@@ -1,7 +1,6 @@
-* RematchRedux is the direct successor to the original Rematch addon.
+# RematchRedux is the direct successor to the original Rematch addon.
 
-** Functionality can and will change going forward! For now, the base is starting from
-the exact Rematch code with small fixes to import your old teams, notes, and targets.
+## *Functionality can and will change going forward! For now, the base is starting from the last Rematch update (5.3.1) with small fixes to import your old teams, notes, and targets.*
 
 Rematch is a pet journal alternative for managing pets and teams.
 
