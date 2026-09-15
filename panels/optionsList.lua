@@ -88,20 +88,20 @@ rematch.optionsList = {
 	-- Standalone Window Options
 	{type="header", group=2, text=L["Standalone Window Options"]},
 	{type="dropdown", group=2, text=L["Anchor To"], var="Anchor", func="Anchor", tooltip=L["When the standalone window is minimized or maximized, use the chosen corner/edge as the anchor."],
-		menu = {{text="Bottom Left", value="BOTTOMLEFT", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0,0.25,0.5,0.75}},
-				{text="Bottom Center", value="BOTTOM", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0.25,0.5,0.5,0.75}},
-				{text="Bottom Right", value="BOTTOMRIGHT", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0.5,0.75,0.5,0.75}},
-				{text="Top Right", value="TOPRIGHT", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0.5,0.75,0,0.25}},
-				{text="Top Center", value="TOP", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0.25,0.5,0,0.25}},
-				{text="Top Left", value="TOPLEFT", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0,0.25,0,0.25}}}
+		menu = {{text="Bottom Left", value="BOTTOMLEFT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0,0.25,0.5,0.75}},
+				{text="Bottom Center", value="BOTTOM", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.25,0.5,0.5,0.75}},
+				{text="Bottom Right", value="BOTTOMRIGHT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.5,0.75,0.5,0.75}},
+				{text="Top Right", value="TOPRIGHT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.5,0.75,0,0.25}},
+				{text="Top Center", value="TOP", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.25,0.5,0,0.25}},
+				{text="Top Left", value="TOPLEFT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0,0.25,0,0.25}}}
 	},
 	{type="dropdown", group=2, text=L["Panel Tabs"], var="PanelTabAnchor", func="PanelTabAnchor", tooltip=L["Choose which corner of the standalone Rematch window to anchor panel tabs such as Pets, Teams, Targets, etc.\n\nNote: Choosing a new anchor for the whole window will change the tabs anchor to match. You can change this tabs anchor again anytime."],
-		menu = {{text="Bottom Left", value="BOTTOMLEFT", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0,0.25,0.5,0.75}},
-				{text="Bottom Center", value="BOTTOM", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0.25,0.5,0.5,0.75}},
-				{text="Bottom Right", value="BOTTOMRIGHT", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0.5,0.75,0.5,0.75}},
-				{text="Top Right", value="TOPRIGHT", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0.5,0.75,0,0.25}},
-				{text="Top Center", value="TOP", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0.25,0.5,0,0.25}},
-				{text="Top Left", value="TOPLEFT", icon="Interface\\AddOns\\Rematch\\textures\\arrows", iconCoords={0,0.25,0,0.25}}}
+		menu = {{text="Bottom Left", value="BOTTOMLEFT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0,0.25,0.5,0.75}},
+				{text="Bottom Center", value="BOTTOM", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.25,0.5,0.5,0.75}},
+				{text="Bottom Right", value="BOTTOMRIGHT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.5,0.75,0.5,0.75}},
+				{text="Top Right", value="TOPRIGHT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.5,0.75,0,0.25}},
+				{text="Top Center", value="TOP", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.25,0.5,0,0.25}},
+				{text="Top Left", value="TOPLEFT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0,0.25,0,0.25}}}
 	},
 	{type="check", group=2, text=L["Prefer Minimized Window"], var="PreferMinimized", tooltip=L["When the window is automatically summoned such as from an Interact Option or Safari Hat Reminder, summon the window in minimized mode."]},
 	{type="widget", group=2, text=L["Use Custom Scale"], parentKey="UseCustomScaleWidget"},
@@ -318,9 +318,9 @@ rematch.optionsList = {
 	{type="check", group=15, text=L["Hide Truncated Tooltips"], var="HideTruncatedTooltips", tooltip=L["Hide tooltips for team or target names when they're truncated (such as Sully \"The Pickle\" McL... instead of Sully \"The Pickle\" McLeary)."]},
 
 	-- About Rematch
-	{type="header", group=20, text=L["About Rematch"]},
+	{type="header", group=20, text=L["About RematchRedux"]},
 	{type="widget", group=20, text=L["All Options Troubleshoot Export Reset"], parentKey="OptionsManagementWidget"},
-	{type="text", group=20, text=L["Version "]..(C_AddOns.GetAddOnMetadata("Rematch","Version") or "")},
+	{type="text", group=20, text=L["Version "]..(C_AddOns.GetAddOnMetadata("RematchRedux","Version") or "")},
 	{type="text", group=20, isHelp=true, text=rematch.utils:GetBadgeAsText(12,16,true).."\124cffb0b0b0 "..L["Target or pet is in a team"]},
 	{type="text", group=20, isHelp=true, text=rematch.utils:GetBadgeAsText(11,16,true).."\124cffb0b0b0 "..L["Pet is in the leveling queue"]},
 	{type="text", group=20, isHelp=true, text=rematch.utils:GetBadgeAsText(27,16,true).."\124cffb0b0b0 "..L["Team has at least one target"]},

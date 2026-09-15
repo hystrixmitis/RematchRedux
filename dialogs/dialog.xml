@@ -18,7 +18,7 @@
         <Layers>
             <Layer level="BACKGROUND">
                 <!-- background texture stretchable over most of the button (aside from pet icons) -->
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\listbuttondark">
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\listbuttondark">
                     <Anchors>
                         <Anchor point="TOPLEFT" x="90" y="-1"/>
                         <Anchor point="BOTTOMRIGHT"/>
@@ -32,7 +32,7 @@
                     </Anchors>
                 </FontString>
                 <!-- border over the pet icons on the left -->
-                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\teamborders">
+                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\teamborders">
                     <Size x="72" y="26"/>
                     <Anchors>
                         <Anchor point="LEFT" x="18" y="0"/>
@@ -162,7 +162,7 @@
                 </Texture>
             </Layer>
             <Layer level="ARTWORK">
-                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\borders">
+                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\borders">
                     <Size x="44" y="44"/>
                     <Anchors>
                         <Anchor point="LEFT"/>
@@ -178,7 +178,7 @@
                         <Anchor point="TOPLEFT" relativeKey="$parent.Border" relativePoint="TOPLEFT" x="-6" y="7"/>
                     </Anchors>
                 </Texture>
-                <Texture parentKey="LevelBubble" file="Interface\AddOns\Rematch\textures\level-bubble" hidden="true">
+                <Texture parentKey="LevelBubble" file="Interface\AddOns\RematchRedux\textures\level-bubble" hidden="true">
                     <Size x="19 " y="19"/>
                     <Anchors>
                         <Anchor point="CENTER" relativeKey="$parent.Border" relativePoint="BOTTOMRIGHT" x="-5" y="5"/>
@@ -238,7 +238,7 @@
                 <Layers>
                     <Layer level="ARTWORK">
                         <!-- the borders around the 3 buttons is a single texture -->
-                        <Texture parentKey="AbilitiesBorder" file="Interface\AddOns\Rematch\textures\borders" setAllPoints="true"/>
+                        <Texture parentKey="AbilitiesBorder" file="Interface\AddOns\RematchRedux\textures\borders" setAllPoints="true"/>
                     </Layer>
                 </Layers>
                 <Frames>
@@ -276,7 +276,7 @@
         <Size x="0" y="26"/>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\headers" setAllPoints="true">
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\headers" setAllPoints="true">
                     <TexCoords left="0" right="0.494140625" top="0" bottom="0.40625"/>
                 </Texture>
             </Layer>
@@ -702,7 +702,7 @@
                                             </Layer>
                                             <Layer level="OVERLAY">
                                                 <!-- border (overlay) for xp-bar-like statusbar for progress bar-->
-                                                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\borders">
+                                                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\borders">
                                                     <Size x="200" y="12"/>
                                                     <Anchors>
                                                         <Anchor point="CENTER"/>
@@ -906,7 +906,7 @@
                         </Frames>
                         <Layers>
                             <Layer level="BORDER">
-                                <Texture parentKey="LeftBorder" file="Interface\AddOns\Rematch\textures\typebar">
+                                <Texture parentKey="LeftBorder" file="Interface\AddOns\RematchRedux\textures\typebar">
                                     <Size x="0" y="24"/>
                                     <Anchors>
                                         <Anchor point="BOTTOMLEFT" x="-7" y="2"/>
@@ -915,7 +915,7 @@
                                     <TexCoords left="0.33203125" right="0.373046875" top="0.75" bottom="0.84375"/>
                                     <Color r="0.5" g="0.5" b="0.5"/>
                                 </Texture>
-                                <Texture parentKey="RightBorder" file="Interface\AddOns\Rematch\textures\typebar">
+                                <Texture parentKey="RightBorder" file="Interface\AddOns\RematchRedux\textures\typebar">
                                     <Size x="0" y="24"/>
                                     <Anchors>
                                         <Anchor point="BOTTOMLEFT" relativeKey="$parent.Tab4" relativePoint="BOTTOMRIGHT"/>
@@ -974,7 +974,7 @@
                                     </Layer>
                                     <Layer level="BORDER">
                                         <!-- Border overlays for the 10 pet types -->
-                                        <Texture parentKey="Borders" file="Interface\AddOns\Rematch\textures\typebar">
+                                        <Texture parentKey="Borders" file="Interface\AddOns\RematchRedux\textures\typebar">
                                             <Size x="259" y="25"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT"/>
@@ -1148,7 +1148,7 @@
                                     </Layer>
                                     <Layer level="BORDER">
                                         <!-- Border overlays for the 10 pet types -->
-                                        <Texture parentKey="Borders" file="Interface\AddOns\Rematch\textures\typebar">
+                                        <Texture parentKey="Borders" file="Interface\AddOns\RematchRedux\textures\typebar">
                                             <Size x="259" y="25"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT"/>
@@ -1376,7 +1376,7 @@
                                 </Texture>
                             </Layer>
                             <Layer level="OVERLAY">
-                                <Texture file="Interface\AddOns\Rematch\textures\borders">
+                                <Texture file="Interface\AddOns\RematchRedux\textures\borders">
                                     <Size x="32" y="32"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="16" y="0"/>
@@ -1668,14 +1668,14 @@
                                 </Anchors>
                                 <Layers>
                                     <Layer level="BACKGROUND">
-                                        <Texture file="Interface\AddOns\Rematch\textures\headers">
+                                        <Texture file="Interface\AddOns\RematchRedux\textures\headers">
                                             <Size x="8" y="26"/>
                                             <Anchors>
                                                 <Anchor point="LEFT"/>
                                             </Anchors>
                                             <TexCoords left="0" right="0.015625" top="0" bottom="0.40625"/>
                                         </Texture>
-                                        <Texture file="Interface\AddOns\Rematch\textures\headers">
+                                        <Texture file="Interface\AddOns\RematchRedux\textures\headers">
                                             <Size x="0" y="26"/>
                                             <Anchors>
                                                 <Anchor point="LEFT" x="8" y="0"/>
@@ -1683,7 +1683,7 @@
                                             </Anchors>
                                             <TexCoords left="0.015625" right="0.478515625" top="0" bottom="0.40625"/>
                                         </Texture>
-                                        <Texture file="Interface\AddOns\Rematch\textures\headers">
+                                        <Texture file="Interface\AddOns\RematchRedux\textures\headers">
                                             <Size x="8" y="26"/>
                                             <Anchors>
                                                 <Anchor point="RIGHT"/>
@@ -1692,14 +1692,14 @@
                                         </Texture>
                                     </Layer>
                                     <Layer level="BORDER">
-                                        <Texture parentArray="Highlights" file="Interface\AddOns\Rematch\textures\headers" alphaMode="ADD" alpha="0.5" hidden="true">
+                                        <Texture parentArray="Highlights" file="Interface\AddOns\RematchRedux\textures\headers" alphaMode="ADD" alpha="0.5" hidden="true">
                                             <Size x="8" y="26"/>
                                             <Anchors>
                                                 <Anchor point="LEFT"/>
                                             </Anchors>
                                             <TexCoords left="0" right="0.015625" top="0" bottom="0.40625"/>
                                         </Texture>
-                                        <Texture parentArray="Highlights" file="Interface\AddOns\Rematch\textures\headers" alphaMode="ADD" alpha="0.5" hidden="true">
+                                        <Texture parentArray="Highlights" file="Interface\AddOns\RematchRedux\textures\headers" alphaMode="ADD" alpha="0.5" hidden="true">
                                             <Size x="0" y="26"/>
                                             <Anchors>
                                                 <Anchor point="LEFT" x="8" y="0"/>
@@ -1707,7 +1707,7 @@
                                             </Anchors>
                                             <TexCoords left="0.015625" right="0.478515625" top="0" bottom="0.40625"/>
                                         </Texture>
-                                        <Texture parentArray="Highlights" file="Interface\AddOns\Rematch\textures\headers" alphaMode="ADD" alpha="0.5" hidden="true">
+                                        <Texture parentArray="Highlights" file="Interface\AddOns\RematchRedux\textures\headers" alphaMode="ADD" alpha="0.5" hidden="true">
                                             <Size x="8" y="26"/>
                                             <Anchors>
                                                 <Anchor point="RIGHT"/>
@@ -1815,7 +1815,7 @@
                                     <Anchor point="LEFT" relativeKey="$parent.Wins" relativePoint="RIGHT" x="2" y="0"/>
                                 </Anchors>
                                 <KeyValues>
-                                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0.125,0.25,0.375,0.5"/>
                                 </KeyValues>
                                 <Scripts>
@@ -1829,7 +1829,7 @@
                                     <Anchor point="LEFT" relativeKey="$parent.WinsMinus" relativePoint="RIGHT" x="0" y="0"/>
                                 </Anchors>
                                 <KeyValues>
-                                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0,0.125,0.375,0.5"/>
                                 </KeyValues>
                                 <Scripts>
@@ -1851,7 +1851,7 @@
                                     <Anchor point="LEFT" relativeKey="$parent.Losses" relativePoint="RIGHT" x="2" y="0"/>
                                 </Anchors>
                                 <KeyValues>
-                                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0.375,0.5,0.375,0.5"/>
                                 </KeyValues>
                                 <Scripts>
@@ -1865,7 +1865,7 @@
                                     <Anchor point="LEFT" relativeKey="$parent.LossesMinus" relativePoint="RIGHT" x="0" y="0"/>
                                 </Anchors>
                                 <KeyValues>
-                                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0.25,0.375,0.375,0.5"/>
                                 </KeyValues>
                                 <Scripts>
@@ -1887,7 +1887,7 @@
                                     <Anchor point="LEFT" relativeKey="$parent.Draws" relativePoint="RIGHT" x="2" y="0"/>
                                 </Anchors>
                                 <KeyValues>
-                                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0.625,0.75,0.375,0.5"/>
                                 </KeyValues>
                                 <Scripts>
@@ -1901,7 +1901,7 @@
                                     <Anchor point="LEFT" relativeKey="$parent.DrawsMinus" relativePoint="RIGHT" x="0" y="0"/>
                                 </Anchors>
                                 <KeyValues>
-                                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0.5,0.625,0.375,0.5"/>
                                 </KeyValues>
                                 <Scripts>
@@ -1989,19 +1989,19 @@
                                 <Layers>
                                     <Layer level="OVERLAY" textureSubLevel="-1">
                                         <!-- a red X for dead or red haze for injured (normal team list buttons don't have this) -->
-                                        <Texture parentArray="Status" file="Interface\AddOns\Rematch\textures\petstatus" hidden="true">
+                                        <Texture parentArray="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" hidden="true">
                                             <Size x="28" y="40"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="2" y="-2"/>
                                             </Anchors>
                                         </Texture>
-                                        <Texture parentArray="Status" file="Interface\AddOns\Rematch\textures\petstatus" hidden="true">
+                                        <Texture parentArray="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" hidden="true">
                                             <Size x="28" y="40"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="31" y="-2"/>
                                             </Anchors>
                                         </Texture>
-                                        <Texture parentArray="Status" file="Interface\AddOns\Rematch\textures\petstatus" hidden="true">
+                                        <Texture parentArray="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" hidden="true">
                                             <Size x="28" y="40"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="60" y="-2"/>
@@ -2012,7 +2012,7 @@
                             </Button>
                             <Button parentKey="PrevTeamButton" inherits="RematchSmallGreyButtonTemplate">
                                 <KeyValues>
-                                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0.5,0.625,0.25,0.375"/>
                                 </KeyValues>
                                 <Anchors>
@@ -2026,7 +2026,7 @@
                             </Button>
                             <Button parentKey="NextTeamButton" inherits="RematchSmallGreyButtonTemplate">
                                 <KeyValues>
-                                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0.625,0.75,0.25,0.375"/>
                                 </KeyValues>
                                 <Anchors>
@@ -2136,7 +2136,7 @@
                                     </Anchors>
                                 </FontString>
                                 <!-- left border of rarity bar -->
-                                <Texture parentKey="LeftCap" file="Interface\AddOns\Rematch\textures\select">
+                                <Texture parentKey="LeftCap" file="Interface\AddOns\RematchRedux\textures\select">
                                     <Size x="24" y="24"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="0" y="-42"/>
@@ -2145,7 +2145,7 @@
                                     <Color r="0.5" g="0.5" b="0.5"/>
                                 </Texture>
                                 <!-- right border of rarity bar -->
-                                <Texture parentKey="RightCap" file="Interface\AddOns\Rematch\textures\select">
+                                <Texture parentKey="RightCap" file="Interface\AddOns\RematchRedux\textures\select">
                                     <Size x="24" y="24"/>
                                     <Anchors>
                                         <Anchor point="TOPRIGHT" x="0" y="-42"/>
@@ -2154,7 +2154,7 @@
                                     <Color r="0.5" g="0.5" b="0.5"/>
                                 </Texture>
                                 <!-- middle border of rarity bar -->
-                                <Texture parentKey="MidBorder" file="Interface\AddOns\Rematch\textures\select">
+                                <Texture parentKey="MidBorder" file="Interface\AddOns\RematchRedux\textures\select">
                                     <Size x="0" y="24"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" relativeKey="$parent.LeftCap" relativePoint="TOPRIGHT"/>
@@ -2438,7 +2438,7 @@
                         </KeyValues>
                         <Layers>
                             <Layer level="ARTWORK">
-                                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\typebar" setAllPoints="true">
+                                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\typebar" setAllPoints="true">
                                     <TexCoords left="0.611328125" right="1" top="0" bottom="0.26171875"/>
                                     <Color r="0.5" g="0.5" b="0.5"/>
                                 </Texture>
@@ -2465,7 +2465,7 @@
                 					<TexCoords left="0.0625" right="0.9375" top="0.0625" bottom="0.9375"/>
                                 </Texture>
                                 <!-- leveling -->
-                                <Texture parentArray="Buttons" file="Interface\AddOns\Rematch\textures\levelingicon" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\AddOns\RematchRedux\textures\levelingicon" inherits="RematchDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="70" y="-4"/>
                                     </Anchors>

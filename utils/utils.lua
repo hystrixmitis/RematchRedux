@@ -87,7 +87,7 @@ function rematch.utils:GetBadgeAsText(index,size,borderless)
     size = size or 0 -- default to 0 for size
     local left = index%8*32
     local top = floor(index/8)*32
-    local file = format("Interface\\AddOns\\Rematch\\textures\\badges-%s",borderless and "borderless" or "borders")
+    local file = format("Interface\\AddOns\\RematchRedux\\textures\\badges-%s",borderless and "borderless" or "borders")
     return format("\124T%s:%d:%d:0:0:256:256:%d:%d:%d:%d\124t",file,size,size,left,left+32,top,top+32)
 end
 

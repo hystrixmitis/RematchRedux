@@ -55,7 +55,7 @@
         <Layers>
             <Layer level="BACKGROUND">
                 <!-- background texture stretchable over most of the button (aside from pet icons) -->
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\listbuttondark">
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\listbuttondark">
                     <Anchors>
                         <Anchor point="TOPLEFT" x="91" y="-1"/>
                         <Anchor point="BOTTOMRIGHT"/>
@@ -136,7 +136,7 @@
             </Layer>
             <Layer level="OVERLAY">
                 <!-- border over the pet icons on the left (44px tall for team, 26px tall for target) -->
-                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\teamborders">
+                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\teamborders">
                     <Size x="90" y="44"/>
                     <Anchors>
                         <Anchor point="LEFT"/>
@@ -189,7 +189,7 @@
         <Layers>
             <Layer level="BACKGROUND">
                 <!-- background texture stretchable over most of the button (aside from pet icons) -->
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\listbuttondark">
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\listbuttondark">
                     <Anchors>
                         <Anchor point="TOPLEFT" x="73" y="-1"/>
                         <Anchor point="BOTTOMRIGHT"/>
@@ -263,7 +263,7 @@
             </Layer>
             <Layer level="OVERLAY">
                 <!-- border over the pet icons on the left (44px tall for team, 26px tall for target) -->
-                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\teamborders">
+                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\teamborders">
                     <Size x="72" y="26"/>
                     <Anchors>
                         <Anchor point="LEFT"/>

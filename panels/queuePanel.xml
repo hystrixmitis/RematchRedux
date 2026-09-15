@@ -35,7 +35,7 @@
                             <Anchor point="LEFT" x="3" y="0"/>
                         </Anchors>
                         <KeyValues>
-                            <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\badges-borderless"/>
+                            <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\badges-borderless"/>
                             <!-- <KeyValue key="coords" value="0.87890625,0.99609375,0.12890625,0.24609375"/> -->
                             <KeyValue key="coords" value="0.75390625,0.87109375,0.12890625,0.24609375"/>
                             <KeyValue key="isPreferencesButton" value="true" type="boolean"/>
@@ -142,21 +142,21 @@
                                 <Size x="248" y="8"/>
                                 <Layers>
                                     <Layer level="ARTWORK">
-                                        <Texture file="Interface\AddOns\Rematch\textures\glowline" alphaMode="ADD">
+                                        <Texture file="Interface\AddOns\RematchRedux\textures\glowline" alphaMode="ADD">
                                             <Size x="10" y="8"/>
                                             <Anchors>
                                                 <Anchor point="LEFT"/>
                                             </Anchors>
                                             <TexCoords left="0" right="0.3125" top="0" bottom="0.625"/>
                                         </Texture>
-                                        <Texture file="Interface\AddOns\Rematch\textures\glowline" alphaMode="ADD">
+                                        <Texture file="Interface\AddOns\RematchRedux\textures\glowline" alphaMode="ADD">
                                             <Size x="10" y="8"/>
                                             <Anchors>
                                                 <Anchor point="RIGHT"/>
                                             </Anchors>
                                             <TexCoords left="0.84375" right="1" top="0" bottom="0.625"/>
                                         </Texture>
-                                        <Texture file="Interface\AddOns\Rematch\textures\glowline" alphaMode="ADD">
+                                        <Texture file="Interface\AddOns\RematchRedux\textures\glowline" alphaMode="ADD">
                                             <Size x="0" y="8"/>
                                             <Anchors>
                                                 <Anchor point="LEFT" x="10" y="0"/>

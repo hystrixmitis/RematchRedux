@@ -363,7 +363,7 @@ function pfm:GetIcon()
 	if self.group=="Types" or self.group=="Strong" or self.group=="Tough" then
 		return "Interface\\Icons\\Pet_Type_"..PET_TYPE_SUFFIX[self.key]
 	elseif self.group=="Sources" then
-		return "Interface\\AddOns\\Rematch\\textures\\sources"
+		return "Interface\\AddOns\\RematchRedux\\textures\\sources"
 	end
 end
 -- returns texcoords for an icon
@@ -501,7 +501,7 @@ function rematch.menus:UpdateFavoriteFilters()
 	if #settings.FavoriteFilters>0 then
 		tinsert(menu,{spacer=true})
 	end
-	tinsert(menu,{text=L["Save Filter"], icon="Interface\\AddOns\\Rematch\\textures\\save", isDisabled=rematch.filters.IsAllClear, disabledTooltip=L["A filter must be active before it can be saved."], func=pfm.SaveFavoriteFilter})
+	tinsert(menu,{text=L["Save Filter"], icon="Interface\\AddOns\\RematchRedux\\textures\\save", isDisabled=rematch.filters.IsAllClear, disabledTooltip=L["A filter must be active before it can be saved."], func=pfm.SaveFavoriteFilter})
 	rematch.menus:Register("FavoriteFilters",menu)
 end
 

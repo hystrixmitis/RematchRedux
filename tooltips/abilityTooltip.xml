@@ -190,7 +190,7 @@
                             </Anchors>
                             <TexCoords left="0.1" right="0.9" top="0.1" bottom="0.9"/>
                         </Texture>
-                        <MaskTexture parentKey="FadeMask" file="Interface\AddOns\Rematch\textures\squirclemask">
+                        <MaskTexture parentKey="FadeMask" file="Interface\AddOns\RematchRedux\textures\squirclemask">
                             <Size x="64" Y="64"/>
                             <Anchors>
                                 <Anchor point="RIGHT"/>

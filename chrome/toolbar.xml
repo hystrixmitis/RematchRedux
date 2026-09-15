@@ -10,10 +10,10 @@
                 </Anchors>
                 <Layers>
                     <Layer level="BACKGROUND">
-                        <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\greybuttons" setAllPoints="true"/>
+                        <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\greybuttons" setAllPoints="true"/>
                     </Layer>
                     <Layer level="BACKGROUND" textureSubLevel="1">
-                        <Texture parentKey="Highlight" file="Interface\AddOns\Rematch\textures\greybuttons" alpha="0.5" setAllPoints="true" alphaMode="ADD" hidden="true">
+                        <Texture parentKey="Highlight" file="Interface\AddOns\RematchRedux\textures\greybuttons" alpha="0.5" setAllPoints="true" alphaMode="ADD" hidden="true">
                             <TexCoords left="0" right="0.421875" top="0" bottom="0.109375"/>
                         </Texture>
                     </Layer>
@@ -248,7 +248,7 @@
             <Button parentKey="SaveAsButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="SaveAsButton"/>
-                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\save"/>
+                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\save"/>
                     <KeyValue key="tooltipTitle" value="Save As"/>
                     <KeyValue key="tooltipBody" value="Save the currently loaded pets to a new team."/>
                 </KeyValues>

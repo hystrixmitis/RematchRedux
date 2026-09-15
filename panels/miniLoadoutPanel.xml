@@ -71,7 +71,7 @@
             </Layer>
             <Layer level="BORDER" textureSubLevel="2">
                 <!-- a red X for dead or red haze for injured -->
-				<Texture parentKey="Status" file="Interface\AddOns\Rematch\textures\petstatus" hidden="true">
+				<Texture parentKey="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" hidden="true">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="TOPLEFT" x="-2" y="2"/>
                         <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="2" y="-2"/>
@@ -96,7 +96,7 @@
             </Layer>
             <Layer level="ARTWORK">
                 <!-- grey (or rarity-colored) border around the pet -->
-                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\borders">
+                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\borders">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="TOPLEFT" x="-2" y="2"/>
                         <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="2" y="-2"/>
@@ -126,7 +126,7 @@
                         <Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="TOPLEFT" x="-7" y="8"/>
                     </Anchors>
                 </Texture>
-                <Texture parentKey="LevelBubble" file="Interface\AddOns\Rematch\textures\level-bubble" hidden="true">
+                <Texture parentKey="LevelBubble" file="Interface\AddOns\RematchRedux\textures\level-bubble" hidden="true">
                     <Size x="19 " y="19"/>
                     <Anchors>
                         <Anchor point="CENTER" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="-3" y="3"/>
@@ -140,7 +140,7 @@
                     </Anchors>
                 </FontString>
                 <!-- border overlay for top status bar, the hp bar for pets below 25 (not shown for pets at 25) -->
-                <Texture parentKey="TopStatusBarBorder" file="Interface\AddOns\Rematch\textures\borders">
+                <Texture parentKey="TopStatusBarBorder" file="Interface\AddOns\RematchRedux\textures\borders">
                     <Size x="44" y="12"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="BOTTOMLEFT" x="-1" y="-8"/>
@@ -149,7 +149,7 @@
                     <Color r="0.65" g="0.65" b="0.65"/>
                 </Texture>
                 <!-- border overlay for bottom status bar, either hp bar for 25 pets or xp bar for pets below 25 -->
-                <Texture parentKey="BottomStatusBarBorder" file="Interface\AddOns\Rematch\textures\borders">
+                <Texture parentKey="BottomStatusBarBorder" file="Interface\AddOns\RematchRedux\textures\borders">
                     <Size x="44" y="12"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="BOTTOMLEFT" x="-1" y="-22"/>
@@ -198,7 +198,7 @@
                 </Anchors>
                 <Layers>
                     <Layer level="ARTWORK">
-                        <Texture parentKey="Icon" file="Interface\AddOns\Rematch\textures\badges-borders" setAllPoints="true"/>
+                        <Texture parentKey="Icon" file="Interface\AddOns\RematchRedux\textures\badges-borders" setAllPoints="true"/>
                     </Layer>
                 </Layers>
                 <Scripts>
@@ -225,7 +225,7 @@
                 <Layers>
                     <Layer level="ARTWORK">
                         <!-- the borders around the 3 buttons is a single texture -->
-                        <Texture parentKey="AbilitiesBorder" file="Interface\AddOns\Rematch\textures\borders" setAllPoints="true"/>
+                        <Texture parentKey="AbilitiesBorder" file="Interface\AddOns\RematchRedux\textures\borders" setAllPoints="true"/>
                     </Layer>
                 </Layers>
                 <Frames>
@@ -359,7 +359,7 @@
                 <Layers>
                     <Layer level="ARTWORK">
                         <!-- border overlay is for both ability icons -->
-                        <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\borders" setAllPoints="true"/>
+                        <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\borders" setAllPoints="true"/>
                     </Layer>
                     <Layer level="BORDER" textureSubLevel="1">
                         <!-- the yellow highlight when an ability is the loaded one -->

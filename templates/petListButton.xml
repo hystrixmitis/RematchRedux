@@ -6,7 +6,7 @@
         <Layers>
             <!-- lowest layer contains the background texture over most of the button (aside from pet icon) -->
             <Layer level="BACKGROUND" textureSubLevel="-1">
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\listbuttondark">
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\listbuttondark">
                     <Anchors>
                         <Anchor point="TOPLEFT" x="45" y="0"/>
                         <Anchor point="BOTTOMRIGHT"/>
@@ -34,7 +34,7 @@
             </Layer>
             <!-- border layer contains the pet type decal on the right of the listbutton and various text -->
             <Layer level="BORDER">
-                <Texture parentKey="TypeDecal" file="Interface\AddOns\Rematch\textures\pettypedecals" alpha="0.4">
+                <Texture parentKey="TypeDecal" file="Interface\AddOns\RematchRedux\textures\pettypedecals" alpha="0.4">
 					<Size x="58" y="41"/> <!-- was 55x38 -->
 					<Anchors>
 						<Anchor point="RIGHT" x="-1" y="0"/>
@@ -42,7 +42,7 @@
                     <TexCoords left="0.75" right="1" top="0.25" bottom="0.421875"/>
 				</Texture>
                 <!-- a red X for dead or red haze for injured -->
-				<Texture parentKey="Status" file="Interface\AddOns\Rematch\textures\petstatus" hidden="true">
+				<Texture parentKey="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" hidden="true">
                     <Size x="44" y="44"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
@@ -52,7 +52,7 @@
             <!-- Icon here is the icon of the pet on the left -->
             <Layer level="ARTWORK">
                 <!-- grey (or rarity-colored) border around the pet -->
-                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\borders">
+                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\borders">
                     <Size x="44" y="44"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
@@ -87,7 +87,7 @@
                         <Anchor point="TOPLEFT" relativeKey="$parent.Icon" x="-7" y="6"/>
                     </Anchors>
                 </Texture>
-                <Texture parentKey="LevelBubble" file="Interface\AddOns\Rematch\textures\level-bubble" hidden="true">
+                <Texture parentKey="LevelBubble" file="Interface\AddOns\RematchRedux\textures\level-bubble" hidden="true">
                     <Size x="19 " y="19"/>
                     <Anchors>
                         <Anchor point="CENTER" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="-3" y="7"/>
@@ -136,7 +136,7 @@
         <Size x="200" y="26"/>
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="-1">
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\listbuttondark">
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\listbuttondark">
                     <Anchors>
                         <Anchor point="TOPLEFT" x="26" y="0"/>
                         <Anchor point="BOTTOMRIGHT"/>
@@ -163,7 +163,7 @@
                 </Texture>
             </Layer>
             <Layer level="BORDER">
-                <Texture parentKey="TypeDecal" file="Interface\AddOns\Rematch\textures\pettypedecals" alpha="0.4">
+                <Texture parentKey="TypeDecal" file="Interface\AddOns\RematchRedux\textures\pettypedecals" alpha="0.4">
 					<Size x="36" y="25"/> <!-- was 55x38 -->
 					<Anchors>
 						<Anchor point="RIGHT" x="-1" y="0"/>
@@ -171,7 +171,7 @@
                     <TexCoords left="0.75" right="1" top="0.25" bottom="0.421875"/>
 				</Texture>
                 <!-- a red X for dead or red haze for injured -->
-                <Texture parentKey="Status" file="Interface\AddOns\Rematch\textures\petstatus" hidden="true">
+                <Texture parentKey="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" hidden="true">
                     <Size x="26" y="26"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
@@ -180,7 +180,7 @@
             </Layer>
             <Layer level="ARTWORK">
                 <!-- grey (or rarity-colored) border around the pet -->
-                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\borders">
+                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\borders">
                     <Size x="26" y="26"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
@@ -212,7 +212,7 @@
                         <Anchor point="TOPLEFT" relativeKey="$parent.Icon" x="-6" y="6"/>
                     </Anchors>
                 </Texture>
-                <Texture parentKey="LevelBubble" file="Interface\AddOns\Rematch\textures\level-bubble" hidden="true">
+                <Texture parentKey="LevelBubble" file="Interface\AddOns\RematchRedux\textures\level-bubble" hidden="true">
                     <Size x="17 " y="17"/>
                     <Anchors>
                         <Anchor point="CENTER" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="0" y="6"/>
@@ -225,7 +225,7 @@
                         <Anchor point="CENTER" relativeKey="$parent.LevelBubble" x="0" y="-0.5"/>
                     </Anchors>
                 </FontString>
-                <!-- <Texture parentKey="Level" file="Interface\AddOns\Rematch\textures\levels" hidden="true">
+                <!-- <Texture parentKey="Level" file="Interface\AddOns\RematchRedux\textures\levels" hidden="true">
                     <Size x="17" y="17"/>
                     <Anchors>
                         <Anchor point="CENTER" relativeKey="$parent.Icon" relativePoint="BOTTOMRIGHT" x="0" y="6"/>

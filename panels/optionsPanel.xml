@@ -53,7 +53,7 @@
         <Layers>
             <Layer level="ARTWORK">
                 <!-- Control can be a checkbutton, radio button etc depending on the option -->
-                <Texture parentKey="Check" file="Interface\AddOns\Rematch\textures\checkbuttons">
+                <Texture parentKey="Check" file="Interface\AddOns\RematchRedux\textures\checkbuttons">
                     <Size x="26" y="26"/>
                     <Anchors>
                         <Anchor point="LEFT"/>
@@ -134,7 +134,7 @@
                 </Frames>
                 <Layers>
                     <Layer level="ARTWORK">
-                        <Texture parentKey="Check" file="Interface\AddOns\Rematch\textures\checkbuttons">
+                        <Texture parentKey="Check" file="Interface\AddOns\RematchRedux\textures\checkbuttons">
                             <Size x="26" y="26"/>
                             <Anchors>
                                 <Anchor point="LEFT"/>

@@ -9,14 +9,14 @@
                 <Size x="0" y="36"/>
                 <Layers>
                     <Layer level="BACKGROUND">
-                        <Texture file="Interface\AddOns\Rematch\textures\headers">
+                        <Texture file="Interface\AddOns\RematchRedux\textures\headers">
                             <Size x="8" y="26"/>
                             <Anchors>
                                 <Anchor point="LEFT"/>
                             </Anchors>
                             <TexCoords left="0" right="0.015625" top="0" bottom="0.40625"/>
                         </Texture>
-                        <Texture file="Interface\AddOns\Rematch\textures\headers">
+                        <Texture file="Interface\AddOns\RematchRedux\textures\headers">
                             <Size x="0" y="26"/>
                             <Anchors>
                                 <Anchor point="LEFT" x="8" y="0"/>
@@ -24,28 +24,28 @@
                             </Anchors>
                             <TexCoords left="0.015625" right="0.478515625" top="0" bottom="0.40625"/>
                         </Texture>
-                        <Texture file="Interface\AddOns\Rematch\textures\headers">
+                        <Texture file="Interface\AddOns\RematchRedux\textures\headers">
                             <Size x="8" y="26"/>
                             <Anchors>
                                 <Anchor point="RIGHT"/>
                             </Anchors>
                             <TexCoords left="0.478515625" right="0.494140625" top="0" bottom="0.40625"/>
                         </Texture>                    
-                        <!-- <Texture file="Interface\AddOns\Rematch\textures\headers">
+                        <!-- <Texture file="Interface\AddOns\RematchRedux\textures\headers">
                             <Size x="26" y="26"/>
                             <Anchors>
                                 <Anchor point="LEFT"/>
                             </Anchors>
                             <TexCoords left="0" right="0.05078125" top="0" bottom="0.40625"/>
                         </Texture>
-                        <Texture file="Interface\AddOns\Rematch\textures\headers">
+                        <Texture file="Interface\AddOns\RematchRedux\textures\headers">
                             <Size x="26" y="26"/>
                             <Anchors>
                                 <Anchor point="RIGHT"/>
                             </Anchors>
                             <TexCoords left="0.4296875" right="0.48046875" top="0" bottom="0.40625"/>
                         </Texture>
-                        <Texture file="Interface\AddOns\Rematch\textures\headers">
+                        <Texture file="Interface\AddOns\RematchRedux\textures\headers">
                             <Size x="26" y="26"/>
                             <Anchors>
                                 <Anchor point="LEFT" x="26" y="0"/>
@@ -118,7 +118,7 @@
                     </Layer>
                     <Layer level="OVERLAY">
                         <!-- border over the pet icons -->
-                        <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\teamborders">
+                        <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\teamborders">
                             <Size x="72" y="26"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT"/>
@@ -136,21 +136,21 @@
                         <Size x="248" y="8"/>
                         <Layers>
                             <Layer level="ARTWORK">
-                                <Texture file="Interface\AddOns\Rematch\textures\glowline" alphaMode="ADD">
+                                <Texture file="Interface\AddOns\RematchRedux\textures\glowline" alphaMode="ADD">
                                     <Size x="10" y="8"/>
                                     <Anchors>
                                         <Anchor point="LEFT"/>
                                     </Anchors>
                                     <TexCoords left="0" right="0.3125" top="0" bottom="0.625"/>
                                 </Texture>
-                                <Texture file="Interface\AddOns\Rematch\textures\glowline" alphaMode="ADD">
+                                <Texture file="Interface\AddOns\RematchRedux\textures\glowline" alphaMode="ADD">
                                     <Size x="10" y="8"/>
                                     <Anchors>
                                         <Anchor point="RIGHT"/>
                                     </Anchors>
                                     <TexCoords left="0.84375" right="1" top="0" bottom="0.625"/>
                                 </Texture>
-                                <Texture file="Interface\AddOns\Rematch\textures\glowline" alphaMode="ADD">
+                                <Texture file="Interface\AddOns\RematchRedux\textures\glowline" alphaMode="ADD">
                                     <Size x="0" y="8"/>
                                     <Anchors>
                                         <Anchor point="LEFT" x="10" y="0"/>

@@ -5,21 +5,21 @@
         <Size x="120" y="24"/> <!-- this should always be 24 tall -->
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentKey="Left" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentKey="Left" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="24" y="24"/>
                     <Anchors>
                         <Anchor point="LEFT"/>
                     </Anchors>
                     <TexCoords left="0" right="0.1875" top="0" bottom="0.1875"/>
                 </Texture>
-                <Texture parentKey="Right" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentKey="Right" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="24" y="24"/>
                     <Anchors>
                         <Anchor point="RIGHT"/>
                     </Anchors>
                     <TexCoords left="0.8125" right="1" top="0" bottom="0.1875"/>
                 </Texture>
-                <Texture parentKey="Middle" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentKey="Middle" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="0" y="24"/>
                     <Anchors>
                         <Anchor point="LEFT" x="24" y="0"/>
@@ -30,7 +30,7 @@
             </Layer>
             <Layer level="ARTWORK">
                 <!-- the down button on the right edge -->
-                <Texture parentKey="DropDownButton" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentKey="DropDownButton" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="18" y="18"/>
                     <Anchors>
                         <Anchor point="RIGHT" x="-3" y="0"/>
@@ -72,21 +72,21 @@
         </KeyValues>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentKey="Left" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentKey="Left" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="24" y="24"/>
                     <Anchors>
                         <Anchor point="LEFT"/>
                     </Anchors>
                     <TexCoords left="0" right="0.1875" top="0" bottom="0.1875"/>
                 </Texture>
-                <Texture parentKey="Right" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentKey="Right" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="24" y="24"/>
                     <Anchors>
                         <Anchor point="RIGHT"/>
                     </Anchors>
                     <TexCoords left="0.8125" right="1" top="0" bottom="0.1875"/>
                 </Texture>
-                <Texture parentKey="Middle" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentKey="Middle" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="0" y="24"/>
                     <Anchors>
                         <Anchor point="LEFT" x="24" y="0"/>
@@ -97,7 +97,7 @@
             </Layer>
             <Layer level="ARTWORK">
                 <!-- the down button on the right edge -->
-                <Texture parentKey="DropDownButton" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentKey="DropDownButton" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="18" y="18"/>
                     <Anchors>
                         <Anchor point="RIGHT" x="-3" y="0"/>
