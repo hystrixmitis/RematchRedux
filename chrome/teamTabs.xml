@@ -8,7 +8,7 @@
 		</HitRectInsets>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture parentKey="Background" file="Interface\AddOns\Rematch\Textures\teamtab">
+				<Texture parentKey="Background" file="Interface\AddOns\RematchRedux\Textures\teamtab">
                     <Size x="44" y="44"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>

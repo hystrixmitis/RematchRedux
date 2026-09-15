@@ -122,7 +122,7 @@ end
 
 RematchTitlebarButtonMixin = {}
 
--- texcoords into Interface\AddOns\Rematch\textures\titlebarButtons.blp
+-- texcoords into Interface\AddOns\RematchRedux\textures\titlebarButtons.blp
 local texCoords = {
     close = {0.00390625,0.14453125,0.01171875,0.15234375},
     minimize = {0.15234375,0.29296875,0.01171875,0.15234375},
@@ -326,13 +326,13 @@ end
 function RematchSmallGreyButtonMixin:SetDirection(direction)
     self.direction = direction
     if direction=="up" then
-        self:SetIcon("Interface\\AddOns\\Rematch\\textures\\texticons",0.5,0.625,0.25,0.375)
+        self:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\texticons",0.5,0.625,0.25,0.375)
     elseif direction=="down" then
-        self:SetIcon("Interface\\AddOns\\Rematch\\textures\\texticons",0.625,0.75,0.25,0.375)
+        self:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\texticons",0.625,0.75,0.25,0.375)
     elseif direction=="left" then
-        self:SetIcon("Interface\\AddOns\\Rematch\\textures\\texticons",0.25,0.375,0.325,0.375)
+        self:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\texticons",0.25,0.375,0.325,0.375)
     elseif direction=="right" then
-        self:SetIcon("Interface\\AddOns\\Rematch\\textures\\texticons",0.375,0.5,0.325,0.375)
+        self:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\texticons",0.375,0.5,0.325,0.375)
     end
 end
 
@@ -504,7 +504,7 @@ function RematchColorSwatchMixin:SetColor(color)
             self.Selected:SetVertexColor(r,g,b)
         end
     else
-        self.Color:SetTexture("Interface\\AddOns\\Rematch\\textures\\defaultcolor")
+        self.Color:SetTexture("Interface\\AddOns\\RematchRedux\\textures\\defaultcolor")
         self.Color:SetVertexColor(1,1,1)
         self.Selected:SetVertexColor(1,0.82,0)
     end

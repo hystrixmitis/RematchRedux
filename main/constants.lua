@@ -55,13 +55,13 @@ rematch.constants = {
     SAVE_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:14:14:0:0:256:256:224:256:0:32\124t",
     EDIT_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:14:14:0:0:256:256:160:192:32:64\124t",
     -- icons
-    LEVELING_ICON = "Interface\\AddOns\\Rematch\\Textures\\levelingicon",
-    IGNORED_ICON = "Interface\\AddOns\\Rematch\\Textures\\ignoredicon",
+    LEVELING_ICON = "Interface\\AddOns\\RematchRedux\\Textures\\levelingicon",
+    IGNORED_ICON = "Interface\\AddOns\\RematchRedux\\Textures\\ignoredicon",
     REMATCH_ICON = "Interface\\Icons\\INV_Pet_BattlePetTraining",
     UNKNOWN_ICON = "Interface\\Icons\\INV_Misc_QuestionMark",
-    EMPTY_ICON = "Interface\\AddOns\\Rematch\\Textures\\blank", -- "Interface\\PaperDoll\\UI-Backpack-EmptySlot",
+    EMPTY_ICON = "Interface\\AddOns\\RematchRedux\\Textures\\blank", -- "Interface\\PaperDoll\\UI-Backpack-EmptySlot",
     FANFARE_ICON = "Interface\\Icons\\Item_Shop_GiftBox01",
-    UNNOTABLE_ICON = "Interface\\AddOns\\Rematch\\Textures\\unnotable",
+    UNNOTABLE_ICON = "Interface\\AddOns\\RematchRedux\\Textures\\unnotable",
     NEW_TAB_ICON = "Interface\\GuildBankFrame\\UI-GuildBankFrame-NewTab",
     SUMMON_RANDOM_ICON = 652131,
     -- colors

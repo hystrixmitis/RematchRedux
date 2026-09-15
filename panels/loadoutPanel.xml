@@ -58,11 +58,11 @@
                     </Layer>
                     <Layer level="BORDER">
                         <!-- a red X for dead or red haze for injured -->
-                        <Texture parentKey="Status" file="Interface\AddOns\Rematch\textures\petstatus" setAllPoints="true" hidden="true"/>
+                        <Texture parentKey="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" setAllPoints="true" hidden="true"/>
                     </Layer>
                     <Layer level="ARTWORK">
                         <!-- grey (or rarity-colored) border around the pet -->
-                        <Texture parentKey="Border" setAllPoints="true" file="Interface\AddOns\Rematch\textures\borders">
+                        <Texture parentKey="Border" setAllPoints="true" file="Interface\AddOns\RematchRedux\textures\borders">
                             <TexCoords left="0" right="0.171875" top="0" bottom="0.171875"/>
                         </Texture>
                     </Layer>
@@ -74,7 +74,7 @@
                                 <Anchor point="TOPLEFT" x="-8" y="8"/>
                             </Anchors>
                         </Texture>
-                        <Texture parentKey="LevelBubble" file="Interface\AddOns\Rematch\textures\level-bubble" hidden="true">
+                        <Texture parentKey="LevelBubble" file="Interface\AddOns\RematchRedux\textures\level-bubble" hidden="true">
                             <Size x="19 " y="19"/>
                             <Anchors>
                                 <Anchor point="CENTER" relativePoint="BOTTOMRIGHT" x="-1" y="1"/>
@@ -135,7 +135,7 @@
                 <Layers>
                     <Layer level="OVERLAY">
                         <!-- the borders around the 3 buttons is a single texture -->
-                        <Texture parentKey="AbilitiesBorder" file="Interface\AddOns\Rematch\textures\borders" setAllPoints="true"/>
+                        <Texture parentKey="AbilitiesBorder" file="Interface\AddOns\RematchRedux\textures\borders" setAllPoints="true"/>
                     </Layer>
                 </Layers>
                 <Frames>
@@ -189,7 +189,7 @@
                 </Anchors>
                 <Layers>
                     <Layer level="ARTWORK">
-                        <Texture parentKey="Icon" file="Interface\AddOns\Rematch\textures\badges-borders" setAllPoints="true"/>
+                        <Texture parentKey="Icon" file="Interface\AddOns\RematchRedux\textures\badges-borders" setAllPoints="true"/>
                     </Layer>
                 </Layers>
                 <Scripts>
@@ -376,7 +376,7 @@
             </Layer>
             <Layer level="OVERLAY" textureSubLevel="2">
                 <!-- border of xp bar -->
-                <Texture parentKey="XpBarBorder" file="Interface\AddOns\Rematch\textures\borders">
+                <Texture parentKey="XpBarBorder" file="Interface\AddOns\RematchRedux\textures\borders">
                     <Size x="256" y="12"/>
                     <Anchors>
                         <Anchor point="BOTTOM" x="0" y="5"/>
@@ -384,7 +384,7 @@
                     <TexCoords left="0" right="1" top="0.953125" bottom="1"/>
                     <Color r="0.65" g="0.65" b="0.65"/>
                 </Texture>
-                <Texture parentKey="HpBarBorder" file="Interface\AddOns\Rematch\textures\borders">
+                <Texture parentKey="HpBarBorder" file="Interface\AddOns\RematchRedux\textures\borders">
                     <Size x="64" y="12"/>
                     <Anchors>
                         <Anchor point="BOTTOMLEFT" x="12" y="24"/>
@@ -501,7 +501,7 @@
                 <Layers>
                     <Layer level="ARTWORK">
                         <!-- border overlay is for both ability icons -->
-                        <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\borders" setAllPoints="true"/>
+                        <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\borders" setAllPoints="true"/>
                     </Layer>
                     <Layer level="BORDER" textureSubLevel="1">
                         <!-- the yellow highlight when an ability is the loaded one -->

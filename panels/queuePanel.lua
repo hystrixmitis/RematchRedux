@@ -40,9 +40,9 @@ function rematch.queuePanel:Update()
     self.Top.Label:SetText(format(L["Leveling Pets: %s%d"],C.HEX_WHITE,#settings.LevelingQueue))
 
     if settings.PreferencesPaused then -- if preferences paused, red X version of blue gear icon
-        self.PreferencesFrame.PreferencesButton:SetIcon("Interface\\AddOns\\Rematch\\textures\\badges-borderless",0.87890625,0.99609375,0.12890625,0.24609375)
+        self.PreferencesFrame.PreferencesButton:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",0.87890625,0.99609375,0.12890625,0.24609375)
     else -- preferences are not paused, regular blue gear icon
-        self.PreferencesFrame.PreferencesButton:SetIcon("Interface\\AddOns\\Rematch\\textures\\badges-borderless",0.75390625,0.87109375,0.12890625,0.24609375)
+        self.PreferencesFrame.PreferencesButton:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",0.75390625,0.87109375,0.12890625,0.24609375)
     end
 
     -- minor reconfiguration if gaining/losing active sort: show/hide status bar

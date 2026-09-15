@@ -14,7 +14,7 @@
         <Layers>
             <Layer level="BORDER">
                 <!-- colored (yellow, green, red) "selected" texture to accent a selected tab -->
-                <Texture parentKey="Selected" file="Interface\AddOns\Rematch\textures\typebar" setAllPoints="true">
+                <Texture parentKey="Selected" file="Interface\AddOns\RematchRedux\textures\typebar" setAllPoints="true">
                     <TexCoords left="0" right="0.13671875" top="0.765625" bottom="0.859375"/>
                 </Texture>
             </Layer>
@@ -37,7 +37,7 @@
             </Layer>
             <Layer level="OVERLAY">
                 <!-- border highlight for unselected tabs -->
-                <Texture parentKey="Highlight" file="Interface\AddOns\Rematch\textures\typebar" alphaMode="ADD" alpha="0.33" hidden="true">
+                <Texture parentKey="Highlight" file="Interface\AddOns\RematchRedux\textures\typebar" alphaMode="ADD" alpha="0.33" hidden="true">
                     <Size x="72" y="21"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="-1" y="0"/>
@@ -108,7 +108,7 @@
                         <Layers>
                             <Layer level="BORDER">
                                 <!-- TabbedBorder includes the outline of the tabs as well as border overlays for the 10 pet types -->
-                                <Texture parentKey="TabbedBorder" file="Interface\AddOns\Rematch\textures\typebar">
+                                <Texture parentKey="TabbedBorder" file="Interface\AddOns\RematchRedux\textures\typebar">
                                     <Size x="267" y="54"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT"/>
@@ -240,7 +240,7 @@
                                     </Scripts>
                                 </Texture>
                                 <!-- level 25 button is for quickly filtering level 25 rares -->
-                                <Texture parentKey="Level25Button" file="Interface\AddOns\Rematch\textures\levels" mixin="RematchTextureMouseMixin">
+                                <Texture parentKey="Level25Button" file="Interface\AddOns\RematchRedux\textures\levels" mixin="RematchTextureMouseMixin">
                                     <Size x="19" y="19"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="4" y="-1"/>

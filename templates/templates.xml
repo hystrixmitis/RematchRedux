@@ -60,9 +60,9 @@
     <Button name="RematchTitlebarButtonTemplate" mixin="RematchTitlebarButtonMixin" virtual="true">
         <Size x="22" y="22"/>
 		<HitRectInsets left="-2" right="-2" top="-2" bottom="-2"/>
-		<NormalTexture file="Interface\AddOns\Rematch\Textures\titlebarbuttons"/>
-		<DisabledTexture file="Interface\AddOns\Rematch\Textures\titlebarbuttons"/>
-		<PushedTexture file="Interface\AddOns\Rematch\Textures\titlebarbuttons"/>
+		<NormalTexture file="Interface\AddOns\RematchRedux\Textures\titlebarbuttons"/>
+		<DisabledTexture file="Interface\AddOns\RematchRedux\Textures\titlebarbuttons"/>
+		<PushedTexture file="Interface\AddOns\RematchRedux\Textures\titlebarbuttons"/>
 		<HighlightTexture file="Interface\Buttons\redbutton2x" alphaMode="ADD" alpha="0.5">
 			<TexCoords left="0.6015625" right="0.734375" top="0.0234375" bottom="0.2890625"/>
 		</HighlightTexture>
@@ -422,19 +422,19 @@
 
     <!-- radio button is a checkbutton styled with radio textures; it uses GetChecked etc like a checkbutton -->
     <CheckButton name="RematchRadioButtonTemplate" inherits="RematchCheckButtonTemplate" virtual="true">
-        <NormalTexture file="Interface\AddOns\Rematch\textures\checkbuttons">
+        <NormalTexture file="Interface\AddOns\RematchRedux\textures\checkbuttons">
             <TexCoords left="0" right="0.25" top="0.25" bottom="0.5"/>
         </NormalTexture>
-        <PushedTexture file="Interface\AddOns\Rematch\textures\checkbuttons">
+        <PushedTexture file="Interface\AddOns\RematchRedux\textures\checkbuttons">
             <TexCoords left="0.25" right="0.5" top="0.25" bottom="0.5"/>
         </PushedTexture>
-        <HighlightTexture file="Interface\AddOns\Rematch\textures\checkbuttons" alphaMode="ADD">
+        <HighlightTexture file="Interface\AddOns\RematchRedux\textures\checkbuttons" alphaMode="ADD">
             <TexCoords left="0.75" right="1" top="0.25" bottom="0.5"/>
         </HighlightTexture>
-        <CheckedTexture file="Interface\AddOns\Rematch\textures\checkbuttons">
+        <CheckedTexture file="Interface\AddOns\RematchRedux\textures\checkbuttons">
             <TexCoords left="0.5" right="0.75" top="0.25" bottom="0.5"/>
         </CheckedTexture>
-        <DisabledCheckedTexture file="Interface\AddOns\Rematch\textures\checkbuttons">
+        <DisabledCheckedTexture file="Interface\AddOns\RematchRedux\textures\checkbuttons">
             <TexCoords left="0.75" right="1" top="0.75" bottom="1"/>
         </DisabledCheckedTexture>
     </CheckButton>
@@ -445,10 +445,10 @@
         <Size x="64" y="24"/>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\allbutton" setAllPoints="true"/>
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\allbutton" setAllPoints="true"/>
             </Layer>
             <Layer level="BORDER">
-                <Texture parentKey="Highlight" file="Interface\AddOns\Rematch\textures\allbutton" setAllPoints="true" alphaMode="ADD" alpha="0.5" hidden="true"/>
+                <Texture parentKey="Highlight" file="Interface\AddOns\RematchRedux\textures\allbutton" setAllPoints="true" alphaMode="ADD" alpha="0.5" hidden="true"/>
             </Layer>
             <Layer level="ARTWORK">
                 <FontString parentKey="Text" inherits="GameFontHighlightSmall" text="ALL">
@@ -502,21 +502,21 @@
         </TextInsets>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentArray="Back" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentArray="Back" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="24" y="24"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
                     </Anchors>
                     <TexCoords left="0" right="0.1875" top="0" bottom="0.1875"/>
                 </Texture>
-                <Texture parentArray="Back" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentArray="Back" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="24" y="24"/>
                     <Anchors>
                         <Anchor point="TOPRIGHT"/>
                     </Anchors>
                     <TexCoords left="0.8125" right="1" top="0" bottom="0.1875"/>
                 </Texture>
-                <Texture parentArray="Back" file="Interface\AddOns\Rematch\textures\controls">
+                <Texture parentArray="Back" file="Interface\AddOns\RematchRedux\textures\controls">
                     <Size x="0" y="24"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="24" y="0"/>
@@ -571,7 +571,7 @@
         <Size x="24" y="24"/>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\greybuttons" setAllPoints="true"/>
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\greybuttons" setAllPoints="true"/>
             </Layer>
             <Layer level="ARTWORK">
                 <Texture parentKey="Icon">
@@ -599,10 +599,10 @@
         <Size x="80" y="24"/>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\greybuttons" setAllPoints="true"/>
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\greybuttons" setAllPoints="true"/>
             </Layer>
             <Layer level="BACKGROUND" textureSubLevel="1">
-                <Texture parentKey="Highlight" file="Interface\AddOns\Rematch\textures\greybuttons" setAllPoints="true" alphaMode="ADD" alpha="0.5" hidden="true">
+                <Texture parentKey="Highlight" file="Interface\AddOns\RematchRedux\textures\greybuttons" setAllPoints="true" alphaMode="ADD" alpha="0.5" hidden="true">
                     <TexCoords left="0" right="0.3125" top="0.25" bottom="0.34375"/>
                 </Texture>
             </Layer>
@@ -651,7 +651,7 @@
                 </Texture>
             </Layer>
             <Layer level="ARTWORK">
-                <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\teamborders">
+                <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\teamborders">
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
                         <Anchor point="BOTTOMRIGHT"/>
@@ -660,7 +660,7 @@
                 </Texture>
             </Layer>
             <Layer level="BORDER">
-                <Texture parentKey="Selected" file="Interface\AddOns\Rematch\textures\teamborders" hidden="true">
+                <Texture parentKey="Selected" file="Interface\AddOns\RematchRedux\textures\teamborders" hidden="true">
                     <Anchors>
                         <Anchor point="TOPLEFT" x="-2" y="2"/>
                         <Anchor point="BOTTOMRIGHT" x="2" y="-2"/>
@@ -734,7 +734,7 @@
     </Button>
 
     <!-- 20x20 notes button used in badge area of lists -->
-    <Texture name="RematchNotesButtonTemplate" mixin="RematchNotesButtonMixin" file="Interface\AddOns\Rematch\textures\badges-borders" virtual="true">
+    <Texture name="RematchNotesButtonTemplate" mixin="RematchNotesButtonMixin" file="Interface\AddOns\RematchRedux\textures\badges-borders" virtual="true">
         <Size x="20" y="20"/>
         <TexCoords left="0.625" right="0.75" top="0.125" bottom="0.25"/>
         <!-- Blizzard bug: texture script handlers can't be inherited unless at least one is defined; just defining all -->
@@ -752,10 +752,10 @@
         <Size x="0" y="26"/>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\headers" setAllPoints="true"/>
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\headers" setAllPoints="true"/>
             </Layer>
             <Layer level="BORDER">
-                <Texture parentKey="ExpandIcon" file="Interface\AddOns\Rematch\textures\headers">
+                <Texture parentKey="ExpandIcon" file="Interface\AddOns\RematchRedux\textures\headers">
                     <Size x="26" y="26"/>
                     <Anchors>
                         <Anchor point="LEFT"/>
@@ -806,14 +806,14 @@
 				</Texture>
             </Layer>
             <Layer level="BORDER">
-                <Texture parentKey="Left" file="Interface\AddOns\Rematch\textures\typebar">
+                <Texture parentKey="Left" file="Interface\AddOns\RematchRedux\textures\typebar">
                     <Size x="16" y="24"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
                     </Anchors>
                     <Color r="0.5" g="0.5" b="0.5"/>
                 </Texture>
-                <Texture parentKey="Mid" file="Interface\AddOns\Rematch\textures\typebar">
+                <Texture parentKey="Mid" file="Interface\AddOns\RematchRedux\textures\typebar">
                     <Size x="0" y="24"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="16" y="0"/>
@@ -821,7 +821,7 @@
                     </Anchors>
                     <Color r="0.5" g="0.5" b="0.5"/>
                 </Texture>
-                <Texture parentKey="Right" file="Interface\AddOns\Rematch\textures\typebar">
+                <Texture parentKey="Right" file="Interface\AddOns\RematchRedux\textures\typebar">
                     <Size x="16" y="24"/>
                     <Anchors>
                         <Anchor point="TOPRIGHT"/>
@@ -836,14 +836,14 @@
             </Layer>
             <Layer level="OVERLAY">
                 <!-- Highlights[1] through [3] are for unselected tabs only -->
-                <Texture parentArray="Highlights" file="Interface\AddOns\Rematch\textures\typebar" alphaMode="ADD" alpha="0.33" hidden="true">
+                <Texture parentArray="Highlights" file="Interface\AddOns\RematchRedux\textures\typebar" alphaMode="ADD" alpha="0.33" hidden="true">
                     <Size x="16" y="21"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
                     </Anchors>
                     <TexCoords left="0.1875" right="0.21875" top="0.75" bottom="0.83203125"/>
                 </Texture>
-                <Texture parentArray="Highlights" file="Interface\AddOns\Rematch\textures\typebar" alphaMode="ADD" alpha="0.33" hidden="true">
+                <Texture parentArray="Highlights" file="Interface\AddOns\RematchRedux\textures\typebar" alphaMode="ADD" alpha="0.33" hidden="true">
                     <Size x="0" y="21"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="16" y="0"/>
@@ -851,7 +851,7 @@
                     </Anchors>
                     <TexCoords left="0.21875" right="0.30078125" top="0.75" bottom="0.83203125"/>
                 </Texture>
-                <Texture parentArray="Highlights" file="Interface\AddOns\Rematch\textures\typebar" alphaMode="ADD" alpha="0.33" hidden="true">
+                <Texture parentArray="Highlights" file="Interface\AddOns\RematchRedux\textures\typebar" alphaMode="ADD" alpha="0.33" hidden="true">
                     <Size x="16" y="21"/>
                     <Anchors>
                         <Anchor point="TOPRIGHT"/>

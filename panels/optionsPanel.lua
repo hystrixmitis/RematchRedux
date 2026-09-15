@@ -648,7 +648,7 @@ function rematch.optionsPanel.OptionsManagementWidget.ExportButton:OnClick()
         end
     end
     tinsert(results,"AllTeams="..rematch.utils:GetSize(rematch.savedTeams.AllTeams))
-    tinsert(results,"Version="..(C_AddOns.GetAddOnMetadata("Rematch","Version") or ""))
+    tinsert(results,"Version="..(C_AddOns.GetAddOnMetadata("RematchRedux","Version") or ""))
     tinsert(results,"NumPets="..(rematch.roster:GetNumOwned() or ""))
     tinsert(results,"NumTeams="..(rematch.savedTeams:GetNumTeams() or ""))
     table.sort(results)

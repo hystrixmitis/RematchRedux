@@ -4,7 +4,7 @@
         <Size x="68" y="32"/>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentKey="Back" file="Interface\AddOns\Rematch\textures\panelTabs.blp">
+                <Texture parentKey="Back" file="Interface\AddOns\RematchRedux\textures\panelTabs.blp">
                     <Size x="68" y="42"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
@@ -13,7 +13,7 @@
                 </Texture>
             </Layer>
             <Layer level="BORDER">
-                <Texture parentKey="Highlight" file="Interface\AddOns\Rematch\textures\panelTabs.blp" alphaMode="ADD" alpha="0.4" hidden="true">
+                <Texture parentKey="Highlight" file="Interface\AddOns\RematchRedux\textures\panelTabs.blp" alphaMode="ADD" alpha="0.4" hidden="true">
                     <Size x="68" y="42"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>

@@ -9,7 +9,7 @@
             </Layer>
             <Layer level="ARTWORK">
                 <!-- target/team badge in topleft -->
-                <Texture parentKey="Badge" file="Interface\AddOns\Rematch\textures\badges">
+                <Texture parentKey="Badge" file="Interface\AddOns\RematchRedux\textures\badges">
                     <Size x="18" y="18"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="5" y="-4"/>
@@ -67,7 +67,7 @@
                         </Texture>
                     </Layer>
                     <Layer level="OVERLAY">
-                        <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\teamborders" setAllPoints="true" hidden="true">
+                        <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\teamborders" setAllPoints="true" hidden="true">
                             <!-- <TexCoords left="0.25" right="0.421875" top="0.3125" bottom="0.484375"/> -->
                             <TexCoords left="0" right="0.171875" top="0.7734375" bottom="0.9453125"/>
                             <Color r="1" g="0.82" b="0"/>
@@ -132,7 +132,7 @@
                         </Texture>
                     </Layer>
                     <Layer level="OVERLAY" textureSubLevel="1">
-                        <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\teamborders" setAllPoints="true">
+                        <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\teamborders" setAllPoints="true">
                             <TexCoords left="0" right="0.3515625" top="0" bottom="0.171875"/>
                         </Texture>
                     </Layer>
@@ -196,19 +196,19 @@
                     </Layer>
                     <Layer level="OVERLAY">
                         <!-- a red X for dead or red haze for injured -->
-                        <Texture parentArray="Status" file="Interface\AddOns\Rematch\textures\petstatus" hidden="true">
+                        <Texture parentArray="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" hidden="true">
                             <Size x="28" y="40"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" x="2" y="-2"/>
                             </Anchors>
                         </Texture>
-                        <Texture parentArray="Status" file="Interface\AddOns\Rematch\textures\petstatus" hidden="true">
+                        <Texture parentArray="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" hidden="true">
                             <Size x="28" y="40"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" x="31" y="-2"/>
                             </Anchors>
                         </Texture>
-                        <Texture parentArray="Status" file="Interface\AddOns\Rematch\textures\petstatus" hidden="true">
+                        <Texture parentArray="Status" file="Interface\AddOns\RematchRedux\textures\petstatus" hidden="true">
                             <Size x="28" y="40"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" x="60" y="-2"/>
@@ -216,7 +216,7 @@
                         </Texture>
                     </Layer>
                     <Layer level="OVERLAY" textureSubLevel="1">
-                        <Texture parentKey="Border" file="Interface\AddOns\Rematch\textures\teamborders" setAllPoints="true">
+                        <Texture parentKey="Border" file="Interface\AddOns\RematchRedux\textures\teamborders" setAllPoints="true">
                             <TexCoords left="0" right="0.3515625" top="0" bottom="0.171875"/>
                         </Texture>
                     </Layer>
@@ -224,7 +224,7 @@
                 <Frames>
                     <Button parentKey="PrevTeamButton" inherits="RematchSmallGreyButtonTemplate">
                         <KeyValues>
-                            <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                            <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                             <KeyValue key="coords" value="0.5,0.625,0.25,0.375"/>
                         </KeyValues>
                         <Anchors>
@@ -238,7 +238,7 @@
                     </Button>
                     <Button parentKey="NextTeamButton" inherits="RematchSmallGreyButtonTemplate">
                         <KeyValues>
-                            <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                            <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                             <KeyValue key="coords" value="0.625,0.75,0.25,0.375"/>
                         </KeyValues>
                         <Anchors>
@@ -300,7 +300,7 @@
                     <Anchor point="RIGHT" relativeKey="$parent.SmallRandomButton" relativePoint="LEFT" x="2" y="0"/>
                 </Anchors>
                 <KeyValues>
-                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                     <KeyValue key="coords" value="0.625,0.75,0.125,0.25"/>
                 </KeyValues>
                 <Scripts>
@@ -315,7 +315,7 @@
                     <Anchor point="RIGHT" relativeKey="$parent.SmallTeamsButton" relativePoint="LEFT" x="2" y="0"/>
                 </Anchors>
                 <KeyValues>
-                    <KeyValue key="icon" value="Interface\AddOns\Rematch\textures\texticons"/>
+                    <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                     <KeyValue key="coords" value="0.875,1,0,0.125"/>
                 </KeyValues>
                 <Scripts>

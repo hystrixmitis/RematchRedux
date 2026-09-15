@@ -34,19 +34,19 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
     --[[ pets: badges for pet lists (queue too) ]]
 
     -- leveling: whether pet is leveling
-    self:RegisterBadge("pets","leveling","Interface\\AddOns\\Rematch\\textures\\badges-borderless",{0.375,0.5,0.125,0.25},
+    self:RegisterBadge("pets","leveling","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.375,0.5,0.125,0.25},
         function(self,petID) -- callback
             return not self.forQueue and (not settings.HideLevelingBadges or rematch.petHerder:GetActionID()=="leveling") and rematch.petInfo:Fetch(petID).isLeveling
         end
     )
     -- team: whether pet is in a team
-    self:RegisterBadge("pets","team","Interface\\AddOns\\Rematch\\textures\\badges-borderless",{0.5,0.625,0.125,0.25},
+    self:RegisterBadge("pets","team","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.5,0.625,0.125,0.25},
         function(self,petID) -- callback
             return not settings.HideTeamBadges and rematch.petInfo.inTeams
         end
     )
     -- marker: pet tag for the pet
-    self:RegisterBadge("pets","marker","Interface\\AddOns\\Rematch\\textures\\badges-borderless",
+    self:RegisterBadge("pets","marker","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",
         function(self,petID) -- coords
             local marker = rematch.petInfo:Fetch(petID).marker
             if marker and marker>=1 and marker<=8 then
@@ -59,14 +59,14 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
         end
     )
     -- new: whether pet is new/wrapped (sorted to top of list)
-    self:RegisterBadge("pets","new","Interface\\AddOns\\Rematch\\textures\\badges-borderless",{0.625,0.75,0.75,0.875},
+    self:RegisterBadge("pets","new","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.625,0.75,0.75,0.875},
         function(self,petID) -- callback
             return rematch.petInfo:Fetch(petID).isStickied
         end
     )
 
     -- cage: whether pet can be caged (only shown while pet harder up with "cage" actionID)
-    self:RegisterBadge("pets","cage","Interface\\AddOns\\Rematch\\textures\\badges-borderless",{0.875,1,0.75,0.875},
+    self:RegisterBadge("pets","cage","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.875,1,0.75,0.875},
         function(self,petID) -- callback
             if rematch.petHerder:GetActionID()=="cage" then
                 local petInfo = rematch.petInfo:Fetch(petID)
@@ -78,7 +78,7 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
     --[[ groups: badges for groups (team headers) ]]
 
     -- preferences: whether group has any preferences
-    self:RegisterBadge("groups","preferences","Interface\\AddOns\\Rematch\\textures\\badges-borderless",{0.75,0.875,0.125,0.25},
+    self:RegisterBadge("groups","preferences","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.75,0.875,0.125,0.25},
         function(self,groupID)
             if not settings.HidePreferenceBadges then
                 local group = groupID and rematch.savedGroups[groupID]
@@ -90,7 +90,7 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
     --[[ teams: badges for teams ]]
 
     -- preferences: whether team has any targets
-    self:RegisterBadge("teams","targets","Interface\\AddOns\\Rematch\\textures\\badges-borderless",{0.375,0.5,0.375,0.5},
+    self:RegisterBadge("teams","targets","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.375,0.5,0.375,0.5},
         function(self,teamID)
             if not settings.HideTargetBadges then
                 local team = teamID and rematch.savedTeams[teamID]
@@ -100,7 +100,7 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
     )
 
     -- preferences: whether team has any preferences
-    self:RegisterBadge("teams","preferences","Interface\\AddOns\\Rematch\\textures\\badges-borderless",{0.75,0.875,0.125,0.25},
+    self:RegisterBadge("teams","preferences","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.75,0.875,0.125,0.25},
         function(self,teamID)
             if not settings.HidePreferenceBadges then
                 local team = teamID and rematch.savedTeams[teamID]
@@ -112,7 +112,7 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
     --[[ targets: badges for targets (npcIDs; not using actual targetID) ]]
 
     -- teams: whether target has any teams
-    self:RegisterBadge("targets","teams","Interface\\AddOns\\Rematch\\textures\\badges-borderless",{0.5,0.625,0.125,0.25},
+    self:RegisterBadge("targets","teams","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.5,0.625,0.125,0.25},
         function(self,npcID)
             return not settings.HideTeamBadges and rematch.savedTargets[npcID]
         end

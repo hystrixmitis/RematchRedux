@@ -28,9 +28,9 @@ function rematch.loadedTeamPanel:Update()
         self.PreferencesFrame:Show()
         self.TeamButton:SetPoint("TOPLEFT",self.PreferencesFrame,"TOPRIGHT",2,0)
         if settings.PreferencesPaused then -- if preferences paused, red X version of blue gear icon
-            self.PreferencesFrame.PreferencesButton:SetIcon("Interface\\AddOns\\Rematch\\textures\\badges-borderless",0.87890625,0.99609375,0.12890625,0.24609375)
+            self.PreferencesFrame.PreferencesButton:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",0.87890625,0.99609375,0.12890625,0.24609375)
         else -- preferences are not paused, regular blue gear icon
-            self.PreferencesFrame.PreferencesButton:SetIcon("Interface\\AddOns\\Rematch\\textures\\badges-borderless",0.75390625,0.87109375,0.12890625,0.24609375)
+            self.PreferencesFrame.PreferencesButton:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",0.75390625,0.87109375,0.12890625,0.24609375)
         end
     else
         self.PreferencesFrame:Hide()
@@ -40,7 +40,7 @@ function rematch.loadedTeamPanel:Update()
     if teamID=="loadonly" then -- for loadonly, display notes only if team has notes
         if rematch.savedTeams.loadonly.notes then
             self.NotesFrame:Show()
-            self.NotesFrame.NotesButton:SetIcon("Interface\\AddOns\\Rematch\\textures\\badges-borderless",0.62890625,0.74609375,0.12890625,0.24609375)
+            self.NotesFrame.NotesButton:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",0.62890625,0.74609375,0.12890625,0.24609375)
             self.TeamButton:SetPoint("TOPRIGHT",self.NotesFrame,"TOPLEFT",-2,0)
         else
             self.NotesFrame:Hide()
@@ -63,9 +63,9 @@ function rematch.loadedTeamPanel:Update()
         -- NotesFrame is always shown if a team is loaded
         self.NotesFrame:Show()
         if rematch.savedTeams[teamID].notes then -- team has notes, show normal note icon
-            self.NotesFrame.NotesButton:SetIcon("Interface\\AddOns\\Rematch\\textures\\badges-borderless",0.62890625,0.74609375,0.12890625,0.24609375)
+            self.NotesFrame.NotesButton:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",0.62890625,0.74609375,0.12890625,0.24609375)
         else -- team doesn't have notes, show the icon with green + symbol to add a note
-            self.NotesFrame.NotesButton:SetIcon("Interface\\AddOns\\Rematch\\textures\\badges-borderless",0.25390625,0.37109375,0.62890625,0.74609375)
+            self.NotesFrame.NotesButton:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",0.25390625,0.37109375,0.62890625,0.74609375)
         end
         self.TeamButton:SetPoint("TOPRIGHT",self.NotesFrame,"TOPLEFT",-2,0)
         self.TeamButton.Name:SetText(rematch.utils:GetFormattedTeamName(teamID))

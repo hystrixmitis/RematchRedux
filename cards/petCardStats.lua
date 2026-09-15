@@ -72,7 +72,7 @@ rematch.petCardStats = {
     },
     -- New Pet
     {
-        icon = "Interface\\AddOns\\Rematch\\textures\\badges-borderless",
+        icon = "Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",
         iconCoords = {0.625,0.75,0.75,0.875},
         tooltipTitle = L["New Pet"],
         tooltipBody = format(L["This pet was recently added to your collection."]),
@@ -127,7 +127,7 @@ rematch.petCardStats = {
     },
     -- Leveling
     {
-        icon = "Interface\\AddOns\\Rematch\\textures\\levelingstat",
+        icon = "Interface\\AddOns\\RematchRedux\\textures\\levelingstat",
         tooltipTile = L["Leveling"],
         tooltipBody = L["This pet is in Rematch's leveling queue."],
         value = L["Leveling"],
@@ -210,7 +210,7 @@ rematch.petCardStats = {
     },
     -- Teams
     {
-        icon = "Interface\\AddOns\\Rematch\\textures\\badges-borderless",
+        icon = "Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",
         iconCoords = {0.5,0.625,0.125,0.25},
         tooltipTitle = L["Teams"],
         tooltipBody = format(L["%s Click to find all teams that include this specific pet."],C.LMB_TEXT_ICON),
@@ -244,7 +244,7 @@ rematch.petCardStats = {
     },
     -- Unique
     {
-        icon = "Interface\\AddOns\\Rematch\\textures\\unique",
+        icon = "Interface\\AddOns\\RematchRedux\\textures\\unique",
         tooltipTitle = L["Unique"],
         tooltipBody = L["Only one copy of this pet can be owned at a time."],
         value = L["Unique"],
@@ -312,7 +312,7 @@ rematch.petCardStats = {
     },
     -- Notes
     {
-        icon = "Interface\\AddOns\\Rematch\\textures\\notesmicrobutton",
+        icon = "Interface\\AddOns\\RematchRedux\\textures\\notesmicrobutton",
         iconCoords = {0,0.5,0,1},
         value = L["Notes"],
         show = function(self,petInfo)
