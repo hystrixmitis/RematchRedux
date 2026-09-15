@@ -441,7 +441,7 @@ function RematchMenuFrameMixin:OnUpdate(elapsed)
     local focus = GetMouseFoci()[1]
     -- testing if over a menu by getting the menuName beneath the mouse and confirming it's a registered menu
     local menuName = focus and (focus.menuName or (focus and focus:GetParent() and focus:GetParent().menuName))
-    if menuName and allMenus[menuName] or ((menuFrames[1] and menuFrames[1].relativeTo and MouseIsOver(menuFrames[1].relativeTo)) or MouseIsOver(rematch.menus.sideButtons)) then
+    if menuName and allMenus[menuName] or ((menuFrames[1] and menuFrames[1].relativeTo and menuFrames[1].relativeTo:IsMouseOver()) or rematch.menus.sideButtons:IsMouseOver()) then
         self.timer = 0 -- reset timer if over a menu
     else -- add to elapsed timer to hide if not over a menu
         self.timer = self.timer+elapsed
@@ -507,13 +507,13 @@ function RematchMenuButtonMixin:OnLeave()
     self.Highlight:Hide()
     if self.info and self.info.subMenu then
         for _,menuFrame in ipairs(menuFrames) do
-            if menuFrame.menuName==self.info.subMenu and not MouseIsOver(menuFrame) then
+            if menuFrame.menuName==self.info.subMenu and not menuFrame:IsMouseOver() then
                 menuFrame:Hide()
             end
         end
     end
     rematch.tooltip:Hide()
-    if not MouseIsOver(rematch.menus.sideButtons) then
+    if not rematch.menus.sideButtons:IsMouseOver() then
         rematch.menus.sideButtons:Hide()
     end
 end
@@ -566,7 +566,7 @@ end
 
 function RematchMenuSideButtonMixin:OnLeave()
     local parent = self:GetParent()
-	if not MouseIsOver(parent) or not parent:GetParent():IsVisible() then
+	if not parent:IsMouseOver() or not parent:GetParent():IsVisible() then
 		parent:Hide()
 		parent:GetParent().Highlight:Hide()
 	end
