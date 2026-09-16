@@ -4,7 +4,7 @@
 ## Author: HystrixMitis (originally by Gello)
 ## Version: 12.1.0
 ## SavedVariables: Rematch5Settings, Rematch5SavedTeams, Rematch5SavedGroups, Rematch5SavedTargets, Rematch4Saved, Rematch4Settings, RematchSaved, RematchSettings
-## IconTexture: Interface\AddOns\RematchReduxRedux\textures\icon
+## IconTexture: Interface\AddOns\RematchRedux\textures\icon
 ## AddonCompartmentFunc: RematchToggleWindow
 ## Category-enUS: Pet Battles
 ## Category-deDE: Haustierkämpfe

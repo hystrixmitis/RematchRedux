@@ -1,7 +1,7 @@
-local _,rematch = ...
-local L = rematch.localization
+local _,rematchReduxTable = ...
+local L = rematchReduxTable.localization
 
-Rematch = rematch -- global variable for outside/xml access
+RematchRedux = rematchReduxTable -- global variable for outside/xml access
 
 -- key bindings
 BINDING_HEADER_REMATCH = L["Rematch"]
@@ -23,7 +23,7 @@ REMATCH_SOLID_BACKDROP_STYLE = {
 	insets = { left = 3, right = 3, top = 3, bottom = 3 },
 }
 
-rematch.constants = {
+rematchReduxTable.constants = {
     -- color codes for text
     HEX_WHITE = "\124cffffffff",
     HEX_GOLD = "\124cffffd200",
@@ -36,24 +36,24 @@ rematch.constants = {
     RMB_TEXT_ICON = "\124TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:330:385\124t", -- right mouse button
     NMB_TEXT_ICON = "\124TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:89:144:228:283\124t", -- no mouse button
     WARN_TEXT_ICON = "\124TInterface\\DialogFrame\\UI-Dialog-Icon-AlertNew:0\124t",
-    ADD_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:16:16:0:0:256:256:0:32:0:32\124t",
-    DELETE_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:16:16:0:0:256:256:32:64:0:32\124t",
-    DELETE_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:16:16:0:0:256:256:192:224:0:32\124t",
-    UP_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:16:16:0:0:256:256:64:96:0:32\124t",
-    UP_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:16:16:0:0:256:256:128:160:0:32\124t",
-    DOWN_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:16:16:0:0:256:256:96:128:0:32\124t",
-    DOWN_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:16:16:0:0:256:256:160:192:0:32\124t",
-    LEFT_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:16:16:0:0:256:256:0:32:32:64\124t",
-    --BLANK_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:16:16:0:0:256:256:224:256:0:32\124t",
+    ADD_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:16:16:0:0:256:256:0:32:0:32\124t",
+    DELETE_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:16:16:0:0:256:256:32:64:0:32\124t",
+    DELETE_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:16:16:0:0:256:256:192:224:0:32\124t",
+    UP_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:16:16:0:0:256:256:64:96:0:32\124t",
+    UP_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:16:16:0:0:256:256:128:160:0:32\124t",
+    DOWN_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:16:16:0:0:256:256:96:128:0:32\124t",
+    DOWN_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:16:16:0:0:256:256:160:192:0:32\124t",
+    LEFT_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:16:16:0:0:256:256:0:32:32:64\124t",
+    --BLANK_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:16:16:0:0:256:256:224:256:0:32\124t",
     EMPTY_TEXT_ICON = "\124TInterface\\PaperDoll\\UI-Backpack-EmptySlot:16:16:0:0:64:64:5:59:5:59\124t",
-    MAGIC_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:18:18:0:0:256:256:32:64:32:64\124t",
-    MAGIC_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:18:18:0:0:256:256:64:96:32:64\124t",
-    MECHANICAL_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:18:18:0:0:256:256:96:128:32:64\124t",
-    MECHANICAL_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:18:18:0:0:256:256:128:160:32:64\124t",
-    LOAD_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:14:14:0:0:256:256:0:32:64:96\124t",
-    LOAD_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:14:14:0:0:256:256:32:64:64:96\124t",
-    SAVE_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:14:14:0:0:256:256:224:256:0:32\124t",
-    EDIT_TEXT_ICON = "\124TInterface\\AddOns\\Rematch\\textures\\texticons:14:14:0:0:256:256:160:192:32:64\124t",
+    MAGIC_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:18:18:0:0:256:256:32:64:32:64\124t",
+    MAGIC_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:18:18:0:0:256:256:64:96:32:64\124t",
+    MECHANICAL_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:18:18:0:0:256:256:96:128:32:64\124t",
+    MECHANICAL_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:18:18:0:0:256:256:128:160:32:64\124t",
+    LOAD_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:14:14:0:0:256:256:0:32:64:96\124t",
+    LOAD_DISABLED_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:14:14:0:0:256:256:32:64:64:96\124t",
+    SAVE_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:14:14:0:0:256:256:224:256:0:32\124t",
+    EDIT_TEXT_ICON = "\124TInterface\\AddOns\\RematchRedux\\textures\\texticons:14:14:0:0:256:256:160:192:32:64\124t",
     -- icons
     LEVELING_ICON = "Interface\\AddOns\\RematchRedux\\Textures\\levelingicon",
     IGNORED_ICON = "Interface\\AddOns\\RematchRedux\\Textures\\ignoredicon",
@@ -200,7 +200,7 @@ rematch.constants = {
         [Enum.PetJournalError.InvalidFaction] = L["Wrong Faction"],
         [Enum.PetJournalError.PetIsDead] = L["Pet Is Dead"]
     },
-    -- enum for colors to tints for rematch.utils:TintTexture()
+    -- enum for colors to tints for rematchReduxTable.utils:TintTexture()
     TINT_NONE = 1,
     TINT_RED = 2,
     TINT_GREY = 3,

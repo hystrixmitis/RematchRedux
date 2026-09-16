@@ -745,7 +745,7 @@ L["Hide Option Tooltips"] = nil
 L["Hide tooltips for options like the one you're reading now."] = nil
 L["Hide Truncated Tooltips"] = nil
 L["Hide tooltips for team or target names when they're truncated (such as Sully \"The Pickle\" McL... instead of Sully \"The Pickle\" McLeary)."] = nil
-L["About Rematch"] = nil
+L["About RematchRedux"] = nil
 L["Version "] = nil
 
 -- panels\optionsPanel.lua

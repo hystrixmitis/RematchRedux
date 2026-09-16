@@ -95,15 +95,15 @@ function rematch.journal:ADDON_LOADED(addon)
         rematch.journal:DisablePriorUseRematchCheckButtons()
         rematch.journal.UseRematchCheckButton = CreateFrame("CheckButton",nil,PetJournal,"RematchCheckButtonTemplate,RematchTooltipScripts")
         local button = rematch.journal.UseRematchCheckButton
-        button:SetText(L["Rematch"])
+        button:SetText(L["RematchRedux"])
         button:SetPoint("LEFT",PetJournalSummonButton,"RIGHT",0,-1)
         button:SetScript("OnClick",function(self)
             self:SetChecked(false) -- this version of the checkbutton is when UseDefaultJournal is true, and always false
             rematch.settings.UseDefaultJournal = false
             rematch.journal.PetJournalOnShow(rematch.journal) -- mimic journal being shown to set everything up
         end)
-        button.tooltipTitle = L["Use Rematch In Journal"]
-        button.tooltipBody = L["Check this to restore Rematch to the journal.\n\nYou can always use Rematch in its standalone window, accessed via key binding, /rematch command or from the Minimap button if enabled in options."]
+        button.tooltipTitle = L["Use RematchRedux In Journal"]
+        button.tooltipBody = L["Check this to restore RematchRedux to the journal.\n\nYou can always use RematchRedux in its standalone window, accessed via key binding, /rematch command or from the Minimap button if enabled in options."]
     end
 end
 
