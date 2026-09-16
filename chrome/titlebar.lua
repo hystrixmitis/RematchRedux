@@ -8,7 +8,7 @@ rematch.frame:Register("titlebar")
 local collapseOnEscLists = {} -- autoscrollbox lists that can be collapsed with ESC key (closebutton onkeydown)
 
 rematch.events:Register(rematch.titlebar,"PLAYER_LOGIN",function(self)
-    self.Title:SetText(L["Rematch"])
+    self.Title:SetText(L["RematchRedux"])
 end)
 
 function rematch.titlebar:Configure()

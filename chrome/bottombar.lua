@@ -11,9 +11,9 @@ rematch.events:Register(rematch.bottombar,"PLAYER_LOGIN",function(self)
     self.SaveAsButton:SetText(L["Save As"])
     self.SaveButton:SetText(SAVE)
 
-    self.UseRematchCheckButton:SetText(L["Rematch"])
-    self.UseRematchCheckButton.tooltipTitle = L["Remove Rematch From Journal"]
-    self.UseRematchCheckButton.tooltipBody = L["Uncheck this to restore the default pet journal.\n\nYou can still use Rematch in its standlone window, accessed via key binding, /rematch command or from the Minimap button if enabled in options."]
+    self.UseRematchCheckButton:SetText(L["RematchRedux"])
+    self.UseRematchCheckButton.tooltipTitle = L["Remove RematchRedux From Journal"]
+    self.UseRematchCheckButton.tooltipBody = L["Uncheck this to restore the default pet journal.\n\nYou can still use RematchRedux in its standlone window, accessed via key binding, /rematch command or from the Minimap button if enabled in options."]
 
     self.SummonButton.tooltipTitle = SUMMON
     self.SummonButton.tooltipBody = format("%s\n\n%s",BATTLE_PETS_SUMMON_TOOLTIP,L["You can also double-click a pet to summon or dismiss it."])

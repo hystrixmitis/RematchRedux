@@ -1,7 +1,7 @@
 -- Generated from listfile.csv at https://wow.tools/casc/listfile/download/csv/unverified
 -- all icons in interface\icons since the listfile.csv generated
-local rematch = Rematch
-rematch.allIcons = {}
+local _, rematchReduxTable = ...
+rematchReduxTable.allIcons = {}
 
 -- string is fileID;filename
 -- fileIDs are still needed because many icons (like inv_camelmount2) work with a fileID but not their name
@@ -25913,7 +25913,7 @@ local displayedIcons = {} -- reused ordered list of fileIDs (filtered down to se
 local lastSearch = "" -- the last search used (empty strings become nil so this is safe to use; can use -1 or something unlikely also)
 
 -- returns an ordered list of fileIDs for icons; if search is nil or an empty string it returns all fileIDs; otherwise it returns only those that meet search criteria
-function rematch.allIcons:GetIcons(search)
+function rematchReduxTable.allIcons:GetIcons(search)
     if search then
         search = search:trim():lower()
         if search=="" then

@@ -317,7 +317,7 @@ rematch.optionsList = {
 	{type="check", group=15, text=L["Hide Option Tooltips"], var="HideOptionTooltips", tooltip=L["Hide tooltips for options like the one you're reading now."]},
 	{type="check", group=15, text=L["Hide Truncated Tooltips"], var="HideTruncatedTooltips", tooltip=L["Hide tooltips for team or target names when they're truncated (such as Sully \"The Pickle\" McL... instead of Sully \"The Pickle\" McLeary)."]},
 
-	-- About Rematch
+	-- About RematchRedux
 	{type="header", group=20, text=L["About RematchRedux"]},
 	{type="widget", group=20, text=L["All Options Troubleshoot Export Reset"], parentKey="OptionsManagementWidget"},
 	{type="text", group=20, text=L["Version "]..(C_AddOns.GetAddOnMetadata("RematchRedux","Version") or "")},

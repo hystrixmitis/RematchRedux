@@ -11,7 +11,7 @@ end)
 
 function rematch.minimap:OnEnter()
     if not self.isDragging then
-        rematch.tooltip:ShowSimpleTooltip(self,L["Rematch"],format(L["%s Toggle Window\n%s Load Favorite Team"],C.LMB_TEXT_ICON,C.RMB_TEXT_ICON),"BOTTOMRIGHT",self,"TOPLEFT",8,-8)
+        rematch.tooltip:ShowSimpleTooltip(self,L["RematchRedux"],format(L["%s Toggle Window\n%s Load Favorite Team"],C.LMB_TEXT_ICON,C.RMB_TEXT_ICON),"BOTTOMRIGHT",self,"TOPLEFT",8,-8)
     end
 end
 
