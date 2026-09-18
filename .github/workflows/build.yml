@@ -9,16 +9,16 @@ on:
     - "v*"
 
 jobs:
-  package:
+  build:
     runs-on: ubuntu-latest
   
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Package
-      uses: BigWigsMods/packager@v2
-      env:
-        GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+      - name: Package
+        uses: BigWigsMods/packager@v2
+        env:
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
