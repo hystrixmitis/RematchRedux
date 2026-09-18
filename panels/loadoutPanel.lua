@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.loadoutPanel = rematchRedux.frame.LoadoutPanel
+rematchRedux.loadoutPanel = rematchRedux.frame.LoadoutPanel ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("loadoutPanel")
 
 function rematchRedux.loadoutPanel:Update()
@@ -251,7 +251,7 @@ end
 function rematchRedux.loadoutPanel:LoadoutOnLeave()
     self.Highlight:Hide()
     if GetMouseFoci()[1]~=self.Pet then -- don't dismiss card if moving onto pet button
-        rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,self.petID)
+        rematchRedux.cardManager:OnLeave( rematchRedux.petCard )
     end
 end
 
@@ -324,7 +324,7 @@ function rematchRedux.loadoutPanel:PetOnLeave()
     self:GetParent().Highlight:Hide()
     rematchRedux.textureHighlight:Hide()
     if GetMouseFoci()[1]~=self:GetParent() then
-        rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self:GetParent(),self.petID)
+        rematchRedux.cardManager:OnLeave(rematchRedux.petCard)
     end
 end
 

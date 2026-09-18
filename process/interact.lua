@@ -90,7 +90,7 @@ function rematchRedux.interact:ShouldInteract(npcID)
     end
     local currentTeamID = settings.currentTeamID
     if settings.InteractAlways then
-        local teams,index = rematchRedux.savedTargets:GetTeams(npcID)
+        local teams, index = rematchRedux.savedTargets:GetTeams(npcID)
         if index and (settings.InteractAlwaysEvenLoaded or teams[index]~=currentTeamID) then
             return true -- if Interact Always enabled and a different team would load, interact
         end

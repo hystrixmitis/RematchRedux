@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.titlebar = rematchRedux.frame.TitleBar
+rematchRedux.titlebar = rematchRedux.frame.TitleBar ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("titlebar")
 
 local collapseOnEscLists = {} -- autoscrollbox lists that can be collapsed with ESC key (closebutton onkeydown)

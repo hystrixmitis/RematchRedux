@@ -9,7 +9,7 @@ local pm = rematchRedux.petMenu
 rematchRedux.events:Register(rematchRedux.queueMenu,"PLAYER_LOGIN",function(self)
 
     -- menu for the queue button at top of queue panel
-    local menu = {
+    local queueButtonMenu = {
         {text=L["Sort by:"], highlight=true},
         {text=L["Ascending Level"], radio=qm.IsActiveSort, sort=C.QUEUE_SORT_ASC, isChecked=qm.IsCurrentSort, func=qm.SetCurrentSort, icon="Interface\\AddOns\\RematchRedux\\textures\\badges-borders", iconCoords={0,0.125,0.375,0.5}},
         {text=L["Median Level"], radio=qm.IsActiveSort, sort=C.QUEUE_SORT_MID, isChecked=qm.IsCurrentSort, func=qm.SetCurrentSort, icon="Interface\\AddOns\\RematchRedux\\textures\\badges-borders", iconCoords={0.125,0.25,0.375,0.5}},
@@ -32,10 +32,10 @@ rematchRedux.events:Register(rematchRedux.queueMenu,"PLAYER_LOGIN",function(self
         {text=L["Help"], icon="Interface\\Common\\help-i", isHelp=true, hidden=function() return settings.HideMenuHelp end, iconCoords={0.15,0.85,0.15,0.85}, tooltipBody=L["This is the leveling queue. Drag pets you want to level here.\n\nRight click any of the three battle pet slots and choose 'Put Leveling Pet Here' to mark it as a leveling slot you want controlled by the queue.\n\nWhile a leveling slot is active, the queue will fill the slot with the top-most pet in the queue. When this pet reaches level 25 (gratz!) it will leave the queue and the next pet in the queue will take its place.\n\nTeams saved with a leveling slot will reserve that slot for future leveling pets."]},
         {text=OKAY}
     }
-    rematchRedux.menus:Register("QueueMenu",menu)
+    rematchRedux.menus:Register("QueueMenu",queueButtonMenu)
 
     -- menu when you right-click a pet in the queue (some options/funcs copied from petMenus)
-    local menu = {
+    local queuePetRightClickMenu = {
         {title=qm.GetPetName},
         {text=L["Move To Top Of Queue"], func=qm.MoveToTopOfQueue},
         {text=L["Move Pet In Queue"], func=qm.MovePetInQueue},
@@ -53,7 +53,7 @@ rematchRedux.events:Register(rematchRedux.queueMenu,"PLAYER_LOGIN",function(self
         {spacer=true},
         {text=CANCEL},
     }
-    rematchRedux.menus:Register("QueueListMenu",menu)
+    rematchRedux.menus:Register("QueueListMenu",queuePetRightClickMenu)
 
     rematchRedux.dialog:Register("EmptyQueue",{
         title = L["Empty Queue"],

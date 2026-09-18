@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.targetsPanel = rematchRedux.frame.TargetsPanel
+rematchRedux.targetsPanel = rematchRedux.frame.TargetsPanel ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("targetsPanel")
 
 local targetList = {} -- ordered list of all headerIDs and teamIDs to display

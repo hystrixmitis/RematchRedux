@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.loadedTeamPanel = rematchRedux.frame.LoadedTeamPanel
+rematchRedux.loadedTeamPanel = rematchRedux.frame.LoadedTeamPanel ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("loadedTeamPanel")
 
 function rematchRedux.loadedTeamPanel:Update()
@@ -84,7 +84,7 @@ function rematchRedux.loadedTeamPanel:BlingTeam()
 end
 
 function rematchRedux.loadedTeamPanel:OnShow()
-    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",self.BlingTeam,self)
+    rematchRedux.events:Register( self,"REMATCHREDUX_TEAM_LOADED",self.BlingTeam )
 end
 
 function rematchRedux.loadedTeamPanel:OnHide()
@@ -136,7 +136,7 @@ function rematchRedux.loadedTeamPanel.NotesFrame.NotesButton:OnEnter()
 end
 
 function rematchRedux.loadedTeamPanel.NotesFrame.NotesButton:OnLeave()
-    rematchRedux.cardManager:OnLeave(rematchRedux.notes,self,self:GetParent():GetParent().teamID)
+    rematchRedux.cardManager:OnLeave( rematchRedux.notes )
 end
 
 function rematchRedux.loadedTeamPanel.NotesFrame.NotesButton:OnClick(button)

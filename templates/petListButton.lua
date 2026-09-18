@@ -25,7 +25,7 @@ end
 function RematchReduxCommonPetListButtonMixin:OnLeave()
     rematchRedux.textureHighlight:Hide()
     if GetMouseFoci()[1]~=self.Icon then -- don't dismiss card if moving onto pet button
-        rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,self.petID)
+        rematchRedux.cardManager:OnLeave( rematchRedux.petCard )
     end
     SetCursor(nil)
     rematchRedux.dialog.Canvas.PetHerderPicker.petID = nil
@@ -244,7 +244,7 @@ end
 function RematchReduxPetPickupIconMixin:OnLeave()
     rematchRedux.textureHighlight:Hide()
     if GetMouseFoci()[1]~=self:GetParent() then -- don't dismiss card if moving onto pet button
-        rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self:GetParent(),self.petID)
+        rematchRedux.cardManager:OnLeave( rematchRedux.petCard )
     end
     -- if mouse went down while in this texture and never went up before it left, pet is being dragged
     if rematchRedux.textureDrag:IsDragging() and not GetCursorInfo() then

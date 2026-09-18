@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.miniLoadoutPanel = rematchRedux.frame.MiniLoadoutPanel
+rematchRedux.miniLoadoutPanel = rematchRedux.frame.MiniLoadoutPanel ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("miniLoadoutPanel")
 
 function rematchRedux.miniLoadoutPanel:Configure()
@@ -155,7 +155,7 @@ end
 
 function rematchRedux.miniLoadoutPanel:LoadoutOnLeave()
     rematchRedux.textureHighlight:Hide()
-    rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,self.petID)
+    rematchRedux.cardManager:OnLeave(rematchRedux.petCard)
 end
 
 function rematchRedux.miniLoadoutPanel:LoadoutOnMouseDown()

@@ -180,22 +180,27 @@ function rematchRedux.savedGroups:Validate()
         RematchReduxSavedGroups = {}
         savedvar = RematchReduxSavedGroups
     end
-    local group = savedvar["group:favorites"]
-    if not group or group.groupID~="group:favorites" or group.name~=L["Favorite Teams"] then
+    
+    local groupFavorites = savedvar["group:favorites"]
+    if not groupFavorites or groupFavorites.groupID~="group:favorites" or groupFavorites.name~=L["Favorite Teams"] then
         savedvar["group:favorites"] = {groupID="group:favorites", name=L["Favorite Teams"], teams={}, icon="Interface\\Icons\\ACHIEVEMENT_GUILDPERK_MRPOPULARITY_RANK2", sortMode=C.GROUP_SORT_ALPHA, isExpanded=true, meta=true}
     end
-    local group = savedvar["group:none"]
-    if not group or group.groupID~="group:none" then
+    
+    local groupNone = savedvar["group:none"]
+    if not groupNone or groupNone.groupID~="group:none" then
         savedvar["group:none"] = {groupID="group:none", name=L["Ungrouped Teams"], teams={}, icon="Interface\\Icons\\INV_Pet_BattlePetTraining", sortMode=C.GROUP_SORT_ALPHA, isExpanded=true, meta=true}
     end
+
     -- validate order
     if type(settings.GroupOrder)~="table" then
         settings.GroupOrder = {}
     end
+
     -- make sure group:favorites is first
     if not tContains(settings.GroupOrder,"group:favorites") then
         tinsert(settings.GroupOrder,1,"group:favorites") -- insert at top
     end
+    
     -- make sure group:none exists
     if not tContains(settings.GroupOrder,"group:none") then
         tinsert(settings.GroupOrder,2,"group:none") -- insert just below group:favorites

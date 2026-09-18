@@ -442,7 +442,7 @@ end
 
 function rematchRedux.teamMenu:ExportTeam(teamID)
     if rematchRedux.menus:IsMenuOpen("LoadedTeamMenu") then -- if this is the export from the loadedTeamPanel Share -> Export
-        rematchRedux.saveDialog:SidelineLoadouts(newTeam) -- then export pets actually loaded
+        rematchRedux.saveDialog:SidelineLoadouts( false ) -- then export pets actually loaded
         rematchRedux.dialog:ShowDialog("ExportSingleTeam",{teamID="sideline", isPlainText=self.isPlainText})
     else -- otherwise export teamID
         rematchRedux.dialog:ShowDialog("ExportSingleTeam",{teamID=teamID, isPlainText=self.isPlainText})

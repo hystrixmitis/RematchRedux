@@ -59,11 +59,11 @@ rematchRedux.events:Register(rematchRedux.dialog,"PLAYER_LOGIN",function(self)
     self.MinimizeButton:SetScript("OnClick",function(self,button)
         if self.nextDialog then
             local layout = rematchRedux.dialog:GetOpenLayout()
-            local tabsShown = rematchRedux.dialog.Canvas.LayoutTabs:IsVisible()
+            local tabsShown = rematchRedux.dialog.Canvas.LayoutTabs:IsVisible() ---@diagnostic disable-line: undefined-field
             rematchRedux.dialog:ShowDialog(self.nextDialog)
             if rematchRedux.dialog:GetOpenLayout()~=layout then
                 if tabsShown then
-                    rematchRedux.dialog.Canvas.LayoutTabs:GoToTab(layout)
+                    rematchRedux.dialog.Canvas.LayoutTabs:GoToTab(layout) ---@diagnostic disable-line: undefined-field
                 else
                     rematchRedux.dialog:ChangeLayout(layout)
                 end
@@ -195,9 +195,11 @@ function rematchRedux.dialog:ShowDialog(name,subject,layoutTab)
     -- self:Resize()
     -- finally, show the dialog
     rematchRedux.dialog:Show()
+    
     -- if choosing to open in a layoutTab (dialog mixin) other than Default, go to it now
+    ---@diagnostic disable-next-line: undefined-field
     if layoutTab and layoutTab~="Default" and self.Canvas.LayoutTabs:IsVisible() then
-        self.Canvas.LayoutTabs:GoToTab(layoutTab)
+        self.Canvas.LayoutTabs:GoToTab(layoutTab) ---@diagnostic disable-line: undefined-field
     end
 end
 
@@ -226,10 +228,12 @@ function rematchRedux.dialog:Reset()
     openDialog = nil
     openLayout = nil
     -- hide all children of the canvas
-    for _,child in pairs({self.Canvas:GetChildren()}) do
+    for _, child in pairs({self.Canvas:GetChildren()}) do
         child:Hide()
-        if type(child.Reset)=="function" then
-            child.Reset(child) -- if element has a reset function, run it
+
+        -- if element has a reset function, run it
+        if type(child.Reset) == "function" then ---@diagnostic disable-line: undefined-field
+            child.Reset(child) ---@diagnostic disable-line: undefined-field
         end
     end
     self.MinimizeButton:Hide()
@@ -273,8 +277,9 @@ end
 function rematchRedux.dialog.CloseButton:OnKeyDown(key)
     if key==GetBindingKey("TOGGLEGAMEMENU") then
         -- if a teampicker list is expanded and CollapseOnEsc enabled, collapse list
+        ---@diagnostic disable-next-line: undefined-field
         if settings.CollapseOnEsc and rematchRedux.dialog.Canvas.TeamPicker.Picker.List:IsVisible() and rematchRedux.dialog.Canvas.TeamPicker.Picker.List:IsAnyExpanded() then
-            rematchRedux.dialog.Canvas.TeamPicker.Picker.List:ToggleAllHeaders()
+            rematchRedux.dialog.Canvas.TeamPicker.Picker.List:ToggleAllHeaders() ---@diagnostic disable-line: undefined-field
         else
             rematchRedux.dialog.CancelButton:Click()
         end

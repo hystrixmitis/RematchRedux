@@ -3,7 +3,7 @@ local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
 
-rematchRedux.teamTabs = rematchRedux.frame.TeamTabs
+rematchRedux.teamTabs = rematchRedux.frame.TeamTabs ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("teamTabs")
 
 rematchRedux.events:Register(rematchRedux.teamTabs,"PLAYER_LOGIN",function(self)
@@ -48,7 +48,7 @@ function rematchRedux.teamTabs:Update()
         self.Tabs[i]:Hide()
     end
     -- scale the tabs depending on number of them
-    local numTabs = rematchRedux.savedGroups:GetNumTeamTabs() -- in case any were dropped
+    numTabs = rematchRedux.savedGroups:GetNumTeamTabs() -- in case any were dropped
     local scale, yoff
     if numTabs<=11 then
         scale,yoff = 1,-64

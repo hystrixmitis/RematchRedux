@@ -115,7 +115,7 @@ function rematchRedux.scriptFilter:SetupEnvironment()
     -- get the code being filtered
     local code = rematchRedux.filters:Get("Script","Code")
     -- define the scripting environment
-    self.environment = {
+    local environment = {
         -- common lua
         print=print, table=table, string=string, format=format, pairs=pairs, ipairs=ipairs, select=select, tonumber=tonumber, tostring=tostring, random=random, type=type,
         -- Blizzard pet API
@@ -130,12 +130,14 @@ function rematchRedux.scriptFilter:SetupEnvironment()
         GetSource=self.GetSource, -- should use petInfo.sourceID
         IsPetLeveling=self.IsPetLeveling, -- should use petInfo.isLeveling
     }
+    self.environment = environment
+
     -- it's critical that lua errors triggered by scripts not go through normal channels, or it will be RematchRedux that's
     -- believed to be bugged and not the user script >:D
-    local ok,func = pcall(function() return assert(loadstring(code,"")) end)
+    local ok, func = pcall(function() return assert(loadstring(code,"")) end)
     if ok then -- code successfully parsed into a function, set it to environment
         self.scriptFunc = func
-        setfenv(self.scriptFunc,self.environment)
+        setfenv(func, environment)
         return true
     else -- code couldn't be turned into a function, throw a custom error with its lua error
         self:CleanupEnvironment() -- leave no environment behind

@@ -100,7 +100,7 @@ rematchRedux.events:Register(rematchRedux.petFilterMenu,"PLAYER_LOGIN",function(
 			tinsert(breedMenu,{text=pfm.GetBreedName, check=true, group="Breed", multiCheck=11, multiCheckStart=3, key=i, isChecked=pfm.GetChecked, func=pfm.ToggleChecked})
 		end
 		tinsert(breedMenu,{text=NEW, check=true, group="Breed", multiCheck=11, multiCheckStart=3, key=13, isChecked=pfm.GetChecked, func=pfm.ToggleChecked})
-		tinsert(breedMenu,{text=L["Help"], stay=true, isHelp=true, hidden=pfm.HideMenuHelp, icon="Interface\\Common\\help-i", iconCoords={0.15,0.85,0.15,0.85}, tooltipTitle=L["Breed"], tooltipBody=format(L["All breed data is pulled from your installed %s%s\124r addon.\n\nThe breed \"New\" means the pet has no breed data. Keep your breed addon up to date to ensure it has the most recent breed data."],C.HEX_WHITE,C_AddOns.GetAddOnMetadata(rematchRedux.breedInfo:GetBreedSource(),"Title") or rematchRedux.breedInfo:GetBreedSource())})
+		tinsert(breedMenu,{text=L["Help"], stay=true, isHelp=true, hidden=pfm.HideMenuHelp, icon="Interface\\Common\\help-i", iconCoords={0.15,0.85,0.15,0.85}, tooltipTitle=L["Breed"], tooltipBody=format(L["All breed data is pulled from your installed %s%s\124r addon.\n\nThe breed \"New\" means the pet has no breed data. Keep your breed addon up to date to ensure it has the most recent breed data."],C.HEX_WHITE,C_AddOns.GetAddOnMetadata(rematchRedux.breedInfo:GetBreedSource() --[[@as string | number]],"Title") or rematchRedux.breedInfo:GetBreedSource())})
 		tinsert(breedMenu,{text=RESET, group="Breed", stay=true, func=pfm.ResetGroup})
 		rematchRedux.menus:Register("PetBreed",breedMenu)
 	end
@@ -160,7 +160,7 @@ rematchRedux.events:Register(rematchRedux.petFilterMenu,"PLAYER_LOGIN",function(
 		{text=L["Reverse Sort"], check=true, group="Sort", key=-1, isChecked=pfm.GetChecked, func=pfm.ToggleChecked},
 		{text=L["Favorites First"], check=true, group="Sort", key="FavoritesNotFirst", isChecked=pfm.GetNotChecked, func=pfm.ToggleChecked},
 		{spacer=true},
-		{text=L["Help"], stay=true, isHelp=true, hidden=pfm.HideMenuHelp, icon="Interface\\Common\\help-i", iconCoords={0.15,0.85,0.15,0.85}, tooltipTitle=L["Checkbox Groups"], tooltipTitle=RAID_FRAME_SORT_LABEL, tooltipBody=format(L["You can filter to a specific range of stats too. For example, search for:\n\n%shealth>500\124r\nor\n%sspeed=200-300\124r\n\nThe sort order is not ordinarily reset when filters are reset. The option %sReset Sort With Filters\124r in the Options tab will reset the sort when you reset the filters."],C.HEX_WHITE,C.HEX_WHITE,C.HEX_WHITE)},
+		{text=L["Help"], stay=true, isHelp=true, hidden=pfm.HideMenuHelp, icon="Interface\\Common\\help-i", iconCoords={0.15,0.85,0.15,0.85}, tooltipTitle=RAID_FRAME_SORT_LABEL, tooltipBody=format(L["You can filter to a specific range of stats too. For example, search for:\n\n%shealth>500\124r\nor\n%sspeed=200-300\124r\n\nThe sort order is not ordinarily reset when filters are reset. The option %sReset Sort With Filters\124r in the Options tab will reset the sort when you reset the filters."],C.HEX_WHITE,C.HEX_WHITE,C.HEX_WHITE)},
 		{text=RESET, group="Sort", stay=true, func=pfm.ResetGroup},
 	}
 	rematchRedux.menus:Register("PetSort",firstSortMenu)
@@ -573,7 +573,7 @@ function pfm:GetPetExportData()
 			-- if a breed addon enabled, add breed to end (P/P letter breed, not icon breed)
 			-- with special handling for PetTracker. another reason not to use icons as breeds: you can't put icons in a csv!
 			if rematchRedux.breedInfo:GetBreedSource() then
-				local breedName = petInfo.breedName and rematchRedux.breedInfo:GetBreedNameByID(petInfo.breedID,nil,true)
+				local breedName = petInfo.breedName and rematchRedux.breedInfo:GetBreedNameByID(petInfo.breedID,nil)
 				if not breedName then -- a new breed for pettracker won't have a lettered value here, determine if new or breed n/a
 					if petInfo.isOwned and petInfo.canBattle then
 						breedName = "NEW"

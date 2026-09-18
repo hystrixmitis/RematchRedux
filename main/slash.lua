@@ -130,10 +130,10 @@ SlashCmdList["REMATCHREDUX"] = function(msg)
         -- close off line
         result = result..format("}, -- %s, %s",mapName,npcName)
         -- send result to TinyPad if enabled
-        if TinyPad then
-            TinyPad.Insert(result)
+        if _G.TinyPad then
+            _G.TinyPad.Insert( result )
         else -- otherwise print to chat
-            rematchRedux.utils:Write(result)
+            rematchRedux.utils:Write( result )
             -- ChatEdit_ActivateChat(DEFAULT_CHAT_FRAME.editBox)
             -- DEFAULT_CHAT_FRAME.editBox:Insert(result)
         end

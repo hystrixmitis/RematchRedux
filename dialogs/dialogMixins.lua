@@ -111,14 +111,15 @@ function RematchReduxDialogEditBoxMixin:GetText()
     return self.EditBox:GetText()
 end
 
-function RematchReduxDialogEditBoxMixin:SetEnabled(enable)
-    self.EditBox:SetEnabled(enable)
+function RematchReduxDialogEditBoxMixin:SetEnabled( enable )
+    local enabled =self.EditBox:SetEnabled( enable )
     if not enabled then
         self.EditBox:ClearHighlightText()
         self.EditBox.Clear:Hide()
     end
-    for i=1,3 do
-        self.EditBox.Back[i]:SetShown(enable)
+
+    for i = 1, 3 do
+        self.EditBox.Back[i]:SetShown( enable )
     end
 end
 
@@ -1177,7 +1178,7 @@ end
 
 function RematchReduxDialogPetButtonMixin:OnLeave()
     rematchRedux.textureHighlight:Hide()
-    rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,self.petID)
+    rematchRedux.cardManager:OnLeave(rematchRedux.petCard)
 end
 
 function RematchReduxDialogPetButtonMixin:OnMouseDown()
@@ -1687,7 +1688,7 @@ end
 
 function RematchReduxDialogTopTeamsListPetButtonMixin:OnLeave()
     rematchRedux.textureHighlight:Hide()
-    rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self:GetParent(),self.petID)
+    rematchRedux.cardManager:OnLeave(rematchRedux.petCard)
 end
 
 function RematchReduxDialogTopTeamsListPetButtonMixin:OnMouseDown()

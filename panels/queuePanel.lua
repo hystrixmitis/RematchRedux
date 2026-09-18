@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.queuePanel = rematchRedux.frame.QueuePanel
+rematchRedux.queuePanel = rematchRedux.frame.QueuePanel ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("queuePanel")
 
 local queueIndexes = {} -- for autoscrollbox, list of numeric indexes into settings.LevelingQueue
@@ -105,9 +105,9 @@ function rematchRedux.queuePanel:UpdateGlow(skipRefresh)
 end
 
 function rematchRedux.queuePanel:OnShow()
-    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",self.Update,self)
-    rematchRedux.events:Register(self,"REMATCHREDUX_PET_PICKED_UP_ON_CURSOR",self.REMATCHREDUX_PET_PICKED_UP_ON_CURSOR,self)
-    rematchRedux.events:Register(self,"REMATCHREDUX_PET_DROPPED_FROM_CURSOR",self.REMATCHREDUX_PET_DROPPED_FROM_CURSOR,self)
+    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",self.Update)
+    rematchRedux.events:Register(self,"REMATCHREDUX_PET_PICKED_UP_ON_CURSOR",self.REMATCHREDUX_PET_PICKED_UP_ON_CURSOR)
+    rematchRedux.events:Register(self,"REMATCHREDUX_PET_DROPPED_FROM_CURSOR",self.REMATCHREDUX_PET_DROPPED_FROM_CURSOR)
     self:CloseQueueDialogs()
     self:UpdateGlow()
 end

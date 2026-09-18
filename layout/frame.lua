@@ -43,7 +43,7 @@ end
 rematchRedux.events:Register(rematchRedux.frame,"PLAYER_LOGIN",function(self)
     rematchRedux.events:Register(self,"PLAYER_ENTERING_WORLD",self.PLAYER_ENTERING_WORLD)
     rematchRedux.events:Register(self,"PET_BATTLE_OPENING_START",self.PET_BATTLE_OPENING_START)
-    rematchRedux.events:Register(self,"REMATCHREDUX_PETS_LOADED",REMATCHREDUX_ATCH_PETS_LOADED)
+    rematchRedux.events:Register(self,"REMATCHREDUX_PETS_LOADED",self.REMATCHREDUX_PETS_LOADED)
     rematchRedux.events:Register(self,"PLAYER_LOGOUT",self.PLAYER_LOGOUT)
     self.CloseButton:Hide() -- using titlebar's close button
 end)
@@ -111,7 +111,8 @@ function rematchRedux.frame:Toggle(auto)
         rematchRedux.utils:Write(L["RematchRedux can't be summoned during combat. Try again later"])
     end
 end
-RematchReduxToggleWindow = rematchRedux.frame.Toggle
+
+_G.RematchReduxToggleWindow = rematchRedux.frame.Toggle
 
 -- minimizes or maximizes the frame (if in standalone mode); optionally maximizes to the given layoutName
 function rematchRedux.frame:ToggleMinimized(layoutName)

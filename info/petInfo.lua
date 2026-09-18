@@ -245,7 +245,7 @@ function funcs:Stats()
         local owner = self.battleOwner
         local index = self.battleIndex
         if C_PetBattles.GetPetSpeciesID(owner,index) then
-            rarity = C_PetBattles.GetBreedQuality(owner,index)+1
+            rarity = C_PetBattles.GetBreedQuality(owner --[[@as Enum.BattlePetOwner]],index)+1
             health = C_PetBattles.GetHealth(owner,index)
             maxHealth = C_PetBattles.GetMaxHealth(owner,index)
             power = C_PetBattles.GetPower(owner,index)
@@ -409,7 +409,7 @@ end
 -- pulls battleOwner and battleIndex from the "battle" petID
 function funcs:Battle()
     if self.idType=="battle" then
-       local owner,index = self.petID:match("battle:(%d):(%d)")
+       local owner, index = self.petID:match("battle:(%d):(%d)")
        self.battleOwner = tonumber(owner)
        self.battleIndex = tonumber(index)
     end
@@ -429,17 +429,17 @@ function funcs:Breed()
         local breedID,breedName
         if source=="BattlePetBreedID" then
             if idType=="pet" or idType=="link" then
-                breedID = BPBID_Internal.CalculateBreedID(self.speciesID,self.rarity,self.level,self.maxHealth,self.power,self.speed,false,false)
+                breedID = _G.BPBID_Internal.CalculateBreedID(self.speciesID,self.rarity,self.level,self.maxHealth,self.power,self.speed,false,false)
             elseif idType=="battle" then
-                breedID = BPBID_Internal.breedCache[self.battleIndex + (self.battleOwner==2 and 3 or 0)]
+                breedID = _G.BPBID_Internal.breedCache[self.battleIndex + (self.battleOwner==2 and 3 or 0)]
             end
         elseif source=="PetTracker" then
-            if idType=="pet" and PetTracker and PetTracker.Pet then
-                breedID = PetTracker.Pet(self.petID):GetBreed()
-            elseif idType=="link" and PetTracker and PetTracker.Predict then
-                breedID = PetTracker.Predict:Breed(self.speciesID,self.level,self.rarity,self.maxHealth,self.power,self.speed)
-            elseif idType=="battle" and PetTracker and PetTracker.Battle then
-                breedID = PetTracker.Battle(self.battleOwner,self.battleIndex):GetBreed()
+            if idType=="pet" and _G.PetTracker and _G.PetTracker.Pet then
+                breedID = _G.PetTracker.Pet(self.petID):GetBreed()
+            elseif idType=="link" and _G.PetTracker and _G.PetTracker.Predict then
+                breedID = _G.PetTracker.Predict:Breed(self.speciesID,self.level,self.rarity,self.maxHealth,self.power,self.speed)
+            elseif idType=="battle" and _G.PetTracker and _G.PetTracker.Battle then
+                breedID = _G.PetTracker.Battle(self.battleOwner,self.battleIndex):GetBreed()
             end
         end
         if type(breedID)~="number" then
@@ -465,12 +465,12 @@ function funcs:PossibleBreeds()
     if source and type(speciesID)=="number" and self.canBattle then
         local data -- table to contain possible breeds
         if source=="BattlePetBreedID" then
-            if not BPBID_Arrays.BreedsPerSpecies then
-                BPBID_Arrays.InitializeArrays()
+            if not _G.BPBID_Arrays.BreedsPerSpecies then
+                _G.BPBID_Arrays.InitializeArrays()
             end
-            data = BPBID_Arrays.BreedsPerSpecies[speciesID]
+            data = _G.BPBID_Arrays.BreedsPerSpecies[speciesID]
         elseif source=="PetTracker" then
-            data = PetTracker.SpecieBreeds[speciesID]
+            data = _G.PetTracker.SpecieBreeds[speciesID]
         end
         -- if there's a table of breeds, copy them to possibleBreeds
         if data and type(data)=="table" then

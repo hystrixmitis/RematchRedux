@@ -539,7 +539,7 @@ end
 function RematchReduxNotesButtonMixin:OnLeave()
     local parent = self:GetParent()
     rematchRedux.textureHighlight:Hide()
-    rematchRedux.cardManager:OnLeave(rematchRedux.notes,parent,parent.petID or parent.teamID)
+    rematchRedux.cardManager:OnLeave( rematchRedux.notes )
 end
 
 function RematchReduxNotesButtonMixin:OnMouseDown()
@@ -576,7 +576,7 @@ end
 -- if isExpanded is false, update ExpandIcon to a "+"
 function RematchReduxHeaderListButtonMixin:SetExpanded(isExpanded,isSearching)
     -- update the +/- to show if header collapsed
-    local desaturate,left,right,top,bottom = false
+    local desaturate, left, right, top, bottom = false, nil, nil, nil, nil
     if isSearching then
         left,right,top,bottom = 0.8515625,0.902343750,0,0.40625 -- neither plus or minus while searching
         desaturate = true
@@ -659,7 +659,7 @@ end
 
 function RematchReduxPetTextureMixin:OnLeave()
     rematchRedux.textureHighlight:Hide()
-    rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,self.petID)
+    rematchRedux.cardManager:OnLeave( rematchRedux.petCard )
 end
 
 function RematchReduxPetTextureMixin:OnMouseDown()
