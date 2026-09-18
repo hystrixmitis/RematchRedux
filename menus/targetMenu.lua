@@ -1,11 +1,11 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.targetMenu = {}
-local tm = rematch.targetMenu
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.targetMenu = {}
+local tm = rematchRedux.targetMenu
 
-rematch.events:Register(rematch.targetMenu,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.targetMenu,"PLAYER_LOGIN",function(self)
 
     -- menu when you right-click a target in the target list
     local targetMenu = {
@@ -16,13 +16,13 @@ rematch.events:Register(rematch.targetMenu,"PLAYER_LOGIN",function(self)
         {text=L["Edit Team"], hidden=tm.HasNoTeam, func=tm.EditSavedTeam, subMenu="TargetEditTeamMenu", subMenuFunc=tm.BuildEditTeamSubMenu},
         {text=CANCEL},
     }
-    rematch.menus:Register("TargetMenu",targetMenu)
+    rematchRedux.menus:Register("TargetMenu",targetMenu)
 
     -- submenus have just title, subMenuFuncs fill them in
-    rematch.menus:Register("TargetEditTeamMenu",{{title=L["Teams"]}})
-    rematch.menus:Register("TargetLoadTeamMenu",{{title=L["Teams"]}})
+    rematchRedux.menus:Register("TargetEditTeamMenu",{{title=L["Teams"]}})
+    rematchRedux.menus:Register("TargetLoadTeamMenu",{{title=L["Teams"]}})
 
-    rematch.dialog:Register("SetTargetTeams",{
+    rematchRedux.dialog:Register("SetTargetTeams",{
         title=L["Edit Target"],
         accept=SAVE,
         cancel=CANCEL,
@@ -30,101 +30,101 @@ rematch.events:Register(rematch.targetMenu,"PLAYER_LOGIN",function(self)
         layout={"Text","TeamPicker","Help"},
         refreshFunc = function(self,info,subject,firstRun)
             if firstRun then
-                rematch.dialog:SetTitle(rematch.targetInfo:GetNpcName(subject.targetID))
-                self.Text:SetText(format(L["These are the teams saved for %s."],rematch.utils:GetFormattedTargetName(subject.targetID)))
+                rematchRedux.dialog:SetTitle(rematchRedux.targetInfo:GetNpcName(subject.targetID))
+                self.Text:SetText(format(L["These are the teams saved for %s."],rematchRedux.utils:GetFormattedTargetName(subject.targetID)))
                 self.Help:SetText(L["The topmost team is the preferred team to load when you interact with this target."])
                 self.TeamPicker:SetList(subject.listType,subject.list)
             end
         end,
         acceptFunc = function(self,info,subject)
-            local npcID = rematch.targetInfo:GetNpcID(subject.targetID)
+            local npcID = rematchRedux.targetInfo:GetNpcID(subject.targetID)
             if npcID then
-                rematch.savedTargets:Set(npcID,self.TeamPicker:GetList())
-                rematch.targetsPanel.List:BlingData(subject.targetID)
+                rematchRedux.savedTargets:Set(npcID,self.TeamPicker:GetList())
+                rematchRedux.targetsPanel.List:BlingData(subject.targetID)
             end
         end
     })
 
 end)
 
-function rematch.targetMenu:GetTargetName(npcID)
-    return rematch.targetInfo:GetNpcName(npcID)
+function rematchRedux.targetMenu:GetTargetName(npcID)
+    return rematchRedux.targetInfo:GetNpcName(npcID)
 end
 
-function rematch.targetMenu:SetTeams(targetID)
+function rematchRedux.targetMenu:SetTeams(targetID)
     local list = {}
-    if rematch.savedTargets[targetID] then
-        for _,npcID in ipairs(rematch.savedTargets[targetID]) do
+    if rematchRedux.savedTargets[targetID] then
+        for _,npcID in ipairs(rematchRedux.savedTargets[targetID]) do
             tinsert(list,npcID)
         end
     end
-    rematch.dialog:ShowDialog("SetTargetTeams",{targetID=targetID, listType=C.LIST_TYPE_TEAM, list=list})
+    rematchRedux.dialog:ShowDialog("SetTargetTeams",{targetID=targetID, listType=C.LIST_TYPE_TEAM, list=list})
 end
 
-function rematch.targetMenu:LoadRandomTeam(targetID)
-    local npcID = rematch.targetInfo:GetNpcID(targetID)
+function rematchRedux.targetMenu:LoadRandomTeam(targetID)
+    local npcID = rematchRedux.targetInfo:GetNpcID(targetID)
     if npcID then
-        rematch.loadedTargetPanel:SetTarget(npcID,true)
+        rematchRedux.loadedTargetPanel:SetTarget(npcID,true)
     end
-    rematch.randomPets:BuildCounterTeam(npcID)
-    rematch.loadTeam:LoadTeamID("counter")
+    rematchRedux.randomPets:BuildCounterTeam(npcID)
+    rematchRedux.loadTeam:LoadTeamID("counter")
 end
 
-function rematch.targetMenu:HasNoTeam(targetID)
-    return not rematch.savedTargets:GetTeams(targetID)
+function rematchRedux.targetMenu:HasNoTeam(targetID)
+    return not rematchRedux.savedTargets:GetTeams(targetID)
 end
 
 -- BuildLoadTeamSubMenu
 -- BuildEditTeamSubMenu
 
-function rematch.targetMenu:BuildTeamSubMenu(targetID,menu,func)
-    local def = rematch.menus:GetDefinition(menu)
+function rematchRedux.targetMenu:BuildTeamSubMenu(targetID,menu,func)
+    local def = rematchRedux.menus:GetDefinition(menu)
     -- remove any existing teams
     for i=#def,2,-1 do
         tremove(def,i)
     end
-    local teams = rematch.savedTargets:GetTeams(targetID)
+    local teams = rematchRedux.savedTargets:GetTeams(targetID)
     if teams and #teams>0 then
         for _,teamID in ipairs(teams) do
-            local name = rematch.utils:GetFormattedTeamName(teamID)
+            local name = rematchRedux.utils:GetFormattedTeamName(teamID)
             tinsert(def,{text=name,teamID=teamID,func=func})
         end
     else
         tinsert(def,{text=L["No teams :("]})
     end
     tinsert(def,{text=CANCEL})
-    rematch.menus:Register(menu,def)
+    rematchRedux.menus:Register(menu,def)
 end
 
-function rematch.targetMenu:BuildLoadTeamSubMenu(targetID)
-    rematch.targetMenu:BuildTeamSubMenu(targetID,"TargetLoadTeamMenu",tm.LoadTargetTeam)
+function rematchRedux.targetMenu:BuildLoadTeamSubMenu(targetID)
+    rematchRedux.targetMenu:BuildTeamSubMenu(targetID,"TargetLoadTeamMenu",tm.LoadTargetTeam)
 end
 
-function rematch.targetMenu:BuildEditTeamSubMenu(targetID)
-    rematch.targetMenu:BuildTeamSubMenu(targetID,"TargetEditTeamMenu",tm.EditTargetTeam)
+function rematchRedux.targetMenu:BuildEditTeamSubMenu(targetID)
+    rematchRedux.targetMenu:BuildTeamSubMenu(targetID,"TargetEditTeamMenu",tm.EditTargetTeam)
 end
 
-function rematch.targetMenu:LoadTargetTeam(targetID)
-    rematch.loadTeam:LoadTeamID(self.teamID)
+function rematchRedux.targetMenu:LoadTargetTeam(targetID)
+    rematchRedux.loadTeam:LoadTeamID(self.teamID)
 end
 
-function rematch.targetMenu:EditTargetTeam(targetID)
-    rematch.teamMenu:EditTeam(self.teamID)
+function rematchRedux.targetMenu:EditTargetTeam(targetID)
+    rematchRedux.teamMenu:EditTeam(self.teamID)
 end
 
 -- this loads the preferred teamID for the target (click of Load Team menu button that shows teams submenu)
-function rematch.targetMenu:LoadSavedTeam(targetID)
-    local teams,index = rematch.savedTargets:GetTeams(targetID)
+function rematchRedux.targetMenu:LoadSavedTeam(targetID)
+    local teams,index = rematchRedux.savedTargets:GetTeams(targetID)
     if teams and index and teams[index] then
-        rematch.loadTeam:LoadTeamID(teams[index])
+        rematchRedux.loadTeam:LoadTeamID(teams[index])
     end
-    rematch.menus:Hide()
+    rematchRedux.menus:Hide()
 end
 
-function rematch.targetMenu:EditSavedTeam(targetID)
-    local teams,index = rematch.savedTargets:GetTeams(targetID)
+function rematchRedux.targetMenu:EditSavedTeam(targetID)
+    local teams,index = rematchRedux.savedTargets:GetTeams(targetID)
     if teams and index and teams[index] then
-        rematch.teamMenu:EditTeam(teams[index])
+        rematchRedux.teamMenu:EditTeam(teams[index])
     end
-    rematch.menus:Hide()
+    rematchRedux.menus:Hide()
 end
