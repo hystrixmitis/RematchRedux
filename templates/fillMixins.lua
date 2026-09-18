@@ -1,18 +1,18 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
 
---[[ RematchFillPetMixin adds FillPet(petID) to fill in a pet ]]
+--[[ RematchReduxFillPetMixin adds FillPet(petID) to fill in a pet ]]
 -- self.neverDim = true if the pet should never be desaturated/tinted due to not owning it
 
-RematchFillPetMixin = {}
+RematchReduxFillPetMixin = {}
 
 -- common function to fill a pet icon, border, favorite, level and status
 -- dim is true if the pet should be force greyed out (and not naturally greyed out for being a speciesID)
-function RematchFillPetMixin:FillPet(petID,dim)
-    local petInfo = rematch.petInfo:Fetch(petID)
+function RematchReduxFillPetMixin:FillPet(petID,dim)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     -- note to self: don't set self.petID = petID here; sometimes a battle:1:x petID is filled instead of actual petID
 
     local tint = not self.neverDim and petInfo.tint
@@ -22,7 +22,7 @@ function RematchFillPetMixin:FillPet(petID,dim)
 
      -- icon
     self.Icon:SetTexture(petInfo.needsFanfare and C.FANFARE_ICON or petInfo.icon)
-    rematch.utils:TintTexture(self.Icon,tint)
+    rematchRedux.utils:TintTexture(self.Icon,tint)
     -- rarity border
     if not settings.HideRarityBorders and petInfo.color and petInfo.isSummonable and not dim then
         self.Border:SetVertexColor(petInfo.color.r,petInfo.color.g,petInfo.color.b)
@@ -35,7 +35,7 @@ function RematchFillPetMixin:FillPet(petID,dim)
     if self.Favorite then
         if petInfo.isFavorite then
             self.Favorite:Show()
-            rematch.utils:TintTexture(self.Favorite,tint)
+            rematchRedux.utils:TintTexture(self.Favorite,tint)
         else
             self.Favorite:Hide()
         end
@@ -48,7 +48,7 @@ function RematchFillPetMixin:FillPet(petID,dim)
             local y = floor((level-1)/8)*0.25
             self.Level:SetTexCoord(x,x+0.125,y,y+0.25)
             self.Level:Show()
-            rematch.utils:TintTexture(self.Level,tint)
+            rematchRedux.utils:TintTexture(self.Level,tint)
         else
             self.Level:Hide()
         end
@@ -80,7 +80,7 @@ end
 
 --[[ abilities ]]
 
--- shared by RematchFillAbilityBarMixin and RematchFillAbilityFlyoutMixin
+-- shared by RematchReduxFillAbilityBarMixin and RematchReduxFillAbilityFlyoutMixin
 -- fills a single ability for petID and ability slot with the abilityID; showing the 1/2 number if showNumbers is true
 local function fillAbilitySlot(self,petID,abilityID,abilitySlot,showNumber)
     self.isUsable = false
@@ -91,14 +91,14 @@ local function fillAbilitySlot(self,petID,abilityID,abilitySlot,showNumber)
         self.Number:Hide()
         self.Level:Hide()
     else
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         -- if abilityID is a 1 or 2, and an abilitySlot is defined, get abilityID for the 1/2 for that slot
         if abilitySlot and (abilityID==1 or abilityID==2) then
             abilityID = petInfo.abilityList[abilitySlot + (abilityID==1 and 0 or 3)]
         end
         self.Icon:SetTexture((select(3,C_PetBattles.GetAbilityInfoByID(abilityID))) or C.EMPTY_ICON)
 
-        local abilityIndex = petInfo.abilityList and rematch.utils:GetIndexByValue(petInfo.abilityList,abilityID)
+        local abilityIndex = petInfo.abilityList and rematchRedux.utils:GetIndexByValue(petInfo.abilityList,abilityID)
         local abilityLevel = abilityIndex and petInfo.levelList and petInfo.levelList[abilityIndex]
         if showNumber then -- show the 1/2 if it should be shown
             self.Number:SetText(abilityIndex and (abilityIndex<=3 and "1" or "2") or "")
@@ -122,12 +122,12 @@ local function fillAbilitySlot(self,petID,abilityID,abilitySlot,showNumber)
     end
 end
 
---[[ RematchFillAbilityBarMixin adds FillAbilities(petID,ability1,ability2,ability3) to fill in a bar of abilities ]]
+--[[ RematchReduxFillAbilityBarMixin adds FillAbilities(petID,ability1,ability2,ability3) to fill in a bar of abilities ]]
 -- self.horizontal = true if abilities are horizontal (main loadouts); false if veritcal (mini loadouts, teams in dialogs)
 
-RematchFillAbilityBarMixin = {}
+RematchReduxFillAbilityBarMixin = {}
 
-function RematchFillAbilityBarMixin:FillAbilityBar(petID,ability1,ability2,ability3)
+function RematchReduxFillAbilityBarMixin:FillAbilityBar(petID,ability1,ability2,ability3)
     -- update border (need at least first abilityID to be non-nil to use number insets)
     local showNumbers = settings.ShowAbilityNumbers and settings.ShowAbilityNumbersLoaded and ability1 and true or false
     if showNumbers and self.horizontal then -- horizontal with number insets
@@ -144,11 +144,11 @@ function RematchFillAbilityBarMixin:FillAbilityBar(petID,ability1,ability2,abili
     fillAbilitySlot(self.Abilities[3],petID,ability3,3,showNumbers)
 end
 
---[[ RematchFillAbilityFlyoutMixin fills the two abilities in a flyout based on petSlot abilitySlot ]]
+--[[ RematchReduxFillAbilityFlyoutMixin fills the two abilities in a flyout based on petSlot abilitySlot ]]
 
-RematchFillAbilityFlyoutMixin = {}
+RematchReduxFillAbilityFlyoutMixin = {}
 
-function RematchFillAbilityFlyoutMixin:FillAbilityFlyout(petSlot,abilitySlot)
+function RematchReduxFillAbilityFlyoutMixin:FillAbilityFlyout(petSlot,abilitySlot)
     local petID,ability1,ability2,ability3 = C_PetJournal.GetPetLoadOutInfo(petSlot)
     local showNumbers = settings.ShowAbilityNumbers
     if showNumbers and self.horizontal then -- main loadout border with ability number insets
@@ -160,7 +160,7 @@ function RematchFillAbilityFlyoutMixin:FillAbilityFlyout(petSlot,abilitySlot)
     else -- mini loadout border without ability number insets
         self.Border:SetTexCoord(0.25,0.44921875,0.28125,0.3828125)
     end
-    local petInfo = rematch.petInfo:Fetch(petID)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     if petInfo.isValid then
         local flyoutAbility1 = petInfo.abilityList[abilitySlot]
         local flyoutAbility2 = petInfo.abilityList[abilitySlot+3]

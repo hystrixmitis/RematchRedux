@@ -1,17 +1,17 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.collectionInfo = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.collectionInfo = {}
 
 --[[
     Information about the collection, such as number of pets at 25 and such, is kept here.
 ]]
 
 -- on-demand table for species at 25
-local speciesAt25 = rematch.odTable:Create(function(self)
-    for petID in rematch.roster:AllOwnedPets() do
-        local petInfo = rematch.petInfo:Fetch(petID)
+local speciesAt25 = rematchRedux.odTable:Create(function(self)
+    for petID in rematchRedux.roster:AllOwnedPets() do
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if petInfo.level==25 then
             self[petInfo.speciesID] = true
         end
@@ -19,10 +19,10 @@ local speciesAt25 = rematch.odTable:Create(function(self)
 end)
 
 -- this is used for level filter "Moveset Not At 25" and is probably used even more rarely
-local movesetsAt25 = rematch.odTable:Create(function(self)
+local movesetsAt25 = rematchRedux.odTable:Create(function(self)
     speciesAt25:Start()
     for speciesID in pairs(speciesAt25) do
-        local moveset = rematch.speciesInfo:GetMoveset(speciesID)
+        local moveset = rematchRedux.speciesInfo:GetMoveset(speciesID)
         if moveset then
             self[moveset] = true
         end
@@ -30,10 +30,10 @@ local movesetsAt25 = rematch.odTable:Create(function(self)
 end)
 
 -- this is used for other filter "Unique Moveset" to find all pets that have a unique moveset
-local uniqueMovesets = rematch.odTable:Create(function(self)
+local uniqueMovesets = rematchRedux.odTable:Create(function(self)
     -- first gather a count of all movesets
-    for speciesID in rematch.roster:AllSpecies() do
-        local petInfo = rematch.petInfo:Fetch(speciesID)
+    for speciesID in rematchRedux.roster:AllSpecies() do
+        local petInfo = rematchRedux.petInfo:Fetch(speciesID)
         local moveset = petInfo.moveset
         if moveset and petInfo.canBattle then
             self[moveset] = (self[moveset] or 0) + 1
@@ -48,9 +48,9 @@ local uniqueMovesets = rematch.odTable:Create(function(self)
 end)
 
 -- used by pet summary/statistics to break down pets
-local speciesStats = rematch.odTable:Create(function(self)
-    for petID in rematch.roster:AllPets() do
-        local petInfo = rematch.petInfo:Fetch(petID)
+local speciesStats = rematchRedux.odTable:Create(function(self)
+    for petID in rematchRedux.roster:AllPets() do
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         local speciesID = petInfo.speciesID
         if not self[speciesID] then
             self[speciesID] = {petInfo.petType,petInfo.sourceID,0,0,0,0,0,0,0,0,0}
@@ -73,9 +73,9 @@ local speciesStats = rematch.odTable:Create(function(self)
 end)
 
 -- an unordered table of details about the collection
-local collectionStats = rematch.odTable:Create(function(self)
+local collectionStats = rematchRedux.odTable:Create(function(self)
     -- collection[speciesID] = {petType,source,numPets,numAt25,totalLevels,numPoor,numCommon,numUncommon,numRare}
-    local stats = rematch.collectionInfo:GetSpeciesStats()
+    local stats = rematchRedux.collectionInfo:GetSpeciesStats()
 
     self.numInJournal = 0
     self.numCollectedUnique = 0
@@ -124,44 +124,44 @@ local collectionStats = rematch.odTable:Create(function(self)
 end)
 
 -- returns whether the given speciesID has a version at 25
-function rematch.collectionInfo:IsSpeciesAt25(speciesID)
+function rematchRedux.collectionInfo:IsSpeciesAt25(speciesID)
     return speciesAt25[speciesID] or false
 end
 
 -- returns the whole lookup table of species at 25
-function rematch.collectionInfo:GetAllSpeciesAt25()
+function rematchRedux.collectionInfo:GetAllSpeciesAt25()
     speciesAt25:Start()
     return speciesAt25
 end
 
 -- returns whether the given moveset has a pet at 25
-function rematch.collectionInfo:IsMovesetAt25(moveset)
+function rematchRedux.collectionInfo:IsMovesetAt25(moveset)
     return movesetsAt25[moveset] or false
 end
 
 -- returns whether the moveset is unique
-function rematch.collectionInfo:IsMovesetUnique(moveset)
+function rematchRedux.collectionInfo:IsMovesetUnique(moveset)
     return uniqueMovesets[moveset] and true
 end
 
 -- returns stats about all species in a lookup table by speciesID where each is an ordered list of stats:
 -- [speciesID] = {petType,source,numPets,numAt25,totalLevels,numPoor,numCommon,numUncommon,numRare}
-function rematch.collectionInfo:GetSpeciesStats()
+function rematchRedux.collectionInfo:GetSpeciesStats()
     speciesStats:Start()
     return speciesStats
 end
 
-function rematch.collectionInfo:GetCollectionStats()
+function rematchRedux.collectionInfo:GetCollectionStats()
     collectionStats:Start()
     return collectionStats
 end
 
 -- returns a table of winrecord stats for all teams, including a table of the top ten teamIDs by wins/percent
 -- limit, if given, will limit the topTeams to the first limit entries (3 or 10)
-function rematch.collectionInfo:GetWinStats(limit)
+function rematchRedux.collectionInfo:GetWinStats(limit)
     local winStats = {battles=0,teams=0,wins=0,losses=0,draws=0,topTeams={}}
     local teamStats = {} -- ordered table of wins, percent wins and teamID gathered while counting totals
-    for teamID,team in rematch.savedTeams:AllTeams() do
+    for teamID,team in rematchRedux.savedTeams:AllTeams() do
         if team.winrecord then
             local recordWins = team.winrecord.wins or 0
             local recordLosses = team.winrecord.losses or 0

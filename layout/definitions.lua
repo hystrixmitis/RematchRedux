@@ -1,6 +1,6 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
 
 --[[
 
@@ -30,7 +30,7 @@ local C = rematch.constants
         - height (required): height of the frame.Canvas the layout will arrange panels on
         - tab (optional): Localized text to display on the tab generated for the layout's view, if it has a tab
         - hasTempTarget (optional): true if this layout has a -target version for temporarily showing saved targets
-        - panels (required): an ordered list of sub-lists that list the parentKey (relative to rematch.frame) of
+        - panels (required): an ordered list of sub-lists that list the parentKey (relative to rematchRedux.frame) of
             a panel to place, and then two anchors to position the panel:
 
                     {panelParentKey,anchorPoint1,relativeTo1,relativePoint1,xoff1,yoff2,
@@ -42,10 +42,10 @@ local C = rematch.constants
 
             Note: "Canvas" is resized to the width,height defined in the layout; and panels should anchor
             to this if they're not anchoring to other panels. Note that parentKeys are used for these
-            relativeTo's also, and all are a parentKey relative to the main Rematch frame. Any new panels
-            must have a parentKey defined and a parent of "RematchFrame".
+            relativeTo's also, and all are a parentKey relative to the main RematchRedux frame. Any new panels
+            must have a parentKey defined and a parent of "RematchReduxFrame".
 
-    After a layout definition is complete, register it with: rematch.layout:Register(definition)
+    After a layout definition is complete, register it with: rematchRedux.layout:Register(definition)
 
     When a layout is registered, a layoutName is created from the mode-view[-subview]. This is unique and
     registering the same mode-view-subview will overwrite the previous definition. All future references to
@@ -55,7 +55,7 @@ local C = rematch.constants
 
 ]]
 
-rematch.layout.definitions = {
+rematchRedux.layout.definitions = {
 
     --[[ minimized views (0-view) ]]
 

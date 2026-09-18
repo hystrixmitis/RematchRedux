@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.sort = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.sort = {}
 
 --[[
     RunSort(list) takes a list of petIDs (which can include speciesIDs) and sorts them in the orders
@@ -73,13 +73,13 @@ local petInfoStats = {
 }
 
 
-local stickiedPetIDs = {} -- indexed by petID, these pets should be moved to the top of the list until rematch is closed
+local stickiedPetIDs = {} -- indexed by petID, these pets should be moved to the top of the list until RematchRedux is closed
 local stickiedStaging = {} -- for a quick stable sort, used as a temp space for swapping
 
 -- call this before starting a filter run. it does pre-sort maintenance, such as wiping tables and filling actualSorts,
 -- ascendingSorts and petInfoSorts depending on current settings. It needs to be before a filter run so that
 -- AddSortValues() knows which sort values (name, level, rarity, etc.) to keep as pets are evaluated.
-function rematch.sort:PrepareSort()
+function rematchRedux.sort:PrepareSort()
     -- first clean up the lookup tables
     for _,v in ipairs(sortValues) do
         wipe(v)
@@ -89,7 +89,7 @@ function rematch.sort:PrepareSort()
     local nameSorted = false -- assume no sort by name is happening until observed otherwise
     -- go through each of the three sort levels to set up activeSorts and ascendingSorts
     for sortLevel=1,3 do
-        local sort = rematch.filters:GetSort(sortLevel)
+        local sort = rematchRedux.filters:GetSort(sortLevel)
         activeSorts[sortLevel] = sort
         -- choose whether it's ascending or descending based on the type of sort and the reverse filter setting
         if sort==C.SORT_NAME then -- name sorts happen in ascending order by default
@@ -120,19 +120,19 @@ function rematch.sort:PrepareSort()
     -- create local flag to avoid doing table indexing
     listFavoritesFirst = not settings.Filters.Sort.FavoritesNotFirst
     -- if search is happening, keep a local reference for quick lookup
-    searchRelevance = not settings.DontSortByRelevance and rematch.filters:GetSearchRelevance()
+    searchRelevance = not settings.DontSortByRelevance and rematchRedux.filters:GetSearchRelevance()
 end
 
 -- called after a filter run, wipes the sort cache tables
-function rematch.sort:Cleanup()
+function rematchRedux.sort:Cleanup()
     for _,v in ipairs(sortValues) do
         wipe(v)
     end
 end
 
--- fills sortValues with the 3 values (4 if name needed) of the given petID; called as pets are evaluated in rematch.filter:RunFilters()
-function rematch.sort:AddSortValues(petID)
-    local petInfo = rematch.petInfo:Fetch(petID)
+-- fills sortValues with the 3 values (4 if name needed) of the given petID; called as pets are evaluated in rematchRedux.filter:RunFilters()
+function rematchRedux.sort:AddSortValues(petID)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     for sortLevel=1,#activeSorts do
         sortValues[sortLevel][petID] = petInfo[petInfoSorts[sortLevel]]
     end
@@ -151,23 +151,23 @@ function rematch.sort:AddSortValues(petID)
 end
 
 -- sorts the given list according to the current sort settings and sort values accumulated during RunFilters()
-function rematch.sort:RunSort(list)
-    table.sort(list,rematch.sort.SortFunc)
-    -- once an epoch, a wrapped pet should be moved to top temporarily (until rematch closes or filter reset all)
+function rematchRedux.sort:RunSort(list)
+    table.sort(list,rematchRedux.sort.SortFunc)
+    -- once an epoch, a wrapped pet should be moved to top temporarily (until RematchRedux closes or filter reset all)
     if C_PetJournal.GetNumPetsNeedingFanfare()>0 then
         for _,petID in ipairs(list) do
-            if rematch.petInfo:Fetch(petID).needsFanfare then
-                rematch.sort:AddStickiedPetID(petID)
+            if rematchRedux.petInfo:Fetch(petID).needsFanfare then
+                rematchRedux.sort:AddStickiedPetID(petID)
             end
         end
     end
     if stickiedPetIDs then
-        rematch.sort:MoveStickiedPetsToTop(list)
+        rematchRedux.sort:MoveStickiedPetsToTop(list)
     end
 end
 
 -- if any petIDs are stickied, moves them to top of list with a simple stable sort (assumption: list is already sorted)
-function rematch.sort:MoveStickiedPetsToTop(list)
+function rematchRedux.sort:MoveStickiedPetsToTop(list)
     if #list<=1 then
         return -- only have 0-1 result, don't bother to sort
     end
@@ -185,22 +185,22 @@ function rematch.sort:MoveStickiedPetsToTop(list)
     end
 end
 
--- call when stickied pets should be unstickied (rematch window closes or filter reset all); return true if something was stickied
-function rematch.sort:ClearStickiedPetIDs()
+-- call when stickied pets should be unstickied (RematchRedux window closes or filter reset all); return true if something was stickied
+function rematchRedux.sort:ClearStickiedPetIDs()
     local wasStickied = type(stickiedPetIDs)=="table"
     stickiedPetIDs = nil
     return wasStickied
 end
 
 -- adds a petID to be stickied (called in roster too for new pets)
-function rematch.sort:AddStickiedPetID(petID)
+function rematchRedux.sort:AddStickiedPetID(petID)
     if not stickiedPetIDs then
         stickiedPetIDs = {}
     end
     stickiedPetIDs[petID] = true
 end
 
-function rematch.sort:IsPetIDStickied(petID)
+function rematchRedux.sort:IsPetIDStickied(petID)
     return (stickiedPetIDs and petID and stickiedPetIDs[petID]) and true or false
 end
 
@@ -213,7 +213,7 @@ end
 -- 5. Tertiary Sort
 -- 6. Name sort (if C.SORT_NAME not in primary-tertiary sort)
 -- 7. petID
-function rematch.sort.SortFunc(pet1,pet2)
+function rematchRedux.sort.SortFunc(pet1,pet2)
 
     -- always sort owned pets (strings) before uncollected (number) pets
     local o1,o2 = type(pet1)=="string", type(pet2)=="string"

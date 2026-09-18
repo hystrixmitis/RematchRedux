@@ -1,11 +1,11 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.loadedTargetPanel = rematch.frame.LoadedTargetPanel
-rematch.frame:Register("loadedTargetPanel")
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.loadedTargetPanel = rematchRedux.frame.LoadedTargetPanel
+rematchRedux.frame:Register("loadedTargetPanel")
 
-rematch.events:Register(rematch.loadedTargetPanel,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.loadedTargetPanel,"PLAYER_LOGIN",function(self)
     self.BigLoadSaveButton.Text:SetFontObject(GameFontNormal)
     self.MediumLoadButton.Text:SetFontObject(GameFontNormal)
     self.MediumLoadButton:SetText(L["Load"])
@@ -17,15 +17,15 @@ rematch.events:Register(rematch.loadedTargetPanel,"PLAYER_LOGIN",function(self)
     self.SmallSaveButton.tooltipBody = L["Create a new team for this target with the currently loaded pets."]
 end)
 
-function rematch.loadedTargetPanel:Configure()
-    if rematch.layout:GetSubview()=="target" then -- in a "mini" target view like minimized or one- or two-panel view
+function rematchRedux.loadedTargetPanel:Configure()
+    if rematchRedux.layout:GetSubview()=="target" then -- in a "mini" target view like minimized or one- or two-panel view
         self.Badge:Hide()
         self.Name:Hide()
         self.Underline:Hide()
         self.ClearButton:Hide()
         -- if mini target panel being shown, then switch to current npcID instead of recent target in bigger target panel
         self.blingNextUpdate = true -- always bling when mini target panel shown
-        rematch.targetInfo.recentTarget = rematch.targetInfo.currentTarget
+        rematchRedux.targetInfo.recentTarget = rematchRedux.targetInfo.currentTarget
     else
         self.Badge:Show()
         self.Name:Show()
@@ -33,33 +33,33 @@ function rematch.loadedTargetPanel:Configure()
     end
 end
 
-function rematch.loadedTargetPanel:Update()
-    if self.npcID ~= rematch.targetInfo.recentTarget or not self.teamIndex then
+function rematchRedux.loadedTargetPanel:Update()
+    if self.npcID ~= rematchRedux.targetInfo.recentTarget or not self.teamIndex then
         self.teamIndex = 1 -- if target has changed, reset teamIndex to first team of a target
     end
-    self.npcID = rematch.targetInfo.recentTarget
+    self.npcID = rematchRedux.targetInfo.recentTarget
     self.teamID = nil -- FillAllyTeam will set this
 
-    local isMini = rematch.layout:GetSubview()=="target"
+    local isMini = rematchRedux.layout:GetSubview()=="target"
     local right = -8 -- offset from right for name/underline/clear
 
     -- for both mini targets and normal, display portrait if there's a recent target
     if self.npcID then
-        local targetNpcID = UnitExists("target") and rematch.targetInfo:GetUnitNpcID("target")
+        local targetNpcID = UnitExists("target") and rematchRedux.targetInfo:GetUnitNpcID("target")
         if targetNpcID and targetNpcID==self.npcID then -- we are actually targeting this, use unit portrait
             self.Portrait.npcID = self.npcID
             SetPortraitTexture(self.Portrait.Texture,"target")
         elseif self.Portrait.npcID~=self.npcID then -- otherwise use displayID portrait from the npcID if not actual recent target (that's already drawn)
-            local displayID = rematch.targetInfo:GetNpcDisplayID(self.npcID)
+            local displayID = rematchRedux.targetInfo:GetNpcDisplayID(self.npcID)
             if displayID then
                 SetPortraitTextureFromCreatureDisplayID(self.Portrait.Texture,displayID)
             end
         end
         self.Portrait:Show()
 
-        local isSaved = rematch.savedTargets[self.npcID]
-        local isWild = rematch.targetInfo:IsWildPet(self.npcID)
-        local isNotable = rematch.targetInfo:IsNotable(self.npcID) or isWild
+        local isSaved = rematchRedux.savedTargets[self.npcID]
+        local isWild = rematchRedux.targetInfo:IsWildPet(self.npcID)
+        local isNotable = rematchRedux.targetInfo:IsNotable(self.npcID) or isWild
 
         if isMini then -- the mini target panel only displays ally team regardless if there's an enemy to show (no room)
             self.EnemyTeam:Hide()
@@ -139,7 +139,7 @@ function rematch.loadedTargetPanel:Update()
         self.Underline:SetPoint("TOPRIGHT",right,-22)
         self.ClearButton:SetPoint("TOPRIGHT",right+2,-4)
         if self.npcID then
-            self.Name:SetText(rematch.utils:GetFormattedTargetName(self.npcID))
+            self.Name:SetText(rematchRedux.utils:GetFormattedTargetName(self.npcID))
             self.ClearButton:Show()
         else
             self.Name:SetText(L["No Target"])
@@ -157,7 +157,7 @@ function rematch.loadedTargetPanel:Update()
 end
 
 -- for the shared load/save button, set for loading or saving
-function rematch.loadedTargetPanel:SetBigLoadSaveButton(mode)
+function rematchRedux.loadedTargetPanel:SetBigLoadSaveButton(mode)
     local button = self.BigLoadSaveButton
     button.mode = mode
     if mode==C.BUTTON_MODE_LOAD then
@@ -172,9 +172,9 @@ function rematch.loadedTargetPanel:SetBigLoadSaveButton(mode)
 end
 
 -- fills the enemy team with the target's pets, there can be 1 to 3 of them if this is called
-function rematch.loadedTargetPanel:FillEnemyTeam()
+function rematchRedux.loadedTargetPanel:FillEnemyTeam()
     local npcID = self.npcID
-    local numPets = rematch.targetInfo:GetNumPets(npcID)
+    local numPets = rematchRedux.targetInfo:GetNumPets(npcID)
     -- team border
     local coords = C.PET_BORDER_TEXCOORDS[C.TEAM_SIZE_NORMAL][numPets]
     if coords then
@@ -182,9 +182,9 @@ function rematch.loadedTargetPanel:FillEnemyTeam()
         self.EnemyTeam:SetSize(coords[5],coords[6])
     end
     -- fill pets
-    local pets = rematch.targetInfo:GetNpcPets(npcID)
+    local pets = rematchRedux.targetInfo:GetNpcPets(npcID)
     for i,petID in ipairs(pets) do
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         self.EnemyTeam.Pets[i].petID = petID
         self.EnemyTeam.Pets[i]:SetTexture(petInfo.icon)
         self.EnemyTeam.Pets[i]:SetDesaturated(false)
@@ -196,9 +196,9 @@ function rematch.loadedTargetPanel:FillEnemyTeam()
 end
 
 -- fills the ally team with the user's pets from the team of the current teamIndex
-function rematch.loadedTargetPanel:FillAllyTeam()
+function rematchRedux.loadedTargetPanel:FillAllyTeam()
     local npcID = self.npcID
-    local teams = rematch.savedTargets[npcID]
+    local teams = rematchRedux.savedTargets[npcID]
     if teams and #teams>0 then
         self.teamIndex = max(1,min(self.teamIndex,#teams))
         -- handle prev/next buttons
@@ -212,9 +212,9 @@ function rematch.loadedTargetPanel:FillAllyTeam()
         self.AllyTeam:SetSize(coords[5],coords[6])
         -- fill pets
         self.teamID = teams[self.teamIndex]
-        local team = rematch.savedTeams[self.teamID]
+        local team = rematchRedux.savedTeams[self.teamID]
         for i,petID in ipairs(team.pets) do
-            local petInfo = rematch.petInfo:Fetch(petID)
+            local petInfo = rematchRedux.petInfo:Fetch(petID)
             self.AllyTeam.Pets[i].teamID = self.teamID
             self.AllyTeam.Pets[i].petID = petID
             self.AllyTeam.Pets[i]:SetTexture(petInfo.icon)
@@ -233,47 +233,47 @@ function rematch.loadedTargetPanel:FillAllyTeam()
     end
 end
 
-function rematch.loadedTargetPanel:OnShow()
-    rematch.events:Register(self,"REMATCH_TARGET_CHANGED",self.SetTarget)
+function rematchRedux.loadedTargetPanel:OnShow()
+    rematchRedux.events:Register(self,"REMATCHREDUX_TARGET_CHANGED",self.SetTarget)
 end
 
-function rematch.loadedTargetPanel:OnHide()
-    rematch.events:Unregister(self,"REMATCH_TARGET_CHANGED")
+function rematchRedux.loadedTargetPanel:OnHide()
+    rematchRedux.events:Unregister(self,"REMATCHREDUX_TARGET_CHANGED")
 end
 
 -- if npcID is nill, set to current target; otherwise set to given npcID
-function rematch.loadedTargetPanel:SetTarget(npcID,bling)
+function rematchRedux.loadedTargetPanel:SetTarget(npcID,bling)
     if not npcID then -- if no npcID given this was likely from a targeting change, show team's pets first
-        npcID = rematch.targetInfo.currentTarget
+        npcID = rematchRedux.targetInfo.currentTarget
     else -- if npcID given this is likely from the targetsPanel, show target's pets first
         if type(npcID)=="string" then
-            npcID = rematch.targetInfo:GetNpcID(npcID) -- if "target:123", get the numeric npcID
+            npcID = rematchRedux.targetInfo:GetNpcID(npcID) -- if "target:123", get the numeric npcID
         end
     end
     if npcID then
-        rematch.targetInfo:SetRecentTarget(npcID)
+        rematchRedux.targetInfo:SetRecentTarget(npcID)
     end
     -- if settarget wanted to bling (from targetsPanel list) or this is a target with a saved team, bling it
-    if bling or rematch.savedTargets[npcID] then
+    if bling or rematchRedux.savedTargets[npcID] then
         self.blingNextUpdate = true
     end
     self:Update()
-    if rematch.targetsPanel:IsVisible() then
-        rematch.targetsPanel:Update()
+    if rematchRedux.targetsPanel:IsVisible() then
+        rematchRedux.targetsPanel:Update()
     end
 end
 
 -- use this to clear target (SetTarget(nil) will just pick up current target)
-function rematch.loadedTargetPanel:ClearTarget()
-    rematch.targetInfo:SetRecentTarget(nil)
+function rematchRedux.loadedTargetPanel:ClearTarget()
+    rematchRedux.targetInfo:SetRecentTarget(nil)
     self:Update()
 end
 
 -- for target subviews, target should only be shown if the target has a saved team
-function rematch.loadedTargetPanel:ShouldShowTarget()
-    local npcID = UnitExists("target") and rematch.targetInfo:GetUnitNpcID("target")
-    if npcID and rematch.savedTargets[npcID] then
-        local teams = rematch.savedTargets[npcID]
+function rematchRedux.loadedTargetPanel:ShouldShowTarget()
+    local npcID = UnitExists("target") and rematchRedux.targetInfo:GetUnitNpcID("target")
+    if npcID and rematchRedux.savedTargets[npcID] then
+        local teams = rematchRedux.savedTargets[npcID]
         if #teams==1 and teams[1]==settings.currentTeamID then
             return false -- if this target has one team that's already loaded, don't show target
         else
@@ -283,60 +283,60 @@ function rematch.loadedTargetPanel:ShouldShowTarget()
     return false
 end
 
-function rematch.loadedTargetPanel.ClearButton:OnClick()
+function rematchRedux.loadedTargetPanel.ClearButton:OnClick()
     self:GetParent():ClearTarget()
 end
 
-function rematch.loadedTargetPanel.AllyTeam.PrevTeamButton:OnClick()
+function rematchRedux.loadedTargetPanel.AllyTeam.PrevTeamButton:OnClick()
     self:GetParent():GetParent().teamIndex = self:GetParent():GetParent().teamIndex - 1
     self:GetParent():GetParent():Update()
 end
 
-function rematch.loadedTargetPanel.AllyTeam.NextTeamButton:OnClick()
+function rematchRedux.loadedTargetPanel.AllyTeam.NextTeamButton:OnClick()
     self:GetParent():GetParent().teamIndex = self:GetParent():GetParent().teamIndex + 1
     self:GetParent():GetParent():Update()
 end
 
 -- click of the big load (or save) button
-function rematch.loadedTargetPanel.BigLoadSaveButton:OnClick(button)
+function rematchRedux.loadedTargetPanel.BigLoadSaveButton:OnClick(button)
     local teamID = self:GetParent().teamID
     if self.mode==C.BUTTON_MODE_LOAD and teamID then
-        rematch.loadTeam:LoadTeamID(self:GetParent().teamID)
+        rematchRedux.loadTeam:LoadTeamID(self:GetParent().teamID)
     elseif self.mode==C.BUTTON_MODE_SAVE then
-        rematch.loadedTargetPanel:SaveTeamForNpcID(self:GetParent().npcID)
+        rematchRedux.loadedTargetPanel:SaveTeamForNpcID(self:GetParent().npcID)
     end
 end
 
 -- click of the smaller load button
-function rematch.loadedTargetPanel.MediumLoadButton:OnClick(button)
-    rematch.loadTeam:LoadTeamID(self:GetParent().teamID)
+function rematchRedux.loadedTargetPanel.MediumLoadButton:OnClick(button)
+    rematchRedux.loadTeam:LoadTeamID(self:GetParent().teamID)
 end
 
 -- click of green paw to set teams for the target
-function rematch.loadedTargetPanel.SmallTeamsButton:OnClick(button)
+function rematchRedux.loadedTargetPanel.SmallTeamsButton:OnClick(button)
     local npcID = self:GetParent().npcID
     if npcID then
-        rematch.targetMenu:SetTeams(npcID)
+        rematchRedux.targetMenu:SetTeams(npcID)
     end
 end
 
-function rematch.loadedTargetPanel.SmallRandomButton:OnClick(button)
+function rematchRedux.loadedTargetPanel.SmallRandomButton:OnClick(button)
     local npcID = self:GetParent().npcID
     if npcID then
-        rematch.randomPets:BuildCounterTeam(npcID)
-        rematch.loadTeam:LoadTeamID("counter")
+        rematchRedux.randomPets:BuildCounterTeam(npcID)
+        rematchRedux.loadTeam:LoadTeamID("counter")
     end
 end
 
-function rematch.loadedTargetPanel.SmallSaveButton:OnClick(button)
-    rematch.loadedTargetPanel:SaveTeamForNpcID(self:GetParent().npcID)
+function rematchRedux.loadedTargetPanel.SmallSaveButton:OnClick(button)
+    rematchRedux.loadedTargetPanel:SaveTeamForNpcID(self:GetParent().npcID)
 end
 
-function rematch.loadedTargetPanel:SaveTeamForNpcID(npcID)
+function rematchRedux.loadedTargetPanel:SaveTeamForNpcID(npcID)
     if npcID then
-        rematch.saveDialog:SidelineLoadouts()
-        rematch.savedTeams.sideline.name = rematch.savedTeams:GetUniqueName(rematch.targetInfo:GetNpcName(npcID))
-        rematch.savedTeams.sideline.targets = {npcID}
-        rematch.dialog:ShowDialog("SaveTeam",{saveMode=C.SAVE_MODE_SAVEAS})
+        rematchRedux.saveDialog:SidelineLoadouts()
+        rematchRedux.savedTeams.sideline.name = rematchRedux.savedTeams:GetUniqueName(rematchRedux.targetInfo:GetNpcName(npcID))
+        rematchRedux.savedTeams.sideline.targets = {npcID}
+        rematchRedux.dialog:ShowDialog("SaveTeam",{saveMode=C.SAVE_MODE_SAVEAS})
     end
 end

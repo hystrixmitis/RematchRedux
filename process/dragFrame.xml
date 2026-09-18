@@ -2,7 +2,7 @@
     <!-- The cursor can't be changed while over WorldFrame, so this frame acts as a backdrop beneath the UI
          so the cursor can remain an ITEM_CURSOR while dragging. (it also serves to capture clicks to drop
          the stuff off the cursor.) -->
-    <Button name="RematchDragFrame" parent="UIParent" registerForClicks="AnyUp" frameStrata="LOW" setAllPoints="true" hidden="true">
+    <Button name="RematchReduxDragFrame" parent="UIParent" registerForClicks="AnyUp" frameStrata="LOW" setAllPoints="true" hidden="true">
         <Frames>
             <!-- a group header "picked up" on the cursor (this is continually positioned at the cursor) -->
             <Frame parentKey="Group" frameStrata="TOOLTIP">

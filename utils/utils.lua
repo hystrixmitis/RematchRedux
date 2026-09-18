@@ -1,18 +1,18 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.utils = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.utils = {}
 
 --[[ print utils ]]
 
--- use instead of print to prefix Rematch before the text
-function rematch.utils:Write(...)
-    print(format("%sRematch:\124r",C.HEX_GOLD),...)
+-- use instead of print to prefix RematchRedux before the text
+function rematchRedux.utils:Write(...)
+    print(format("%sRematchRedux:\124r",C.HEX_GOLD),...)
 end
 
 -- for all chat frames registered for system messages, send the text with the system color
-function rematch.utils:WriteSystem(text)
+function rematchRedux.utils:WriteSystem(text)
     for i=1,NUM_CHAT_WINDOWS do
         local frame = _G["ChatFrame"..i]
         if frame and frame:IsEventRegistered("CHAT_MSG_SYSTEM") then
@@ -45,7 +45,7 @@ local function literal(c) return "%"..c end
 local function caseinsensitive(c) return format("[%s%s]",c:lower(),c:upper()) end
 local function unaccent(c) return accentMap[c] or c end
 
-function rematch.utils:DesensitizeText(text)
+function rematchRedux.utils:DesensitizeText(text)
 	if type(text)=="string" then
         text = text:trim()
         if useUnaccent and text:match("[\128-\244]") then
@@ -63,7 +63,7 @@ end
 
 -- returns true if any ... matches the given pattern
 -- when doing a case-insensitive match, use this instead of a direct match; so it can handle ruRU/deDE matches
-function rematch.utils:match(pattern,...)
+function rematchRedux.utils:match(pattern,...)
 	if type("pattern")=="string" then
 		for i=1,select("#",...) do
 			local candidate = select(i,...)
@@ -83,7 +83,7 @@ function rematch.utils:match(pattern,...)
 end
 
 -- using a 256x256 texture divided into 32px squares 8 across and 8 down, return the string to represent a badge at the given index (0-based)
-function rematch.utils:GetBadgeAsText(index,size,borderless)
+function rematchRedux.utils:GetBadgeAsText(index,size,borderless)
     size = size or 0 -- default to 0 for size
     local left = index%8*32
     local top = floor(index/8)*32
@@ -92,7 +92,7 @@ function rematch.utils:GetBadgeAsText(index,size,borderless)
 end
 
 -- takes a petType (1-10) and returns a text string for the icon (20x20) with the thin circle border
-function rematch.utils:PetTypeAsText(petType,size,borderless)
+function rematchRedux.utils:PetTypeAsText(petType,size,borderless)
     if not size then
         size = 16
     end
@@ -105,7 +105,7 @@ function rematch.utils:PetTypeAsText(petType,size,borderless)
 end
 
 -- converts 64x64 icons (like in Interface\Icons) to text
-function rematch.utils:IconAsText(icon,size)
+function rematchRedux.utils:IconAsText(icon,size)
     if not size then
         size = 16
     end
@@ -116,7 +116,7 @@ end
 local digitsOut = {} -- to avoid garbage creation, this is reused to build a 32-base number
 local digitsIn = "0123456789ABCDEFGHIJKLMNOPQRSTUV"
 -- convert number to base 32: VV = 1023
-function rematch.utils:ToBase32(number)
+function rematchRedux.utils:ToBase32(number)
 	number = tonumber(number)
 	if number then
 		wipe(digitsOut)
@@ -131,7 +131,7 @@ function rematch.utils:ToBase32(number)
 end
 
 -- converts a 6-digit hex like FFD200 to an r,g,b value, or white 0.9,0.9,0.9 if not a valid hex value
-function rematch.utils:HexToRGB(hex)
+function rematchRedux.utils:HexToRGB(hex)
     if not hex or hex:len()~=6 then
         return 0.9,0.9,0.9
     else
@@ -143,32 +143,32 @@ function rematch.utils:HexToRGB(hex)
 end
 
 -- for "type:id" ids (team:0, target:0, group:0, header:0, placeholder:0) returns the type of the id
-function rematch.utils:GetIDType(id)
+function rematchRedux.utils:GetIDType(id)
     if type(id)=="string" then
         return (id:match("(.-):.+"))
     end
 end
 
 -- returns the name of a marker (1 to 8) colored for that marker
-function rematch.utils:GetFormattedMarkerName(marker)
+function rematchRedux.utils:GetFormattedMarkerName(marker)
     if marker and C.MARKER_COLORS[marker] and _G["RAID_TARGET_"..marker] then
         return "\124cff"..C.MARKER_COLORS[marker]..(settings.PetMarkerNames[marker] or _G["RAID_TARGET_"..marker])
     end
 end
 
 -- returns the name of the teamID formatted with color codes
-function rematch.utils:GetFormattedTeamName(teamID)
-    local team = rematch.savedTeams[teamID]
+function rematchRedux.utils:GetFormattedTeamName(teamID)
+    local team = rematchRedux.savedTeams[teamID]
     if team then
-        local group = rematch.savedGroups[team.groupID]
+        local group = rematchRedux.savedGroups[team.groupID]
         local color = group and (settings.ColorTeamNames and group.color) or "E8E8E8"
         return format("\124cff%s%s\124r",color,team.name or "")
     end
 end
 
 -- returns the name of the groupID formatted with color codes
-function rematch.utils:GetFormattedGroupName(groupID)
-    local group = rematch.savedGroups[groupID]
+function rematchRedux.utils:GetFormattedGroupName(groupID)
+    local group = rematchRedux.savedGroups[groupID]
     if group then
         local color = group.color or "FFD200"
         return format("\124cff%s%s\124r",color,group.name or "")
@@ -176,27 +176,27 @@ function rematch.utils:GetFormattedGroupName(groupID)
 end
 
 -- returns the name of the target with a 0.9,0.9,0.9 color
-function rematch.utils:GetFormattedTargetName(targetID)
-    local name = rematch.targetInfo:GetNpcName(targetID)
+function rematchRedux.utils:GetFormattedTargetName(targetID)
+    local name = rematchRedux.targetInfo:GetNpcName(targetID)
     if name==C.CACHE_RETRIEVING then -- if name isn't cached yet, caller will want to try again later
         return name
     else
-        local expansionID = rematch.targetInfo:GetExpansionID(targetID)
+        local expansionID = rematchRedux.targetInfo:GetExpansionID(targetID)
         local color = expansionID and (settings.ColorTargetNames and C.EXPANSION_COLORS[expansionID]) or "E8E8E8"
         return format("\124cff%s%s\124r",color,name or "")
     end
 end
 
 -- returns the name of the target header with a 1,0.82,0 color
-function rematch.utils:GetFormattedHeaderName(headerID)
-    local name = rematch.targetInfo:GetHeaderName(headerID)
-    local expansionID = rematch.targetInfo:GetHeaderExpansionID(headerID)
+function rematchRedux.utils:GetFormattedHeaderName(headerID)
+    local name = rematchRedux.targetInfo:GetHeaderName(headerID)
+    local expansionID = rematchRedux.targetInfo:GetHeaderExpansionID(headerID)
     local color = expansionID and C.EXPANSION_COLORS[expansionID] or "FFD200"
     return format("\124cff%s%s\124r",color,name or "")
 end
 
 -- returns the placeholder text with a 0.5,0.5,0.5 color (placeholderID is either actual text to display or a numeric groupID)
-function rematch.utils:GetFormattedPlaceholderName(placeholderID)
+function rematchRedux.utils:GetFormattedPlaceholderName(placeholderID)
     local color = "808080"
     local name = placeholderID -- placeholders can be the text they display, like "No recent targets"
     local groupID = tonumber(placeholderID)
@@ -212,12 +212,12 @@ function rematch.utils:GetFormattedPlaceholderName(placeholderID)
     return format("\124cff%s%s\124r",color,name)
 end
 
-function rematch.utils:GetFormattedExpansionName(expansionID)
+function rematchRedux.utils:GetFormattedExpansionName(expansionID)
     local color = expansionID and C.EXPANSION_COLORS[expansionID] or "E8E8E8"
     return format("\124cff%s%s\124r",color,_G["EXPANSION_NAME"..expansionID] or UNKNOWN)
 end
 
-function rematch.utils:GetFormattedActionName(actionID)
+function rematchRedux.utils:GetFormattedActionName(actionID)
     if actionID=="cage" then
         return L["Cage Pet (Without Confirmation)"]
     elseif actionID=="favorite" then
@@ -229,14 +229,14 @@ function rematch.utils:GetFormattedActionName(actionID)
     elseif type(actionID)=="string" then
         local markerIndex = actionID:match("marker:(.+)")
         if tonumber(markerIndex) then
-            return format(L["Set/Remove Pet Tag: %s"],rematch.utils:GetFormattedMarkerName(tonumber(markerIndex)))
+            return format(L["Set/Remove Pet Tag: %s"],rematchRedux.utils:GetFormattedMarkerName(tonumber(markerIndex)))
         end
     end
     return actionID
 end
 
 -- if dim is true, set text to 0.5,0.5,0.5; otherwise set to r,g,b (or 1,0.82,0 if none given)
-function rematch.utils:SetDimText(fontstring,dim,r,g,b)
+function rematchRedux.utils:SetDimText(fontstring,dim,r,g,b)
     if not r then
         r,g,b = 1,0.82,0
     end
@@ -250,7 +250,7 @@ end
 --[[ table utils ]]
 
 -- does a tinsert(table,value) only if value doesn't exist in the given ordered table
-function rematch.utils:TableInsertDistinct(otable,value,noNils)
+function rematchRedux.utils:TableInsertDistinct(otable,value,noNils)
     if value==nil and noNils then
         return
     end
@@ -264,7 +264,7 @@ function rematch.utils:TableInsertDistinct(otable,value,noNils)
 end
 
 -- removes all given values from the given ordered table
-function rematch.utils:TableRemoveByValue(otable,value)
+function rematchRedux.utils:TableRemoveByValue(otable,value)
     for i=#otable,1,-1 do
         if otable[i]==value then
             tremove(otable,i)
@@ -273,11 +273,11 @@ function rematch.utils:TableRemoveByValue(otable,value)
 end
 
 -- moves the value in the otable to come after the 'after' value (or top of list if after is C.TOP_OF_LIST)
-function rematch.utils:TableMoveValueAfter(otable,value,after)
+function rematchRedux.utils:TableMoveValueAfter(otable,value,after)
     if value==after then -- can't make a value come after itself
         return -- it's not moving, already done
     end
-    rematch.utils:TableRemoveByValue(otable,value) -- remove the value first
+    rematchRedux.utils:TableRemoveByValue(otable,value) -- remove the value first
     if after==C.TOP_OF_LIST then
         table.insert(otable,1,value) -- insert to top of list
         return -- and leave
@@ -291,7 +291,7 @@ function rematch.utils:TableMoveValueAfter(otable,value,after)
 end
 
 -- returns the index the given value can be found in the given ordered table
-function rematch.utils:GetIndexByValue(otable,value)
+function rematchRedux.utils:GetIndexByValue(otable,value)
     for index,candidate in ipairs(otable) do
         if candidate==value then
             return index
@@ -300,7 +300,7 @@ function rematch.utils:GetIndexByValue(otable,value)
 end
 
 -- returns the size of utable, an unordered table. if utable is a function it will use it as an iterator
-function rematch.utils:GetSize(utable)
+function rematchRedux.utils:GetSize(utable)
     local count = 0
     if type(utable)=="function" then
         for id in utable() do
@@ -316,7 +316,7 @@ end
 
 -- compares two values and returns true if the same; if tables it does a deep compare to return true if the two tables have the same content
 -- if forTeams is true, it will ignore the teamID so two teams can be compared (teamID will always be different if not same team)
-function rematch.utils:AreSame(utable1,utable2,forTeams)
+function rematchRedux.utils:AreSame(utable1,utable2,forTeams)
     local utype1 = type(utable1)
     local utype2 = type(utable2)
     if utype1~=utype2 then
@@ -352,7 +352,7 @@ function rematch.utils:AreSame(utable1,utable2,forTeams)
 end
 
 -- returns true if value equals something in the passed varargs
-function rematch.utils:AnyEquals(value,...)
+function rematchRedux.utils:AnyEquals(value,...)
     for i=1,select("#",...) do
         if value and value==select(i,...) then
             return true
@@ -365,19 +365,19 @@ end
 
 -- at times, we don't want to show tooltips or cards if the UI was recongifured, a dialog dismissed, a menu
 -- chosen, etc. and an OnEnter happens because an element appears under the mouse. So any time elements may come
--- and go, call rematch.utils:SetUIJustChanged(); and in the tooltip or card functions, call
--- rematch.utils:GetUIJustChanged() to determine whether to ignore the OnEnter
+-- and go, call rematchRedux.utils:SetUIJustChanged(); and in the tooltip or card functions, call
+-- rematchRedux.utils:GetUIJustChanged() to determine whether to ignore the OnEnter
 local uiJustChanged = false
-function rematch.utils:SetUIJustChanged()
+function rematchRedux.utils:SetUIJustChanged()
     uiJustChanged = true
-    rematch.timer:Start(0.05,rematch.utils.ResetUIJustChanged)
+    rematchRedux.timer:Start(0.05,rematchRedux.utils.ResetUIJustChanged)
 end
 
-function rematch.utils:ResetUIJustChanged()
+function rematchRedux.utils:ResetUIJustChanged()
     uiJustChanged = false
 end
 
-function rematch.utils:GetUIJustChanged()
+function rematchRedux.utils:GetUIJustChanged()
     return uiJustChanged
 end
 
@@ -385,7 +385,7 @@ end
 
 -- returns the corner a frame is closest to a corner of reference (and its opposite corner)
 -- (if frame is closest to TOPRIGHT corner of reference, returns "TOPRIGHT","BOTTOMLEFT")
-function rematch.utils:GetCorner(frame,reference)
+function rematchRedux.utils:GetCorner(frame,reference)
     local fx,fy = frame:GetCenter()
     local fScale = frame:GetEffectiveScale()
     local rx,ry = reference:GetCenter()
@@ -409,11 +409,11 @@ end
 -- when anchoring stuff with GetCorner, it's not enough to anchor to an opposite corner of
 -- the frame being anchored to, since in a list of many buttons the anchor can change
 -- mid-list. so this function will look for the reference
-function rematch.utils:GetFrameForReference(startingFrame)
+function rematchRedux.utils:GetFrameForReference(startingFrame)
     local frame = startingFrame
     while frame do
         frame = frame:GetParent()
-        if frame and (frame==rematch.frame or frame==rematch.dialog) then
+        if frame and (frame==rematchRedux.frame or frame==rematchRedux.dialog) then
             return frame
         end
     end
@@ -424,7 +424,7 @@ end
 
 -- currentMenuID is for dropdowns and comboboxes, returns a new incrementing unique number so each menu instance is unique
 local currentMenuID = 0
-function rematch.utils:GetNewMenuID()
+function rematchRedux.utils:GetNewMenuID()
     currentMenuID = currentMenuID + 1
     return currentMenuID
 end
@@ -436,14 +436,14 @@ end
 -- rarityColors[Enum.ItemQuality.Rare].b = 0.99166 -- min(1,rarityColors[Enum.ItemQuality.Rare].b+0.125)
 -- rarityColors[Enum.ItemQuality.Rare].hex = "\124cff2090fd"
 -- -- call this instead of using GetItemQualityColor or ITEM_QUALITY_COLORS
--- function rematch.utils:GetRarityColor(rarity)
+-- function rematchRedux.utils:GetRarityColor(rarity)
 --     return rarity and rarityColors[rarity] or rarityColors[Enum.ItemQuality.Common]
 -- end
 
 --[[ buff utils ]]
 
 -- for setting buff tooltips that need a buff index, returns the index if found
-function rematch.utils:GetBuffIndex(spellID)
+function rematchRedux.utils:GetBuffIndex(spellID)
     local index = 0
     local buff
     repeat
@@ -456,7 +456,7 @@ function rematch.utils:GetBuffIndex(spellID)
 end
 
 -- returns the name and spellID if safari hat, pet treat, etc item's buff is active
-function rematch.utils:GetItemBuff(itemID)
+function rematchRedux.utils:GetItemBuff(itemID)
     local buffName, spellID = C_Item.GetItemSpell(itemID)
     if buffName and C_UnitAuras.GetPlayerAuraBySpellID(spellID) then
         return buffName, spellID
@@ -472,13 +472,13 @@ rarityColors[Enum.ItemQuality.Rare].g = 0.56422 -- min(1,rarityColors[Enum.ItemQ
 rarityColors[Enum.ItemQuality.Rare].b = 0.99166 -- min(1,rarityColors[Enum.ItemQuality.Rare].b+0.125)
 rarityColors[Enum.ItemQuality.Rare].hex = "\124cff2090fd"
 -- call this instead of using GetItemQualityColor or ITEM_QUALITY_COLORS
-function rematch.utils:GetRarityColor(rarity)
+function rematchRedux.utils:GetRarityColor(rarity)
     return rarity and rarityColors[rarity] or rarityColors[Enum.ItemQuality.Common]
 end
 
 -- updates a statusbar progress texture to a percent of the maxWidth with the given colors
 -- this assumes the statusbar is just a texture of the colored portion
-function rematch.utils:UpdateStatusBar(statusbar,value,maxValue,width,r,g,b)
+function rematchRedux.utils:UpdateStatusBar(statusbar,value,maxValue,width,r,g,b)
     local percent = value and maxValue and maxValue>0 and value/maxValue or 0
     if percent==0 then
         statusbar:Hide()
@@ -493,9 +493,9 @@ end
 -- (exports of more than a few thousand characters cause editboxes to flake out if done all at once)
 -- if highlight is true, highlight all the text when done
 local spoolFunc -- used for timer to spool
-function rematch.utils:SpoolText(editbox,text,highlight)
+function rematchRedux.utils:SpoolText(editbox,text,highlight)
     if spoolFunc then -- in case a SpoolText was called while the timer is running, stop the timer
-        rematch.timer:Stop(spoolFunc)
+        rematchRedux.timer:Stop(spoolFunc)
     end
     editbox:SetText("") -- start with an empty editbox
     editbox:ClearFocus() -- get the cursor out (we'll set focus back at end)
@@ -530,7 +530,7 @@ function rematch.utils:SpoolText(editbox,text,highlight)
         end
         -- update Please Wait progress bar
         if pleaseWait then
-            rematch.utils:UpdateStatusBar(pleaseWait.Bar,maxLines-#text,maxLines,196,1,0.82,0)
+            rematchRedux.utils:UpdateStatusBar(pleaseWait.Bar,maxLines-#text,maxLines,196,1,0.82,0)
         end
         local lines = ""
         for i=1,chunkSize do -- gather up a few lines in one chunk
@@ -543,7 +543,7 @@ function rematch.utils:SpoolText(editbox,text,highlight)
         end
         editbox:Insert(lines) -- add the chunk to the end of the text in the editbox
         if #text>0 then -- if there's more lines to add, come back next frame
-            rematch.timer:Start(0,spoolFunc)
+            rematchRedux.timer:Start(0,spoolFunc)
             return
         end
         -- if we reached here, we're done
@@ -561,7 +561,7 @@ end
 
 -- updates a statusbar progress texture to a percent of the maxWidth with the given colors
 -- this assumes the statusbar is just a texture of the colored portion
-function rematch.utils:UpdateStatusBar(statusbar,value,maxValue,width,r,g,b)
+function rematchRedux.utils:UpdateStatusBar(statusbar,value,maxValue,width,r,g,b)
     local percent = value and maxValue and maxValue>0 and value/maxValue or 0
     if percent==0 then
         statusbar:Hide()
@@ -573,19 +573,19 @@ function rematch.utils:UpdateStatusBar(statusbar,value,maxValue,width,r,g,b)
 end
 
 -- function to hide all extraneous popups and flyouts
-function rematch.utils:HideWidgets()
-    rematch.tooltip:Hide()
-    rematch.menus:Hide()
-    rematch.cardManager:HideAllCards()
-    rematch.miniLoadoutPanel.AbilityFlyout:Hide()
-    rematch.loadoutPanel.AbilityFlyout:Hide()
-    rematch.dragFrame:Hide()
+function rematchRedux.utils:HideWidgets()
+    rematchRedux.tooltip:Hide()
+    rematchRedux.menus:Hide()
+    rematchRedux.cardManager:HideAllCards()
+    rematchRedux.miniLoadoutPanel.AbilityFlyout:Hide()
+    rematchRedux.loadoutPanel.AbilityFlyout:Hide()
+    rematchRedux.dragFrame:Hide()
 end
 
 --[[ texture utils ]]
 
 -- tints a texture based on petInfo.tint value
-function rematch.utils:TintTexture(texture,tint)
+function rematchRedux.utils:TintTexture(texture,tint)
     if not tint then
         texture:SetDesaturated(false)
         texture:SetVertexColor(1,1,1)
@@ -599,7 +599,7 @@ function rematch.utils:TintTexture(texture,tint)
 end
 
 -- into either badges-borderless or badges-borders, returns left,right,top,bottom for given petType
-function rematch.utils:GetBadgeCoordsByPetType(petType)
+function rematchRedux.utils:GetBadgeCoordsByPetType(petType)
     if petType and petType>=1 and petType<=10 then -- pet has a valid type
         local x = (petType-1)%8
         local y = floor((petType-1)/8)
@@ -612,7 +612,7 @@ end
 --[[ pet utils ]]
 
 -- if a pet is on the cursor, returns its petID, returns false otherwise
-function rematch.utils:IsPetOnCursor()
+function rematchRedux.utils:IsPetOnCursor()
     local cursorType,petID = GetCursorInfo()
     return cursorType=="battlepet" and true or false
 end
@@ -620,14 +620,14 @@ end
 -- returns information about pet on the curosr; or false if no pet on the cursor
 -- includeLevelingInfo false: return petID
 -- includeLevelingInfo true:  return petID, canLevel, alreadyQueued, queueIndex
-function rematch.utils:GetPetCursorInfo(includeLevelingInfo)
+function rematchRedux.utils:GetPetCursorInfo(includeLevelingInfo)
     local cursorType,petID = GetCursorInfo()
     local canLevel,alreadyQueued,queueIndex
     if cursorType=="battlepet" and petID then
         if includeLevelingInfo then
-            canLevel = rematch.queue:PetIDCanLevel(petID) -- true/false if pet can level
-            alreadyQueued = rematch.queue:IsPetLeveling(petID) -- true/false if pet is already in queue
-            queueIndex = rematch.queue:GetPetIndex(petID) -- numeric index into settings.LevelingQueue of petID
+            canLevel = rematchRedux.queue:PetIDCanLevel(petID) -- true/false if pet can level
+            alreadyQueued = rematchRedux.queue:IsPetLeveling(petID) -- true/false if pet is already in queue
+            queueIndex = rematchRedux.queue:GetPetIndex(petID) -- numeric index into settings.LevelingQueue of petID
             return petID,canLevel,alreadyQueued,queueIndex
         else
             return petID
@@ -637,7 +637,7 @@ function rematch.utils:GetPetCursorInfo(includeLevelingInfo)
 end
 
 -- if in battle and given petID is slotted, return the "battle:1:x" petID, otherwise return the given petID
-function rematch.utils:GetBattlePetID(petID)
+function rematchRedux.utils:GetBattlePetID(petID)
     if C_PetBattles.IsInBattle() and C_PetJournal.PetIsSlotted(petID) then
         for i=1,3 do
             local slottedPetID = C_PetJournal.GetPetLoadOutInfo(i)
@@ -650,23 +650,23 @@ function rematch.utils:GetBattlePetID(petID)
 end
 
 -- returns true if queued for a battle or multiple accounts logged in
-function rematch.utils:IsJournalLocked()
+function rematchRedux.utils:IsJournalLocked()
     return (C_PetBattles.GetPVPMatchmakingInfo() or not C_PetJournal.IsJournalUnlocked()) and true or false
 end
 
 -- to avoid the need for many 'not isjournallocked' which can make logic weird
-function rematch.utils:IsJournalUnlocked()
-    return not rematch.utils:IsJournalLocked()
+function rematchRedux.utils:IsJournalUnlocked()
+    return not rematchRedux.utils:IsJournalLocked()
 end
 
 -- called from card manager, if a pet is being clicked, look for special handling and return
 -- true if something happend
 -- if chat modifier key is down (usually Shift) then handle the linking of the pet to chat or AH
 -- returns true if it was handled
-function rematch.utils:HandleSpecialPetClicks(petID)
+function rematchRedux.utils:HandleSpecialPetClicks(petID)
     -- something is targeting, try to target the pet being clicked
     if SpellIsTargeting() then
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if petInfo.idType=="pet" and petInfo.isOwned then
             C_PetJournal.SpellTargetBattlePet(petID)
         end
@@ -674,7 +674,7 @@ function rematch.utils:HandleSpecialPetClicks(petID)
     end
     -- pet is being shift+clicked
     if IsModifiedClick("CHATLINK") then
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if AuctionHouseFrame and AuctionHouseFrame.SearchBar.SearchBox:IsVisible() and petInfo.speciesName then
             AuctionHouseFrame.SearchBar.SearchBox:SetText(petInfo.speciesName) -- AH is up, put pet in search box
         elseif petInfo.isOwned and petInfo.idType=="pet" then
@@ -687,9 +687,9 @@ end
 -- if an ability is shift+clicked, send to chat with the stats of the abilityID if possible
 -- (petID will give a link with actual stats for the pet's level/rarity/etc)
 -- returns true if it was handled
-function rematch.utils:HandleSpecialAbilityClicks(abilityID,petID)
+function rematchRedux.utils:HandleSpecialAbilityClicks(abilityID,petID)
     if abilityID and IsModifiedClick("CHATLINK") and C_PetBattles.GetAbilityInfoByID(abilityID) then
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         local link = GetBattlePetAbilityHyperlink(abilityID,petInfo.maxHealth or 100,petInfo.power or 0,petInfo.speed or 0)
         if link then
             ChatEdit_InsertLink(link)
@@ -702,7 +702,7 @@ end
 
 -- takes an expression which can be a function or a literal. if a function it returns the return of that function;
 -- if a literal it returns the literal
-function rematch.utils:Evaluate(expression,info,subject)
+function rematchRedux.utils:Evaluate(expression,info,subject)
     if type(expression)=="function" then
         return expression(info,subject)
     else
@@ -711,7 +711,7 @@ function rematch.utils:Evaluate(expression,info,subject)
 end
 
 -- returns a YYYYMMDDHHMISS of the current datetime
-function rematch.utils:GetDateTime()
+function rematchRedux.utils:GetDateTime()
     return tonumber(date("%Y%m%d%H%M%S"))
 end
 

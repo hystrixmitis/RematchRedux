@@ -1,6 +1,6 @@
-local _,rematch = ...
-local L = rematch.localization
-rematch.debug = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+rematchRedux.debug = {}
 
 local debugTypes = {
     error = true,
@@ -13,11 +13,11 @@ local debugTypes = {
     teams = false,
 }
 
-rematch.debug.times = {} -- used to log times
+rematchRedux.debug.times = {} -- used to log times
 local profileStop
 
 -- returns where the calling function was called from
-function rematch.debug:CallerID()
+function rematchRedux.debug:CallerID()
     local where = (debugstack():match(".-\n.-\n.-\n.-\\AddOns\\.-\\(.-:%d+.-)\n") or ""):gsub("\"]","")
     if where:len()==0 then
         where = (debugstack():match(".-\n.-\n.-\\AddOns\\.-\\(.-:%d+.-)\n") or ""):gsub("\"]","")
@@ -26,15 +26,15 @@ function rematch.debug:CallerID()
 end
 
 
-function rematch.debug:Write(debugType,...)
+function rematchRedux.debug:Write(debugType,...)
     if debugTypes[debugType] then
         print(...)
     end
 end
 
--- returns the parentKey under rematch of the given frame
-function rematch.debug:GetModuleName(module)
-    for k,v in pairs(rematch) do
+-- returns the parentKey under rematchRedux of the given frame
+function rematchRedux.debug:GetModuleName(module)
+    for k,v in pairs(rematchRedux) do
         if module==v then
             return k
         end
@@ -44,23 +44,23 @@ end
 
 -- call this to wrap all update functions to print "Updating <parentKey>"
 local updateHooks
-function rematch.debug:MonitorUpdates()
-    for k,v in pairs(rematch) do
+function rematchRedux.debug:MonitorUpdates()
+    for k,v in pairs(rematchRedux) do
         if type(v)=="table" and type(v.Update)=="function" then
             local o = v.Update
-            rematch[k].Update = function(self,...)
-                rematch.debug:Write("updates","Updating",k)
+            rematchRedux[k].Update = function(self,...)
+                rematchRedux.debug:Write("updates","Updating",k)
                 return o(self,...)
             end
         end
     end
 end
 
-function rematch.debug:StartProfile()
+function rematchRedux.debug:StartProfile()
     profileStop = debugprofilestop()
 end
 
-function rematch.debug:Profile(name)
-    rematch.debug.times[name] = (rematch.debug.times[name] or 0) + (debugprofilestop()-profileStop)
+function rematchRedux.debug:Profile(name)
+    rematchRedux.debug.times[name] = (rematchRedux.debug.times[name] or 0) + (debugprofilestop()-profileStop)
     profileStop = debugprofilestop()
 end

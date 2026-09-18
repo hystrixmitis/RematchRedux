@@ -1,13 +1,13 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
 
 -- mixin for ability bar within a loadout slot and also for flyout abilities (if self.isFlyoutAbility is true)
 
-RematchAbilityBarButtonMixin = {}
+RematchReduxAbilityBarButtonMixin = {}
 
-function RematchAbilityBarButtonMixin:OnEnter()
-    if not self.isFlyoutAbility and not self.noClick and rematch.utils:IsJournalUnlocked() then
+function RematchReduxAbilityBarButtonMixin:OnEnter()
+    if not self.isFlyoutAbility and not self.noClick and rematchRedux.utils:IsJournalUnlocked() then
         local arrow = self:GetParent():GetParent():GetParent().FlyoutArrow
         arrow:SetParent(self) -- parent arrow to abilityBar that contains this ability
         if arrow.direction=="LEFT" then -- this is for the miniLoadoutPanel
@@ -17,39 +17,39 @@ function RematchAbilityBarButtonMixin:OnEnter()
         end
         arrow:Show()
     end
-    rematch.textureHighlight:Show(self.Icon)
-    rematch.abilityTooltip:ShowTooltip(self,self.petID,self.abilityID,rematch.frame)
+    rematchRedux.textureHighlight:Show(self.Icon)
+    rematchRedux.abilityTooltip:ShowTooltip(self,self.petID,self.abilityID,rematchRedux.frame)
 end
 
-function RematchAbilityBarButtonMixin:OnLeave()
+function RematchReduxAbilityBarButtonMixin:OnLeave()
     if not self.isFlyoutAbility and not self.noClick then
         local arrow = self:GetParent():GetParent():GetParent().FlyoutArrow
         arrow:Hide()
     end
-    rematch.textureHighlight:Hide()
-    rematch.abilityTooltip:Hide()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.abilityTooltip:Hide()
 end
 
-function RematchAbilityBarButtonMixin:OnMouseDown()
-    if rematch.utils:IsJournalUnlocked() then
-        rematch.textureHighlight:Hide()
+function RematchReduxAbilityBarButtonMixin:OnMouseDown()
+    if rematchRedux.utils:IsJournalUnlocked() then
+        rematchRedux.textureHighlight:Hide()
     end
 end
 
-function RematchAbilityBarButtonMixin:OnMouseUp()
-    if self:IsMouseMotionFocus() and rematch.utils:IsJournalUnlocked() then
-        rematch.textureHighlight:Show(self.Icon)
+function RematchReduxAbilityBarButtonMixin:OnMouseUp()
+    if self:IsMouseMotionFocus() and rematchRedux.utils:IsJournalUnlocked() then
+        rematchRedux.textureHighlight:Show(self.Icon)
     end
 end
 
 -- click of ability on ability bar or flyout
-function RematchAbilityBarButtonMixin:OnClick(button)
-    if self.noClick or rematch.utils:IsJournalLocked() then -- this is not part of an ability bar within or with a flyout, leave
+function RematchReduxAbilityBarButtonMixin:OnClick(button)
+    if self.noClick or rematchRedux.utils:IsJournalLocked() then -- this is not part of an ability bar within or with a flyout, leave
         return
-    elseif rematch.utils:HandleSpecialAbilityClicks(self.abilityID,self:GetParent().petID) then -- shift+click ability to chat
+    elseif rematchRedux.utils:HandleSpecialAbilityClicks(self.abilityID,self:GetParent().petID) then -- shift+click ability to chat
         return
     elseif button=="RightButton" then
-        rematch.menus:Show("AbilityMenu",self,self.abilityID,"cursor")
+        rematchRedux.menus:Show("AbilityMenu",self,self.abilityID,"cursor")
         return
     elseif self.isFlyoutAbility then -- this is a flyout ability button
         local flyout = self:GetParent()
@@ -58,7 +58,7 @@ function RematchAbilityBarButtonMixin:OnClick(button)
             local flyout = self:GetParent()
             C_PetJournal.SetAbility(flyout.petSlot,flyout.abilitySlot,self.abilityID)
             flyout:Hide()
-            --rematch.frame:Update() -- don't use this, the addon should be watching for ability changes
+            --rematchRedux.frame:Update() -- don't use this, the addon should be watching for ability changes
         end
     else -- this is an ability button on an abilityBar
         local abilityBar = self:GetParent()

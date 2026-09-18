@@ -1,9 +1,9 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-rematch.textureHighlight = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+rematchRedux.textureHighlight = {}
 
-local highlightFrame = CreateFrame("Frame",nil,UIParent,"RematchUseParentLevelTemplate")
+local highlightFrame = CreateFrame("Frame",nil,UIParent,"RematchReduxUseParentLevelTemplate")
 highlightFrame:Hide()
 local highlightPool = {}
 
@@ -11,7 +11,7 @@ local highlightPool = {}
 -- overlap they should be separated with a textureSubLevel gap between them (since highlight
 -- will appear 1 textureSubLevel above each); all textures being highlighted at once should
 -- have the same parent
-function rematch.textureHighlight:Show(...)
+function rematchRedux.textureHighlight:Show(...)
     local numHighlights = select("#",...)
     local texture = select(1,...)
     local parentFrame = texture and texture:GetParent()
@@ -56,7 +56,7 @@ function rematch.textureHighlight:Show(...)
 end
 
 -- hides the current highlight
-function rematch.textureHighlight:Hide()
+function rematchRedux.textureHighlight:Hide()
     highlightFrame:Hide()
     for _,highlight in ipairs(highlightPool) do
         highlight:Hide()

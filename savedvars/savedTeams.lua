@@ -1,13 +1,13 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.savedTeams = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.savedTeams = {}
 
 --[[
     A team has this definition:
 
-        rematch.savedTeams[teamID] = {
+        rematchRedux.savedTeams[teamID] = {
             teamID = "team:0", -- unique identifier of the team (required and persistent)
             name = "", -- unique name of the team (required, case insensitive)
             pets = {petID,petID,petID}, -- list of petIDs (or speciesIDs/"leveling"/"random:0"/"ignored") (required)
@@ -105,7 +105,7 @@ local function getNewUniqueTeamID()
     return "team:"..teamID
 end
 
--- rematch.savedTeams[key] will get the savedvar unless it's a meta teamID
+-- rematchRedux.savedTeams[key] will get the savedvar unless it's a meta teamID
 local function getter(self,key)
     if metaTeams[key] then
         return metaTeams[key]
@@ -114,7 +114,7 @@ local function getter(self,key)
     end
 end
 
--- rematch.savedTeams[key] = {team} will "copy" the contents of {team} to rematch.savedTeams[key]
+-- rematchRedux.savedTeams[key] = {team} will "copy" the contents of {team} to rematchRedux.savedTeams[key]
 -- if {team} is nil, it will empty metateams or nil savedvar teams
 local function setter(self,key,value)
     if key=="empty" then
@@ -124,8 +124,8 @@ local function setter(self,key,value)
             copyTeam(metaTeams.empty,metaTeams[key])
         else -- otherwise nil the saved team
             Rematch5SavedTeams[key] = nil
-            tinsert(dispatch,{"REMATCH_TEAM_DELETED",key})
-            rematch.savedTeams:TeamsChanged()
+            tinsert(dispatch,{"REMATCHREDUX_TEAM_DELETED",key})
+            rematchRedux.savedTeams:TeamsChanged()
         end
     elseif validateTeamStructure(value) then -- if assigning another team to this team
         value.name = value.name:trim()
@@ -133,8 +133,8 @@ local function setter(self,key,value)
             copyTeam(value,metaTeams[key])
         elseif Rematch5SavedTeams[key] then -- team already exists, replace contents
             copyTeam(value,Rematch5SavedTeams[key])
-            tinsert(dispatch,{"REMATCH_TEAM_UPDATED",key})
-            rematch.savedTeams:TeamsChanged()
+            tinsert(dispatch,{"REMATCHREDUX_TEAM_UPDATED",key})
+            rematchRedux.savedTeams:TeamsChanged()
         end
     end
 end
@@ -145,7 +145,7 @@ local function updatePets()
     local pets = numPetsByTeamID
     wipe(pets)
     numTeams = 0
-    for teamID,team in rematch.savedTeams:AllTeams() do
+    for teamID,team in rematchRedux.savedTeams:AllTeams() do
         numTeams = numTeams + 1
         for i=1,3 do
             local petID = team.pets[i]
@@ -165,48 +165,48 @@ end
 -- updates teamIDsByName with all team names and the teamID the name is used by
 local function updateNames()
     wipe(teamIDsByName)
-    for teamID,team in rematch.savedTeams:AllTeams() do
+    for teamID,team in rematchRedux.savedTeams:AllTeams() do
         teamIDsByName[team.name:lower()] = teamID
     end
 end
 
--- runs 0 frames after rematch.savedTeams:TeamsChanged() to do housekeeping and fires REMATCH_TEAMS_CHANGED event
+-- runs 0 frames after rematchRedux.savedTeams:TeamsChanged() to do housekeeping and fires REMATCHREDUX_TEAMS_CHANGED event
 local function afterTeamsChanged()
-    rematch.savedTargets:Update() -- update targets based on teams
-    rematch.savedGroups:Update() -- update groups based on teams
+    rematchRedux.savedTargets:Update() -- update targets based on teams
+    rematchRedux.savedGroups:Update() -- update groups based on teams
     updatePets()
     updateNames()
-    -- if any REMATCH_TEAM_CREATED, REMATCH_TEAM_DELETED, REMATCH_TEAM_UPDATED events are waiting to fire them, fire them here
+    -- if any REMATCHREDUX_TEAM_CREATED, REMATCHREDUX_TEAM_DELETED, REMATCHREDUX_TEAM_UPDATED events are waiting to fire them, fire them here
     if #dispatch>0 then
         for _,info in ipairs(dispatch) do
-            rematch.events:Fire(info[1],info[2],info[3],info[4])
+            rematchRedux.events:Fire(info[1],info[2],info[3],info[4])
         end
         wipe(dispatch)
     end
-    -- and then fire a generic REMATCH_TEAMS_CHANGED
-    rematch.events:Fire("REMATCH_TEAMS_CHANGED")
-    if rematch.frame:IsVisible() then
-        rematch.frame:Update()
+    -- and then fire a generic REMATCHREDUX_TEAMS_CHANGED
+    rematchRedux.events:Fire("REMATCHREDUX_TEAMS_CHANGED")
+    if rematchRedux.frame:IsVisible() then
+        rematchRedux.frame:Update()
     end
 end
 
 --[[ public functions ]]
 
--- iterator for all teams (a normal loop over rematch.savedTeams is a loop over a near-empty table with just a couple functions)
-function rematch.savedTeams:AllTeams()
+-- iterator for all teams (a normal loop over rematchRedux.savedTeams is a loop over a near-empty table with just a couple functions)
+function rematchRedux.savedTeams:AllTeams()
     return next, Rematch5SavedTeams, nil
 end
 
 -- empties a metateam ("sideline" or "temporary")
 -- to reset a regular team, reset a sideline and assign it to the team
-function rematch.savedTeams:Reset(teamID)
+function rematchRedux.savedTeams:Reset(teamID)
     assert(metaTeams[teamID],"Reset must be a named metaTeam such as \"sideline\" or \"temporary\"")
     -- to reset a regular team, reset a sideline and assign it to the team
     copyTeam(metaTeams.empty,metaTeams[teamID])
 end
 
 -- constructor for a new team; creates a new teamID in Rematch5SavedTeams from the sideline team
-function rematch.savedTeams:Create()
+function rematchRedux.savedTeams:Create()
     local sideline = metaTeams.sideline
     assert(sideline,"Sideline team is malformed. Can't create a new team.")
     --assert(sideline.name:len()>0,"Sideline team has no name. Can't create a new team.")
@@ -216,7 +216,7 @@ function rematch.savedTeams:Create()
     -- create a new table from a copy of the sideline
     local team = CopyTable(sideline)
     -- if name is already taken, make a unique name by appending (2) after it (or 3, 4, etc.)
-    team.name = rematch.savedTeams:GetUniqueName(team.name:trim())
+    team.name = rematchRedux.savedTeams:GetUniqueName(team.name:trim())
     -- assign a unique teamID
     team.teamID = getNewUniqueTeamID()
     -- and a groupID if none was in sideline
@@ -225,24 +225,24 @@ function rematch.savedTeams:Create()
     end
     -- and save
     Rematch5SavedTeams[team.teamID] = team
-    tinsert(dispatch,{"REMATCH_TEAM_CREATED",team.teamID})
-    rematch.savedTeams:TeamsChanged()
+    tinsert(dispatch,{"REMATCHREDUX_TEAM_CREATED",team.teamID})
+    rematchRedux.savedTeams:TeamsChanged()
     return team
 end
 
 -- deletes a non-meta team
-function rematch.savedTeams:DeleteTeam(teamID)
-    if teamID and rematch.savedTeams[teamID] then
-        rematch.savedTeams[teamID] = nil
-        rematch.savedTeams:TeamsChanged()
+function rematchRedux.savedTeams:DeleteTeam(teamID)
+    if teamID and rematchRedux.savedTeams[teamID] then
+        rematchRedux.savedTeams[teamID] = nil
+        rematchRedux.savedTeams:TeamsChanged()
     end
 end
 
 -- moves teamID to groupID and returns true if teamID's groupID was successfully changed
-function rematch.savedTeams:MoveTeam(teamID,groupID)
+function rematchRedux.savedTeams:MoveTeam(teamID,groupID)
     local moved = false
-    if rematch.savedTeams:IsUserTeam(teamID) and groupID and rematch.savedGroups[groupID] then
-        local team = rematch.savedTeams[teamID]
+    if rematchRedux.savedTeams:IsUserTeam(teamID) and groupID and rematchRedux.savedGroups[groupID] then
+        local team = rematchRedux.savedTeams[teamID]
         if groupID=="group:favorites" and groupID~=team.groupID then -- moving to favorites, set homeID
             team.homeID = team.groupID
             team.favorite = true
@@ -256,14 +256,14 @@ function rematch.savedTeams:MoveTeam(teamID,groupID)
         end
     end
     if moved then -- calling procedure may call this too which is fine; this is critical to run so group.teams can be rebuilt
-        rematch.savedTeams:TeamsChanged()
+        rematchRedux.savedTeams:TeamsChanged()
     end
     return moved
 end
 
 -- returns a unique team name, either based off the given name or "New Team", appending a (2) (or (3), (4), etc.)
 -- if the name is already taken
-function rematch.savedTeams:GetUniqueName(name)
+function rematchRedux.savedTeams:GetUniqueName(name)
     updateNames()
     name = (name or L["New Team"]):trim()
     if not teamIDsByName[tostring(name):lower()] then
@@ -280,30 +280,30 @@ function rematch.savedTeams:GetUniqueName(name)
 end
 
 -- returns the number of teams with the given petID (can be a speciesID for uncollected pets)
-function rematch.savedTeams:GetNumTeamsWithPet(petID)
+function rematchRedux.savedTeams:GetNumTeamsWithPet(petID)
     return petID and numPetsByTeamID[petID] or 0
 end
 
 -- returns the teamID of the team with the given name
-function rematch.savedTeams:GetTeamIDByName(name)
+function rematchRedux.savedTeams:GetTeamIDByName(name)
     return name and teamIDsByName[name:lower()]
 end
 
 -- returns true if the teamID is not a "meta" team like "counter" or "sideline"
-function rematch.savedTeams:IsUserTeam(teamID)
-    return (teamID and not metaTeams[teamID] and rematch.savedTeams[teamID]) and true or false
+function rematchRedux.savedTeams:IsUserTeam(teamID)
+    return (teamID and not metaTeams[teamID] and rematchRedux.savedTeams[teamID]) and true or false
 end
 
 -- returns the number of teams saved (excludes meta teams)
-function rematch.savedTeams:GetNumTeams()
+function rematchRedux.savedTeams:GetNumTeams()
     return numTeams
 end
 
 -- deletes all teams
-function rematch.savedTeams:Wipe()
+function rematchRedux.savedTeams:Wipe()
     Rematch5SavedTeams = {}
-    tinsert(dispatch,{"REMATCH_TEAMS_WIPED"})
-    rematch.savedTeams:TeamsChanged()
+    tinsert(dispatch,{"REMATCHREDUX_TEAMS_WIPED"})
+    rematchRedux.savedTeams:TeamsChanged()
 end
 
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -313,19 +313,19 @@ end
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -- this does a 0-frame timer before running housekeeping from changing teams; the validation is relatively
 -- expensive, so a 0-frame timer is used out of an abundance of caution that it doesn't happen multiple times in a row
-function rematch.savedTeams:TeamsChanged(now)
+function rematchRedux.savedTeams:TeamsChanged(now)
     if now then
         afterTeamsChanged() -- if now is true, do an immediate update (only do this when necessary; eg dragging teams)
     else
-        rematch.timer:Start(0,afterTeamsChanged)
+        rematchRedux.timer:Start(0,afterTeamsChanged)
     end
 end
 
--- add getter and setter metamethods that get/set to savedvar instead of rematch.savedTeams
-setmetatable(rematch.savedTeams,{__index=getter,__newindex=setter})
+-- add getter and setter metamethods that get/set to savedvar instead of rematchRedux.savedTeams
+setmetatable(rematchRedux.savedTeams,{__index=getter,__newindex=setter})
 
 -- after pets are loaded (this fires from roster), do housekeeping (roster will already call ValidateAllTeams)
-rematch.events:Register(rematch.savedTeams,"REMATCH_PETS_LOADED",function()
-    tinsert(dispatch,{"REMATCH_TEAMS_READY"})
-    rematch.savedTeams:TeamsChanged()
+rematchRedux.events:Register(rematchRedux.savedTeams,"REMATCHREDUX_PETS_LOADED",function()
+    tinsert(dispatch,{"REMATCHREDUX_TEAMS_READY"})
+    rematchRedux.savedTeams:TeamsChanged()
 end)

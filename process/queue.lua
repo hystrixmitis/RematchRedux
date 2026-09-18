@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.queue = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.queue = {}
 
 --[[
 
@@ -24,7 +24,7 @@ rematch.queue = {}
 
     In any of these scenarios it should call:
 
-        rematch.queue:Process()
+        rematchRedux.queue:Process()
 
     This will do a 0-frame wait (in case multiple of the above happen in the same frame) and then call
     startProcess() which will update the queue (apply preferences, kick out level 25 pets, sort if active
@@ -41,24 +41,24 @@ local topPicks = {} -- top three pets in the queue to be chosen for a leveling s
 
 local excludePetIDs = {} -- in the event the queue needs rebuilt, petIDs already in the queue are added here
 
-rematch.events:Register(rematch.queue,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.queue,"PLAYER_LOGIN",function(self)
     -- if pets changed level or rarity then queue may be changing (can't limit to ActiveSort due to a pet reaching 25/out of preferences)
-    rematch.events:Register(self,"REMATCH_PETS_CHANGED",self.Process)
+    rematchRedux.events:Register(self,"REMATCHREDUX_PETS_CHANGED",self.Process)
     -- after pets loaded on login, remove any invalid pets (caged or released while addon disabled or potentially a petID reassignment)
-    rematch.events:Register(self,"REMATCH_PETS_LOADED",self.REMATCH_PETS_LOADED)
-    rematch.events:Register(self,"PET_JOURNAL_PET_DELETED",self.PET_JOURNAL_PET_DELETED)
+    rematchRedux.events:Register(self,"REMATCHREDUX_PETS_LOADED",self.REMATCHREDUX_PETS_LOADED)
+    rematchRedux.events:Register(self,"PET_JOURNAL_PET_DELETED",self.PET_JOURNAL_PET_DELETED)
 
-    rematch.events:Register(self,"NEW_PET_ADDED",self.NEW_PET_ADDED)
+    rematchRedux.events:Register(self,"NEW_PET_ADDED",self.NEW_PET_ADDED)
 end)
 
 -- updates queue including lookup for indexes, removing pets that are 25/no longer exist, applying preferences and sorting if active sort enabled
-function rematch.queue:Update(teamID)
+function rematchRedux.queue:Update(teamID)
 
-    if not rematch.main:IsPlayerInWorld() then
+    if not rematchRedux.main:IsPlayerInWorld() then
         return -- player is in a loading screen, leave
     end
 
-    local preferences = rematch.preferences:GetCurrentPreferences(teamID) -- if teamID not provided, it will get current teamID
+    local preferences = rematchRedux.preferences:GetCurrentPreferences(teamID) -- if teamID not provided, it will get current teamID
 
     -- rebuild lookup indexes
     wipe(queueLookup)
@@ -80,7 +80,7 @@ function rematch.queue:Update(teamID)
         if info.petID=="delete" then
             tremove(settings.LevelingQueue,index) -- petID doesn't exist, remove from queue
         else
-            local petInfo = rematch.petInfo:Fetch(info.petID)
+            local petInfo = rematchRedux.petInfo:Fetch(info.petID)
             if petInfo.level==25 then
                 tremove(settings.LevelingQueue,index) -- pet is level 25, remove from queue
             else
@@ -92,28 +92,28 @@ function rematch.queue:Update(teamID)
                             excludePetIDs[queueInfo.petID] = true
                         end
                     end
-                    local newPetID = rematch.petTags:FindPetID(info.petTag,excludePetIDs)
+                    local newPetID = rematchRedux.petTags:FindPetID(info.petTag,excludePetIDs)
                     if newPetID then
                         info.petID = newPetID
                     else -- there was no replacement petID, should delete but letting it be a blank pet for now
                         --print(info.petID,petInfo.name,"is still not valid, tag:",info.petTag)
                     end
                 end
-                info.preferred = rematch.preferences:IsPetPreferred(info.petID,preferences)
+                info.preferred = rematchRedux.preferences:IsPetPreferred(info.petID,preferences)
             end
         end
     end
 
     -- after preferences updated, update top picks
-    rematch.queue:UpdateTopPicks()
+    rematchRedux.queue:UpdateTopPicks()
 
     if settings.QueueActiveSort then
-        rematch.queue:SortQueue(C.QUEUE_SORT_ALL)
+        rematchRedux.queue:SortQueue(C.QUEUE_SORT_ALL)
     end
 end
 
 -- after preferences updated, this picks the top 3 pets from the queue
-function rematch.queue:UpdateTopPicks()
+function rematchRedux.queue:UpdateTopPicks()
     wipe(topPicks)
     local pick = 1
     -- look for preferred pets first
@@ -128,7 +128,7 @@ function rematch.queue:UpdateTopPicks()
     end
     -- if still here, then not enough preferred pets to fill 3 top picks; try unpreferred
     for _,info in ipairs(settings.LevelingQueue) do
-        if not info.preferred and rematch.petInfo:Fetch(info.petID).isSummonable then
+        if not info.preferred and rematchRedux.petInfo:Fetch(info.petID).isSummonable then
             topPicks[pick] = info.petID
             pick = pick + 1
             if pick > 3 then
@@ -144,12 +144,12 @@ local function runProcess()
     local petSlotted = false -- true if any pets are slotted
     local firstSlotted -- petID of first pet (pickIndex 1) slotted for toasting purposes
     for slot=1,3 do
-        if rematch.loadouts:GetSpecialSlotType(slot)=="leveling" then
-            local petID = rematch.queue:GetTopPick(pickIndex)
-            local petInfo = rematch.petInfo:Fetch(petID)
+        if rematchRedux.loadouts:GetSpecialSlotType(slot)=="leveling" then
+            local petID = rematchRedux.queue:GetTopPick(pickIndex)
+            local petInfo = rematchRedux.petInfo:Fetch(petID)
             if petInfo.isOwned and petInfo.isSummonable then
-                if rematch.loadouts:GetLoadoutInfo(slot)~=petID then
-                    rematch.loadouts:SlotPet(slot,petID,0,true)
+                if rematchRedux.loadouts:GetLoadoutInfo(slot)~=petID then
+                    rematchRedux.loadouts:SlotPet(slot,petID,0,true)
                     petSlotted = true
                     if pickIndex==1 then
                         firstSlotted = petID
@@ -160,14 +160,14 @@ local function runProcess()
         end
     end
     -- update UI if it's visible (to hide.show leveling badges everywhere)
-    if rematch.frame:IsVisible() then
-        rematch.frame:Update()
+    if rematchRedux.frame:IsVisible() then
+        rematchRedux.frame:Update()
     end
     -- if a petID is waiting to be blinged
     if blingPetID then
         -- if queue panel is up, scroll to pet added to queue and bling it
-        if rematch.queuePanel:IsVisible() and rematch.queue:IsPetLeveling(blingPetID) then
-            rematch.queuePanel.List:BlingData(rematch.queue:GetPetIndex(blingPetID))
+        if rematchRedux.queuePanel:IsVisible() and rematchRedux.queue:IsPetLeveling(blingPetID) then
+            rematchRedux.queuePanel.List:BlingData(rematchRedux.queue:GetPetIndex(blingPetID))
         end
         -- whether queue panel was up or not, clear petID so it's not blinged when going to queue panel later
         blingPetID = nil
@@ -175,106 +175,106 @@ local function runProcess()
     -- if any pets were attempted to be slotted, come back in a bit to confirm they're all slotted
     if petSlotted and timeout>0 then
         timeout = timeout - 1
-        rematch.timer:Start(C.QUEUE_PROCESS_WAIT,runProcess)
+        rematchRedux.timer:Start(C.QUEUE_PROCESS_WAIT,runProcess)
     end
     if firstSlotted and firstSlotted~=settings.LastToastedPetID then
         settings.LastToastedPetID = firstSlotted
-        rematch.toast:ToastLevelingPet(firstSlotted)
+        rematchRedux.toast:ToastLevelingPet(firstSlotted)
     end
 end
 
--- called from rematch.queue:Process() after a 0-frame update; updates the queue and kicks off runProcess
+-- called from rematchRedux.queue:Process() after a 0-frame update; updates the queue and kicks off runProcess
 local function startProcess()
-    rematch.queue:Update()
+    rematchRedux.queue:Update()
     timeout = C.QUEUE_PROCESS_TIMEOUT
     runProcess()
 end
 
 -- procedure to call when the queue may change or pet levels/rarity may change; can potentially slot leveling pets in their place
-function rematch.queue:Process()
-    if rematch.main:IsPlayerInWorld() then
-        rematch.timer:Start(0,startProcess)
+function rematchRedux.queue:Process()
+    if rematchRedux.main:IsPlayerInWorld() then
+        rematchRedux.timer:Start(0,startProcess)
     else -- if in a loading screen, stop any pending queue process
-        rematch.queue:CancelProcess()
+        rematchRedux.queue:CancelProcess()
     end
 end
 
 -- when queue should be updated/processed without a wait
-function rematch.queue:ProcessNow()
-    rematch.queue:CancelProcess()
-    if rematch.main:IsPlayerInWorld() then
+function rematchRedux.queue:ProcessNow()
+    rematchRedux.queue:CancelProcess()
+    if rematchRedux.main:IsPlayerInWorld() then
         startProcess()
     end
 end
 
 -- call this to cancel any pending swaps from a queue being processed (eg team loading)
-function rematch.queue:CancelProcess()
-    rematch.timer:Stop(startProcess)
-    rematch.timer:Stop(runProcess)
+function rematchRedux.queue:CancelProcess()
+    rematchRedux.timer:Stop(startProcess)
+    rematchRedux.timer:Stop(runProcess)
 end
 
 -- bling the given petID at the end of the next process
-function rematch.queue:BlingPetID(petID)
+function rematchRedux.queue:BlingPetID(petID)
     blingPetID = petID
 end
 
 -- returns true if the petID is in the leveling queue; using lookup for performance
-function rematch.queue:IsPetLeveling(petID)
+function rematchRedux.queue:IsPetLeveling(petID)
     return (petID and queueLookup[petID]) and true or false
 end
 
 -- returns the numeric index of a petID in the queue from its petID
-function rematch.queue:GetPetIndex(petID)
+function rematchRedux.queue:GetPetIndex(petID)
     return petID and queueLookup[petID]
 end
 
 -- return the topmost preferred petID from the queue, by the given index. (so index 3 will get the 3rd topmost pet from the queue)
-function rematch.queue:GetTopPick(index)
+function rematchRedux.queue:GetTopPick(index)
     return topPicks[index] -- if there's a pet in the queue available, return it
 end
 
 -- returns true if the petID can level (is owned, can battle, has a level and is under 25)
-function rematch.queue:PetIDCanLevel(petID)
-    local petInfo = rematch.altInfo:Fetch(petID)
+function rematchRedux.queue:PetIDCanLevel(petID)
+    local petInfo = rematchRedux.altInfo:Fetch(petID)
     return petInfo.isOwned and petInfo.canBattle and petInfo.level and petInfo.level<25
 end
 
 -- adds a petID to the end of the queue
-function rematch.queue:AddPetID(petID)
-    rematch.queue:InsertPetID(petID,#settings.LevelingQueue+1) -- adding to end of queue
+function rematchRedux.queue:AddPetID(petID)
+    rematchRedux.queue:InsertPetID(petID,#settings.LevelingQueue+1) -- adding to end of queue
 end
 
 -- inserts a petID into the queue at the given index
-function rematch.queue:InsertPetID(petID,index)
+function rematchRedux.queue:InsertPetID(petID,index)
     assert(type(index)=="number" and index>=1 and index<=(#settings.LevelingQueue+1),"Invalid index ("..(index or "nil")..") in queue:InsertPetID(index)")
-    if rematch.queue:PetIDCanLevel(petID) then
-        if rematch.queue:IsPetLeveling(petID) then
-            rematch.queue:MoveIndex(rematch.queue:GetPetIndex(petID),index) -- pet was already in queue, move to this new position
+    if rematchRedux.queue:PetIDCanLevel(petID) then
+        if rematchRedux.queue:IsPetLeveling(petID) then
+            rematchRedux.queue:MoveIndex(rematchRedux.queue:GetPetIndex(petID),index) -- pet was already in queue, move to this new position
         else
-            tinsert(settings.LevelingQueue,index,{petID=petID,petTag=rematch.petTags:Create(petID,"Q"),added=rematch.utils:GetDateTime()})
+            tinsert(settings.LevelingQueue,index,{petID=petID,petTag=rematchRedux.petTags:Create(petID,"Q"),added=rematchRedux.utils:GetDateTime()})
         end
-        rematch.queue:Process()
+        rematchRedux.queue:Process()
     end
 end
 
 -- removes a petID from the queue
-function rematch.queue:RemovePetID(petID)
-    local index = rematch.queue:GetPetIndex(petID)
+function rematchRedux.queue:RemovePetID(petID)
+    local index = rematchRedux.queue:GetPetIndex(petID)
     if index then
         tremove(settings.LevelingQueue,index)
     end
-    rematch.queue:Process()
+    rematchRedux.queue:Process()
 end
 
 -- moves a pet in the queue from oldIndex to newIndex (newIndex can be #queue+1 to add to end of queue)
-function rematch.queue:MoveIndex(oldIndex,newIndex)
+function rematchRedux.queue:MoveIndex(oldIndex,newIndex)
     local queueSize = #settings.LevelingQueue
     assert(type(oldIndex)=="number" and oldIndex>=1 and oldIndex<=queueSize,"Invalid oldIndex ("..(oldIndex or "nil")..") in queue:MoveIndex(oldIndex,newIndex)")
     assert(type(newIndex)=="number" and newIndex>=1 and newIndex<=(queueSize+1),"Invalid newIndex ("..(newIndex or "nil")..") in queue:MoveIndex(oldIndex,newIndex)")
     local deleteIndex = newIndex<oldIndex and oldIndex+1 or oldIndex -- after copying queue entry, this index will be deleted
     tinsert(settings.LevelingQueue,newIndex,CopyTable(settings.LevelingQueue[oldIndex]))
     tremove(settings.LevelingQueue,deleteIndex)
-    rematch.queue:Process()
+    rematchRedux.queue:Process()
 end
 
 
@@ -299,7 +299,7 @@ local function fillSortWeights(sort)
 
     for _,info in ipairs(settings.LevelingQueue) do
         local petID = info.petID
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
 
         -- weight is a value of the petID where the higher weight is listed first
         local weight = (petInfo.isOwned and 1 or 0) * 10000000 -- isOwned criteria is always used
@@ -339,7 +339,7 @@ local function shouldSwap(e1,e2)
 end
 
 -- does a stable sort (insertion sort) of the queue for the given sort (C.QUEUE_SORT_ASC, C.QUEUE_SORT_MID, etc.; C.QUEUE_SORT_ALL for active sort)
-function rematch.queue:SortQueue(sort)
+function rematchRedux.queue:SortQueue(sort)
     -- update weights before going into sort
     fillSortWeights(sort)
     -- perform insertion sort on the given sort (can't use table.sort since it's unstable)
@@ -369,16 +369,16 @@ end
 
 -- this runs once after login when pets are loaded, to remove any pets that no longer exist, possibly from pets released/caged
 -- while addon disabled or server-side petID reassignment. if all pets are invalid a petID reassignment happened, rebuild the queue
-function rematch.queue:REMATCH_PETS_LOADED()
+function rematchRedux.queue:REMATCHREDUX_PETS_LOADED()
     local queue = settings.LevelingQueue
     local excludePetIDs = {} -- lookup table of petIDs added to queue (so they don't get added for repeats)
     -- first see if ALL pets are invalid; if so then likely a server-side petID reassignment happened
     local validFound = false
     local invalidFound = false
     for index,info in ipairs(queue) do
-        local petInfo = rematch.petInfo:Fetch(queue[index].petID)
+        local petInfo = rematchRedux.petInfo:Fetch(queue[index].petID)
         if petInfo.idType=="species" then -- if a species, look for a pet to take its place; possibly remainingg a species
-            local petID = rematch.petTags:FindPetID(info.petTag,excludePetIDs)
+            local petID = rematchRedux.petTags:FindPetID(info.petTag,excludePetIDs)
             if petID then
                 excludePetIDs[petID] = true
                 info.petID = petID
@@ -398,9 +398,9 @@ function rematch.queue:REMATCH_PETS_LOADED()
         end
     elseif invalidFound then -- if ALL pets are invalid, rebuild entire queue from tags
         for index,info in ipairs(queue) do
-            local speciesID = rematch.petTags:GetSpecies(info.petTag)
+            local speciesID = rematchRedux.petTags:GetSpecies(info.petTag)
             if speciesID then
-                local petID = rematch.petTags:FindPetID(info.petTag,excludePetIDs)
+                local petID = rematchRedux.petTags:FindPetID(info.petTag,excludePetIDs)
                 if petID then
                     excludePetIDs[petID] = true
                     info.petID = petID
@@ -412,12 +412,12 @@ function rematch.queue:REMATCH_PETS_LOADED()
     for _,info in ipairs(settings.LevelingQueue) do
         info.isValid = nil
     end
-    rematch.queue:Process()
-    rematch.events:Register(rematch.queue,"PET_JOURNAL_LIST_UPDATE",rematch.queue.Process)
+    rematchRedux.queue:Process()
+    rematchRedux.events:Register(rematchRedux.queue,"PET_JOURNAL_LIST_UPDATE",rematchRedux.queue.Process)
 end
 
 -- when a pet is caged or released, remove from queue directly (this event doesn't fire naturally on release; roster is firing it on a hook)
-function rematch.queue:PET_JOURNAL_PET_DELETED(petID)
+function rematchRedux.queue:PET_JOURNAL_PET_DELETED(petID)
     for index=#settings.LevelingQueue,1,-1 do
         local info = settings.LevelingQueue[index]
         if info.petID==petID then
@@ -431,24 +431,24 @@ end
 -- when fillMore is true, one levelable copy of each species will be added to the queue
 -- when countOnly is true, the pets won't actually be added, just a count of what would be added is returned
 local speciesInQueue = {}
-function rematch.queue:FillQueue(fillMore,countOnly)
+function rematchRedux.queue:FillQueue(fillMore,countOnly)
     local count = 0
     wipe(speciesInQueue)
     if not fillMore then
         for _,info in ipairs(settings.LevelingQueue) do
             local petID = info.petID
-            local petInfo = rematch.petInfo:Fetch(petID)
+            local petInfo = rematchRedux.petInfo:Fetch(petID)
             speciesInQueue[petInfo.speciesID] = true
         end
     end
     -- for each petID in the filtered list of pets
-    for _,petID in ipairs(rematch.filters:RunFilters()) do
-        local petInfo = rematch.petInfo:Fetch(petID)
+    for _,petID in ipairs(rematchRedux.filters:RunFilters()) do
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         local speciesID = petInfo.speciesID
         -- if speciesID is not in the queue and there's no level 25 version of the pet
-        if speciesID and not speciesInQueue[speciesID] and not rematch.queue:IsPetLeveling(petID) and rematch.queue:PetIDCanLevel(petID) and (fillMore or not rematch.collectionInfo:IsSpeciesAt25(speciesID)) then
+        if speciesID and not speciesInQueue[speciesID] and not rematchRedux.queue:IsPetLeveling(petID) and rematchRedux.queue:PetIDCanLevel(petID) and (fillMore or not rematchRedux.collectionInfo:IsSpeciesAt25(speciesID)) then
             if not countOnly then
-                rematch.queue:AddPetID(petID) -- add it (this triggers a 0-frame process queue)
+                rematchRedux.queue:AddPetID(petID) -- add it (this triggers a 0-frame process queue)
             end
             speciesInQueue[speciesID] = true
             count = count + 1
@@ -458,7 +458,7 @@ function rematch.queue:FillQueue(fillMore,countOnly)
 end
 
 -- returns all petTags in the queue in a comma-separated list
-function rematch.queue:ExportQueue()
+function rematchRedux.queue:ExportQueue()
     local result = ""
     for index,info in ipairs(settings.LevelingQueue) do
         result = result..info.petTag..(index==#settings.LevelingQueue and "" or ",")
@@ -467,7 +467,7 @@ function rematch.queue:ExportQueue()
 end
 
 -- takes an export/import string and returns: numNew,numOld,numCant,numBad
-function rematch.queue:AnalyzeImport(import)
+function rematchRedux.queue:AnalyzeImport(import)
     local numNew = 0 -- the number of pets importing this would add to the queue (will be added)
     local numOld = 0 -- the number of pets already in the queue (won't be added)
     local numCant = 0 -- the number of pets can't add to queue due to level or missing (can't be added)
@@ -480,10 +480,10 @@ function rematch.queue:AnalyzeImport(import)
     end
 
     for petTag in import:gmatch("[^,]+") do
-        local speciesID = rematch.petTags:GetSpecies(petTag)
+        local speciesID = rematchRedux.petTags:GetSpecies(petTag)
         if speciesID then
-            local petID = rematch.petTags:FindPetID(petTag,excludePetIDs)
-            local petInfo = rematch.petInfo:Fetch(petID)
+            local petID = rematchRedux.petTags:FindPetID(petTag,excludePetIDs)
+            local petInfo = rematchRedux.petInfo:Fetch(petID)
             if not petInfo.isValid or not petInfo.level then -- this pet is bad
                 numBad = numBad + 1
             else
@@ -491,7 +491,7 @@ function rematch.queue:AnalyzeImport(import)
                     numCant = numCant + 1
                 elseif not petInfo.isOwned then -- this pet is not owned, can't add
                     numCant = numCant + 1
-                elseif rematch.queue:IsPetLeveling(petID) then -- this pet is already leveling, won't add
+                elseif rematchRedux.queue:IsPetLeveling(petID) then -- this pet is already leveling, won't add
                     numOld = numOld + 1
                 else -- this pet is ok to add
                     numNew = numNew + 1
@@ -507,19 +507,19 @@ function rematch.queue:AnalyzeImport(import)
 end
 
 --  imports the pets in the given string into the queue where it can
-function rematch.queue:ImportQueue(import)
+function rematchRedux.queue:ImportQueue(import)
     local excludePetIDs = {}
     if not import or import=="" then
         return
     end
     for petTag in import:gmatch("[^,]+") do
-        local speciesID = rematch.petTags:GetSpecies(petTag)
+        local speciesID = rematchRedux.petTags:GetSpecies(petTag)
         if speciesID then
-            local petID = rematch.petTags:FindPetID(petTag,excludePetIDs)
+            local petID = rematchRedux.petTags:FindPetID(petTag,excludePetIDs)
             excludePetIDs[petID] = true
-            local petInfo = rematch.petInfo:Fetch(petID)
-            if petInfo.isValid and petInfo.level and petInfo.level<25 and petInfo.isOwned and not rematch.queue:IsPetLeveling(petID) then
-                rematch.queue:AddPetID(petID)
+            local petInfo = rematchRedux.petInfo:Fetch(petID)
+            if petInfo.isValid and petInfo.level and petInfo.level<25 and petInfo.isOwned and not rematchRedux.queue:IsPetLeveling(petID) then
+                rematchRedux.queue:AddPetID(petID)
             end
         end
     end
@@ -527,20 +527,20 @@ end
 
 -- fires when a pet is captured in a pet battle, learned from a caged pet, and from an item that learns a pet
 -- if settings enabled, add new pets to the queue
-function rematch.queue:NEW_PET_ADDED(petID)
+function rematchRedux.queue:NEW_PET_ADDED(petID)
     if settings.QueueAutoLearn then
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if petInfo.canBattle and petInfo.level and petInfo.level<25 then
             -- if QueueAutoLearnOnly, only add pets whose species does not have a verion at 25 or in queue
             -- if QueueAutoLearnRare, only add pets that are rare
             local newSpeciesID = petInfo.speciesID -- IsSpeciesAt25 may invalidate petInfo, hold speciesID/name here
             local newFormattedName = petInfo.formattedName
             local isRare = petInfo.rarity==4
-            local isAnyAt25 = rematch.collectionInfo:IsSpeciesAt25(newSpeciesID)
+            local isAnyAt25 = rematchRedux.collectionInfo:IsSpeciesAt25(newSpeciesID)
             -- QueueAutoLearnOnly also checks if any same species in queue; only bother checking if a 25 not already found
             if not isAnyAt25 and settings.QueueAutoLearnOnly then
                 for _,info in ipairs(settings.LevelingQueue) do
-                    local speciesID = rematch.petTags:GetSpecies(info.petTag)
+                    local speciesID = rematchRedux.petTags:GetSpecies(info.petTag)
                     if speciesID==newSpeciesID then
                         isAnyAt25 = true -- found species in queue, flag it as if there's a 25
                     end
@@ -548,8 +548,8 @@ function rematch.queue:NEW_PET_ADDED(petID)
             end
             if (not settings.QueueAutoLearnOnly or not isAnyAt25) and (not settings.QueueAutoLearnRare or isRare) then
                 -- add pet to queue and print a "system" message to match the that the pet was just added to journal
-                rematch.queue:AddPetID(petID)
-                rematch.utils:WriteSystem(format(L["%s has also been added to your leveling queue!"],newFormattedName))
+                rematchRedux.queue:AddPetID(petID)
+                rematchRedux.utils:WriteSystem(format(L["%s has also been added to your leveling queue!"],newFormattedName))
             end
         end
     end

@@ -1,13 +1,13 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.teamMenu = {}
-local tm = rematch.teamMenu
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.teamMenu = {}
+local tm = rematchRedux.teamMenu
 
 --[[ this is a place to hold common functions used across multiple team menus ]]
 
-rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.teamMenu,"PLAYER_LOGIN",function(self)
 
     -- menu when you right-click a group in the team list
     local groupMenu = {
@@ -24,7 +24,7 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
         {text = tm.HideShowGroupTabText, hidden=tm.IsHideShowGroupTabHidden, isDisabled=tm.IsHideShowGroupTabDisabled, disabledTooltip=tm.HideShowGroupTabDisabledTooltip, func=tm.HideShowGroupTab},
         {text=CANCEL},
     }
-    rematch.menus:Register("GroupMenu",groupMenu)
+    rematchRedux.menus:Register("GroupMenu",groupMenu)
 
     -- menu when you right-click a team in the team list
     local teamMenu = {
@@ -40,7 +40,7 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
         {text=L["Delete Team"], func=tm.DeleteTeam},
         {text=CANCEL},
     }
-    rematch.menus:Register("TeamMenu",teamMenu)
+    rematchRedux.menus:Register("TeamMenu",teamMenu)
 
     local shareTeamMenu = {
         {text=L["Plain Text"], isPlainText=true, func=tm.ExportTeam},
@@ -48,7 +48,7 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
         {text=L["Send Team"], isDisabled=tm.IsShareDisabled, disabledTooltip=L["Sending teams is disabled due to Disabling Sharing in options.\n\nYou can still export and import teams, however."], func=tm.SendTeam},
         {text=CANCEL}
     }
-    rematch.menus:Register("ShareTeamMenu",shareTeamMenu)
+    rematchRedux.menus:Register("ShareTeamMenu",shareTeamMenu)
 
     -- menu for the Teams button at the top of the panel
     local teamsButtonMenu = {
@@ -56,10 +56,10 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
         {text=L["Team Herder"], func=tm.TeamHerder},
         {text=L["Import Teams"], func=tm.ImportTeams},
         {text=L["Backup All Teams"], func=tm.BackupAllTeams},
-        {text=L["Help"], stay=true, isHelp=true, hidden=function() return settings.HideMenuHelp end, icon="Interface\\Common\\help-i", iconCoords={0.15,0.85,0.15,0.85}, tooltipTitle=L["Teams and Groups"], tooltipBody=format(L["Teams can be organized into an unlimited number of collapsible groups. You can create new groups with %sCreate New Group\124r in this menu. Up to %d groups can be shown as tabs to act as bookmarks to these groups.\n\nBoth teams and groups can be rearranged with drag and drop. To easily move many teams to another group, use %sTeam Herder\124r in this menu.\n\nTeams with a %s beside their name contain at least one target.\nTeams with a %s beside their name contain a leveling preference.\nPets or targets with a %s beside their name belong to at least one team."],C.HEX_WHITE,C.MAX_TEAM_TABS,C.HEX_WHITE,rematch.utils:GetBadgeAsText(27,14,true),rematch.utils:GetBadgeAsText(14,14,true),rematch.utils:GetBadgeAsText(12,14,true))},
+        {text=L["Help"], stay=true, isHelp=true, hidden=function() return settings.HideMenuHelp end, icon="Interface\\Common\\help-i", iconCoords={0.15,0.85,0.15,0.85}, tooltipTitle=L["Teams and Groups"], tooltipBody=format(L["Teams can be organized into an unlimited number of collapsible groups. You can create new groups with %sCreate New Group\124r in this menu. Up to %d groups can be shown as tabs to act as bookmarks to these groups.\n\nBoth teams and groups can be rearranged with drag and drop. To easily move many teams to another group, use %sTeam Herder\124r in this menu.\n\nTeams with a %s beside their name contain at least one target.\nTeams with a %s beside their name contain a leveling preference.\nPets or targets with a %s beside their name belong to at least one team."],C.HEX_WHITE,C.MAX_TEAM_TABS,C.HEX_WHITE,rematchRedux.utils:GetBadgeAsText(27,14,true),rematchRedux.utils:GetBadgeAsText(14,14,true),rematchRedux.utils:GetBadgeAsText(12,14,true))},
         {text=OKAY},
     }
-    rematch.menus:Register("TeamsButtonMenu",teamsButtonMenu)
+    rematchRedux.menus:Register("TeamsButtonMenu",teamsButtonMenu)
 
     -- menu from the right-click of the loadedTeamPanel TeamButton
     local loadedTeamMenu = {
@@ -73,14 +73,14 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
         {text=L["Share"], subMenu="ShareTeamMenu"},
         {text=CANCEL}
     }
-    rematch.menus:Register("LoadedTeamMenu",loadedTeamMenu)
+    rematchRedux.menus:Register("LoadedTeamMenu",loadedTeamMenu)
 
     -- submenus have just title, subMenuFuncs fill them in
-    rematch.menus:Register("TeamEditTargetMenu",{{title=L["Targets"]}})
-    rematch.menus:Register("TeamLoadTargetMenu",{{title=L["Targets"]}})
+    rematchRedux.menus:Register("TeamEditTargetMenu",{{title=L["Targets"]}})
+    rematchRedux.menus:Register("TeamLoadTargetMenu",{{title=L["Targets"]}})
 
     -- dialog for editing a team group
-    rematch.dialog:Register("EditGroup",{
+    rematchRedux.dialog:Register("EditGroup",{
         title = L["New Group"],
         accept = SAVE,
         cancel = CANCEL,
@@ -92,16 +92,16 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
         },
         refreshFunc = function(self,info,subject,firstRun)
             if firstRun then
-                local group = subject and rematch.savedGroups[subject]
+                local group = subject and rematchRedux.savedGroups[subject]
                 if group then
                     self.ColorPicker:Set(group.color)
                 else
                     self.ColorPicker:Reset()
                 end
                 local name = group and group.name or L["New Group"]
-                rematch.dialog:SetTitle(name)
+                rematchRedux.dialog:SetTitle(name)
                 self.EditBox:SetText(name,true)
-                self.EditBox:SetTextColor(rematch.utils:HexToRGB(self.ColorPicker.color))
+                self.EditBox:SetTextColor(rematchRedux.utils:HexToRGB(self.ColorPicker.color))
                 self.EditBox:SetEnabled(not (subject=="group:favorites"))
                 self.LayoutTabs:SetTabs({
                     {L["Group"],"Default"},
@@ -118,44 +118,44 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
                 self.DropDown.DropDown:SetSelection(group and group.sortMode or C.GROUP_SORT_ALPHA)
                 self.CheckButton:SetText(L["Show Tab For This Group"])
                 self.CheckButton.Check.tooltipTitle = L["Show Tab For This Group"]
-                local numTeamTabs = rematch.savedGroups:GetNumTeamTabs()
-                self.CheckButton.Check.tooltipBody = format(L["Up to %d groups can be chosen to display as tabs along the right side of the Rematch window.\n\n%s%d of %d\124r possible tabs are shown."],C.MAX_TEAM_TABS,numTeamTabs<C.MAX_TEAM_TABS and C.HEX_WHITE or C.HEX_RED,numTeamTabs,C.MAX_TEAM_TABS)
+                local numTeamTabs = rematchRedux.savedGroups:GetNumTeamTabs()
+                self.CheckButton.Check.tooltipBody = format(L["Up to %d groups can be chosen to display as tabs along the right side of the RematchRedux window.\n\n%s%d of %d\124r possible tabs are shown."],C.MAX_TEAM_TABS,numTeamTabs<C.MAX_TEAM_TABS and C.HEX_WHITE or C.HEX_RED,numTeamTabs,C.MAX_TEAM_TABS)
                 if numTeamTabs >= C.MAX_TEAM_TABS and (not group or not group.showTab) then
                     self.CheckButton.Check.tooltipBody = self.CheckButton.Check.tooltipBody..L["\n\nYou will need to hide another group's tab before you can show a tab for this group."]
                 end
-                self.IconPicker:SetIcon(group and group.icon or C.REMATCH_ICON)
+                self.IconPicker:SetIcon(group and group.icon or C.REMATCHREDUX_ICON)
                 self.Preferences:Set(group and group.preferences or {})
-                rematch.dialog.AcceptButton:Enable()
+                rematchRedux.dialog.AcceptButton:Enable()
             end
             -- these run every refresh (above is only on first run)
-            local openLayout = rematch.dialog:GetOpenLayout()
+            local openLayout = rematchRedux.dialog:GetOpenLayout()
             if openLayout=="Default" then
                 self.Help:SetText(format(L["Groups are categories you create for organizing your teams. Unlimited groups can be made but only %d can be shown as tabs."],C.MAX_TEAM_TABS))
             elseif openLayout=="Preferences" then
                 self.Help:SetText(L["Leveling preferences choose which pets are picked first in the leveling queue. All criteria are optional."])
                 self.Text:SetText(L["Group Leveling Preferences"])
             end
-            local showTab = subject and rematch.savedGroups[subject] and rematch.savedGroups[subject].showTab and true or false
+            local showTab = subject and rematchRedux.savedGroups[subject] and rematchRedux.savedGroups[subject].showTab and true or false
             self.CheckButton:SetChecked(showTab)
-            self.CheckButton:SetEnabled(showTab or rematch.savedGroups:GetNumTeamTabs()<C.MAX_TEAM_TABS)
+            self.CheckButton:SetEnabled(showTab or rematchRedux.savedGroups:GetNumTeamTabs()<C.MAX_TEAM_TABS)
             self.LayoutTabs:Update()
         end,
         changeFunc = function(self,info,subject)
-            self.EditBox:SetTextColor(rematch.utils:HexToRGB(self.ColorPicker.color))
-            rematch.dialog.AcceptButton:SetEnabled(self.EditBox:GetText():trim():len()>0)
+            self.EditBox:SetTextColor(rematchRedux.utils:HexToRGB(self.ColorPicker.color))
+            rematchRedux.dialog.AcceptButton:SetEnabled(self.EditBox:GetText():trim():len()>0)
             self.LayoutTabs:Update()
         end,
         acceptFunc = function(self,info,subject)
-            local group = subject and rematch.savedGroups[subject]
+            local group = subject and rematchRedux.savedGroups[subject]
             local name = self.EditBox:GetText():trim() or L["New Group"]
             if not group then
-                group = rematch.savedGroups:Create(name)
+                group = rematchRedux.savedGroups:Create(name)
             end
             group.name = name
             group.color = self.ColorPicker.color
             if group.sortMode~=self.DropDown:GetSelection() then
                 group.sortMode = self.DropDown:GetSelection()
-                rematch.savedGroups:Sort(subject)
+                rematchRedux.savedGroups:Sort(subject)
             end
             group.icon = self.IconPicker:GetIcon()
             if self.Preferences:IsAnyUsed() then
@@ -164,17 +164,17 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
                 group.preferences = nil
             end
             group.showTab = self.CheckButton:GetChecked() or nil
-            if rematch.layout:GetView()~="teams" then
-                rematch.layout:ChangeView("teams")
+            if rematchRedux.layout:GetView()~="teams" then
+                rematchRedux.layout:ChangeView("teams")
             end
-            rematch.teamsPanel:Update()
-            rematch.teamsPanel.List:BlingData(group.groupID)
-            rematch.teamTabs:Update()
-            rematch.loadedTeamPanel:Update()
+            rematchRedux.teamsPanel:Update()
+            rematchRedux.teamsPanel.List:BlingData(group.groupID)
+            rematchRedux.teamTabs:Update()
+            rematchRedux.loadedTeamPanel:Update()
         end
     })
 
-    rematch.dialog:Register("DeleteGroup",{
+    rematchRedux.dialog:Register("DeleteGroup",{
         title = L["Delete Group"],
         accept = YES,
         cancel = NO,
@@ -184,7 +184,7 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
             Warning = {"Text","CheckButton","Feedback"}
         },
         refreshFunc = function(self,info,subject,firstRun)
-            local group = subject and rematch.savedGroups[subject]
+            local group = subject and rematchRedux.savedGroups[subject]
             if group then
                 if firstRun then
                     self.CheckButton:SetText(L["Also delete teams in this group"])
@@ -192,59 +192,59 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
                     self.CheckButton:SetChecked(false)
                 end
                 if self.CheckButton:GetChecked() then
-                    self.Text:SetText(format(L["Are you sure you want to delete the group %s and all teams within it?"],rematch.utils:GetFormattedGroupName(subject)))
+                    self.Text:SetText(format(L["Are you sure you want to delete the group %s and all teams within it?"],rematchRedux.utils:GetFormattedGroupName(subject)))
                 else
-                    self.Text:SetText(format(L["Are you sure you want to delete the group %s? All of its teams will be moved to the %s group."],rematch.utils:GetFormattedGroupName(subject),rematch.utils:GetFormattedGroupName("group:none")))
+                    self.Text:SetText(format(L["Are you sure you want to delete the group %s? All of its teams will be moved to the %s group."],rematchRedux.utils:GetFormattedGroupName(subject),rematchRedux.utils:GetFormattedGroupName("group:none")))
                 end
             end
         end,
         changeFunc = function(self,info,subject)
-            local group = subject and rematch.savedGroups[subject]
+            local group = subject and rematchRedux.savedGroups[subject]
             if group then
                 if self.CheckButton:GetChecked() then
-                    rematch.dialog:ChangeLayout("Warning")
+                    rematchRedux.dialog:ChangeLayout("Warning")
                 else
-                    rematch.dialog:ChangeLayout("Default")
+                    rematchRedux.dialog:ChangeLayout("Default")
                 end
             end
         end,
         acceptFunc = function(self,info,subject)
             if self.CheckButton:GetChecked() then -- if 'Also delete teams in this group' checked
-                for teamID,team in rematch.savedTeams:AllTeams() do
+                for teamID,team in rematchRedux.savedTeams:AllTeams() do
                     if team.groupID==subject then
-                        rematch.savedTeams[teamID] = nil -- delete team
+                        rematchRedux.savedTeams[teamID] = nil -- delete team
                     end
                 end
             end
             -- the following delete will move teams to Ungrouped Teams (if any remain)
-            rematch.savedGroups:Delete(subject)
-            rematch.savedGroups:Update() -- just in case anything weird happened
-            rematch.teamsPanel:Update()
+            rematchRedux.savedGroups:Delete(subject)
+            rematchRedux.savedGroups:Update() -- just in case anything weird happened
+            rematchRedux.teamsPanel:Update()
         end
     })
 
-    rematch.dialog:Register("DeleteGroupTeams",{
+    rematchRedux.dialog:Register("DeleteGroupTeams",{
         title = L["Delete Group Teams"],
         accept = YES,
         cancel = NO,
         layout = {"Text","Feedback"},
         refreshFunc = function(self,info,subject,firstRun)
-            self.Text:SetText(format(L["There are %s%d\124r teams in the group %s."],C.HEX_WHITE,#rematch.savedGroups[subject].teams,rematch.utils:GetFormattedGroupName(subject)))
+            self.Text:SetText(format(L["There are %s%d\124r teams in the group %s."],C.HEX_WHITE,#rematchRedux.savedGroups[subject].teams,rematchRedux.utils:GetFormattedGroupName(subject)))
             self.Feedback:Set("warning",format(L["%sAre you sure you want to %sdelete\124r these teams? This cannot be undone."],C.HEX_GOLD,C.HEX_WHITE))
         end,
         acceptFunc = function(self,info,subject)
-            for teamID,team in rematch.savedTeams:AllTeams() do
+            for teamID,team in rematchRedux.savedTeams:AllTeams() do
                 if team.groupID==subject then
-                    rematch.savedTeams[teamID] = nil -- delete team
+                    rematchRedux.savedTeams[teamID] = nil -- delete team
                 end
             end
-            rematch.savedGroups:Update()
-            rematch.teamsPanel:Update()
-            rematch.teamsPanel.List:BlingData(subject)
+            rematchRedux.savedGroups:Update()
+            rematchRedux.teamsPanel:Update()
+            rematchRedux.teamsPanel.List:BlingData(subject)
         end
     })
 
-    rematch.dialog:Register("DeleteTeam",{
+    rematchRedux.dialog:Register("DeleteTeam",{
         title = L["Delete Team"],
         accept = YES,
         cancel = NO,
@@ -260,12 +260,12 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
             if self.CheckButton:GetChecked() then
                 settings.DontConfirmDeleteTeams = true
             end
-            rematch.savedTeams:DeleteTeam(subject)
+            rematchRedux.savedTeams:DeleteTeam(subject)
         end
     })
 
     -- subject is {teamID=teamID, isPlainText=true/false} where isPlainText is true to export in plain text (really)
-    rematch.dialog:Register("ExportSingleTeam",{
+    rematchRedux.dialog:Register("ExportSingleTeam",{
         title = L["Export Team"],
         accept = OKAY,
         layout = {"Text","MultiLineEditBox","IncludeCheckButtons"},
@@ -273,7 +273,7 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
             if firstRun then
                 self.Text:SetText(L["Press Ctrl+C to copy to clipboard"])
                 self.IncludeCheckButtons:Update(subject.teamID)
-                local export = subject.isPlainText and rematch.teamStrings:ExportPlainTextTeam(subject.teamID) or rematch.teamStrings:ExportTeam(subject.teamID)
+                local export = subject.isPlainText and rematchRedux.teamStrings:ExportPlainTextTeam(subject.teamID) or rematchRedux.teamStrings:ExportTeam(subject.teamID)
                 self.MultiLineEditBox:SetText(export or "",true)
                 self.MultiLineEditBox:ScrollToTop()
             end
@@ -281,14 +281,14 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
         changeFunc = function(self,info,subject)
             settings.ExportIncludePreferences = self.IncludeCheckButtons.IncludePreferences:GetChecked()
             settings.ExportIncludeNotes = self.IncludeCheckButtons.IncludeNotes:GetChecked()
-            local export = subject.isPlainText and rematch.teamStrings:ExportPlainTextTeam(subject.teamID) or rematch.teamStrings:ExportTeam(subject.teamID)
+            local export = subject.isPlainText and rematchRedux.teamStrings:ExportPlainTextTeam(subject.teamID) or rematchRedux.teamStrings:ExportTeam(subject.teamID)
             self.MultiLineEditBox:SetText(export or "",true)
             self.MultiLineEditBox:ScrollToTop()
         end
     })
 
     -- subject is a groupID to export a group and its teams, or nil to export all teams (backup)
-    rematch.dialog:Register("ExportMultipleTeams",{
+    rematchRedux.dialog:Register("ExportMultipleTeams",{
         title = L["Export Teams"],
         accept = OKAY,
         layout = {"Text","MultiLineEditBox","IncludeCheckButtons"},
@@ -296,7 +296,7 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
             if firstRun then
                 self.Text:SetText(L["Press Ctrl+C to copy to clipboard"])
                 self.IncludeCheckButtons:Update()
-                local teamStrings = subject and rematch.teamStrings:ExportGroup(subject) or rematch.teamStrings:ExportAll()
+                local teamStrings = subject and rematchRedux.teamStrings:ExportGroup(subject) or rematchRedux.teamStrings:ExportAll()
                 self.MultiLineEditBox:SetText(teamStrings,true)
             end
         end,
@@ -304,7 +304,7 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
             if settings.ExportIncludePreferences~=self.IncludeCheckButtons.IncludePreferences:GetChecked() or settings.ExportIncludeNotes~=self.IncludeCheckButtons.IncludeNotes:GetChecked() then
                 settings.ExportIncludePreferences = self.IncludeCheckButtons.IncludePreferences:GetChecked()
                 settings.ExportIncludeNotes = self.IncludeCheckButtons.IncludeNotes:GetChecked()
-                local teamStrings = subject and rematch.teamStrings:ExportGroup(subject) or rematch.teamStrings:ExportAll()
+                local teamStrings = subject and rematchRedux.teamStrings:ExportGroup(subject) or rematchRedux.teamStrings:ExportAll()
                 self.MultiLineEditBox:SetText(teamStrings,true)
             end
         end
@@ -313,96 +313,96 @@ rematch.events:Register(rematch.teamMenu,"PLAYER_LOGIN",function(self)
 end)
 
 -- returns unformatted name of group
-function rematch.teamMenu:GetGroupName(groupID)
-    local group = rematch.savedGroups[groupID]
+function rematchRedux.teamMenu:GetGroupName(groupID)
+    local group = rematchRedux.savedGroups[groupID]
     return group.name or L["New Group"]
 end
 
-function rematch.teamMenu:GetTeamName(teamID)
-    local team = rematch.savedTeams[teamID]
+function rematchRedux.teamMenu:GetTeamName(teamID)
+    local team = rematchRedux.savedTeams[teamID]
     return team.name or L["New Team"]
 end
 
 -- summon EditGroup dialog
-function rematch.teamMenu:EditGroup(groupID)
-    rematch.dialog:ShowDialog("EditGroup",groupID)
+function rematchRedux.teamMenu:EditGroup(groupID)
+    rematchRedux.dialog:ShowDialog("EditGroup",groupID)
 end
 
 -- returns true if group can't be deleted (favorites or ungrouped teams)
-function rematch.teamMenu:IsUndeletable(groupID)
+function rematchRedux.teamMenu:IsUndeletable(groupID)
     return groupID=="group:favorites" or groupID=="group:none"
 end
 
 -- summon DeleteGroup dialog
-function rematch.teamMenu:DeleteGroup(groupID)
-    rematch.dialog:ShowDialog("DeleteGroup",groupID)
+function rematchRedux.teamMenu:DeleteGroup(groupID)
+    rematchRedux.dialog:ShowDialog("DeleteGroup",groupID)
 end
 
 -- dummon DeleteTeam dialog
-function rematch.teamMenu:DeleteTeam(teamID)
+function rematchRedux.teamMenu:DeleteTeam(teamID)
     if not settings.DontConfirmDeleteTeams then
-        rematch.dialog:ShowDialog("DeleteTeam",teamID)
+        rematchRedux.dialog:ShowDialog("DeleteTeam",teamID)
     else
-        rematch.savedTeams:DeleteTeam(teamID)
+        rematchRedux.savedTeams:DeleteTeam(teamID)
     end
 end
 
 -- returns "Show Tab" or group's tab is not shown; "Hide Tab" otherwise
-function rematch.teamMenu:HideShowGroupTabText(groupID)
-    local group = rematch.savedGroups[groupID]
+function rematchRedux.teamMenu:HideShowGroupTabText(groupID)
+    local group = rematchRedux.savedGroups[groupID]
     return group.showTab and L["Hide Tab"] or L["Show Tab"]
 end
 
 -- if Never Show Team Tabs enabled, then never show options to show or hide tabs too
-function rematch.teamMenu:IsHideShowGroupTabHidden(groupID)
+function rematchRedux.teamMenu:IsHideShowGroupTabHidden(groupID)
     return settings.NeverTeamTabs
 end
 
 -- returns true if max groups are tabs
-function rematch.teamMenu:IsHideShowGroupTabDisabled(groupID)
-    local group = rematch.savedGroups[groupID]
+function rematchRedux.teamMenu:IsHideShowGroupTabDisabled(groupID)
+    local group = rematchRedux.savedGroups[groupID]
     if group.showTab then
         return false -- always make hiding the tab enabled
     else
-        return rematch.savedGroups:GetNumTeamTabs() >= C.MAX_TEAM_TABS -- disable if at team tab limit
+        return rematchRedux.savedGroups:GetNumTeamTabs() >= C.MAX_TEAM_TABS -- disable if at team tab limit
     end
 end
 
 -- tooltip to explain why Show Tab is disabled
-function rematch.teamMenu:HideShowGroupTabDisabledTooltip(groupID)
-    return format(L["%s%d of %d\124r tabs are currently shown.\n\nBefore the tab for this group can be shown, another one needs to be hidden."],C.HEX_WHITE,rematch.savedGroups:GetNumTeamTabs(),C.MAX_TEAM_TABS)
+function rematchRedux.teamMenu:HideShowGroupTabDisabledTooltip(groupID)
+    return format(L["%s%d of %d\124r tabs are currently shown.\n\nBefore the tab for this group can be shown, another one needs to be hidden."],C.HEX_WHITE,rematchRedux.savedGroups:GetNumTeamTabs(),C.MAX_TEAM_TABS)
 end
 
 -- shows or hides team tab for the groupID
-function rematch.teamMenu:HideShowGroupTab(groupID)
-    local group = rematch.savedGroups[groupID]
+function rematchRedux.teamMenu:HideShowGroupTab(groupID)
+    local group = rematchRedux.savedGroups[groupID]
     if group.showTab then
         group.showTab = nil
-    elseif rematch.savedGroups:GetNumTeamTabs()<C.MAX_TEAM_TABS then
+    elseif rematchRedux.savedGroups:GetNumTeamTabs()<C.MAX_TEAM_TABS then
         group.showTab = true
     end
-    rematch.teamTabs:Update()
+    rematchRedux.teamTabs:Update()
 end
 
-function rematch.teamMenu:MoveGroup(groupID)
+function rematchRedux.teamMenu:MoveGroup(groupID)
     if groupID then
-        rematch.dragFrame:PickupGroup(groupID)
+        rematchRedux.dragFrame:PickupGroup(groupID)
     end
 end
 
-function rematch.teamMenu:MoveTeam(teamID)
+function rematchRedux.teamMenu:MoveTeam(teamID)
     if teamID then
-        rematch.dragFrame:PickupTeam(teamID)
+        rematchRedux.dragFrame:PickupTeam(teamID)
     end
 end
 
-function rematch.teamMenu:SetOrRemoveFavoriteText(teamID)
-    local team = teamID and rematch.savedTeams[teamID]
+function rematchRedux.teamMenu:SetOrRemoveFavoriteText(teamID)
+    local team = teamID and rematchRedux.savedTeams[teamID]
     return (team and team.favorite) and L["Remove Favorite"] or L["Set Favorite"]
 end
 
-function rematch.teamMenu:SetOrRemoveFavorite(teamID)
-    local team = teamID and rematch.savedTeams[teamID]
+function rematchRedux.teamMenu:SetOrRemoveFavorite(teamID)
+    local team = teamID and rematchRedux.savedTeams[teamID]
     if team and team.favorite then
         team.groupID = team.homeID or "group:none"
         team.homeID = nil
@@ -412,68 +412,68 @@ function rematch.teamMenu:SetOrRemoveFavorite(teamID)
         team.groupID = "group:favorites"
         team.favorite = true
     end
-    rematch.savedTeams:TeamsChanged()
+    rematchRedux.savedTeams:TeamsChanged()
 end
 
-function rematch.teamMenu:UnloadTeam(teamID)
-    rematch.loadTeam:UnloadTeam()
+function rematchRedux.teamMenu:UnloadTeam(teamID)
+    rematchRedux.loadTeam:UnloadTeam()
 end
 
-function rematch.teamMenu:SetNotes(teamID)
-    rematch.cardManager:HideCard(rematch.notes)
-    rematch.cardManager:ShowCard(rematch.notes,teamID)
-    rematch.notes:SetFocus()
+function rematchRedux.teamMenu:SetNotes(teamID)
+    rematchRedux.cardManager:HideCard(rematchRedux.notes)
+    rematchRedux.cardManager:ShowCard(rematchRedux.notes,teamID)
+    rematchRedux.notes:SetFocus()
 end
 
-function rematch.teamMenu:IsNotUserTeam(teamID)
-    return not rematch.savedTeams:IsUserTeam(teamID)
+function rematchRedux.teamMenu:IsNotUserTeam(teamID)
+    return not rematchRedux.savedTeams:IsUserTeam(teamID)
 end
 
-function rematch.teamMenu:EditTeam(teamID)
-    if rematch.savedTeams:IsUserTeam(teamID) then
-        rematch.saveDialog:SidelineTeamID(teamID)
-        rematch.dialog:ShowDialog("SaveTeam",{saveMode=C.SAVE_MODE_EDIT, teamID=teamID})
+function rematchRedux.teamMenu:EditTeam(teamID)
+    if rematchRedux.savedTeams:IsUserTeam(teamID) then
+        rematchRedux.saveDialog:SidelineTeamID(teamID)
+        rematchRedux.dialog:ShowDialog("SaveTeam",{saveMode=C.SAVE_MODE_EDIT, teamID=teamID})
     end
 end
 
-function rematch.teamMenu:IsTeamNotLoaded(teamID)
+function rematchRedux.teamMenu:IsTeamNotLoaded(teamID)
     return settings.currentTeamID~=teamID
 end
 
-function rematch.teamMenu:ExportTeam(teamID)
-    if rematch.menus:IsMenuOpen("LoadedTeamMenu") then -- if this is the export from the loadedTeamPanel Share -> Export
-        rematch.saveDialog:SidelineLoadouts(newTeam) -- then export pets actually loaded
-        rematch.dialog:ShowDialog("ExportSingleTeam",{teamID="sideline", isPlainText=self.isPlainText})
+function rematchRedux.teamMenu:ExportTeam(teamID)
+    if rematchRedux.menus:IsMenuOpen("LoadedTeamMenu") then -- if this is the export from the loadedTeamPanel Share -> Export
+        rematchRedux.saveDialog:SidelineLoadouts(newTeam) -- then export pets actually loaded
+        rematchRedux.dialog:ShowDialog("ExportSingleTeam",{teamID="sideline", isPlainText=self.isPlainText})
     else -- otherwise export teamID
-        rematch.dialog:ShowDialog("ExportSingleTeam",{teamID=teamID, isPlainText=self.isPlainText})
+        rematchRedux.dialog:ShowDialog("ExportSingleTeam",{teamID=teamID, isPlainText=self.isPlainText})
     end
 end
 
-function rematch.teamMenu:ExportGroup(groupID)
-    rematch.dialog:ShowDialog("ExportMultipleTeams",groupID)
+function rematchRedux.teamMenu:ExportGroup(groupID)
+    rematchRedux.dialog:ShowDialog("ExportMultipleTeams",groupID)
 end
 
-function rematch.teamMenu:BackupAllTeams()
-    rematch.dialog:ShowDialog("ExportMultipleTeams")
+function rematchRedux.teamMenu:BackupAllTeams()
+    rematchRedux.dialog:ShowDialog("ExportMultipleTeams")
 end
 
-function rematch.teamMenu:ImportTeams()
-    rematch.dialog:ShowDialog("ImportTeams")
+function rematchRedux.teamMenu:ImportTeams()
+    rematchRedux.dialog:ShowDialog("ImportTeams")
 end
 
-function rematch.teamMenu:ImportGroupTeams(groupID)
-    if rematch.savedGroups[groupID] then
+function rematchRedux.teamMenu:ImportGroupTeams(groupID)
+    if rematchRedux.savedGroups[groupID] then
         settings.LastSelectedGroup = groupID
     end
-    rematch.dialog:ShowDialog("ImportTeams")
+    rematchRedux.dialog:ShowDialog("ImportTeams")
 end
 
-function rematch.teamMenu:SendTeam(teamID)
-    rematch.dialog:ShowDialog("SendTeam",{teamID=teamID})
+function rematchRedux.teamMenu:SendTeam(teamID)
+    rematchRedux.dialog:ShowDialog("SendTeam",{teamID=teamID})
 end
 
-function rematch.teamMenu:TeamHerder()
-    rematch.dialog:Register("TeamHerder",{
+function rematchRedux.teamMenu:TeamHerder()
+    rematchRedux.dialog:Register("TeamHerder",{
         title = L["Team Herder"],
         accept = L["Done"],
         layouts = {
@@ -484,7 +484,7 @@ function rematch.teamMenu:TeamHerder()
             self.GroupPicker:SetReturn("Herding",true) -- GroupPicker will return to "Herding" layout
             self.GroupSelect:SetReturn("Default") -- GroupSelect will return to "Default" layout
             self.GroupSelect:Fill(settings.LastSelectedGroup or "group:none")
-            if rematch.dialog:GetOpenLayout()=="Default" then
+            if rematchRedux.dialog:GetOpenLayout()=="Default" then
                 self.Text:SetText(L["Pick a group to move teams to:"])
             else
                 self.Text:SetText(L["While this window is on screen, click a team in the team list to move it to this group:"])
@@ -492,28 +492,28 @@ function rematch.teamMenu:TeamHerder()
             end
         end,
     })
-    rematch.dialog:ShowDialog("TeamHerder")
+    rematchRedux.dialog:ShowDialog("TeamHerder")
 end
 
-function rematch.teamMenu:IsShareDisabled(teamID)
+function rematchRedux.teamMenu:IsShareDisabled(teamID)
     return settings.DisableShare
 end
 
-function rematch.teamMenu:HasNoTargets(teamID)
-    local team = rematch.savedTeams[teamID]
+function rematchRedux.teamMenu:HasNoTargets(teamID)
+    local team = rematchRedux.savedTeams[teamID]
     return not team or not team.targets or #team.targets==0
 end
 
-function rematch.teamMenu:BuildTargetSubMenu(teamID,menu,func)
-    local def = rematch.menus:GetDefinition(menu)
+function rematchRedux.teamMenu:BuildTargetSubMenu(teamID,menu,func)
+    local def = rematchRedux.menus:GetDefinition(menu)
     -- remove any existing targets
     for i=#def,2,-1 do
         tremove(def,i)
     end
-    local targets = rematch.savedTeams[teamID] and rematch.savedTeams[teamID].targets
+    local targets = rematchRedux.savedTeams[teamID] and rematchRedux.savedTeams[teamID].targets
     if targets and #targets>0 then
         for _,npcID in ipairs(targets) do
-            local name = rematch.utils:GetFormattedTargetName(npcID)
+            local name = rematchRedux.utils:GetFormattedTargetName(npcID)
             if name==C.CACHE_RETRIEVING then -- name is not cached, need to rebuild this in a bit
 
             end
@@ -523,53 +523,53 @@ function rematch.teamMenu:BuildTargetSubMenu(teamID,menu,func)
         tinsert(def,{text=L["No targets :("]})
     end
     tinsert(def,{text=CANCEL})
-    rematch.menus:Register(menu,def)
+    rematchRedux.menus:Register(menu,def)
 end
 
 -- called just before the Edit Targets submenu is shown to rebuild menu for team's targets
-function rematch.teamMenu:BuildEditTargetSubMenu(teamID)
-    rematch.teamMenu:BuildTargetSubMenu(teamID,"TeamEditTargetMenu",tm.EditTeamTarget)
+function rematchRedux.teamMenu:BuildEditTargetSubMenu(teamID)
+    rematchRedux.teamMenu:BuildTargetSubMenu(teamID,"TeamEditTargetMenu",tm.EditTeamTarget)
 end
 
-function rematch.teamMenu:EditTeamTarget(teamID,targetID)
-    rematch.targetMenu:SetTeams(targetID or self.npcID)
+function rematchRedux.teamMenu:EditTeamTarget(teamID,targetID)
+    rematchRedux.targetMenu:SetTeams(targetID or self.npcID)
 end
 
-function rematch.teamMenu:BuildLoadTargetSubMenu(teamID)
-    rematch.teamMenu:BuildTargetSubMenu(teamID,"TeamLoadTargetMenu",tm.LoadTeamTarget)
+function rematchRedux.teamMenu:BuildLoadTargetSubMenu(teamID)
+    rematchRedux.teamMenu:BuildTargetSubMenu(teamID,"TeamLoadTargetMenu",tm.LoadTeamTarget)
 end
 
-function rematch.teamMenu:LoadTeamTarget(teamID,targetID)
-    rematch.layout:SummonView("teams")
+function rematchRedux.teamMenu:LoadTeamTarget(teamID,targetID)
+    rematchRedux.layout:SummonView("teams")
     -- if in single panel mode, expand so the loaded team shows
-    if rematch.layout:GetMode()==1 then
-        rematch.layout:ChangeMode(2)
+    if rematchRedux.layout:GetMode()==1 then
+        rematchRedux.layout:ChangeMode(2)
     end
-    rematch.loadedTargetPanel:SetTarget(targetID or self.npcID,true)
+    rematchRedux.loadedTargetPanel:SetTarget(targetID or self.npcID,true)
 end
 
 -- click of the Load Target menu option will load the first target (this menu option opens a submenu of targets)
-function rematch.teamMenu:LoadSavedTarget(teamID)
-    local targets = rematch.savedTeams[teamID] and rematch.savedTeams[teamID].targets
+function rematchRedux.teamMenu:LoadSavedTarget(teamID)
+    local targets = rematchRedux.savedTeams[teamID] and rematchRedux.savedTeams[teamID].targets
     if #targets>0 then
-        rematch.teamMenu:LoadTeamTarget(teamID,targets[1])
+        rematchRedux.teamMenu:LoadTeamTarget(teamID,targets[1])
     end
-    rematch.menus:Hide()
+    rematchRedux.menus:Hide()
 end
 
-function rematch.teamMenu:EditSavedTarget(teamID)
-    local targets = rematch.savedTeams[teamID] and rematch.savedTeams[teamID].targets
+function rematchRedux.teamMenu:EditSavedTarget(teamID)
+    local targets = rematchRedux.savedTeams[teamID] and rematchRedux.savedTeams[teamID].targets
     if #targets>0 then
-        rematch.teamMenu:EditTeamTarget(teamID,targets[1])
+        rematchRedux.teamMenu:EditTeamTarget(teamID,targets[1])
     end
-    rematch.menus:Hide()
+    rematchRedux.menus:Hide()
 end
 
-function rematch.teamMenu:IsGroupEmpty(groupID)
-    local group = rematch.savedGroups[groupID]
+function rematchRedux.teamMenu:IsGroupEmpty(groupID)
+    local group = rematchRedux.savedGroups[groupID]
     return not group or not group.teams or #group.teams==0
 end
 
-function rematch.teamMenu:DeleteGroupTeams(groupID)
-    rematch.dialog:ShowDialog("DeleteGroupTeams",groupID)
+function rematchRedux.teamMenu:DeleteGroupTeams(groupID)
+    rematchRedux.dialog:ShowDialog("DeleteGroupTeams",groupID)
 end

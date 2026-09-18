@@ -1,7 +1,7 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-rematch.targetInfo = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+rematchRedux.targetInfo = {}
 
 --[[
     This gets information about npcIDs, mostly for notable targets, but some support for all npcIDs
@@ -35,12 +35,12 @@ local wildPets = {} -- lookup by npcID, whether this is a wild pet
 local testModel = CreateFrame("PlayerModel") -- used to get displayIDs, a hidden model to SetCreature(npcID) and GetDisplayInfo()
 testModel:Hide()
 
-rematch.targetInfo.recentTarget = nil -- the last npcID targeted (can be nil but is generally not nil'ed by dropping target)
-rematch.targetInfo.currentTarget = nil -- the current npcID targeted (or nil if a player or no current target)
+rematchRedux.targetInfo.recentTarget = nil -- the last npcID targeted (can be nil but is generally not nil'ed by dropping target)
+rematchRedux.targetInfo.currentTarget = nil -- the current npcID targeted (or nil if a player or no current target)
 
 -- on login, populate targetIndexes with indexes into notableTargets for each npcID
-rematch.events:Register(rematch.targetInfo,"PLAYER_LOGIN",function(self)
-    for index,info in ipairs(rematch.targetData.notableTargets) do
+rematchRedux.events:Register(rematchRedux.targetInfo,"PLAYER_LOGIN",function(self)
+    for index,info in ipairs(rematchRedux.targetData.notableTargets) do
         targetIndexes[info[2]] = index
     end
     -- if sometehing targeted while logging in, capture target
@@ -67,17 +67,17 @@ local function cleanupTargetHistory()
     end
 end
 
-function rematch.targetInfo:PLAYER_TARGET_CHANGED()
+function rematchRedux.targetInfo:PLAYER_TARGET_CHANGED()
     if UnitExists("target") then
-        local npcID = rematch.targetInfo:GetUnitNpcID("target")
+        local npcID = rematchRedux.targetInfo:GetUnitNpcID("target")
         if npcID then
             self.recentTarget = npcID
-            rematch.loadedTargetPanel.teamMode = C.ENEMY_TEAM
+            rematchRedux.loadedTargetPanel.teamMode = C.ENEMY_TEAM
 
             -- add npcID to history and come back in a while to do cleanup so list doesn't get huge
             -- and we don't waste time doing maintenance in a PLAYER_TARGET_CHANGED
             tinsert(targetHistory,npcID)
-            rematch.timer:Start(30,cleanupTargetHistory)
+            rematchRedux.timer:Start(30,cleanupTargetHistory)
 
             -- if the target is a wild pet that hasn't been saved to the wildPets lookup yet, add it
             if not wildPets[npcID] and UnitIsWildBattlePet("target") then
@@ -89,21 +89,21 @@ function rematch.targetInfo:PLAYER_TARGET_CHANGED()
     else
         self.currentTarget = nil
     end
-    rematch.events:Fire("REMATCH_TARGET_CHANGED")
+    rematchRedux.events:Fire("REMATCHREDUX_TARGET_CHANGED")
 end
 
--- rematch.targetInfo.recentTarget should be registered first (before PLAYER_LOGIN) so it can define recentTarget
+-- rematchRedux.targetInfo.recentTarget should be registered first (before PLAYER_LOGIN) so it can define recentTarget
 -- before anything else hears the target has changed
-rematch.events:Register(rematch.targetInfo,"PLAYER_TARGET_CHANGED",rematch.targetInfo.PLAYER_TARGET_CHANGED)
+rematchRedux.events:Register(rematchRedux.targetInfo,"PLAYER_TARGET_CHANGED",rematchRedux.targetInfo.PLAYER_TARGET_CHANGED)
 
 
 -- sometimes this addon "targets" something via loadedTargetPanel:SetTarget(npcID); these should show in history also
-function rematch.targetInfo:SetRecentTarget(npcID)
+function rematchRedux.targetInfo:SetRecentTarget(npcID)
     if not npcID then
         self.recentTarget = nil
     else
         if type(npcID)=="string" then
-            npcID = rematch.targetInfo:GetNpcID(npcID)
+            npcID = rematchRedux.targetInfo:GetNpcID(npcID)
         end
         if type(npcID)=="number" then
             self.recentTarget = npcID
@@ -113,20 +113,20 @@ function rematch.targetInfo:SetRecentTarget(npcID)
 end
 
 -- returns an ordered list of the 3 (C.TARGET_HISTORY_SIZE) most recent targets, with the most recent at the end of the list
-function rematch.targetInfo:GetTargetHistory()
+function rematchRedux.targetInfo:GetTargetHistory()
     cleanupTargetHistory()
     return targetHistory
 end
 
 -- returns the npcID of the given unit ("target"/"mouseover"), or nil if unit doesn't exist/is a player
-function rematch.targetInfo:GetUnitNpcID(unit)
+function rematchRedux.targetInfo:GetUnitNpcID(unit)
 	if UnitExists(unit) then
         local guid = UnitGUID(unit) or ""
         if not issecretvalue(guid) then
             local npcID = tonumber((UnitGUID(unit) or ""):match(".-%-%d+%-%d+%-%d+%-%d+%-(%d+)"))
             if npcID and npcID~=0 then
-                if rematch.targetData.redirects[npcID] then -- targeting a redirected target
-                    return rematch.targetData.redirects[npcID] -- return redirected npcID
+                if rematchRedux.targetData.redirects[npcID] then -- targeting a redirected target
+                    return rematchRedux.targetData.redirects[npcID] -- return redirected npcID
                 else
                     return npcID -- otherwise return the npcID
                 end
@@ -141,25 +141,25 @@ end
 -- can wait a second and re-update to try for the name again. once the number of attempts are exceeded, it
 -- will return "NPC <npcID>". (the goal here is to not cache all 300+ npcs on login. the calling function
 -- should do a delayed update if the name returned is C.CACHE_RETRIEVING)
-function rematch.targetInfo:GetNpcName(npcID,noDisplay)
+function rematchRedux.targetInfo:GetNpcName(npcID,noDisplay)
     if type(npcID)=="string" then
         npcID = tonumber(npcID:match("target:(%d+)"))
     end
     -- if target has a subname like (Legendary) then it will be appended to name
     local subname = ""
-    if rematch.targetData.subnames[npcID] then
-        subname = format(" (%s)",rematch.targetData.subnames[npcID])
+    if rematchRedux.targetData.subnames[npcID] then
+        subname = format(" (%s)",rematchRedux.targetData.subnames[npcID])
     end
     if type(npcID)~="number" then
         return L["No Target"]
     elseif targetNameCache[npcID] then -- if name cached, return it
         return targetNameCache[npcID]..subname
     else
-        local tooltip = RematchTooltipScan or CreateFrame("GameTooltip","RematchTooltipScan",nil,"GameTooltipTemplate")
+        local tooltip = RematchReduxTooltipScan or CreateFrame("GameTooltip","RematchReduxTooltipScan",nil,"GameTooltipTemplate")
         tooltip:SetOwner(UIParent,"ANCHOR_NONE")
         tooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d-0000000000",npcID))
         if tooltip:NumLines()>0 then
-            local name = RematchTooltipScanTextLeft1:GetText()
+            local name = RematchReduxTooltipScanTextLeft1:GetText()
             if name and name:len()>0 then
                 targetNameCache[npcID] = name
                 targetsToCache[npcID] = nil
@@ -172,7 +172,7 @@ function rematch.targetInfo:GetNpcName(npcID,noDisplay)
         end
         if GetTime()-targetsToCache[npcID] < C.CACHE_TIMEOUT then -- haven't exceeded timeout duration, return temp name
             if not noDisplay then -- if name wasn't cached and we're displaying it, come back in a bit and update UI (could be team or target list or elsewhere that needs update)
-                rematch.timer:Start(C.CACHE_WAIT,rematch.frame.Update) 
+                rematchRedux.timer:Start(C.CACHE_WAIT,rematchRedux.frame.Update) 
             end
             return C.CACHE_RETRIEVING
         else -- exceeded retry attempts, cache it as NPC <npcID> and give up trying
@@ -185,7 +185,7 @@ function rematch.targetInfo:GetNpcName(npcID,noDisplay)
 end
 
 -- gets the displayID for the given npcID, by setting a model to that npcID and then getting its displayID from that
-function rematch.targetInfo:GetNpcDisplayID(npcID)
+function rematchRedux.targetInfo:GetNpcDisplayID(npcID)
     if type(npcID)=="number" then
         testModel:SetCreature(npcID)
         return testModel:GetDisplayInfo()
@@ -195,11 +195,11 @@ end
 --[[ notable npcs: the following only apply to the 300+ npcs in targetData ]]
 
 -- iterator function to iterate over all npcIDs in order in targetData
--- usage: for npcID in rematch.targetInfo:AllTargets() do print(npcID) end
-function rematch.targetInfo:AllTargets()
+-- usage: for npcID in rematchRedux.targetInfo:AllTargets() do print(npcID) end
+function rematchRedux.targetInfo:AllTargets()
     local i = 0
     return function()
-        local targetData = rematch.targetData.notableTargets
+        local targetData = rematchRedux.targetData.notableTargets
         i = i + 1
         if i <= #targetData then
             return targetData[i][2]
@@ -208,53 +208,53 @@ function rematch.targetInfo:AllTargets()
 end
 
 -- returns true if the npcID is in the notableTargets table (with redirect too)
-function rematch.targetInfo:IsNotable(npcID)
-    return rematch.targetInfo:GetNpcInfo(npcID) and true
+function rematchRedux.targetInfo:IsNotable(npcID)
+    return rematchRedux.targetInfo:GetNpcInfo(npcID) and true
 end
 
-function rematch.targetInfo:IsWildPet(npcID)
+function rematchRedux.targetInfo:IsWildPet(npcID)
     return wildPets[npcID] and true or false
 end
 
 -- returns the headerID,mapID,expansionID,questID for the given notable npcID
-function rematch.targetInfo:GetNpcInfo(npcID)
+function rematchRedux.targetInfo:GetNpcInfo(npcID)
     if type(npcID)=="string" then
         npcID = tonumber(npcID:match("target:(%d+)"))
     end
     if not npcID then
         return
     end
-    if rematch.targetData.redirects[npcID] then
-        npcID = rematch.targetData.redirects[npcID]
+    if rematchRedux.targetData.redirects[npcID] then
+        npcID = rematchRedux.targetData.redirects[npcID]
     end
     if targetIndexes[npcID] then
-        local info = rematch.targetData.notableTargets[targetIndexes[npcID]]
+        local info = rematchRedux.targetData.notableTargets[targetIndexes[npcID]]
         --info[1] = "header:"..info[1] -- make header into a headerID usable in lists
         return "header:"..info[1],info[3],info[4],info[5]
     end
 end
 
 -- converts target:12345 to numeric 12345
-function rematch.targetInfo:GetNpcID(targetID)
+function rematchRedux.targetInfo:GetNpcID(targetID)
     return type(targetID)=="string" and tonumber(targetID:match("target:(.+)")) or targetID
 end
 
 -- returns an ordered table of petInfo-usable battlepet:etc strings for the notable npc
 -- if numSlots is defined, the table is padded with empty slots before the pet(s)
 -- returns a single unnotable pet if the npc is not notable (use GetNumPets to get a real count)
-function rematch.targetInfo:GetNpcPets(npcID,numSlots)
+function rematchRedux.targetInfo:GetNpcPets(npcID,numSlots)
     if type(npcID)=="string" then
         npcID = tonumber(npcID:match("target:(%d+)"))
     end
     if not npcID then
         return
     end
-    if rematch.targetData.redirects[npcID] then
-        npcID = rematch.targetData.redirects[npcID]
+    if rematchRedux.targetData.redirects[npcID] then
+        npcID = rematchRedux.targetData.redirects[npcID]
     end
     wipe(reusedPets)
     if targetIndexes[npcID] then -- if this is a notable npc, pets are known
-        local info = rematch.targetData.notableTargets[targetIndexes[npcID]]
+        local info = rematchRedux.targetData.notableTargets[targetIndexes[npcID]]
         for i=6,8 do
             if info[i] then
                 tinsert(reusedPets,info[i])
@@ -274,18 +274,18 @@ function rematch.targetInfo:GetNpcPets(npcID,numSlots)
 end
 
 -- returns the number of pets this npcID is known to have, 0 if not notable or no pets
-function rematch.targetInfo:GetNumPets(npcID)
+function rematchRedux.targetInfo:GetNumPets(npcID)
     if type(npcID)=="string" then
         npcID = tonumber(npcID:match("target:(%d+)"))
     end
     if not npcID then
         return 0
     end
-    if rematch.targetData.redirects[npcID] then
-        npcID = rematch.targetData.redirects[npcID]
+    if rematchRedux.targetData.redirects[npcID] then
+        npcID = rematchRedux.targetData.redirects[npcID]
     end
     if targetIndexes[npcID] then
-        return #rematch.targetData.notableTargets[targetIndexes[npcID]]-5
+        return #rematchRedux.targetData.notableTargets[targetIndexes[npcID]]-5
     elseif wildPets[npcID] then
         return 1 -- wild pets have 1 pet, the speciesID
     else
@@ -294,12 +294,12 @@ function rematch.targetInfo:GetNumPets(npcID)
 end
 
 -- gets the headerID of the given npcID
-function rematch.targetInfo:GetHeaderID(npcID)
-    return rematch.targetInfo:GetNpcInfo(npcID)
+function rematchRedux.targetInfo:GetHeaderID(npcID)
+    return rematchRedux.targetInfo:GetNpcInfo(npcID)
 end
 
 -- returns the name of the header from the headerID (first return of GetNpcInfo)
-function rematch.targetInfo:GetHeaderName(headerID)
+function rematchRedux.targetInfo:GetHeaderName(headerID)
     local name = headerID:match("header:(.+)")
     local mapID = tonumber(name)
     if mapID then
@@ -311,28 +311,28 @@ function rematch.targetInfo:GetHeaderName(headerID)
 end
 
 -- returns the expansionID of the header
-function rematch.targetInfo:GetHeaderExpansionID(headerID)
-    return headerID and rematch.targetData.headerExpansions[headerID]
+function rematchRedux.targetInfo:GetHeaderExpansionID(headerID)
+    return headerID and rematchRedux.targetData.headerExpansions[headerID]
 end
 
 -- returns the name of the expansion associated with the notable npcID
-function rematch.targetInfo:GetExpansionName(npcID)
-    local _,_,expansionID = rematch.targetInfo:GetNpcInfo(npcID)
+function rematchRedux.targetInfo:GetExpansionName(npcID)
+    local _,_,expansionID = rematchRedux.targetInfo:GetNpcInfo(npcID)
     return _G["EXPANSION_NAME"..expansionID]
 end
 
 -- returns the name of the quest associated with the notable npcID, if any. (if a quest name hasn't been
 -- cached yet, it will return nothing; todo: make it return CACHE_RETRIEVING with a timeout like name?)
-function rematch.targetInfo:GetQuestName(npcID)
-    local _,_,_,questID = rematch.targetInfo:GetNpcInfo(npcID)
+function rematchRedux.targetInfo:GetQuestName(npcID)
+    local _,_,_,questID = rematchRedux.targetInfo:GetNpcInfo(npcID)
     if questID then
         local name = C_TaskQuest.GetQuestInfoByQuestID(questID) or C_QuestLog.GetTitleForQuestID(questID)
         return name --or C.CACHE_RETRIEVING
     end
 end
 
-function rematch.targetInfo:GetExpansionID(npcID)
-    local _,_,expansionID = rematch.targetInfo:GetNpcInfo(npcID)
+function rematchRedux.targetInfo:GetExpansionID(npcID)
+    local _,_,expansionID = rematchRedux.targetInfo:GetNpcInfo(npcID)
     return expansionID
 end
 
@@ -349,8 +349,8 @@ end
 
 -- returns a string of the map a notable npcID belongs to and its parent maps, up to but not
 -- including cosmic/azeroth
-function rematch.targetInfo:GetLocations(npcID)
-    local _,mapID = rematch.targetInfo:GetNpcInfo(npcID)
+function rematchRedux.targetInfo:GetLocations(npcID)
+    local _,mapID = rematchRedux.targetInfo:GetNpcInfo(npcID)
     wipe(exploredIDs)
     exploreMapID(mapID)
     if #exploredIDs>0 then

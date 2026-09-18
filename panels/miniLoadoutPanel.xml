@@ -1,7 +1,7 @@
 <Ui>
 
     <!-- this is used not only for the three abilities in each loadout slot but for the flyout's two ability buttons -->
-    <Button name="RematchMiniAbilityBarButtonTemplate" mixin="RematchAbilityBarButtonMixin" registerForClicks="AnyUp" useParentLevel="true" virtual="true">
+    <Button name="RematchReduxMiniAbilityBarButtonTemplate" mixin="RematchReduxAbilityBarButtonMixin" registerForClicks="AnyUp" useParentLevel="true" virtual="true">
         <Size x="22" y="22"/>
         <HitRectInsets left="-2" right="-2" top="-2" bottom="-2"/>
         <Layers>
@@ -37,7 +37,7 @@
     </Button>
 
     <!-- a loadout slot is a single pet and its abilities and status bars -->
-    <Button name="RematchMiniLoadoutTemplate" mixin="RematchFillPetMixin" registerForDrag="LeftButton" registerForClicks="AnyUp" inherits="RematchInsetFrameTemplate" virtual="true">
+    <Button name="RematchReduxMiniLoadoutTemplate" mixin="RematchReduxFillPetMixin" registerForDrag="LeftButton" registerForClicks="AnyUp" inherits="RematchReduxInsetFrameTemplate" virtual="true">
         <Layers>
             <!-- brown background to pet slot -->
             <Layer level="BACKGROUND" textureSubLevel="-1">
@@ -220,7 +220,7 @@
                 </Scripts>
             </Button>
             <!-- abilitybar is its own frame -->
-            <Frame parentKey="AbilityBar" mixin="RematchFillAbilityBarMixin">
+            <Frame parentKey="AbilityBar" mixin="RematchReduxFillAbilityBarMixin">
                 <Size x="26" y="76"/>
                 <Layers>
                     <Layer level="ARTWORK">
@@ -229,17 +229,17 @@
                     </Layer>
                 </Layers>
                 <Frames>
-                    <Button parentArray="Abilities" inherits="RematchMiniAbilityBarButtonTemplate" id="1">
+                    <Button parentArray="Abilities" inherits="RematchReduxMiniAbilityBarButtonTemplate" id="1">
                         <Anchors>
                             <Anchor point="TOP" x="0" y="-2"/>
                         </Anchors>
                     </Button>
-                    <Button parentArray="Abilities" inherits="RematchMiniAbilityBarButtonTemplate" id="2">
+                    <Button parentArray="Abilities" inherits="RematchReduxMiniAbilityBarButtonTemplate" id="2">
                         <Anchors>
                             <Anchor point="CENTER"/>
                         </Anchors>
                     </Button>
-                    <Button parentArray="Abilities" inherits="RematchMiniAbilityBarButtonTemplate" id="3">
+                    <Button parentArray="Abilities" inherits="RematchReduxMiniAbilityBarButtonTemplate" id="3">
                         <Anchors>
                             <Anchor point="BOTTOM" x="0" y="2"/>
                         </Anchors>
@@ -247,7 +247,7 @@
                 </Frames>
             </Frame>
             <!-- flash for when team loads -->
-            <Frame parentKey="Bling" inherits="RematchBlingAreaTemplate">
+            <Frame parentKey="Bling" inherits="RematchReduxBlingAreaTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="2" y="-2"/>
                     <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
@@ -313,12 +313,12 @@
         </Scripts>
     </Button>
 
-    <Frame parentKey="MiniLoadoutPanel" parent="RematchFrame" hidden="true">
+    <Frame parentKey="MiniLoadoutPanel" parent="RematchReduxFrame" hidden="true">
         <Frames>
             <!-- the three loaded pets, each in their own inset frame -->
-            <Button parentArray="Loadouts" inherits="RematchMiniLoadoutTemplate" id="1"/>
-            <Button parentArray="Loadouts" inherits="RematchMiniLoadoutTemplate" id="2"/>
-            <Button parentArray="Loadouts" inherits="RematchMiniLoadoutTemplate" id="3"/>
+            <Button parentArray="Loadouts" inherits="RematchReduxMiniLoadoutTemplate" id="1"/>
+            <Button parentArray="Loadouts" inherits="RematchReduxMiniLoadoutTemplate" id="2"/>
+            <Button parentArray="Loadouts" inherits="RematchReduxMiniLoadoutTemplate" id="3"/>
             <!-- the little arrow that appears to the left of an ability when the mouse is over it -->
             <Frame parentKey="FlyoutArrow">
                 <Size x="16" y="16"/>
@@ -336,10 +336,10 @@
                 </Layers>
             </Frame>
             <!-- the flyout that appears when an ability is clicked, with the two ability options for the given ability slot -->
-            <Frame parentKey="AbilityFlyout" mixin="RematchFillAbilityFlyoutMixin" hidden="true">
+            <Frame parentKey="AbilityFlyout" mixin="RematchReduxFillAbilityFlyoutMixin" hidden="true">
                 <Size x="51" y="26"/>
                 <Frames>
-                    <Button parentArray="Abilities" inherits="RematchMiniAbilityBarButtonTemplate">
+                    <Button parentArray="Abilities" inherits="RematchReduxMiniAbilityBarButtonTemplate">
                         <Anchors>
                             <Anchor point="RIGHT" x="-2" y="0"/>
                         </Anchors>
@@ -347,7 +347,7 @@
                             <KeyValue key="isFlyoutAbility" value="true" type="boolean"/>
                         </KeyValues>
                     </Button>
-                    <Button parentArray="Abilities" inherits="RematchMiniAbilityBarButtonTemplate">
+                    <Button parentArray="Abilities" inherits="RematchReduxMiniAbilityBarButtonTemplate">
                         <Anchors>
                             <Anchor point="LEFT" x="2" y="0"/>
                         </Anchors>

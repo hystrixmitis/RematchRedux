@@ -1,7 +1,7 @@
 <Ui>
     <Script file="autoScrollBox.lua"/>
 
-    <Frame name="RematchAutoScrollBoxTintTemplate" hidden="true" virtual="true">
+    <Frame name="RematchReduxAutoScrollBoxTintTemplate" hidden="true" virtual="true">
         <KeyValues>
             <KeyValue key="selectType" value="tint"/>
         </KeyValues>
@@ -15,7 +15,7 @@
     </Frame>
 
     <!-- template for a stretchable bordered selected texture -->
-    <Frame name="RematchAutoScrollBoxSelectTemplate" useParentLevel="true" hidden="true" virtual="true">
+    <Frame name="RematchReduxAutoScrollBoxSelectTemplate" useParentLevel="true" hidden="true" virtual="true">
         <Layers>
             <Layer level="OVERLAY">
                 <Texture parentKey="TopLeft" parentArray="Textures" file="Interface\AddOns\RematchRedux\textures\select">
@@ -87,7 +87,7 @@
         </Scripts>
     </Frame>
 
-    <Frame name="RematchAutoScrollBoxTemplate" mixin="RematchAutoScrollBoxMixin" virtual="true">
+    <Frame name="RematchReduxAutoScrollBoxTemplate" mixin="RematchReduxAutoScrollBoxMixin" virtual="true">
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="-1">
                 <Texture parentKey="Back" file="Interface\FrameGeneral\UI-Background-Marble" horizTile="true" vertTile="true" setAllPoints="true">
@@ -158,7 +158,7 @@
                     <Anchor point="BOTTOMRIGHT" x="-5" y="13"/> <!-- was -6,2 with WowTrimScrollBar -->
                 </Anchors>
             </EventFrame>
-            <Button parentKey="ScrollToTopButton" mixin="RematchAutoScrollBoxScrollToEndMixin">
+            <Button parentKey="ScrollToTopButton" mixin="RematchReduxAutoScrollBoxScrollToEndMixin">
                 <Size x="17" y="12"/>
                 <Anchors>
                     <Anchor point="TOPRIGHT" x="0" y="-3"/>
@@ -194,7 +194,7 @@
                     <OnClick method="OnClick"/>
                 </Scripts>
             </Button>
-            <Button parentKey="ScrollToBottomButton" mixin="RematchAutoScrollBoxScrollToEndMixin">
+            <Button parentKey="ScrollToBottomButton" mixin="RematchReduxAutoScrollBoxScrollToEndMixin">
                 <Size x="17" y="12"/>
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT" x="0" y="0"/>

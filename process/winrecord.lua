@@ -1,22 +1,22 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.winrecord = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.winrecord = {}
 
 local playerForfeit -- true when the player forfeits a match
 
-rematch.events:Register(rematch.winrecord,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.winrecord,"PLAYER_LOGIN",function(self)
     self:Update() -- register/unregister based on settings
     hooksecurefunc(C_PetBattles,"ForfeitGame",function() playerForfeit=true end) -- watch for player forfeiting match
 end)
 
-function rematch.winrecord:Update()
+function rematchRedux.winrecord:Update()
     if settings.AutoWinRecord then
-        rematch.events:Register(self,"PET_BATTLE_FINAL_ROUND",self.PET_BATTLE_FINAL_ROUND)
-        rematch.events:Register(self,"PET_BATTLE_OPENING_START",self.PET_BATTLE_OPENING_START)
+        rematchRedux.events:Register(self,"PET_BATTLE_FINAL_ROUND",self.PET_BATTLE_FINAL_ROUND)
+        rematchRedux.events:Register(self,"PET_BATTLE_OPENING_START",self.PET_BATTLE_OPENING_START)
     else
-        rematch.events:Unregister(self,"PET_BATTLE_FINAL_ROUND")
+        rematchRedux.events:Unregister(self,"PET_BATTLE_FINAL_ROUND")
     end
 end
 
@@ -31,15 +31,15 @@ local function teamAlive(player)
     return false
 end
 
-function rematch.winrecord:PET_BATTLE_OPENING_START()
+function rematchRedux.winrecord:PET_BATTLE_OPENING_START()
     playerForfeit = nil
 end
 
-function rematch.winrecord:PET_BATTLE_FINAL_ROUND(winner)
+function rematchRedux.winrecord:PET_BATTLE_FINAL_ROUND(winner)
     self.wasInPVP = not C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy)
 
-    if settings.AutoWinRecord and (not settings.AutoWinRecordPVPOnly or self.wasInPVP) and rematch.savedTeams:IsUserTeam(settings.currentTeamID) then
-        local team = rematch.savedTeams[rematch.settings.currentTeamID]
+    if settings.AutoWinRecord and (not settings.AutoWinRecordPVPOnly or self.wasInPVP) and rematchRedux.savedTeams:IsUserTeam(settings.currentTeamID) then
+        local team = rematchRedux.savedTeams[rematchRedux.settings.currentTeamID]
         if not team.winrecord then
             team.winrecord = {}
         end

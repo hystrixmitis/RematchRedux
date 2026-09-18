@@ -1,6 +1,6 @@
 <Ui>
 
-    <Frame parentKey="LoadedTargetPanel" parent="RematchFrame" inherits="RematchInsetFrameTemplate">
+    <Frame parentKey="LoadedTargetPanel" parent="RematchReduxFrame" inherits="RematchReduxInsetFrameTemplate">
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture parentKey="InsetBack" file="Interface\PetBattles\PetJournalBigChunks" setAllPoints="true">
@@ -34,9 +34,9 @@
             </Layer>
         </Layers>
         <Frames>
-            <Frame parentKey="Bling" inherits="RematchBlingAreaTemplate" setAllPoints="true"/>
+            <Frame parentKey="Bling" inherits="RematchReduxBlingAreaTemplate" setAllPoints="true"/>
             <!-- clear button will clear the current target -->
-            <Button parentKey="ClearButton" inherits="RematchClearButtonTemplate">
+            <Button parentKey="ClearButton" inherits="RematchReduxClearButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPRIGHT" x="-4" y="-3"/>
                 </Anchors>
@@ -91,7 +91,7 @@
                 </Anchors>
                 <Layers>
                     <Layer level="ARTWORK">
-                        <Texture parentArray="Pets" mixin="RematchPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
+                        <Texture parentArray="Pets" mixin="RematchReduxPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
                             <Size x="28" y="40"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" x="2" y="-2"/>
@@ -104,7 +104,7 @@
                                 <OnMouseUp method="OnMouseUp"/>
                             </Scripts>
                         </Texture>
-                        <Texture parentArray="Pets" mixin="RematchPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
+                        <Texture parentArray="Pets" mixin="RematchReduxPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
                             <Size x="28" y="40"/>
                             <Anchors>
 						        <Anchor point="TOPLEFT" x="31" y="-2"/>
@@ -117,7 +117,7 @@
                                 <OnMouseUp method="OnMouseUp"/>
                             </Scripts>
                         </Texture>
-                        <Texture parentArray="Pets" mixin="RematchPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
+                        <Texture parentArray="Pets" mixin="RematchReduxPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
                             <Size x="28" y="40"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" x="60" y="-2"/>
@@ -154,7 +154,7 @@
                             <Color r="0.75" g="0.75" b="0.75"/>
                         </FontString>
                         <!-- pets for the target's team -->
-                        <Texture parentArray="Pets" mixin="RematchPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
+                        <Texture parentArray="Pets" mixin="RematchReduxPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
                             <Size x="28" y="40"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" x="2" y="-2"/>
@@ -167,7 +167,7 @@
                                 <OnMouseUp method="OnMouseUp"/>
                             </Scripts>
                         </Texture>
-                        <Texture parentArray="Pets" mixin="RematchPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
+                        <Texture parentArray="Pets" mixin="RematchReduxPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
                             <Size x="28" y="40"/>
                             <Anchors>
 						        <Anchor point="TOPLEFT" x="31" y="-2"/>
@@ -180,7 +180,7 @@
                                 <OnMouseUp method="OnMouseUp"/>
                             </Scripts>
                         </Texture>
-                        <Texture parentArray="Pets" mixin="RematchPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
+                        <Texture parentArray="Pets" mixin="RematchReduxPetTextureMixin" file="Interface\Icons\INV_Misc_QuestionMark">
                             <Size x="28" y="40"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" x="60" y="-2"/>
@@ -222,7 +222,7 @@
                     </Layer>
                 </Layers>
                 <Frames>
-                    <Button parentKey="PrevTeamButton" inherits="RematchSmallGreyButtonTemplate">
+                    <Button parentKey="PrevTeamButton" inherits="RematchReduxSmallGreyButtonTemplate">
                         <KeyValues>
                             <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                             <KeyValue key="coords" value="0.5,0.625,0.25,0.375"/>
@@ -236,7 +236,7 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <Button parentKey="NextTeamButton" inherits="RematchSmallGreyButtonTemplate">
+                    <Button parentKey="NextTeamButton" inherits="RematchReduxSmallGreyButtonTemplate">
                         <KeyValues>
                             <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                             <KeyValue key="coords" value="0.625,0.75,0.25,0.375"/>
@@ -253,7 +253,7 @@
                 </Frames>
             </Frame>
             <!-- big button for load/save for mini panel, not notable or not saved -->
-            <Button parentKey="BigLoadSaveButton" inherits="RematchGreyPanelButtonTemplate,RematchTooltipScripts">
+            <Button parentKey="BigLoadSaveButton" inherits="RematchReduxGreyPanelButtonTemplate,RematchReduxTooltipScripts">
                 <Size x="68" y="34"/>
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT" x="-8" y="6"/>
@@ -268,7 +268,7 @@
                 </Scripts>
             </Button>
             <!-- regular-sized load button for notable and saved -->
-            <Button parentKey="MediumLoadButton" inherits="RematchGreyPanelButtonTemplate,RematchTooltipScripts">
+            <Button parentKey="MediumLoadButton" inherits="RematchReduxGreyPanelButtonTemplate,RematchReduxTooltipScripts">
                 <Size x="68" y="24"/>
                 <Anchors>
                     <Anchor point="TOPRIGHT" x="-3" y="-3"/>
@@ -283,7 +283,7 @@
                 </Scripts>
             </Button>
             <!-- small random button to load a random team -->
-            <Button parentKey="SmallRandomButton" inherits="RematchSmallGreyButtonTemplate,RematchTooltipScripts">
+            <Button parentKey="SmallRandomButton" inherits="RematchReduxSmallGreyButtonTemplate,RematchReduxTooltipScripts">
                 <KeyValues>
                     <KeyValue key="icon" value="Interface\Icons\INV_Misc_Dice_01"/>
                     <KeyValue key="coords" value="0.075,0.925,0.075,0.925"/>
@@ -295,7 +295,7 @@
                 </Scripts>
             </Button>
             <!-- small teams button for all targets -->
-            <Button parentKey="SmallTeamsButton" inherits="RematchSmallGreyButtonTemplate,RematchTooltipScripts">
+            <Button parentKey="SmallTeamsButton" inherits="RematchReduxSmallGreyButtonTemplate,RematchReduxTooltipScripts">
                 <Anchors>
                     <Anchor point="RIGHT" relativeKey="$parent.SmallRandomButton" relativePoint="LEFT" x="2" y="0"/>
                 </Anchors>
@@ -310,7 +310,7 @@
                 </Scripts>
             </Button>
             <!-- small save button for saved -->
-            <Button parentKey="SmallSaveButton" inherits="RematchSmallGreyButtonTemplate,RematchTooltipScripts">
+            <Button parentKey="SmallSaveButton" inherits="RematchReduxSmallGreyButtonTemplate,RematchReduxTooltipScripts">
                 <Anchors>
                     <Anchor point="RIGHT" relativeKey="$parent.SmallTeamsButton" relativePoint="LEFT" x="2" y="0"/>
                 </Anchors>

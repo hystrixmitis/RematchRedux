@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.loadouts = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.loadouts = {}
 
 -- add hooks to loadouts/abilities
 
@@ -12,20 +12,20 @@ rematch.loadouts = {}
 -- specialPetID: the special petID (0, "random:8", etc) if a BattlePet-0-x is being slotted on behalf a special petID
 -- stableSlots: true if special slots should not move with their pets (for queue process)
 local keptCompanion -- petID to restore (can be nil to dismiss) after a summons
-function rematch.loadouts:SlotPet(slot,petID,specialPetID,stableSlots)
-    if rematch.loadouts:CantSwapPets() then
+function rematchRedux.loadouts:SlotPet(slot,petID,specialPetID,stableSlots)
+    if rematchRedux.loadouts:CantSwapPets() then
         return -- can't swap pets, leave
     end
     -- if a pet is being slotted while in a post-battle wait to swap pets, stop the timer
-    rematch.main:StopPostBattleTimer()
-    local petInfo = rematch.petInfo:Fetch(petID)
+    rematchRedux.main:StopPostBattleTimer()
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     -- if KeepCompanion enabled, note the pet summoned and start a timer to check back
     if settings.KeepCompanion then
         -- this doesn't check for slot 1 only because SlotPet(2,petID) can swap slots 1 and 2
-        if not rematch.timer:IsRunning(rematch.loadouts.RestoreKeptCompanion) then -- only if not already mid-swap
+        if not rematchRedux.timer:IsRunning(rematchRedux.loadouts.RestoreKeptCompanion) then -- only if not already mid-swap
             keptCompanion = C_PetJournal.GetSummonedPetGUID()
         end
-        rematch.timer:Start(0.5,rematch.loadouts.RestoreKeptCompanion)
+        rematchRedux.timer:Start(0.5,rematchRedux.loadouts.RestoreKeptCompanion)
     end
     if petInfo.isSpecialType then -- a special type is being directly slotted
         settings.SpecialSlots[slot] = petID -- this is either a leveling, random or ignored slot
@@ -48,7 +48,7 @@ function rematch.loadouts:SlotPet(slot,petID,specialPetID,stableSlots)
             end
         end
         -- if a special petID is being slotted with an actual pet (specialPetID is true), assign it
-        if specialPetID and rematch.loadouts:IsPetIDSpecial(specialPetID) then
+        if specialPetID and rematchRedux.loadouts:IsPetIDSpecial(specialPetID) then
             settings.SpecialSlots[slot] = specialPetID
         end
         C_PetJournal.SetPetLoadOutInfo(slot,petID)
@@ -56,14 +56,14 @@ function rematch.loadouts:SlotPet(slot,petID,specialPetID,stableSlots)
     -- if there's any leveling pets slotted, then process the queue to rearrange pets if needed
     for i=1,3 do
         if settings.SpecialSlots[i]==0 then
-            rematch.queue:Process()
+            rematchRedux.queue:Process()
         end
     end
 end
 
 -- for loadteam or other cases where the slot types need to be asserted
-function rematch.loadouts:SetSlotPetID(slot,petID)
-    local petInfo = rematch.petInfo:Fetch(petID)
+function rematchRedux.loadouts:SetSlotPetID(slot,petID)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     if petInfo.isSpecialType then
         settings.SpecialSlots[slot] = petID
     else
@@ -72,32 +72,32 @@ function rematch.loadouts:SetSlotPetID(slot,petID)
 end
 
 -- started from above SlotPet, waits until GCD is over and either restores the previously summoned pet or dismisses if none out
-function rematch.loadouts:RestoreKeptCompanion()
+function rematchRedux.loadouts:RestoreKeptCompanion()
     -- if still in GCD from the swap (or happened to go into combat during the swap) wait a little longer
     local info = C_Spell.GetSpellCooldown(C.GCD_SPELL_ID)
     if info.startTime~=0 or InCombatLockdown() then
-        rematch.timer:Start(0.5,rematch.loadouts.RestoreKeptCompanion)
+        rematchRedux.timer:Start(0.5,rematchRedux.loadouts.RestoreKeptCompanion)
     else -- done swapping
         local petID = C_PetJournal.GetSummonedPetGUID()
         if petID ~= keptCompanion then
             C_PetJournal.SummonPetByGUID(keptCompanion or petID)
-            rematch.timer:Start(0.5,rematch.loadouts.RestoreKeptCompanion) -- come back in 1/2 a second to make sure swap succeeded
+            rematchRedux.timer:Start(0.5,rematchRedux.loadouts.RestoreKeptCompanion) -- come back in 1/2 a second to make sure swap succeeded
         end
     end
 end
 
 -- returns true/false if this slot is special (leveling, random, ignored)
-function rematch.loadouts:IsSlotSpecial(slot)
+function rematchRedux.loadouts:IsSlotSpecial(slot)
     return settings.SpecialSlots[slot] and true or false
 end
 
 -- returns true/false if this petID is special
-function rematch.loadouts:IsPetIDSpecial(petID)
+function rematchRedux.loadouts:IsPetIDSpecial(petID)
     return petID==0 or petID=="ignored" or (type(petID)=="string" and petID:match("^random"))
 end
 
 -- returns the petID of the slot, which can be a special petID, and abilities
-function rematch.loadouts:GetSlotInfo(slot)
+function rematchRedux.loadouts:GetSlotInfo(slot)
     if settings.SpecialSlots[slot] then
         return settings.SpecialSlots[slot]
     else
@@ -106,15 +106,15 @@ function rematch.loadouts:GetSlotInfo(slot)
 end
 
 -- returns the special slot type ("leveling", "random" or "ignored")
-function rematch.loadouts:GetSpecialSlotType(slot)
+function rematchRedux.loadouts:GetSpecialSlotType(slot)
     if settings.SpecialSlots[slot] then
         local petID = self:GetSlotInfo(slot) -- only want first value
-        return rematch.loadouts:GetSpecialPetIDType(petID)
+        return rematchRedux.loadouts:GetSpecialPetIDType(petID)
     end
 end
 
 -- returns the special petID type ("leveling", "random" or "ignored"), or nil if none
-function rematch.loadouts:GetSpecialPetIDType(petID)
+function rematchRedux.loadouts:GetSpecialPetIDType(petID)
     if petID==0 then
         return "leveling"
     elseif type(petID)=="string" and petID:match("^random") then
@@ -127,14 +127,14 @@ function rematch.loadouts:GetSpecialPetIDType(petID)
 end
 
 -- returns the actually-slotted pet and abilities for the given slot (and whether slot is locked)
-function rematch.loadouts:GetLoadoutInfo(slot)
+function rematchRedux.loadouts:GetLoadoutInfo(slot)
     if type(slot)=="number" and slot>0 and slot<4 then
         return C_PetJournal.GetPetLoadOutInfo(slot)
     end
 end
 
 -- returns the two petIDs in slots other than the slot given
-function rematch.loadouts:GetOtherPetIDs(slot)
+function rematchRedux.loadouts:GetOtherPetIDs(slot)
     if type(slot)=="number" and slot>0 and slot<4 then
         local other1 = C_PetJournal.GetPetLoadOutInfo(slot%3+1)
         local other2 = C_PetJournal.GetPetLoadOutInfo((slot+1)%3+1)
@@ -143,7 +143,7 @@ function rematch.loadouts:GetOtherPetIDs(slot)
 end
 
 -- returns true if the slot is locked (for new players who've not yet fully unlocked pet battles)
-function rematch.loadouts:IsSlotLocked(slot)
+function rematchRedux.loadouts:IsSlotLocked(slot)
     if type(slot)=="number" and slot>0 and slot<4 then
         local _,_,_,_,locked = C_PetJournal.GetPetLoadOutInfo(slot)
         return locked
@@ -152,7 +152,7 @@ end
 
 -- returns the localized text and spell/achievement link for the slot being unlearned/locked for new pet battlers
 -- slot 1 is a spell (), slots 2 and 3 are achievements ()
-function rematch.loadouts:GetSlotLockedDetails(slot)
+function rematchRedux.loadouts:GetSlotLockedDetails(slot)
     local text = slot and _G["BATTLE_PET_UNLOCK_HELP_"..slot]
     local link, spellID, achievementID
     if text then
@@ -166,14 +166,14 @@ end
 
 
 -- returns true if in a state where we can't swap pets (if journal locked or in pvp queue or in a battle or in combat or player not in world)
-function rematch.loadouts:CantSwapPets()
-    return (rematch.utils:IsJournalLocked() or C_PetBattles.IsInBattle() or InCombatLockdown() or not rematch.main:IsPlayerInWorld()) and true or false
+function rematchRedux.loadouts:CantSwapPets()
+    return (rematchRedux.utils:IsJournalLocked() or C_PetBattles.IsInBattle() or InCombatLockdown() or not rematchRedux.main:IsPlayerInWorld()) and true or false
 end
 
 -- returns true if any slotted pet is below level 25
-function rematch.loadouts:NotAllMaxLevel()
+function rematchRedux.loadouts:NotAllMaxLevel()
     for i=1,3 do
-        local petInfo = rematch.petInfo:Fetch((rematch.loadouts:GetLoadoutInfo(i)))
+        local petInfo = rematchRedux.petInfo:Fetch((rematchRedux.loadouts:GetLoadoutInfo(i)))
         if petInfo.level and petInfo.level>0 and petInfo.level<25 then
             return true
         end

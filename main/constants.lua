@@ -1,19 +1,24 @@
 local _,rematchReduxTable = ...
 local L = rematchReduxTable.localization
 
-RematchRedux = rematchReduxTable -- global variable for outside/xml access
+_G.RematchRedux = rematchReduxTable -- global variable for outside/xml access
+
+-- back-compat shim for third-party tools expecting the original name
+if not C_AddOns.IsAddOnLoaded("Rematch") then
+    _G.Rematch = rematchReduxTable
+end
 
 -- key bindings
-BINDING_HEADER_REMATCH = L["Rematch"]
-BINDING_NAME_REMATCH_WINDOW = L["Toggle Rematch"]
-BINDING_NAME_REMATCH_NOTES = L["Rematch Team Notes"]
+BINDING_HEADER_REMATCHREDUX = L["RematchRedux"]
+BINDING_NAME_REMATCHREDUX_WINDOW = L["Toggle RematchRedux"]
+BINDING_NAME_REMATCHREDUX_NOTES = L["RematchRedux Team Notes"]
 
 -- backdrop color/style
-REMATCH_BORDER_BACKGROUND_COLOR = CreateColor(0.5,0.5,0.5)
-REMATCH_BORDER_RED_COLOR = CreateColor(1.0,0,0)
-REMATCH_SOLID_DARK_BACKDROP_COLOR = CreateColor(0.05,0.05,0.05)
-REMATCH_SOLID_LIGHT_BACKDROP_COLOR = CreateColor(0.2,0.2,0.2)
-REMATCH_SOLID_BACKDROP_STYLE = {
+_G.REMATCHREDUX_BORDER_BACKGROUND_COLOR = CreateColor(0.5,0.5,0.5)
+_G.REMATCHREDUX_BORDER_RED_COLOR = CreateColor(1.0,0,0)
+_G.REMATCHREDUX_SOLID_DARK_BACKDROP_COLOR = CreateColor(0.05,0.05,0.05)
+_G.REMATCHREDUX_SOLID_LIGHT_BACKDROP_COLOR = CreateColor(0.2,0.2,0.2)
+_G.REMATCHREDUX_SOLID_BACKDROP_STYLE = {
 	bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 	tile = true,
@@ -57,7 +62,7 @@ rematchReduxTable.constants = {
     -- icons
     LEVELING_ICON = "Interface\\AddOns\\RematchRedux\\Textures\\levelingicon",
     IGNORED_ICON = "Interface\\AddOns\\RematchRedux\\Textures\\ignoredicon",
-    REMATCH_ICON = "Interface\\Icons\\INV_Pet_BattlePetTraining",
+    REMATCHREDUX_ICON = "Interface\\Icons\\INV_Pet_BattlePetTraining",
     UNKNOWN_ICON = "Interface\\Icons\\INV_Misc_QuestionMark",
     EMPTY_ICON = "Interface\\AddOns\\RematchRedux\\Textures\\blank", -- "Interface\\PaperDoll\\UI-Backpack-EmptySlot",
     FANFARE_ICON = "Interface\\Icons\\Item_Shop_GiftBox01",
@@ -232,9 +237,6 @@ rematchReduxTable.constants = {
     -- toggleable top of petpanel heights
     PETPANEL_TOP_COLLAPSED_HEIGHT = 29,
     PETPANEL_TOP_EXPANDED_HEIGHT = 88,
-    -- toggleable top of petpanel heights
-    PETPANEL_TOP_COLLAPSED_HEIGHT = 29,
-    PETPANEL_TOP_EXPANDED_HEIGHT = 88,
     -- typebar constants
     TYPEBAR_TAB_TYPE = 1,
     TYPEBAR_TAB_STRONG_VS = 2,
@@ -398,8 +400,8 @@ rematchReduxTable.constants = {
     -- sounds
     SOUND_DRAG_START = 688,
     SOUND_DRAG_STOP = 689,
-    SOUND_REMATCH_OPEN = SOUNDKIT.IG_CHARACTER_INFO_OPEN,
-    SOUND_REMATCH_CLOSE = SOUNDKIT.IG_CHARACTER_INFO_CLOSE,
+    SOUND_REMATCHREDUX_OPEN = SOUNDKIT.IG_CHARACTER_INFO_OPEN,
+    SOUND_REMATCHREDUX_CLOSE = SOUNDKIT.IG_CHARACTER_INFO_CLOSE,
     SOUND_PET_CARD = SOUNDKIT.IG_QUEST_LIST_SELECT,
     SOUND_CHECKBUTTON = SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF,
     SOUND_FLYOUT_OPEN = SOUNDKIT.UI_JOURNEYS_OPEN_LORE_BOOK,

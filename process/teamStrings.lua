@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.teamStrings = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.teamStrings = {}
 
 --[[
 
@@ -58,7 +58,7 @@ rematch.teamStrings = {}
 
 -- returns the preference substring: P:minHP:allowMM:expectedDD:maxHP:minXP:maxXP:
 -- note: none of these values are converted to base32 and minXP and maxXP can be floats (23.5)
-function rematch.teamStrings:ExportPreferences(preferences)
+function rematchRedux.teamStrings:ExportPreferences(preferences)
     if type(preferences)=="table" and settings.ExportIncludePreferences then
         return format("P:%s:%s:%s:%s:%s:%s:",preferences.minHP or "",preferences.allowMM and "1" or "",preferences.expectedDD or "",preferences.maxHP or "",preferences.minXP or "",preferences.maxXP or "")
     else
@@ -67,8 +67,8 @@ function rematch.teamStrings:ExportPreferences(preferences)
 end
 
 -- returns a team string for a single given teamID
-function rematch.teamStrings:ExportTeam(teamID)
-    local team = teamID and rematch.savedTeams[teamID]
+function rematchRedux.teamStrings:ExportTeam(teamID)
+    local team = teamID and rematchRedux.savedTeams[teamID]
     if not team then
         return
     end
@@ -78,7 +78,7 @@ function rematch.teamStrings:ExportTeam(teamID)
     if team.targets then
         local targets = {}
         for _,npcID in ipairs(team.targets) do
-            tinsert(targets,rematch.utils:ToBase32(npcID))
+            tinsert(targets,rematchRedux.utils:ToBase32(npcID))
         end
         npcIDs = table.concat(targets,",")
     end
@@ -87,7 +87,7 @@ function rematch.teamStrings:ExportTeam(teamID)
     local result = format("%s:%s:%s:%s:%s:",team.name,npcIDs,team.tags[1] or "",team.tags[2] or "",team.tags[3] or "")
 
     -- add preferences P:minHP:allowMM:expectedDD:maxHP:minXP:maxXP
-    result = result..rematch.teamStrings:ExportPreferences(rematch.preferences:GetTeamPreferences(teamID))
+    result = result..rematchRedux.teamStrings:ExportPreferences(rematchRedux.preferences:GetTeamPreferences(teamID))
 
     -- notes always at end
     if team.notes and team.notes:trim():len()>0 and settings.ExportIncludeNotes then
@@ -99,8 +99,8 @@ end
 
 -- returns a multi-line string of the given teamID in a "plain text" format meant to be human readable
 -- (plain text exports are never meant to be imported)
-function rematch.teamStrings:ExportPlainTextTeam(teamID)
-    local team = teamID and rematch.savedTeams[teamID]
+function rematchRedux.teamStrings:ExportPlainTextTeam(teamID)
+    local team = teamID and rematchRedux.savedTeams[teamID]
     if not team then
         return
     end
@@ -111,7 +111,7 @@ function rematch.teamStrings:ExportPlainTextTeam(teamID)
     if team.targets then
         local targets = {}
         for _,npcID in ipairs(team.targets) do
-            local name = rematch.targetInfo:GetNpcName(npcID)
+            local name = rematchRedux.targetInfo:GetNpcName(npcID)
             if name and name~=team.name and name~=C.CACHE_RETRIEVING then -- only include target names if they aren't team name
                 tinsert(targets,name)
             end
@@ -126,7 +126,7 @@ function rematch.teamStrings:ExportPlainTextTeam(teamID)
     for i=1,3 do
         local petID = team.pets[i]
         local petTag = team.tags[i]
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         local name = petInfo.speciesName or petInfo.name or UNKNOWN
         -- if abilities are in the tag (and not 000 for any abilities in any slot)
         local abilities = petTag and petTag:match("^([012][012][012])")
@@ -142,7 +142,7 @@ function rematch.teamStrings:ExportPlainTextTeam(teamID)
     end
 
     local preferences = type(team.preferences)=="table" and team.preferences
-    if settings.ExportIncludePreferences and preferences and rematch.utils:GetSize(preferences)>0 then
+    if settings.ExportIncludePreferences and preferences and rematchRedux.utils:GetSize(preferences)>0 then
         result = result..string.rep("-",team.name:len()).."\n".."Leveling preferences: "
         local list = {}
         if preferences.minHP then
@@ -177,32 +177,32 @@ end
 
 -- returns a string for a group header in format "__ name:sort:icon:color:showTab:[preferences] __"
 -- all except name are optional, and preferences field only exists if group has preferences
-function rematch.teamStrings:ExportHeader(groupID)
-    local group = groupID and rematch.savedGroups[groupID]
+function rematchRedux.teamStrings:ExportHeader(groupID)
+    local group = groupID and rematchRedux.savedGroups[groupID]
     if group and group.name then
         return format("__ %s:%s:%s:%s:%s:%s __",
             group.name:trim(),
             group.sortMode or "",
-            rematch.utils:ToBase32(type(group.icon)=="number" and group.icon or GetFileIDFromPath(group.icon or "")) or "",
+            rematchRedux.utils:ToBase32(type(group.icon)=="number" and group.icon or GetFileIDFromPath(group.icon or "")) or "",
             group.color or "",
             group.showTab and "1" or "",
-            rematch.teamStrings:ExportPreferences(group.preferences)
+            rematchRedux.teamStrings:ExportPreferences(group.preferences)
         )
     end
 end
 
 -- returns an ordered table of strings for a group and all teams in the group (in table form
 -- so it can spool to the multilineeditbox)
-function rematch.teamStrings:ExportGroup(groupID)
+function rematchRedux.teamStrings:ExportGroup(groupID)
     local results = {}
 
-    local header = rematch.teamStrings:ExportHeader(groupID)
+    local header = rematchRedux.teamStrings:ExportHeader(groupID)
     if header then
         tinsert(results,header)
         tinsert(results,"")
 
-        for _,teamID in ipairs(rematch.savedGroups[groupID].teams) do
-            local team = rematch.teamStrings:ExportTeam(teamID)
+        for _,teamID in ipairs(rematchRedux.savedGroups[groupID].teams) do
+            local team = rematchRedux.teamStrings:ExportTeam(teamID)
             if team then
                 tinsert(results,team)
             end
@@ -213,11 +213,11 @@ function rematch.teamStrings:ExportGroup(groupID)
 end
 
 -- returns an ordered table of all groups and teams
-function rematch.teamStrings:ExportAll()
+function rematchRedux.teamStrings:ExportAll()
     local results = {}
 
     for _,groupID in ipairs(settings.GroupOrder) do
-        for _,teamString in pairs(rematch.teamStrings:ExportGroup(groupID)) do
+        for _,teamString in pairs(rematchRedux.teamStrings:ExportGroup(groupID)) do
             tinsert(results,teamString)
         end
         tinsert(results,"")
@@ -231,7 +231,7 @@ function rematch.teamStrings:ExportAll()
 end
 
 -- analyzes the import string for groups and teams and returns numGroups, numTeams, numConflicts, numBad
-function rematch.teamStrings:AnalyzeImport(import)
+function rematchRedux.teamStrings:AnalyzeImport(import)
     local numGroups = 0 -- number of group headers in the import
     local numTeams = 0 -- number of teams in the import
     local numConflicts = 0 -- number of teams/groups that share the name of an existing team in the import
@@ -244,7 +244,7 @@ function rematch.teamStrings:AnalyzeImport(import)
         local groupName = test:match("^__ (.-):*.* __$")
         if groupName then -- this matches a group format, increment numGroups
             numGroups = numGroups + 1
-            local existingGroupID = rematch.savedGroups:GetGroupIDByName(groupName)
+            local existingGroupID = rematchRedux.savedGroups:GetGroupIDByName(groupName)
             -- if this group already exists (and it's not favorites or ungrouped which never conflict), increment numConflicts
             if existingGroupID and existingGroupID~="group:favorites" and existingGroupID~="group:none" then
                 numConflicts = numConflicts + 1
@@ -256,7 +256,7 @@ function rematch.teamStrings:AnalyzeImport(import)
             local teamName = test:match("^([^\n]-):[%w,]*:%w*:%w*:%w*:")
             if teamName then -- this line matches a team format, increment numTeams
                 numTeams = numTeams + 1
-                if rematch.savedTeams:GetTeamIDByName(teamName) then
+                if rematchRedux.savedTeams:GetTeamIDByName(teamName) then
                     numConflicts = numConflicts + 1 -- an existing team has this name, increment numConflicts
                 end
                 if not foundFirst then
@@ -278,7 +278,7 @@ function rematch.teamStrings:AnalyzeImport(import)
 end
 
 -- imports a single team to the loadonly meta team and loads the team
-function rematch.teamStrings:LoadOnly(import)
+function rematchRedux.teamStrings:LoadOnly(import)
     if type(import)~="string" then
         return -- if import is not a string, do nothing and leave
     end
@@ -291,11 +291,11 @@ function rematch.teamStrings:LoadOnly(import)
 
     self:ImportTeam(import:trim(),"group:none",true)
 
-    rematch.loadTeam:LoadTeamID("loadonly")
+    rematchRedux.loadTeam:LoadTeamID("loadonly")
 end
 
 -- imports the teams (possibly groups too) from the given import string
-function rematch.teamStrings:Import(import)
+function rematchRedux.teamStrings:Import(import)
 
     if type(import)~="string" then
         return -- if import is not a string, do nothing and leave
@@ -308,7 +308,7 @@ function rematch.teamStrings:Import(import)
 
     -- for single team or multi team (not group) imports, the group to put teams is settings.LastSelectedGroup
     -- here confirm setting is group:none if not defined or a no-longer-existing group
-    if not settings.LastSelectedGroup or not rematch.savedGroups[settings.LastSelectedGroup] then
+    if not settings.LastSelectedGroup or not rematchRedux.savedGroups[settings.LastSelectedGroup] then
         settings.LastSelectedGroup = "group:none"
     end
 
@@ -339,24 +339,24 @@ function rematch.teamStrings:Import(import)
         if numGroups==0 then
             if teamLine then
                 local teamID = self:ImportTeam(teamLine:trim(),groupID)
-                rematch.savedTeams:TeamsChanged(true)
+                rematchRedux.savedTeams:TeamsChanged(true)
                 if numTeams==1 then -- if only importing one team, bling it
-                    rematch.layout:SummonView("teams")
-                    rematch.saveDialog:LoadAndBlingTeamID({teamID=teamID})
+                    rematchRedux.layout:SummonView("teams")
+                    rematchRedux.saveDialog:LoadAndBlingTeamID({teamID=teamID})
                 end
             end
         end
     end
     -- if more than one team imported, scroll the group they were imported to top (first group if multi group)
     if numTeams>1 or numGroups>0 then
-        rematch.layout:SummonView("teams")
-        rematch.saveDialog:BlingTeamIDOrGroupID(firstGroupID or groupID)
+        rematchRedux.layout:SummonView("teams")
+        rematchRedux.saveDialog:BlingTeamIDOrGroupID(firstGroupID or groupID)
     end
 end
 
 -- for the given tag (and excludePetIDs lookup table), return a petID and add to lookup if one found
 local function findPetID(tag,excludePetIDs)
-    local petID = rematch.petTags:FindPetID(tag,excludePetIDs)
+    local petID = rematchRedux.petTags:FindPetID(tag,excludePetIDs)
     if type(petID)=="string" and petID:match("^BattlePet") then -- if an actual pet
         excludePetIDs[petID] = true
     end
@@ -387,7 +387,7 @@ local function parseExtras(extras)
 end
 
 -- sets the sideline to the team in the import string
-function rematch.teamStrings:SidelineTeamString(import,groupID)
+function rematchRedux.teamStrings:SidelineTeamString(import,groupID)
     -- test for extras (preferences/notes) first
     local teamString,extras = import:match("^([^\n]-:[%w,]*:%w*:%w*:%w*:)(.+)$")
     if not teamString then -- no extras, test for just team
@@ -403,32 +403,32 @@ function rematch.teamStrings:SidelineTeamString(import,groupID)
     name=name:trim()
 
     -- build sideline
-    rematch.savedTeams:Reset("sideline")
-    rematch.savedTeams.sideline.name = name
-    rematch.savedTeams.sideline.tags[1] = pet1
-    rematch.savedTeams.sideline.tags[2] = pet2
-    rematch.savedTeams.sideline.tags[3] = pet3
+    rematchRedux.savedTeams:Reset("sideline")
+    rematchRedux.savedTeams.sideline.name = name
+    rematchRedux.savedTeams.sideline.tags[1] = pet1
+    rematchRedux.savedTeams.sideline.tags[2] = pet2
+    rematchRedux.savedTeams.sideline.tags[3] = pet3
 
     -- set groupID
-    rematch.savedTeams.sideline.groupID = groupID or "group:none"
+    rematchRedux.savedTeams.sideline.groupID = groupID or "group:none"
     if groupID=="group:favorites" then
-        rematch.savedTeams.sideline.homeID = "group:none"
-        rematch.savedTeams.sideline.favorite = true
+        rematchRedux.savedTeams.sideline.homeID = "group:none"
+        rematchRedux.savedTeams.sideline.favorite = true
     end
 
     -- find petIDs for each tag
     local excludePetIDs = {}
-    rematch.savedTeams.sideline.pets[1] = findPetID(pet1,excludePetIDs)
-    rematch.savedTeams.sideline.pets[2] = findPetID(pet2,excludePetIDs)
-    rematch.savedTeams.sideline.pets[3] = findPetID(pet3,excludePetIDs)
+    rematchRedux.savedTeams.sideline.pets[1] = findPetID(pet1,excludePetIDs)
+    rematchRedux.savedTeams.sideline.pets[2] = findPetID(pet2,excludePetIDs)
+    rematchRedux.savedTeams.sideline.pets[3] = findPetID(pet3,excludePetIDs)
 
     -- set targets (comma-separated list)
     if npcIDs:len()>0 then
-        rematch.savedTeams.sideline.targets = {}
+        rematchRedux.savedTeams.sideline.targets = {}
         for npcID in npcIDs:gmatch("[^,]+") do
             local target = tonumber(npcID,32)
             if target then
-                tinsert(rematch.savedTeams.sideline.targets,target)
+                tinsert(rematchRedux.savedTeams.sideline.targets,target)
             end
         end
     end
@@ -437,12 +437,12 @@ function rematch.teamStrings:SidelineTeamString(import,groupID)
     if extras then
         local preferences,notes = parseExtras(extras)
         if preferences then
-            rematch.savedTeams.sideline.preferences = CopyTable(preferences)
+            rematchRedux.savedTeams.sideline.preferences = CopyTable(preferences)
         end
         if notes then
-            rematch.savedTeams.sideline.notes = notes:gsub("\\n","\n")
+            rematchRedux.savedTeams.sideline.notes = notes:gsub("\\n","\n")
         else
-            rematch.savedTeams.sideline.notes = nil
+            rematchRedux.savedTeams.sideline.notes = nil
         end
     end
 
@@ -450,38 +450,38 @@ end
 
 -- imports a single team to the given groupID
 -- if loadOnly is true, then the team is imported into the "loadonly" meta team and not saved
-function rematch.teamStrings:ImportTeam(import,groupID,loadOnly)
+function rematchRedux.teamStrings:ImportTeam(import,groupID,loadOnly)
 
-    rematch.teamStrings:SidelineTeamString(import,groupID)
+    rematchRedux.teamStrings:SidelineTeamString(import,groupID)
 
     -- if team name already used, we're either making a copy (make name unique) or overwriting
     -- (savedTeams:Create() call a TeamsChanged)
-    local existingTeamID = rematch.savedTeams:GetTeamIDByName(rematch.savedTeams.sideline.name)
+    local existingTeamID = rematchRedux.savedTeams:GetTeamIDByName(rematchRedux.savedTeams.sideline.name)
     local newTeamID
     if loadOnly then -- if only loading team, copy sideline to loadonly meta team
-        --rematch.savedTeams.sideline.name = rematch.savedTeams:GetUniqueName(rematch.savedTeams.sideline.name)
-        rematch.savedTeams.loadonly = rematch.savedTeams.sideline
+        --rematchRedux.savedTeams.sideline.name = rematchRedux.savedTeams:GetUniqueName(rematchRedux.savedTeams.sideline.name)
+        rematchRedux.savedTeams.loadonly = rematchRedux.savedTeams.sideline
         newTeamID = "loadonly"
     elseif existingTeamID then
         if settings.ImportConflictOverwrite then -- when overwriting, reuse old teamID
-            rematch.events:Fire("REMATCH_TEAM_OVERWRITTEN",existingTeamID)
-            rematch.savedTeams[existingTeamID] = rematch.savedTeams.sideline
+            rematchRedux.events:Fire("REMATCHREDUX_TEAM_OVERWRITTEN",existingTeamID)
+            rematchRedux.savedTeams[existingTeamID] = rematchRedux.savedTeams.sideline
             newTeamID = existingTeamID
-            rematch.savedTeams:TeamsChanged()
+            rematchRedux.savedTeams:TeamsChanged()
         else
-            rematch.savedTeams.sideline.name = rematch.savedTeams:GetUniqueName(rematch.savedTeams.sideline.name)
-            newTeamID = rematch.savedTeams:Create().teamID
+            rematchRedux.savedTeams.sideline.name = rematchRedux.savedTeams:GetUniqueName(rematchRedux.savedTeams.sideline.name)
+            newTeamID = rematchRedux.savedTeams:Create().teamID
         end
     else -- this is a new team with no conflict, create a new team
-        newTeamID = rematch.savedTeams:Create().teamID
+        newTeamID = rematchRedux.savedTeams:Create().teamID
     end
 
     -- if any of the chosen pets are below 25 (and QueueAutoImport enabled), then add them to queue
     if settings.QueueAutoImport then
         for i=1,3 do
-            local petID = rematch.savedTeams.sideline.pets[i]
-            local petInfo = rematch.petInfo:Fetch(petID)
-            if rematch.queue:PetIDCanLevel(petID) then
+            local petID = rematchRedux.savedTeams.sideline.pets[i]
+            local petInfo = rematchRedux.petInfo:Fetch(petID)
+            if rematchRedux.queue:PetIDCanLevel(petID) then
                 -- since queue won't have time to process/sort, making a manual check for each pass
                 local inQueue
                 for _,info in ipairs(settings.LevelingQueue) do
@@ -491,8 +491,8 @@ function rematch.teamStrings:ImportTeam(import,groupID,loadOnly)
                     end
                 end
                 if not inQueue then
-                    rematch.queue:AddPetID(petID)
-                    rematch.utils:WriteSystem(format(L["%s has been added to your leveling queue!"],petInfo.formattedName))
+                    rematchRedux.queue:AddPetID(petID)
+                    rematchRedux.utils:WriteSystem(format(L["%s has been added to your leveling queue!"],petInfo.formattedName))
                 end
             end
         end
@@ -503,7 +503,7 @@ function rematch.teamStrings:ImportTeam(import,groupID,loadOnly)
 end
 
 -- creates a new group from the given __ name:sort:icon:color:[preferences] __ and returns the groupID that was created
-function rematch.teamStrings:ImportGroup(import)
+function rematchRedux.teamStrings:ImportGroup(import)
     -- test for new group definition with preferences (extras) first
     local groupName,sort,icon,color,showTab,extras = import:match("^__ ([^\n]-):(%d*):(%w*):(%w*):(%w*):(.+) __$")
     -- no match yet, try without preferences next
@@ -523,16 +523,16 @@ function rematch.teamStrings:ImportGroup(import)
     -- if group has a valid name
     if groupName:len()>0 then
         local group
-        local existingGroupID = rematch.savedGroups:GetGroupIDByName(groupName)
+        local existingGroupID = rematchRedux.savedGroups:GetGroupIDByName(groupName)
         if existingGroupID=="group:favorites" or existingGroupID=="group:none" then
-            group = rematch.savedGroups[existingGroupID] -- favorites and ungrouped always import into existing group
+            group = rematchRedux.savedGroups[existingGroupID] -- favorites and ungrouped always import into existing group
         elseif existingGroupID and settings.ImportConflictOverwrite then
-            group = rematch.savedGroups[existingGroupID] -- other groups that share a name use existing one if overwrite chosen
+            group = rematchRedux.savedGroups[existingGroupID] -- other groups that share a name use existing one if overwrite chosen
         else
-            group = rematch.savedGroups:Create(groupName) -- in all other cases create a new group (can be same name)
+            group = rematchRedux.savedGroups:Create(groupName) -- in all other cases create a new group (can be same name)
         end
         group.sortMode = tonumber(sort) or C.GROUP_SORT_ALPHA
-        group.icon = tonumber((icon or ""),32) or C.REMATCH_ICON
+        group.icon = tonumber((icon or ""),32) or C.REMATCHREDUX_ICON
         group.color = tonumber((color or ""),16) and color:trim() or nil
         group.showTab = showTab~="" and true or nil
 
@@ -540,7 +540,7 @@ function rematch.teamStrings:ImportGroup(import)
             group.preferences = parseExtras(extras:trim()) -- no notes support yet; but if so it'd be second return here
         end
 
-        rematch.savedTeams:TeamsChanged()
+        rematchRedux.savedTeams:TeamsChanged()
         return group.groupID
     end
 
@@ -552,7 +552,7 @@ end
 -- when a line is a continuation (not the first line) then it begins with \002.
 -- when an incoming team begins without \002 it should start a new team.
 -- when an incoming line ends with \003 it should wait for the next line.
-function rematch.teamStrings:SplitTeamStrings(teamID)
+function rematchRedux.teamStrings:SplitTeamStrings(teamID)
     local teamString = self:ExportTeam(teamID) 
     if not teamString then
         return -- teamID invalid
@@ -577,21 +577,21 @@ function rematch.teamStrings:SplitTeamStrings(teamID)
 end
 
 -- checks if it's time to prompt about backups and displays the dialog if so
-function rematch.teamStrings:CheckForBackup()
+function rematchRedux.teamStrings:CheckForBackup()
     if not settings.NoBackupReminder and not C_PetBattles.IsInBattle() and not InCombatLockdown() and not C_PetBattles.GetPVPMatchmakingInfo() then
-        local numTeams = rematch.savedTeams:GetNumTeams()
+        local numTeams = rematchRedux.savedTeams:GetNumTeams()
         if type(settings.BackupCount)~="number" or settings.BackupCount==0 then
             settings.BackupCount = numTeams
         elseif numTeams > (settings.BackupCount+C.BACKUP_INTERVAL) then
             settings.BackupCount = numTeams
-            rematch.dialog:Register("BackupTeams",{
+            rematchRedux.dialog:Register("BackupTeams",{
                 title = L["Backup Teams"],
                 accept = YES,
                 cancel = NO,
                 layout = {"Text","SmallText","CheckButton"},
                 refreshFunc = function(self,info,subject,firstRun)
-                    self.Text:SetText(format(L["You have %s%d\124r Rematch teams.\n\nWould you like to back them up now?"],C.HEX_WHITE,numTeams))
-                    self.SmallText:SetText(L["Choosing Yes will export all teams to copy and paste in an email to yourself or someplace safe.\n\nYou can also do this at any time from the Teams button at the top of the Teams panel of Rematch."])
+                    self.Text:SetText(format(L["You have %s%d\124r RematchRedux teams.\n\nWould you like to back them up now?"],C.HEX_WHITE,numTeams))
+                    self.SmallText:SetText(L["Choosing Yes will export all teams to copy and paste in an email to yourself or someplace safe.\n\nYou can also do this at any time from the Teams button at the top of the Teams panel of RematchRedux."])
                     self.CheckButton:SetText(L["Don't Remind About Backups"])
                     self.CheckButton:SetChecked(settings.NoBackupReminder)
                 end,
@@ -599,13 +599,13 @@ function rematch.teamStrings:CheckForBackup()
                     settings.NoBackupReminder = self.CheckButton:GetChecked()
                 end,
                 acceptFunc = function(self,info,subject)
-                    rematch.timer:Start(0.1,function() 
-                        rematch.dialog:ShowDialog("ExportMultipleTeams")
+                    rematchRedux.timer:Start(0.1,function() 
+                        rematchRedux.dialog:ShowDialog("ExportMultipleTeams")
                     end)
                 end,
             })
-            rematch.dialog:Hide()
-            rematch.dialog:ShowDialog("BackupTeams")
+            rematchRedux.dialog:Hide()
+            rematchRedux.dialog:ShowDialog("BackupTeams")
         end
     end
 end

@@ -1,28 +1,29 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.teamTabs = rematch.frame.TeamTabs
-rematch.frame:Register("teamTabs")
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
-rematch.events:Register(rematch.teamTabs,"PLAYER_LOGIN",function(self)
+rematchRedux.teamTabs = rematchRedux.frame.TeamTabs
+rematchRedux.frame:Register("teamTabs")
+
+rematchRedux.events:Register(rematchRedux.teamTabs,"PLAYER_LOGIN",function(self)
     self.Tabs = {}
     for i=1,C.MAX_TEAM_TABS+1 do
-        self.Tabs[i] = CreateFrame("Button",nil,self,"RematchTeamTabTemplate")
+        self.Tabs[i] = CreateFrame("Button",nil,self,"RematchReduxTeamTabTemplate")
         self.Tabs[i]:SetPoint("TOPLEFT",0,-(i-1)*44)
     end
     self.GlowTab.Animation:Play()
 end)
 
-function rematch.teamTabs:Configure()
-    self:SetShown(rematch.layout:GetMode()~=0 and (settings.AlwaysTeamTabs or rematch.layout:GetView()=="teams") and not settings.NeverTeamTabs)
+function rematchRedux.teamTabs:Configure()
+    self:SetShown(rematchRedux.layout:GetMode()~=0 and (settings.AlwaysTeamTabs or rematchRedux.layout:GetView()=="teams") and not settings.NeverTeamTabs)
 end
 
-function rematch.teamTabs:Update()
-    local numTabs = rematch.savedGroups:GetNumTeamTabs()
+function rematchRedux.teamTabs:Update()
+    local numTabs = rematchRedux.savedGroups:GetNumTeamTabs()
     local tabIndex = 1
     for _,groupID in ipairs(settings.GroupOrder) do
-        local group = rematch.savedGroups[groupID]
+        local group = rematchRedux.savedGroups[groupID]
         if group and group.showTab then
             if tabIndex <= C.MAX_TEAM_TABS then
                 self.Tabs[tabIndex].Icon:SetTexture(group.icon)
@@ -47,7 +48,7 @@ function rematch.teamTabs:Update()
         self.Tabs[i]:Hide()
     end
     -- scale the tabs depending on number of them
-    local numTabs = rematch.savedGroups:GetNumTeamTabs() -- in case any were dropped
+    local numTabs = rematchRedux.savedGroups:GetNumTeamTabs() -- in case any were dropped
     local scale, yoff
     if numTabs<=11 then
         scale,yoff = 1,-64
@@ -61,6 +62,6 @@ function rematch.teamTabs:Update()
         scale,yoff = 0.8,-32
     end
     self:SetScale(scale)
-    self:SetPoint("TOPLEFT",rematch.frame,"TOPRIGHT",-1,yoff)
+    self:SetPoint("TOPLEFT",rematchRedux.frame,"TOPRIGHT",-1,yoff)
     self:SetHeight((numTabs+1)*44)
 end

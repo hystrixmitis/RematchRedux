@@ -1,93 +1,93 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.minimap = RematchMinimapButton
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.minimap = RematchReduxMinimapButton
 
-rematch.events:Register(rematch.minimap,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.minimap,"PLAYER_LOGIN",function(self)
     self:Configure()
-    rematch.menus:Register("MinimapFavorites",{})
+    rematchRedux.menus:Register("MinimapFavorites",{})
 end)
 
-function rematch.minimap:OnEnter()
+function rematchRedux.minimap:OnEnter()
     if not self.isDragging then
-        rematch.tooltip:ShowSimpleTooltip(self,L["RematchRedux"],format(L["%s Toggle Window\n%s Load Favorite Team"],C.LMB_TEXT_ICON,C.RMB_TEXT_ICON),"BOTTOMRIGHT",self,"TOPLEFT",8,-8)
+        rematchRedux.tooltip:ShowSimpleTooltip(self,L["RematchRedux"],format(L["%s Toggle Window\n%s Load Favorite Team"],C.LMB_TEXT_ICON,C.RMB_TEXT_ICON),"BOTTOMRIGHT",self,"TOPLEFT",8,-8)
     end
 end
 
-function rematch.minimap:OnLeave()
-    rematch.tooltip:Hide()
+function rematchRedux.minimap:OnLeave()
+    rematchRedux.tooltip:Hide()
 end
 
-function rematch.minimap:OnMouseDown()
+function rematchRedux.minimap:OnMouseDown()
     self.Icon:SetPoint("CENTER",1,-1)
     self.Icon:SetVertexColor(0.65,0.65,0.65)
 end
 
-function rematch.minimap:OnMouseUp()
+function rematchRedux.minimap:OnMouseUp()
     self.Icon:SetPoint("CENTER")
     self.Icon:SetVertexColor(1,1,1)
 end
 
 -- menu function to load teamID
 local function loadTeam(self)
-    rematch.loadTeam:LoadTeamID(self.teamID)
+    rematchRedux.loadTeam:LoadTeamID(self.teamID)
 end
 
-function rematch.minimap:OnClick(button)
+function rematchRedux.minimap:OnClick(button)
     if button=="RightButton" then
-        rematch.tooltip:Hide()
+        rematchRedux.tooltip:Hide()
         -- rebuild menu for current favorites
-        local menu = rematch.menus:GetDefinition("MinimapFavorites")
+        local menu = rematchRedux.menus:GetDefinition("MinimapFavorites")
         wipe(menu) -- clear menu and rebuild
         tinsert(menu,{title=L["Favorite Teams"]})
-        local teams = rematch.savedGroups["group:favorites"].teams
+        local teams = rematchRedux.savedGroups["group:favorites"].teams
         if not teams or #teams==0 then -- if no teams :(
             tinsert(menu,{text=format(L["%sNo favorite teams :("],C.HEX_GREY)})
         else -- at least one team favorited, add them to menu
             for _,teamID in ipairs(teams) do
-                tinsert(menu,{text=rematch.utils:GetFormattedTeamName(teamID),teamID=teamID,func=loadTeam})
+                tinsert(menu,{text=rematchRedux.utils:GetFormattedTeamName(teamID),teamID=teamID,func=loadTeam})
             end
         end
 
-        rematch.menus:Register("MinimapFavorites",menu)
+        rematchRedux.menus:Register("MinimapFavorites",menu)
 
-        rematch.menus:Toggle("MinimapFavorites",self,nil,"TOPRIGHT",self,"BOTTOMLEFT",8,8)
+        rematchRedux.menus:Toggle("MinimapFavorites",self,nil,"TOPRIGHT",self,"BOTTOMLEFT",8,8)
     else
-        rematch.frame:Toggle()
+        rematchRedux.frame:Toggle()
     end
 end
 
-function rematch.minimap:OnDragStart()
-    rematch.menus:Hide()
-    rematch.tooltip:Hide()
+function rematchRedux.minimap:OnDragStart()
+    rematchRedux.menus:Hide()
+    rematchRedux.tooltip:Hide()
     self.isDragging = true
     self:SetScript("OnUpdate",self.OnDragUpdate)
 end
 
-function rematch.minimap:OnDragStop()
+function rematchRedux.minimap:OnDragStop()
     self.Icon:SetPoint("CENTER")
     self.Icon:SetVertexColor(1,1,1)
     self:SetScript("OnUpdate",nil)
     self.isDragging = false
 end
 
-function rematch.minimap:Configure()
+function rematchRedux.minimap:Configure()
     self:SetShown(settings.UseMinimapButton)
     self:Update()
 end
 
 -- updates position of button based on MinimapButtonPosition setting
-function rematch.minimap:Update()
+function rematchRedux.minimap:Update()
     local angle = settings.MinimapButtonPosition or -162
     self:SetPoint("CENTER",Minimap,"CENTER",(105*cos(angle)),(105*sin(angle)))
 end
 
 -- OnUpdate while button being dragged, calculates new position(angle) for button and moves it
-function rematch.minimap:OnDragUpdate(elapsed)
+function rematchRedux.minimap:OnDragUpdate(elapsed)
     local x,y = GetCursorPosition()
     local scale = Minimap:GetEffectiveScale()
     local minX,minY = Minimap:GetCenter()
     settings.MinimapButtonPosition = math.deg(math.atan2(y/scale-minY,x/scale-minX))
-    rematch.minimap:Update()
+    rematchRedux.minimap:Update()
 end

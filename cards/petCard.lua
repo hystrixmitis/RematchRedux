@@ -1,14 +1,14 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.petCard = RematchPetCard
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.petCard = RematchReduxPetCard
 
-rematch.events:Register(rematch.petCard,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.petCard,"PLAYER_LOGIN",function(self)
     self.Title:SetText(L["Pet Card"])
 
     -- register cardManager behavior
-    rematch.cardManager:Register("PetCard",self,{
+    rematchRedux.cardManager:Register("PetCard",self,{
         update = self.Update,
         lockUpdate = self.UpdateLock,
         pinUpdate = self.UpdatePinButton,
@@ -27,7 +27,7 @@ rematch.events:Register(rematch.petCard,"PLAYER_LOGIN",function(self)
 	self.Content.Back.Racial.StrongAbilities:SetText(L["abilities"])
 	self.Content.Back.Racial.WeakAbilities:SetText(L["abilities"])
 
-    local breedSource,breedSourceName = rematch.breedInfo:GetBreedSource()
+    local breedSource,breedSourceName = rematchRedux.breedInfo:GetBreedSource()
     if breedSource then
         self.Content.Front.Stats.BreedTable.Title:SetText(breedSource=="PetTracker" and L["Possible Breeds"] or L["Stats as \124cff0070ddRare\124r level 25"])
         self.Content.Front.Stats.BreedTable.Footer:SetText(format(L["All breed data pulled from %s%s\124r"],C.HEX_WHITE,breedSourceName))
@@ -46,30 +46,30 @@ rematch.events:Register(rematch.petCard,"PLAYER_LOGIN",function(self)
     -- create hook for using pet cards as links
     hooksecurefunc("SetItemRef",self.SetItemRef)
 
-    rematch.menus:Register("AbilityMenu",{
-        {title=rematch.petCard.GetAbilityNameByID},
-        {text=L["Find Pets With This Ability"], func=rematch.petCard.FindPetsWithAbility},
+    rematchRedux.menus:Register("AbilityMenu",{
+        {title=rematchRedux.petCard.GetAbilityNameByID},
+        {text=L["Find Pets With This Ability"], func=rematchRedux.petCard.FindPetsWithAbility},
     })
 end)
 
 -- returns the name of abilityID
-function rematch.petCard:GetAbilityNameByID(abilityID)
+function rematchRedux.petCard:GetAbilityNameByID(abilityID)
     return (select(2,C_PetBattles.GetAbilityInfoByID(abilityID)))
 end
 
 -- summons pet view if not visible and searching for ability with abilityID
-function rematch.petCard:FindPetsWithAbility(abilityID)
-    local abilityName = rematch.petCard:GetAbilityNameByID(abilityID)
+function rematchRedux.petCard:FindPetsWithAbility(abilityID)
+    local abilityName = rematchRedux.petCard:GetAbilityNameByID(abilityID)
     if abilityName then
-        rematch.layout:SummonView("pets")
+        rematchRedux.layout:SummonView("pets")
         local exactSearch = '"'..abilityName..'"'
-        rematch.filters:SetSearch(exactSearch)
-        rematch.petsPanel.Top.SearchBox:SetText(exactSearch)
-        rematch.petsPanel:Update()
+        rematchRedux.filters:SetSearch(exactSearch)
+        rematchRedux.petsPanel.Top.SearchBox:SetText(exactSearch)
+        rematchRedux.petsPanel:Update()
     end
 end
 
-function rematch.petCard:Update(petID)
+function rematchRedux.petCard:Update(petID)
     if petID then
         self.petID = petID
     end
@@ -78,10 +78,10 @@ function rematch.petCard:Update(petID)
     self:ResetHeights()
 
     -- if this is a leveling, random or ignored pet card, it can't flip
-    local petInfo = rematch.petInfo:Fetch(self.petID)
+    local petInfo = rematchRedux.petInfo:Fetch(self.petID)
 
     if not petInfo.name then
-        rematch.petCard:Hide()
+        rematchRedux.petCard:Hide()
     end
 
     if petInfo.isSpecialType then
@@ -121,9 +121,9 @@ end
 -- flips the pet card to the front or back depending on whether flip modifier key is down or soft/hardFlip
 -- softFlip is when the mouse is over the pet or type icon at the top of the card
 -- hardFlip is when the pet or type icon at the top of the card were clicked (so it stays flipped until flipped again or dismissed)
-function rematch.petCard:FlipCard()
+function rematchRedux.petCard:FlipCard()
 
-    local petInfo = rematch.petInfo:Fetch(self.petID)
+    local petInfo = rematchRedux.petInfo:Fetch(self.petID)
 
     -- if flip key is used then show back (unless doing a hardFlip and already showing back; then show front)
     local isFlipKeyUsed = self:IsFlipKeyUsed()
@@ -139,14 +139,14 @@ function rematch.petCard:FlipCard()
 end
 
 -- if the modifier key going down or up is also the PetCardFlipKey, then update the card to potentially flip it over
-function rematch.petCard:MODIFIER_STATE_CHANGED(key,down)
+function rematchRedux.petCard:MODIFIER_STATE_CHANGED(key,down)
     if self:IsFlipKeyUsed(key) then
         self:FlipCard()
     end
 end
 
 -- adjusts size of persistent elements when pet card is minimized or maximized
-function rematch.petCard:Configure()
+function rematchRedux.petCard:Configure()
     if settings.PetCardMinimized then
         self.MinimizeButton:SetIcon("maximize")
         self.Content.Top:SetHeight(C.PET_CARD_TOP_MINIMIZED_HEIGHT)
@@ -178,8 +178,8 @@ function rematch.petCard:Configure()
     end
 end
 
-function rematch.petCard:UpdatePinButton()
-    local isPinned = rematch.cardManager:IsCardPinned(self)
+function rematchRedux.petCard:UpdatePinButton()
+    local isPinned = rematchRedux.cardManager:IsCardPinned(self)
     self.PinButton:SetShown(isPinned)
 
     if isPinned then
@@ -189,27 +189,27 @@ function rematch.petCard:UpdatePinButton()
     end
 end
 
-function rematch.petCard:UpdateLock()
-    if rematch.bottombar:IsVisible() then
-        rematch.bottombar:Update()
+function rematchRedux.petCard:UpdateLock()
+    if rematchRedux.bottombar:IsVisible() then
+        rematchRedux.bottombar:Update()
     end
     -- if petsPanel up, select/unselect the card's petID
-    if rematch.petsPanel:IsVisible() then
-        rematch.petsPanel.List:Select("PetCard",rematch.petCard:IsVisible() and rematch.cardManager:IsCardLocked(rematch.petCard) and rematch.petCard.petID)
+    if rematchRedux.petsPanel:IsVisible() then
+        rematchRedux.petsPanel.List:Select("PetCard",rematchRedux.petCard:IsVisible() and rematchRedux.cardManager:IsCardLocked(rematchRedux.petCard) and rematchRedux.petCard.petID)
     end
-    if rematch.queuePanel:IsVisible() then
-        rematch.queuePanel.List:Select("PetCard",rematch.petCard:IsVisible() and rematch.cardManager:IsCardLocked(rematch.petCard) and rematch.queue:GetPetIndex(rematch.petCard.petID))
+    if rematchRedux.queuePanel:IsVisible() then
+        rematchRedux.queuePanel.List:Select("PetCard",rematchRedux.petCard:IsVisible() and rematchRedux.cardManager:IsCardLocked(rematchRedux.petCard) and rematchRedux.queue:GetPetIndex(rematchRedux.petCard.petID))
     end
     -- if pet is wrapped, locking the pet card (clicking the pet or clicking its link) will unwrap the pet
-    if rematch.cardManager:IsCardLocked(rematch.petCard) then
-        local petID = rematch.petCard.petID
-        local petInfo = rematch.petInfo:Fetch(petID)
+    if rematchRedux.cardManager:IsCardLocked(rematchRedux.petCard) then
+        local petID = rematchRedux.petCard.petID
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if petInfo.needsFanfare then
-            rematch.petCard.Content.Front.Stats.PetModel:StartUnwrapAnimation(function()
+            rematchRedux.petCard.Content.Front.Stats.PetModel:StartUnwrapAnimation(function()
                 C_PetJournal.ClearFanfare(petID)
-                rematch.frame:Update()
+                rematchRedux.frame:Update()
                 -- fix for weird issue where miniloadoutpanel doesn't update
-                rematch.timer:Start(0.5,rematch.frame.Update,rematch.frame)
+                rematchRedux.timer:Start(0.5,rematchRedux.frame.Update,rematchRedux.frame)
             end)
         end
     end
@@ -218,8 +218,8 @@ end
 --[[ content update functions ]]
 
 -- updates the pet icon, type icon and name at the top of the card (always displayed; on neither front nor back)
-function rematch.petCard.Content.Top:Update()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function rematchRedux.petCard.Content.Top:Update()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
 
     self.Back:SetDesaturated(not petInfo.isOwned)
 
@@ -233,12 +233,12 @@ function rematch.petCard.Content.Top:Update()
         self.Name:SetTextColor(1,0.82,0)
     end
 
-    rematch.petCard.heights.top = settings.PetCardMinimized and C.PET_CARD_TOP_MINIMIZED_HEIGHT or C.PET_CARD_TOP_NORMAL_HEIGHT
+    rematchRedux.petCard.heights.top = settings.PetCardMinimized and C.PET_CARD_TOP_MINIMIZED_HEIGHT or C.PET_CARD_TOP_NORMAL_HEIGHT
 end
 
 -- updates the abilities on the bottom front of the card
-function rematch.petCard.Content.Front.Abilities:Update()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function rematchRedux.petCard.Content.Front.Abilities:Update()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
 
     self.Back:SetDesaturated(not petInfo.isOwned)
 
@@ -265,7 +265,7 @@ function rematch.petCard.Content.Front.Abilities:Update()
         end
     else
         local abilityList = petInfo.abilityList
-        local teamID,teamAbility1,teamAbility2,teamAbility3 = rematch.petCard:GetTeamInfo() -- using altInfo within to avoid petInfo clobber
+        local teamID,teamAbility1,teamAbility2,teamAbility3 = rematchRedux.petCard:GetTeamInfo() -- using altInfo within to avoid petInfo clobber
         local buttonIndex = 1
         -- some pets (like Gizmo) have abilities at indexes 2,4,6 but not 1,3,5; can't assume abilities are ordered starting at 1
         for i=1,6 do
@@ -289,9 +289,9 @@ function rematch.petCard.Content.Front.Abilities:Update()
                     if teamID then
                         -- if card is shown for a pet in a team, dim the ability if it's not used in the team
                         local compareAbility = (i-1)%3==0 and teamAbility1 or (i-1)%3==1 and teamAbility2 or (i-1)%3==2 and teamAbility3
-                        rematch.petCard:DimAbility(button,compareAbility and compareAbility~=0 and not (abilityID==compareAbility)) --  or compareAbility==0 to have slots with no chosen ability both lit up
+                        rematchRedux.petCard:DimAbility(button,compareAbility and compareAbility~=0 and not (abilityID==compareAbility)) --  or compareAbility==0 to have slots with no chosen ability both lit up
                     else
-                        rematch.petCard:DimAbility(button,false)
+                        rematchRedux.petCard:DimAbility(button,false)
                     end
                 else
                     button.abilityID = nil
@@ -307,14 +307,14 @@ function rematch.petCard.Content.Front.Abilities:Update()
         end
 
         -- if only 3 or less abilities shown, shift abilities towards center
-        self.Buttons[1]:SetPoint("TOPLEFT",rematch.utils:GetSize(abilityList)<=3 and 63 or 4,-4)
+        self.Buttons[1]:SetPoint("TOPLEFT",rematchRedux.utils:GetSize(abilityList)<=3 and 63 or 4,-4)
     end
 
-    rematch.petCard.heights.abilities = settings.PetCardMinimized and C.PET_CARD_ABILITIES_MINIMIZED_HEIGHT or C.PET_CARD_ABILITIES_NORMAL_HEIGHT
+    rematchRedux.petCard.heights.abilities = settings.PetCardMinimized and C.PET_CARD_ABILITIES_MINIMIZED_HEIGHT or C.PET_CARD_ABILITIES_NORMAL_HEIGHT
 end
 
 -- dims the ability (if it's not used for a team) if dim is true
-function rematch.petCard:DimAbility(button,dim)
+function rematchRedux.petCard:DimAbility(button,dim)
     if dim then
         button:SetAlpha(0.5)
         button.Name:SetTextColor(0.5,0.5,0.5)
@@ -331,8 +331,8 @@ function rematch.petCard:DimAbility(button,dim)
 end
 
 -- update the top part of stats: species name, stat buttons along left side (or two columns while minimized)
-function rematch.petCard.Content.Front.Stats:UpdateTop()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function rematchRedux.petCard.Content.Front.Stats:UpdateTop()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
 
     local xoff,yoff = C.PET_CARD_STAT_LEFT_MARGIN,-C.PET_CARD_STAT_TOP_MARGIN -- coordinates relative to TOPLEFT
 
@@ -345,12 +345,12 @@ function rematch.petCard.Content.Front.Stats:UpdateTop()
         self.SpeciesName:Hide()
     end
 
-    rematch.petCard:ReleaseStatButtons()
+    rematchRedux.petCard:ReleaseStatButtons()
 
     -- first look for any wide stats to display at top, these never display in columns when minimized
-    for index,info in ipairs(rematch.petCardStats) do
-        if info.isWide and rematch.utils:Evaluate(info.show,rematch.petCard,petInfo) then
-            local button = rematch.petCard:CreateStatButton(button,index,petInfo)
+    for index,info in ipairs(rematchRedux.petCardStats) do
+        if info.isWide and rematchRedux.utils:Evaluate(info.show,rematchRedux.petCard,petInfo) then
+            local button = rematchRedux.petCard:CreateStatButton(button,index,petInfo)
             button:SetPoint("TOPLEFT",xoff,yoff)
             button:Show()
             yoff = yoff - C.PET_CARD_STAT_HEIGHT - 1
@@ -359,8 +359,8 @@ function rematch.petCard.Content.Front.Stats:UpdateTop()
 
     -- next count how many remaining stats to display
     local numStats = 0
-    for index,info in ipairs(rematch.petCardStats) do
-        if not info.isWide and rematch.utils:Evaluate(info.show,rematch.petCard,petInfo) then
+    for index,info in ipairs(rematchRedux.petCardStats) do
+        if not info.isWide and rematchRedux.utils:Evaluate(info.show,rematchRedux.petCard,petInfo) then
             numStats = numStats + 1
         end
     end
@@ -371,7 +371,7 @@ function rematch.petCard.Content.Front.Stats:UpdateTop()
         numRows = ceil(numStats/2) -- two columns while minimized
         --if minimized and stat rows can extend further (card back is taller than front if stats evenly split into two columns),
         -- adjust numRows to use space
-        local heights = rematch.petCard.heights
+        local heights = rematchRedux.petCard.heights
         local minHeight = (heights.source + heights.lore + heights.racial) - (heights.statsBottom + heights.abilities - yoff)
         if numRows*C.PET_CARD_STAT_HEIGHT < minHeight then
             numRows = floor(minHeight/(C.PET_CARD_STAT_HEIGHT+1))
@@ -382,9 +382,9 @@ function rematch.petCard.Content.Front.Stats:UpdateTop()
     local restartYOff = yoff -- for returning to on second row
     local minYOff = yoff -- most extended yOff will determine height of stats
     local row = 1
-    for index,info in ipairs(rematch.petCardStats) do
-        if not info.isWide and rematch.utils:Evaluate(info.show,rematch.petCard,petInfo) then
-            local button = rematch.petCard:CreateStatButton(button,index,petInfo)
+    for index,info in ipairs(rematchRedux.petCardStats) do
+        if not info.isWide and rematchRedux.utils:Evaluate(info.show,rematchRedux.petCard,petInfo) then
+            local button = rematchRedux.petCard:CreateStatButton(button,index,petInfo)
             button:SetPoint("TOPLEFT",xoff,yoff)
             button:Show()
             yoff = yoff - C.PET_CARD_STAT_HEIGHT - 1
@@ -410,13 +410,13 @@ function rematch.petCard.Content.Front.Stats:UpdateTop()
         end
     end
 
-    --rematch.petCard.heights.statsTop = floor((minYOff==-C.PET_CARD_STAT_TOP_MARGIN and 0 or -minYOff)+0.5)
-    rematch.petCard.heights.statsTop = floor(height+0.5)
+    --rematchRedux.petCard.heights.statsTop = floor((minYOff==-C.PET_CARD_STAT_TOP_MARGIN and 0 or -minYOff)+0.5)
+    rematchRedux.petCard.heights.statsTop = floor(height+0.5)
 end
 
 -- update hp/xp statusbar, card-wide collected versions and possible breeds
-function rematch.petCard.Content.Front.Stats:UpdateBottom()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function rematchRedux.petCard.Content.Front.Stats:UpdateBottom()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
 
     -- start laying out bottom of stats at these coordinates and going up
     local xoff,yoff = C.PET_CARD_STAT_LEFT_MARGIN,C.PET_CARD_STAT_BOTTOM_MARGIN -- coordinates relative to TOPLEFT
@@ -425,7 +425,7 @@ function rematch.petCard.Content.Front.Stats:UpdateBottom()
     if petInfo.xp and petInfo.maxXp and petInfo.level and petInfo.level<25 then
         self.XpBar:SetPoint("BOTTOMLEFT",xoff+2,yoff+2)
         self.XpBar:Show()
-        rematch.utils:UpdateStatusBar(self.XpBar.Bar,petInfo.xp,petInfo.maxXp,C.PET_CARD_STATUS_BAR_WIDTH,C.XP_BAR_COLOR.r,C.XP_BAR_COLOR.g,C.XP_BAR_COLOR.b)
+        rematchRedux.utils:UpdateStatusBar(self.XpBar.Bar,petInfo.xp,petInfo.maxXp,C.PET_CARD_STATUS_BAR_WIDTH,C.XP_BAR_COLOR.r,C.XP_BAR_COLOR.g,C.XP_BAR_COLOR.b)
         self.XpBar.Text:SetText(format("XP: %d/%d (%s)",petInfo.xp,petInfo.maxXp,floor(petInfo.xp*100/petInfo.maxXp+0.5).."%"))
         self.XpBar.Text:SetShown(settings.PetCardAlwaysShowHPXPText)
         yoff = yoff + 14
@@ -436,7 +436,7 @@ function rematch.petCard.Content.Front.Stats:UpdateBottom()
     if petInfo.isInjured or (settings.PetCardAlwaysShowHPBar and petInfo.maxHealth and petInfo.maxHealth>0) then --and petInfo.health<petInfo.maxHealth then
         self.HpBar:SetPoint("BOTTOMLEFT",xoff+2,yoff+2)
         self.HpBar:Show()
-        rematch.utils:UpdateStatusBar(self.HpBar.Bar,petInfo.health,petInfo.maxHealth,C.PET_CARD_STATUS_BAR_WIDTH,C.HP_BAR_COLOR.r,C.HP_BAR_COLOR.g,C.HP_BAR_COLOR.b)
+        rematchRedux.utils:UpdateStatusBar(self.HpBar.Bar,petInfo.health,petInfo.maxHealth,C.PET_CARD_STATUS_BAR_WIDTH,C.HP_BAR_COLOR.r,C.HP_BAR_COLOR.g,C.HP_BAR_COLOR.b)
         self.HpBar.Text:SetText(format("HP: %d/%d %s",petInfo.health,petInfo.maxHealth,petInfo.health==0 and format("%s(%s)\124r",C.HEX_RED,DEAD) or format("(%d%%)",floor(petInfo.health*100/petInfo.maxHealth+0.5))))
         self.HpBar.Text:SetShown(settings.PetCardAlwaysShowHPXPText)
         yoff = yoff + 14
@@ -455,7 +455,7 @@ function rematch.petCard.Content.Front.Stats:UpdateBottom()
         self.AltFlipHelp:Hide()
     end
     -- possible breeds only if breed addon is enabled
-    local possibleBreedList = rematch.petCard:GetPossibleBreedList(petInfo)
+    local possibleBreedList = rematchRedux.petCard:GetPossibleBreedList(petInfo)
     if possibleBreedList and not settings.PetCardMinimized and not settings.PetCardHidePossibleBreeds then
         self.PossibleBreeds:SetPoint("BOTTOMLEFT",xoff,yoff+2)
         self.PossibleBreeds.Text:SetText(possibleBreedList)
@@ -467,7 +467,7 @@ function rematch.petCard.Content.Front.Stats:UpdateBottom()
         self.PossibleBreeds:Hide()
     end
     -- collected if card is not minimized and pet is obtainable
-    local collectedList = rematch.petCard:GetCollectedList(petInfo)
+    local collectedList = rematchRedux.petCard:GetCollectedList(petInfo)
     if collectedList and not settings.PetCardMinimized and not settings.PetCardCompactCollected then
         self.Collected:SetPoint("BOTTOMLEFT",xoff,yoff+2)
         self.Collected.Text:SetText(collectedList)
@@ -480,12 +480,12 @@ function rematch.petCard.Content.Front.Stats:UpdateBottom()
     end
 
     -- if yoff unchanged, bottom doesn't contribute anything to height
-    rematch.petCard.heights.statsBottom = floor((yoff==C.PET_CARD_STAT_BOTTOM_MARGIN and 0 or yoff)+0.5)
+    rematchRedux.petCard.heights.statsBottom = floor((yoff==C.PET_CARD_STAT_BOTTOM_MARGIN and 0 or yoff)+0.5)
 end
 
 -- update level pennant, background and model to right of stats
-function rematch.petCard.Content.Front.Stats:UpdateArt()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function rematchRedux.petCard.Content.Front.Stats:UpdateArt()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
 
     -- update level/rarity pennant in topright
     if petInfo.level and petInfo.canBattle then
@@ -501,7 +501,7 @@ function rematch.petCard.Content.Front.Stats:UpdateArt()
     end
 
     -- calculate actual height of the stats (depends on whether back is taller than front)
-    local heights = rematch.petCard.heights
+    local heights = rematchRedux.petCard.heights
     local frontHeight = heights.statsTop + heights.statsBottom + heights.abilities
     local backHeight = heights.source + heights.lore + heights.racial
     local statsHeight = frontHeight - heights.abilities + (backHeight>frontHeight and (backHeight-frontHeight) or 0) + 5
@@ -554,11 +554,11 @@ function rematch.petCard.Content.Front.Stats:UpdateArt()
 
 end
 
-function rematch.petCard.Content.Front.Stats:UpdateModel()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function rematchRedux.petCard.Content.Front.Stats:UpdateModel()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
 
     -- model is confined to the top part of stats but doesn't need to be square
-    local modelHeight = rematch.petCard.heights.fullStats - rematch.petCard.heights.statsBottom - 6
+    local modelHeight = rematchRedux.petCard.heights.fullStats - rematchRedux.petCard.heights.statsBottom - 6
     local modelWidth = max(min(modelHeight,floor(self:GetWidth()+0.5)),C.PET_CARD_MIN_MODEL_WIDTH)
 
     if not petInfo.displayID or settings.PetCardMinimized then
@@ -593,8 +593,8 @@ function rematch.petCard.Content.Front.Stats:UpdateModel()
 end
 
 -- bottom back of the card with pet type name, racial ability and damage taken
-function rematch.petCard.Content.Back.Racial:Update()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function rematchRedux.petCard.Content.Back.Racial:Update()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
     if not petInfo.petType or petInfo.isSpecialType then
         return 0 -- no info about petTypes that don't exist or aren't an actual pet
     end
@@ -625,11 +625,11 @@ function rematch.petCard.Content.Back.Racial:Update()
     end
     self:SetHeight(height)
 
-    rematch.petCard.heights.racial = height
+    rematchRedux.petCard.heights.racial = height
 end
 
-function rematch.petCard.Content.Back.Source:Update()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function rematchRedux.petCard.Content.Back.Source:Update()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
     local sourceText = petInfo.sourceText
     -- shrink font if source text is very long (some pets like spiders list nearly every zone in the game!)
     local sourceLength = (sourceText or ""):len()
@@ -650,7 +650,7 @@ function rematch.petCard.Content.Back.Source:Update()
     -- append expansion to the source (unless Show Expansion On Front is checked or there's no expansion)
     if not settings.PetCardShowExpansionStat and petInfo.expansionName then
         local padchar = settings.PetCardMinimized and " " or "\n"
-        sourceText = sourceText..padchar.."\124cffffd200Expansion: "..rematch.utils:GetFormattedExpansionName(petInfo.expansionID)
+        sourceText = sourceText..padchar.."\124cffffd200Expansion: "..rematchRedux.utils:GetFormattedExpansionName(petInfo.expansionID)
     end
     if petInfo.isSpecialType then
         sourceText = nil
@@ -661,14 +661,14 @@ function rematch.petCard.Content.Back.Source:Update()
     local height = floor((sourceText and self.Text:GetStringHeight()+C.PET_CARD_STAT_TOP_MARGIN*2+4 or 0)+0.5)
     self:SetHeight(height)
 
-    rematch.petCard.heights.source = height
+    rematchRedux.petCard.heights.source = height
 end
 
 -- updates the middle back section of the card, flavor text about the pet
-function rematch.petCard.Content.Back.Lore:Update()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function rematchRedux.petCard.Content.Back.Lore:Update()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
     local loreText = petInfo.loreText
-    self.Text:SetFontObject(settings.BoringLoreFont and "SystemFont_Med1" or "RematchPetCardLoreFont")
+    self.Text:SetFontObject(settings.BoringLoreFont and "SystemFont_Med1" or "RematchReduxPetCardLoreFont")
     self.Text:SetText(loreText)
     self.Back:SetDesaturated(not petInfo.isOwned)
     if petInfo.isObtainable then
@@ -682,13 +682,13 @@ function rematch.petCard.Content.Back.Lore:Update()
         doodad:SetDesaturated(not petInfo.isOwned)
     end
 
-    rematch.petCard.heights.lore = height
+    rematchRedux.petCard.heights.lore = height
 end
 
 --[[ pet card supporting functions ]]
 
 -- resets all changable heights of pet card sections
-function rematch.petCard:ResetHeights()
+function rematchRedux.petCard:ResetHeights()
     self.heights.top = 0
     self.heights.source = 0
     self.heights.lore = 0
@@ -700,7 +700,7 @@ end
 
 -- returns true if the modifier key assigned to the flip key is down; or if key is given then whether that was a modifier key.
 -- (MODIFIER_STATE_CHANGED will flip a card based on the flip key going up or down)
-function rematch.petCard:IsFlipKeyUsed(key)
+function rematchRedux.petCard:IsFlipKeyUsed(key)
     local flipKey = settings.PetCardFlipKey
 
     if not key then -- if no key given, then check if a modifier key is down
@@ -719,19 +719,19 @@ function rematch.petCard:IsFlipKeyUsed(key)
 end
 
 -- used by card manager, return true if the subject is a petID that has a card
-function rematch.petCard:ShouldShow(subject)
-    local petInfo = rematch.petInfo:Fetch(subject)
+function rematchRedux.petCard:ShouldShow(subject)
+    local petInfo = rematchRedux.petInfo:Fetch(subject)
     return petInfo.idType~="empty" and petInfo.idType~="unknown" and type(petInfo.name)=="string"
 end
 
 -- returns a formatted list of possible breeds, or nil if not applicable
-function rematch.petCard:GetPossibleBreedList(petInfo)
-    if petInfo and petInfo.isObtainable and petInfo.canBattle and rematch.breedInfo:GetBreedSource() then
+function rematchRedux.petCard:GetPossibleBreedList(petInfo)
+    if petInfo and petInfo.isObtainable and petInfo.canBattle and rematchRedux.breedInfo:GetBreedSource() then
         local list
         if not petInfo.possibleBreedNames or #petInfo.possibleBreedNames==0 then
             list = UNKNOWN
         else
-            list = table.concat(petInfo.possibleBreedNames,rematch.breedInfo:GetBreedFormat()==C.BREED_FORMAT_ICONS and " " or ", ")
+            list = table.concat(petInfo.possibleBreedNames,rematchRedux.breedInfo:GetBreedFormat()==C.BREED_FORMAT_ICONS and " " or ", ")
         end
         return format("%s: \124cffe5e5e5%s",L["Possible Breeds"],list)
     end
@@ -739,15 +739,15 @@ end
 
 -- returns a formatted Collected (0/3) along with the list of pets collected (rarity/level/breed)
 local collectedPets = {} -- reused table of collected pets
-function rematch.petCard:GetCollectedList(petInfo)
+function rematchRedux.petCard:GetCollectedList(petInfo)
     if petInfo and petInfo.count and petInfo.isObtainable then
         local collected = petInfo.countColor..format(ITEM_PET_KNOWN,petInfo.count,petInfo.maxCount) -- Collected (0/3) bit
         if not petInfo.canBattle or petInfo.count==0 then
             return collected -- for non-battle or uncollected pets, don't list out levels and breeds, just collected count
         end
         wipe(collectedPets)
-        for petID in rematch.roster:AllOwnedPets() do
-            local altInfo = rematch.altInfo:Fetch(petID)
+        for petID in rematchRedux.roster:AllOwnedPets() do
+            local altInfo = rematchRedux.altInfo:Fetch(petID)
             if altInfo.speciesID==petInfo.speciesID then
                 if altInfo.breedName then
 					tinsert(collectedPets,format("%s%d %s",altInfo.color.hex,altInfo.level,altInfo.breedName))
@@ -756,12 +756,12 @@ function rematch.petCard:GetCollectedList(petInfo)
 				end
 			end
         end
-		return format("%s: %s",collected,table.concat(collectedPets,rematch.breedInfo:GetBreedFormat()==C.BREED_FORMAT_ICONS and " " or ", "))
+		return format("%s: %s",collected,table.concat(collectedPets,rematchRedux.breedInfo:GetBreedFormat()==C.BREED_FORMAT_ICONS and " " or ", "))
     end
 end
 
 -- releases all stat buttons from the button pool
-function rematch.petCard:ReleaseStatButtons()
+function rematchRedux.petCard:ReleaseStatButtons()
     for _,button in ipairs(self.Content.Front.Stats.Buttons) do
         button.isUsed = nil
         button:Hide()
@@ -769,7 +769,7 @@ function rematch.petCard:ReleaseStatButtons()
 end
 
 -- creates and returns a stat button from the button pool
-function rematch.petCard:GetStatButton()
+function rematchRedux.petCard:GetStatButton()
     local parent = self.Content.Front.Stats
     for _,button in ipairs(parent.Buttons) do
         if not button.isUsed then
@@ -778,32 +778,32 @@ function rematch.petCard:GetStatButton()
         end
     end
     -- if reached here, all existing buttons used, create a new one
-    local button = CreateFrame("Button",nil,parent,"RematchPetCardStatTemplate")
+    local button = CreateFrame("Button",nil,parent,"RematchReduxPetCardStatTemplate")
     tinsert(parent.Buttons,button)
     button.isUsed = true
     return button
 end
 
--- fetches a stat button and fills its icon, text to the rematch.petCardStats[statIndex] for the petInfo
+-- fetches a stat button and fills its icon, text to the rematchRedux.petCardStats[statIndex] for the petInfo
 -- returns the button if fetched so the calling function can anchor it
-function rematch.petCard:CreateStatButton(button,statIndex,petInfo)
-    local button = rematch.petCard:GetStatButton()
-    local info = rematch.petCardStats[statIndex]
+function rematchRedux.petCard:CreateStatButton(button,statIndex,petInfo)
+    local button = rematchRedux.petCard:GetStatButton()
+    local info = rematchRedux.petCardStats[statIndex]
     assert(type(info)=="table","Malformed stat at index "..(statIndex or "nil"))
     button:SetID(statIndex)
 
-    button.Icon:SetTexture(rematch.utils:Evaluate(info.icon,rematch.petCard,petInfo))
+    button.Icon:SetTexture(rematchRedux.utils:Evaluate(info.icon,rematchRedux.petCard,petInfo))
     local left,right,top,bottom = 0,1,0,1
     if info.iconCoords then
         if type(info.iconCoords)=="function" then
-            left,right,top,bottom = info.iconCoords(rematch.petCard,petInfo)
+            left,right,top,bottom = info.iconCoords(rematchRedux.petCard,petInfo)
         elseif type(info.iconCoords)=="table" and #info.iconCoords==4 then
             left,right,top,bottom = info.iconCoords[1],info.iconCoords[2],info.iconCoords[3],info.iconCoords[4]
         end
     end
     button.Icon:SetTexCoord(left,right,top,bottom)
     button.Text:SetWidth(0)
-    button.Text:SetText(rematch.utils:Evaluate(info.value,rematch.petCard,petInfo))
+    button.Text:SetText(rematchRedux.utils:Evaluate(info.value,rematchRedux.petCard,petInfo))
     local textWidth = button.Text:GetStringWidth()
     if textWidth > 175 then -- 175 width max to text to prevent running over edge of card
         button.Text:SetWidth(175)
@@ -813,11 +813,11 @@ function rematch.petCard:CreateStatButton(button,statIndex,petInfo)
 end
 
 -- shows the breed table (tooltip-like frame displaying possible breeds and their stats for each breed)
-function rematch.petCard:ShowBreedTable(parent)
-    local btable = rematch.petCard.Content.Front.Stats.BreedTable
+function rematchRedux.petCard:ShowBreedTable(parent)
+    local btable = rematchRedux.petCard.Content.Front.Stats.BreedTable
 
-    local petInfo = rematch.petInfo:Fetch(self.petID)
-    local breedTable = rematch.breedInfo:GetBreedTable(petInfo.speciesID)
+    local petInfo = rematchRedux.petInfo:Fetch(self.petID)
+    local breedTable = rematchRedux.breedInfo:GetBreedTable(petInfo.speciesID)
     local petBreed = petInfo.breedID
 
 	for _,row in ipairs(btable.Rows) do
@@ -827,11 +827,11 @@ function rematch.petCard:ShowBreedTable(parent)
 
     for index,info in ipairs(breedTable) do
         if not btable.Rows[index] then
-            btable.Rows[index] = CreateFrame("Frame",nil,btable,"RematchBreedTableRowTemplate")
+            btable.Rows[index] = CreateFrame("Frame",nil,btable,"RematchReduxBreedTableRowTemplate")
             btable.Rows[index]:SetPoint("TOPLEFT",8,-50-(index-1)*16)
         end
 		local row = btable.Rows[index]
-		row.Breed:SetText(rematch.breedInfo:GetBreedNameByID(info[1]))
+		row.Breed:SetText(rematchRedux.breedInfo:GetBreedNameByID(info[1]))
 		row.Health:SetText(info[2])
 		row.Power:SetText(info[3])
 		row.Speed:SetText(info[4])
@@ -855,28 +855,28 @@ function rematch.petCard:ShowBreedTable(parent)
 
     -- position tooltip-like window next to the parent (breed stat button or possible breeds text)
     btable:ClearAllPoints()
-    local corner,opposite = rematch.utils:GetCorner(rematch.utils:GetFrameForReference(parent),UIParent)
+    local corner,opposite = rematchRedux.utils:GetCorner(rematchRedux.utils:GetFrameForReference(parent),UIParent)
     btable:SetPoint(corner,parent,opposite)
 
     btable:Show()
 end
 
-function rematch.petCard:HideBreedTable()
-    rematch.petCard.Content.Front.Stats.BreedTable:Hide()
+function rematchRedux.petCard:HideBreedTable()
+    rematchRedux.petCard.Content.Front.Stats.BreedTable:Hide()
 end
 
 --[[ titlebar button clicks ]]
 
-function rematch.petCard.PinButton:OnClick()
-    rematch.cardManager:Unpin(self:GetParent())
+function rematchRedux.petCard.PinButton:OnClick()
+    rematchRedux.cardManager:Unpin(self:GetParent())
 end
 
-function rematch.petCard.FlipButton:OnClick()
-    rematch.petCard.hardFlip = false
-    rematch.petCard:Update()
+function rematchRedux.petCard.FlipButton:OnClick()
+    rematchRedux.petCard.hardFlip = false
+    rematchRedux.petCard:Update()
 end
 
-function rematch.petCard.MinimizeButton:OnClick()
+function rematchRedux.petCard.MinimizeButton:OnClick()
     settings.PetCardMinimized = not settings.PetCardMinimized
     self:GetParent():Configure()
     self:GetParent():Update()
@@ -884,43 +884,43 @@ end
 
 --[[ script handlers ]]
 
-function rematch.petCard:OnMouseDown()
-    rematch.cardManager.OnMouseDown(self)
+function rematchRedux.petCard:OnMouseDown()
+    rematchRedux.cardManager.OnMouseDown(self)
 end
 
-function rematch.petCard:OnMouseUp()
-    rematch.cardManager.OnMouseUp(self)
+function rematchRedux.petCard:OnMouseUp()
+    rematchRedux.cardManager.OnMouseUp(self)
 end
 
-function rematch.petCard:OnDoubleClick()
+function rematchRedux.petCard:OnDoubleClick()
     self.MinimizeButton:OnClick()
 end
 
-function rematch.petCard:OnShow()
-    rematch.events:Register(self,"MODIFIER_STATE_CHANGED",self.MODIFIER_STATE_CHANGED)
+function rematchRedux.petCard:OnShow()
+    rematchRedux.events:Register(self,"MODIFIER_STATE_CHANGED",self.MODIFIER_STATE_CHANGED)
 end
 
-function rematch.petCard:OnHide()
-    rematch.events:Unregister(self,"MODIFIER_STATE_CHANGED")
+function rematchRedux.petCard:OnHide()
+    rematchRedux.events:Unregister(self,"MODIFIER_STATE_CHANGED")
     self.softFlip = false
     self.hardFlip = false
-    rematch.petCard:UpdateLock()
+    rematchRedux.petCard:UpdateLock()
 end
 
-function rematch.petCard.Content.Front.Stats.PossibleBreeds:OnEnter()
+function rematchRedux.petCard.Content.Front.Stats.PossibleBreeds:OnEnter()
     self.Highlight:Show()
-    rematch.petCard:ShowBreedTable(self)
+    rematchRedux.petCard:ShowBreedTable(self)
 end
 
-function rematch.petCard.Content.Front.Stats.PossibleBreeds:OnLeave()
+function rematchRedux.petCard.Content.Front.Stats.PossibleBreeds:OnLeave()
     self.Highlight:Hide()
-    rematch.petCard:HideBreedTable()
+    rematchRedux.petCard:HideBreedTable()
 end
 
 --[[ seach hits ]]
 
-function rematch.petCard:UpdateSearchHits()
-    local petInfo = rematch.petInfo:Fetch(self.petID)
+function rematchRedux.petCard:UpdateSearchHits()
+    local petInfo = rematchRedux.petInfo:Fetch(self.petID)
     self.Content.Top.PetIcon.SearchHit:SetShown(self:IsPetNameSearchHit(petInfo))
     self.Content.Top.TypeIcon.SearchHit:SetShown(self:IsPetTypeSearchHit(petInfo))
     local abilityList = petInfo.abilityList
@@ -932,8 +932,8 @@ function rematch.petCard:UpdateSearchHits()
 end
 
 -- returns true if a search is happening and the speciesName, customName or sourceText match the search
-function rematch.petCard:IsPetNameSearchHit(petInfo)
-    local pattern = rematch.filters:Get("Search","Pattern")
+function rematchRedux.petCard:IsPetNameSearchHit(petInfo)
+    local pattern = rematchRedux.filters:Get("Search","Pattern")
     if pattern then
         if petInfo.speciesName and petInfo.speciesName:match(pattern) then
             return true
@@ -947,10 +947,10 @@ function rematch.petCard:IsPetNameSearchHit(petInfo)
 end
 
 -- returns true if a Type or Tough Vs filter is happening and the pet type is one of the results
-function rematch.petCard:IsPetTypeSearchHit(petInfo)
-    if petInfo.petType and rematch.filters:Get("Types",petInfo.petType) then
+function rematchRedux.petCard:IsPetTypeSearchHit(petInfo)
+    if petInfo.petType and rematchRedux.filters:Get("Types",petInfo.petType) then
         return true
-    elseif petInfo.toughVs and rematch.filters:Get("Tough",petInfo.toughVs) then
+    elseif petInfo.toughVs and rematchRedux.filters:Get("Tough",petInfo.toughVs) then
         return true
     end
     return false
@@ -958,11 +958,11 @@ end
 
 -- returns true if a search is happening and the abilityName or abilityDescription matches the search,
 -- or a StrongVs or Similar filter is happening and the ability is one of the results
-function rematch.petCard:IsAbilitySearchHit(petInfo,abilityID)
+function rematchRedux.petCard:IsAbilitySearchHit(petInfo,abilityID)
     if not abilityID then
         return false
     end
-    local pattern = rematch.filters:Get("Search","Pattern")
+    local pattern = rematchRedux.filters:Get("Search","Pattern")
     local _,name,_,_,description,_,petType,noHints = C_PetBattles.GetAbilityInfoByID(abilityID)
     if pattern then
         if name and name:match(pattern) then
@@ -971,26 +971,26 @@ function rematch.petCard:IsAbilitySearchHit(petInfo,abilityID)
             return true
         end
     end
-    if petInfo.strongVs and petInfo.strongVs[abilityID] and rematch.filters:Get("Strong",petInfo.strongVs[abilityID]) then
+    if petInfo.strongVs and petInfo.strongVs[abilityID] and rematchRedux.filters:Get("Strong",petInfo.strongVs[abilityID]) then
         return true
-    elseif rematch.filters:Get("Similar",abilityID) then
+    elseif rematchRedux.filters:Get("Similar",abilityID) then
         return true
     end
     return false
 end
 
 -- returns the teamID,ability1,ability,ability3 for the pet the pet card is anchored to, if any
-function rematch.petCard:GetTeamInfo()
+function rematchRedux.petCard:GetTeamInfo()
     if self:IsVisible() then
-        local relativeTo = rematch.cardManager:GetRelativeTo(rematch.petCard)
+        local relativeTo = rematchRedux.cardManager:GetRelativeTo(rematchRedux.petCard)
         local teamID = relativeTo and relativeTo.teamID
-        local team = teamID and rematch.savedTeams[teamID]
+        local team = teamID and rematchRedux.savedTeams[teamID]
         if team then
             for i=1,3 do
                 if team.pets[i]==self.petID then
                     -- found pet in team, return teamID and abilities used for this pet
-                    --local ability1,ability2,ability3 = rematch.petTags:GetAbilities(team.tags[i])
-                    return teamID,rematch.petTags:GetAbilities(team.tags[i]) -- returns teamID,ability1,ability2,ability3
+                    --local ability1,ability2,ability3 = rematchRedux.petTags:GetAbilities(team.tags[i])
+                    return teamID,rematchRedux.petTags:GetAbilities(team.tags[i]) -- returns teamID,ability1,ability2,ability3
                 end
             end
             -- if reached here, didn't find the pet, just return teamID
@@ -1001,19 +1001,19 @@ end
 
 -- hook of the function that calls SetItemRef to show the FloatingBattlePetTooltip
 -- note the dot notation! (SetItemRef doesn't pass a parent frame)
-function rematch.petCard.SetItemRef(link,text,button)
+function rematchRedux.petCard.SetItemRef(link,text,button)
     if settings.PetCardForLinks and not IsModifiedClick("CHATLINK") and link:match("battlepet:%d+:%d+:%d+:%d+:%d+:%d+:.+") then
 		FloatingBattlePetTooltip:Hide()
         local petID = link:match("(BattlePet-%d-[^:]+)") -- pull out petID from link if there is one
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if petInfo.isOwned then
             link = petID -- the linked pet is owned, show the card for owned pet rather than link
         end
-        if not rematch.petCard:IsVisible() or rematch.petCard.petID~=link then
-            rematch.cardManager:SetItemRefMode(rematch.petCard)
-            rematch.cardManager:ShowCard(rematch.petCard,link)
+        if not rematchRedux.petCard:IsVisible() or rematchRedux.petCard.petID~=link then
+            rematchRedux.cardManager:SetItemRefMode(rematchRedux.petCard)
+            rematchRedux.cardManager:ShowCard(rematchRedux.petCard,link)
         else
-            rematch.cardManager:HideCard(rematch.petCard)
+            rematchRedux.cardManager:HideCard(rematchRedux.petCard)
         end
     end
 end

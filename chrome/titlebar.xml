@@ -1,6 +1,6 @@
 <Ui>
 
-    <Frame parentKey="TitleBar" parent="RematchFrame">
+    <Frame parentKey="TitleBar" parent="RematchReduxFrame">
         <Size x="0" y="24"/>
         <Anchors>
             <Anchor point="TOPLEFT"/>
@@ -51,7 +51,7 @@
                     </Layer>
                 </Layers>
             </Frame>
-            <Button parentKey="CloseButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="CloseButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPRIGHT" x="-1" y="-1"/>
                 </Anchors>
@@ -59,7 +59,7 @@
                     <KeyValue key="icon" value="close"/>
                 </KeyValues>
             </Button>
-            <Button parentKey="MinimizeButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="MinimizeButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPRIGHT" relativeKey="$parent.CloseButton" relativePoint="TOPLEFT" x="0" y="0"/>
                 </Anchors>
@@ -67,7 +67,7 @@
                     <KeyValue key="icon" value="minimize"/>
                 </KeyValues>
             </Button>
-            <Button parentKey="LockButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="LockButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="1" y="-1"/>
                 </Anchors>
@@ -75,7 +75,7 @@
                     <KeyValue key="icon" value="lock"/>
                 </KeyValues>
             </Button>
-            <Button parentKey="PrevModeButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="PrevModeButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.LockButton" relativePoint="TOPRIGHT" x="0" y="0"/>
                 </Anchors>
@@ -83,7 +83,7 @@
                     <KeyValue key="icon" value="left"/>
                 </KeyValues>
             </Button>
-            <Button parentKey="NextModeButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="NextModeButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.PrevModeButton" relativePoint="TOPRIGHT" x="0" y="0"/>
                 </Anchors>

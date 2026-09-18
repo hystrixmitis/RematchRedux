@@ -1,21 +1,21 @@
 <Ui>
 
-    <Frame parentKey="TeamsPanel" parent="RematchFrame">
+    <Frame parentKey="TeamsPanel" parent="RematchReduxFrame">
         <Frames>
             <!-- Top contains the All button, search box and Teams button -->
-            <Frame parentKey="Top" inherits="RematchPanelInsetFrameTemplate">
+            <Frame parentKey="Top" inherits="RematchReduxPanelInsetFrameTemplate">
                 <Size x="0" y="29"/>
                 <Anchors>
                     <Anchor point="TOPLEFT"/>
                     <Anchor point="TOPRIGHT"/>
                 </Anchors>
                 <Frames>
-                    <Button parentKey="AllButton" inherits="RematchAllButtonTemplate">
+                    <Button parentKey="AllButton" inherits="RematchReduxAllButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" x="3" y="-3"/>
                         </Anchors>
                     </Button>
-                    <Button parentKey="TeamsButton" inherits="RematchFilterButtonTemplate">
+                    <Button parentKey="TeamsButton" inherits="RematchReduxFilterButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPRIGHT" x="-3" y="-3"/>
                         </Anchors>
@@ -25,7 +25,7 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <EditBox parentKey="SearchBox" inherits="RematchSearchBoxTemplate">
+                    <EditBox parentKey="SearchBox" inherits="RematchReduxSearchBoxTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeKey="$parent.AllButton" relativePoint="TOPRIGHT" x="-1" y="0"/>
                             <Anchor point="TOPRIGHT" relativeKey="$parent.TeamsButton" relativePoint="TOPLEFT" x="1" y="0"/>
@@ -34,7 +34,7 @@
                 </Frames>
             </Frame>
             <!-- List is the main list of teams (with group headers) -->
-            <Frame parentKey="List" inherits="RematchAutoScrollBoxTemplate">
+            <Frame parentKey="List" inherits="RematchReduxAutoScrollBoxTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.Top" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
                     <Anchor point="BOTTOMRIGHT"/>

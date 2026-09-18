@@ -1,11 +1,11 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.loadoutPanel = rematch.frame.LoadoutPanel
-rematch.frame:Register("loadoutPanel")
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.loadoutPanel = rematchRedux.frame.LoadoutPanel
+rematchRedux.frame:Register("loadoutPanel")
 
-function rematch.loadoutPanel:Update()
+function rematchRedux.loadoutPanel:Update()
     for i=1,3 do
         local petID,ability1,ability2,ability3,locked = C_PetJournal.GetPetLoadOutInfo(i)
 
@@ -27,12 +27,12 @@ function rematch.loadoutPanel:Update()
         self.Loadouts[i].LockOverlay.RequirementsLink:SetShown(locked)
 
         -- showing overlay if either journal or just this slot is locked
-        local isJournalLocked = rematch.utils:IsJournalLocked()
+        local isJournalLocked = rematchRedux.utils:IsJournalLocked()
         self.Loadouts[i].LockOverlay:SetShown(isJournalLocked or locked)
 
         -- when slotting a pet, the loadouts are updated; if the mouse is over a loadout when that happens and the pet card
         -- is unlocked and visible, then we need to change pets the card is showing (using the OnEnter to let focus handle it)
-        if self.Loadouts[i]:IsMouseOver() and rematch.petCard.petID~=petID and not rematch.cardManager:IsCardLocked(rematch.petCard) then
+        if self.Loadouts[i]:IsMouseOver() and rematchRedux.petCard.petID~=petID and not rematchRedux.cardManager:IsCardLocked(rematchRedux.petCard) then
             local focus = GetMouseFoci()[1]
             if focus and focus.petID then
                 focus:GetScript("OnEnter")(focus)
@@ -43,9 +43,9 @@ function rematch.loadoutPanel:Update()
     self:UpdateGlow()
 end
 
-function rematch.loadoutPanel:UpdateGlow()
+function rematchRedux.loadoutPanel:UpdateGlow()
     for i=1,3 do
-        local showGlow = rematch.utils:IsPetOnCursor()
+        local showGlow = rematchRedux.utils:IsPetOnCursor()
         if showGlow then
             self.Loadouts[i].Animation:Play()
         else
@@ -56,10 +56,10 @@ function rematch.loadoutPanel:UpdateGlow()
 end
 
 -- updates background for special types (leveling, random, ignored) and handles special slot badge
-function rematch.loadoutPanel:FillSpecial(loadout,slot)
-    if rematch.loadouts:IsSlotSpecial(slot) then
-        local altID = rematch.loadouts:GetSlotInfo(slot)
-        local altInfo = rematch.altInfo:Fetch(altID)
+function rematchRedux.loadoutPanel:FillSpecial(loadout,slot)
+    if rematchRedux.loadouts:IsSlotSpecial(slot) then
+        local altID = rematchRedux.loadouts:GetSlotInfo(slot)
+        local altInfo = rematchRedux.altInfo:Fetch(altID)
         local color
         if altInfo.idType=="leveling" then
             color = C.LOADOUT_COLOR_LEVELING
@@ -70,7 +70,7 @@ function rematch.loadoutPanel:FillSpecial(loadout,slot)
             color = C.LOADOUT_COLOR_RANDOM
             loadout.SpecialButton.tooltipTitle = L["Random Pet"]
             loadout.SpecialButton.tooltipBody = L["When this team loads, a random high level pet will go in this spot."]
-            loadout.SpecialButton.Icon:SetTexCoord(rematch.utils:GetBadgeCoordsByPetType(altInfo.petType))
+            loadout.SpecialButton.Icon:SetTexCoord(rematchRedux.utils:GetBadgeCoordsByPetType(altInfo.petType))
         elseif altInfo.idType=="ignored" then
             color = C.LOADOUT_COLOR_IGNORED
             loadout.SpecialButton.tooltipTitle = L["Ignored Slot"]
@@ -83,7 +83,7 @@ function rematch.loadoutPanel:FillSpecial(loadout,slot)
         loadout.Back:SetDesaturated(true)
         loadout.Back:SetVertexColor(color[1],color[2],color[3])
         loadout.SpecialButton:Show()
-    elseif rematch.loadouts:IsSlotLocked(slot) then
+    elseif rematchRedux.loadouts:IsSlotLocked(slot) then
         loadout.Back:SetDesaturated(true)
         loadout.Back:SetVertexColor(1,1,1)
         loadout.SpecialButton:Hide()
@@ -95,8 +95,8 @@ function rematch.loadoutPanel:FillSpecial(loadout,slot)
 end
 
 -- fills a loadout slot for the petID: type decal, notes, breed, badges, names
-function rematch.loadoutPanel:FillLoadout(loadout,petID)
-    local petInfo = rematch.petInfo:Fetch(petID)
+function rematchRedux.loadoutPanel:FillLoadout(loadout,petID)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     local slot = loadout:GetID()
 
     loadout.Pet:FillPet(petID)
@@ -126,9 +126,9 @@ function rematch.loadoutPanel:FillLoadout(loadout,petID)
 
     -- badges in topright to left of notes button
     local right = showNotes and -34 or -12
-    local badgesWidth = rematch.badges:AddBadges(loadout.Badges,"pets",petID,"TOPRIGHT",loadout,"TOPRIGHT",right,-24,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(loadout.Badges,"pets",petID,"TOPRIGHT",loadout,"TOPRIGHT",right,-24,-1)
 
-    if not rematch.loadouts:IsSlotLocked(slot) then
+    if not rematchRedux.loadouts:IsSlotLocked(slot) then
         -- names between pet button and notes/badges/breed
         local nameXoff = min(right,breedXoff)
         local nameYoff = -21
@@ -159,7 +159,7 @@ function rematch.loadoutPanel:FillLoadout(loadout,petID)
     else
         loadout.PetName:Hide()
         loadout.SpeciesName:Hide()
-        local text,link = rematch.loadouts:GetSlotLockedDetails(slot)
+        local text,link = rematchRedux.loadouts:GetSlotLockedDetails(slot)
         loadout.LockOverlay.RequirementsText:SetText(text)
         loadout.LockOverlay.RequirementsLink:SetText(link)
     end
@@ -167,14 +167,14 @@ function rematch.loadoutPanel:FillLoadout(loadout,petID)
 end
 
 -- unlike mini loadout, the regular loadout bars never move position; though the xp bar is still only visible for pets under 25
-function rematch.loadoutPanel:FillStatusBars(loadout,petID)
-    local petInfo = rematch.petInfo:Fetch(petID)
+function rematchRedux.loadoutPanel:FillStatusBars(loadout,petID)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     local showXpBar = petInfo.level and petInfo.level<25
     loadout.XpBar:SetShown(showXpBar)
     loadout.XpBarBack:SetShown(showXpBar)
     loadout.XpBarBorder:SetShown(showXpBar)
     if petInfo.level and petInfo.level<25 then
-        rematch.utils:UpdateStatusBar(loadout.XpBar,petInfo.xp,petInfo.maxXp,C.LOADOUT_XPBAR_WIDTH,C.XP_BAR_COLOR.r,C.XP_BAR_COLOR.g,C.XP_BAR_COLOR.b)
+        rematchRedux.utils:UpdateStatusBar(loadout.XpBar,petInfo.xp,petInfo.maxXp,C.LOADOUT_XPBAR_WIDTH,C.XP_BAR_COLOR.r,C.XP_BAR_COLOR.g,C.XP_BAR_COLOR.b)
     end
     local showHpBar = petInfo.health and petInfo.maxHealth
     loadout.HpBar:SetShown(showHpBar)
@@ -183,14 +183,14 @@ function rematch.loadoutPanel:FillStatusBars(loadout,petID)
     loadout.HeartIcon:SetShown(showHpBar)
     loadout.HealthText:SetShown(showHpBar)
     if showHpBar then
-        rematch.utils:UpdateStatusBar(loadout.HpBar,petInfo.health,petInfo.maxHealth,C.LOADOUT_HPBAR_WIDTH,C.HP_BAR_COLOR.r,C.HP_BAR_COLOR.g,C.HP_BAR_COLOR.bg)
+        rematchRedux.utils:UpdateStatusBar(loadout.HpBar,petInfo.health,petInfo.maxHealth,C.LOADOUT_HPBAR_WIDTH,C.HP_BAR_COLOR.r,C.HP_BAR_COLOR.g,C.HP_BAR_COLOR.bg)
         loadout.HealthText:SetText(petInfo.shortHealthStatus)
     end
 end
 
 -- updates loadout pet model
-function rematch.loadoutPanel:FillModelScene(loadout,petID)
-    local petInfo = rematch.petInfo:Fetch(petID)
+function rematchRedux.loadoutPanel:FillModelScene(loadout,petID)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     local displayID = petInfo.displayID
     if not displayID then
         loadout.ModelScene:Hide()
@@ -209,33 +209,33 @@ function rematch.loadoutPanel:FillModelScene(loadout,petID)
     end
 end
 
-function rematch.loadoutPanel:OnShow()
-    rematch.events:Register(self,"REMATCH_LOADOUTS_CHANGED",self.Update)
-    rematch.events:Register(self,"REMATCH_ABILITIES_CHANGED",self.Update)
-    rematch.events:Register(self,"REMATCH_PET_PICKED_UP_ON_CURSOR",self.Update)
-    rematch.events:Register(self,"REMATCH_PET_DROPPED_FROM_CURSOR",self.Update)
-    rematch.events:Register(self,"PET_BATTLE_HEALTH_CHANGED",self.Update) -- health changing during battle
-    rematch.events:Register(self,"REMATCH_TEAM_LOADED",self.REMATCH_TEAM_LOADED) -- team loaded, flash pets
+function rematchRedux.loadoutPanel:OnShow()
+    rematchRedux.events:Register(self,"REMATCHREDUX_LOADOUTS_CHANGED",self.Update)
+    rematchRedux.events:Register(self,"REMATCHREDUX_ABILITIES_CHANGED",self.Update)
+    rematchRedux.events:Register(self,"REMATCHREDUX_PET_PICKED_UP_ON_CURSOR",self.Update)
+    rematchRedux.events:Register(self,"REMATCHREDUX_PET_DROPPED_FROM_CURSOR",self.Update)
+    rematchRedux.events:Register(self,"PET_BATTLE_HEALTH_CHANGED",self.Update) -- health changing during battle
+    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",self.REMATCHREDUX_TEAM_LOADED) -- team loaded, flash pets
     self:UpdateGlow()
 end
 
-function rematch.loadoutPanel:OnHide()
+function rematchRedux.loadoutPanel:OnHide()
     --self.AbilityFlyout:Hide()
-    rematch.events:Unregister(self,"REMATCH_LOADOUTS_CHANGED")
-    rematch.events:Unregister(self,"REMATCH_ABILITIES_CHANGED")
-    rematch.events:Unregister(self,"REMATCH_PET_PICKED_UP_ON_CURSOR")
-    rematch.events:Unregister(self,"REMATCH_PET_DROPPED_FROM_CURSOR")
-    rematch.events:Unregister(self,"PET_BATTLE_HEALTH_CHANGED")
-    rematch.events:Unregister(self,"REMATCH_TEAM_LOADED")
+    rematchRedux.events:Unregister(self,"REMATCHREDUX_LOADOUTS_CHANGED")
+    rematchRedux.events:Unregister(self,"REMATCHREDUX_ABILITIES_CHANGED")
+    rematchRedux.events:Unregister(self,"REMATCHREDUX_PET_PICKED_UP_ON_CURSOR")
+    rematchRedux.events:Unregister(self,"REMATCHREDUX_PET_DROPPED_FROM_CURSOR")
+    rematchRedux.events:Unregister(self,"PET_BATTLE_HEALTH_CHANGED")
+    rematchRedux.events:Unregister(self,"REMATCHREDUX_TEAM_LOADED")
 end
 
 -- flashes the three loadout slots when a team finishes loading
-function rematch.loadoutPanel:REMATCH_TEAM_LOADED()
+function rematchRedux.loadoutPanel:REMATCHREDUX_TEAM_LOADED()
     self:Update()
     self:BlingLoadouts()
 end
 
-function rematch.loadoutPanel:BlingLoadouts()
+function rematchRedux.loadoutPanel:BlingLoadouts()
     for i=1,3 do
         self.Loadouts[i].Bling:Show()
     end
@@ -243,70 +243,70 @@ end
 
 --[[ script handlers for Loadout slots ]]
 
-function rematch.loadoutPanel:LoadoutOnEnter()
+function rematchRedux.loadoutPanel:LoadoutOnEnter()
     self.Highlight:Show()
-    rematch.cardManager:OnEnter(rematch.petCard,self,self.petID)
+    rematchRedux.cardManager:OnEnter(rematchRedux.petCard,self,self.petID)
 end
 
-function rematch.loadoutPanel:LoadoutOnLeave()
+function rematchRedux.loadoutPanel:LoadoutOnLeave()
     self.Highlight:Hide()
     if GetMouseFoci()[1]~=self.Pet then -- don't dismiss card if moving onto pet button
-        rematch.cardManager:OnLeave(rematch.petCard,self,self.petID)
+        rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,self.petID)
     end
 end
 
-function rematch.loadoutPanel:LoadoutOnMouseDown()
-    if rematch.utils:IsJournalUnlocked() then
+function rematchRedux.loadoutPanel:LoadoutOnMouseDown()
+    if rematchRedux.utils:IsJournalUnlocked() then
         self.Highlight:Hide()
     end
 end
 
-function rematch.loadoutPanel:LoadoutOnMouseUp()
-    if self:IsMouseMotionFocus() and rematch.utils:IsJournalUnlocked() then
+function rematchRedux.loadoutPanel:LoadoutOnMouseUp()
+    if self:IsMouseMotionFocus() and rematchRedux.utils:IsJournalUnlocked() then
         self.Highlight:Show()
     end
 end
 
-function rematch.loadoutPanel:LoadoutOnClick(button)
-    if rematch.utils:IsJournalLocked() then
-        rematch.cardManager:OnClick(rematch.petCard,self,self.petID) -- if journal locked, only allow locking pet card
+function rematchRedux.loadoutPanel:LoadoutOnClick(button)
+    if rematchRedux.utils:IsJournalLocked() then
+        rematchRedux.cardManager:OnClick(rematchRedux.petCard,self,self.petID) -- if journal locked, only allow locking pet card
     elseif button=="RightButton" then
-        if rematch.petInfo:Fetch(self.petID).idType=="pet" then
-            rematch.menus:Show("LoadoutMenu",self,{slot=self:GetID(),petID=self.petID},"cursor")
+        if rematchRedux.petInfo:Fetch(self.petID).idType=="pet" then
+            rematchRedux.menus:Show("LoadoutMenu",self,{slot=self:GetID(),petID=self.petID},"cursor")
         end
     else
-        if rematch.utils:IsPetOnCursor() then -- if pet is on the cursor then drop pet into this loadout
-            rematch.loadoutPanel.LoadoutOnReceiveDrag(self)
+        if rematchRedux.utils:IsPetOnCursor() then -- if pet is on the cursor then drop pet into this loadout
+            rematchRedux.loadoutPanel.LoadoutOnReceiveDrag(self)
         else -- otherwise lock/unlock pet card
-            rematch.cardManager:OnClick(rematch.petCard,self,self.petID)
+            rematchRedux.cardManager:OnClick(rematchRedux.petCard,self,self.petID)
         end
     end
 end
 
-function rematch.loadoutPanel:LoadoutOnDoubleClick()
+function rematchRedux.loadoutPanel:LoadoutOnDoubleClick()
     if not settings.NoSummonOnDblClick then
         C_PetJournal.SummonPetByGUID(self.petID)
-        rematch.petCard:Hide()
+        rematchRedux.petCard:Hide()
     end
 end
 
-function rematch.loadoutPanel:LoadoutOnDragStart()
-    if rematch.utils:IsJournalUnlocked() then
-        local petInfo = rematch.petInfo:Fetch(self.petID)
+function rematchRedux.loadoutPanel:LoadoutOnDragStart()
+    if rematchRedux.utils:IsJournalUnlocked() then
+        local petInfo = rematchRedux.petInfo:Fetch(self.petID)
         if petInfo.isOwned and petInfo.idType=="pet" then
             C_PetJournal.PickupPet(self.petID)
         end
     end
 end
 
-function rematch.loadoutPanel:LoadoutOnReceiveDrag()
-    if rematch.utils:IsJournalUnlocked() then
-        local petID = rematch.utils:GetPetCursorInfo()
+function rematchRedux.loadoutPanel:LoadoutOnReceiveDrag()
+    if rematchRedux.utils:IsJournalUnlocked() then
+        local petID = rematchRedux.utils:GetPetCursorInfo()
         if petID then
             ClearCursor()
-            rematch.loadouts:SlotPet(self:GetID(),petID)
-            rematch.petCard:Hide()
-            rematch.loadoutPanel.LoadoutOnEnter(self) -- go through motions of entering since new pet here
+            rematchRedux.loadouts:SlotPet(self:GetID(),petID)
+            rematchRedux.petCard:Hide()
+            rematchRedux.loadoutPanel.LoadoutOnEnter(self) -- go through motions of entering since new pet here
             PlaySound(C.SOUND_DRAG_STOP)
         end
     end
@@ -314,45 +314,45 @@ end
 
 --[[ script handlers for pet buttons within loadout slots ]]
 
-function rematch.loadoutPanel:PetOnEnter()
+function rematchRedux.loadoutPanel:PetOnEnter()
     self:GetParent().Highlight:Show()
-    rematch.textureHighlight:Show(self.Icon)
-    rematch.cardManager:OnEnter(rematch.petCard,self:GetParent(),self.petID)
+    rematchRedux.textureHighlight:Show(self.Icon)
+    rematchRedux.cardManager:OnEnter(rematchRedux.petCard,self:GetParent(),self.petID)
 end
 
-function rematch.loadoutPanel:PetOnLeave()
+function rematchRedux.loadoutPanel:PetOnLeave()
     self:GetParent().Highlight:Hide()
-    rematch.textureHighlight:Hide()
+    rematchRedux.textureHighlight:Hide()
     if GetMouseFoci()[1]~=self:GetParent() then
-        rematch.cardManager:OnLeave(rematch.petCard,self:GetParent(),self.petID)
+        rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self:GetParent(),self.petID)
     end
 end
 
-function rematch.loadoutPanel:PetOnMouseDown()
-    if rematch.utils:IsJournalUnlocked() then
+function rematchRedux.loadoutPanel:PetOnMouseDown()
+    if rematchRedux.utils:IsJournalUnlocked() then
         self:GetParent().Highlight:Hide()
-        rematch.textureHighlight:Hide()
+        rematchRedux.textureHighlight:Hide()
     end
 end
 
-function rematch.loadoutPanel:PetOnMouseUp()
-    if self:IsMouseMotionFocus() and rematch.utils:IsJournalUnlocked() then
+function rematchRedux.loadoutPanel:PetOnMouseUp()
+    if self:IsMouseMotionFocus() and rematchRedux.utils:IsJournalUnlocked() then
         self:GetParent().Highlight:Show()
-        rematch.textureHighlight:Show(self.Icon)
+        rematchRedux.textureHighlight:Show(self.Icon)
     end
 end
 
-function rematch.loadoutPanel:PetOnClick(button)
-    if rematch.utils:IsJournalLocked() then
-        rematch.cardManager:OnClick(rematch.petCard,self,self.petID) -- if journal locked, only allow locking pet card
-    elseif rematch.utils:IsPetOnCursor() then
-        rematch.loadoutPanel.PetOnReceiveDrag(self)
+function rematchRedux.loadoutPanel:PetOnClick(button)
+    if rematchRedux.utils:IsJournalLocked() then
+        rematchRedux.cardManager:OnClick(rematchRedux.petCard,self,self.petID) -- if journal locked, only allow locking pet card
+    elseif rematchRedux.utils:IsPetOnCursor() then
+        rematchRedux.loadoutPanel.PetOnReceiveDrag(self)
     else
-        local petInfo = rematch.petInfo:Fetch(self.petID)
+        local petInfo = rematchRedux.petInfo:Fetch(self.petID)
         if petInfo.isOwned and petInfo.idType=="pet" then
             if button=="RightButton" then
-                rematch.menus:Show("LoadoutMenu",self,{slot=self:GetParent():GetID(),petID=self.petID},"cursor")
-            elseif rematch.utils:HandleSpecialPetClicks(self.petID) then
+                rematchRedux.menus:Show("LoadoutMenu",self,{slot=self:GetParent():GetID(),petID=self.petID},"cursor")
+            elseif rematchRedux.utils:HandleSpecialPetClicks(self.petID) then
                 -- if stone targeting or shift-clicking handled, do nothing
             else
                 C_PetJournal.PickupPet(self.petID)
@@ -361,30 +361,30 @@ function rematch.loadoutPanel:PetOnClick(button)
     end
 end
 
-function rematch.loadoutPanel:PetOnDragStart()
-    if rematch.utils:IsJournalUnlocked() then
-        local petInfo = rematch.petInfo:Fetch(self.petID)
+function rematchRedux.loadoutPanel:PetOnDragStart()
+    if rematchRedux.utils:IsJournalUnlocked() then
+        local petInfo = rematchRedux.petInfo:Fetch(self.petID)
         if petInfo.isOwned and petInfo.idType=="pet" then
             C_PetJournal.PickupPet(self.petID)
         end
     end
 end
 
-function rematch.loadoutPanel:PetOnReceiveDrag()
-    if rematch.utils:IsJournalUnlocked() then
-        local petID = rematch.utils:GetPetCursorInfo()
+function rematchRedux.loadoutPanel:PetOnReceiveDrag()
+    if rematchRedux.utils:IsJournalUnlocked() then
+        local petID = rematchRedux.utils:GetPetCursorInfo()
         if petID then
             ClearCursor()
-            rematch.loadouts:SlotPet(self:GetParent():GetID(),petID)
-            rematch.petCard:Hide()
-            rematch.loadoutPanel.PetOnEnter(self)
+            rematchRedux.loadouts:SlotPet(self:GetParent():GetID(),petID)
+            rematchRedux.petCard:Hide()
+            rematchRedux.loadoutPanel.PetOnEnter(self)
         end
     end
 end
 
 -- OnUpdate closes flyout after C.FLYOUT_OPEN_TIMER passes with mouse not on the flyout or ability that opened it
 local flyoutTimer = 0
-function rematch.loadoutPanel.AbilityFlyout:OnUpdate(elapsed)
+function rematchRedux.loadoutPanel.AbilityFlyout:OnUpdate(elapsed)
     if self.anchoredTo and (self.anchoredTo:IsMouseOver() or self:IsMouseOver()) then
         flyoutTimer = 0
     else
@@ -397,73 +397,73 @@ end
 
 --[[ script handlers for special buttons at the top of loadout slots (leveling, random, ignored) ]]
 
-function rematch.loadoutPanel:SpecialOnEnter()
-    rematch.textureHighlight:Show(self.Icon)
-    rematch.tooltip:ShowSimpleTooltip(self) -- tooltip is updated in the loadout update
+function rematchRedux.loadoutPanel:SpecialOnEnter()
+    rematchRedux.textureHighlight:Show(self.Icon)
+    rematchRedux.tooltip:ShowSimpleTooltip(self) -- tooltip is updated in the loadout update
 end
 
-function rematch.loadoutPanel:SpecialOnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.tooltip:Hide()
+function rematchRedux.loadoutPanel:SpecialOnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
-function rematch.loadoutPanel:SpecialOnMouseDown()
-    if rematch.utils:IsJournalUnlocked() then
-        rematch.textureHighlight:Hide()
+function rematchRedux.loadoutPanel:SpecialOnMouseDown()
+    if rematchRedux.utils:IsJournalUnlocked() then
+        rematchRedux.textureHighlight:Hide()
     end
 end
 
-function rematch.loadoutPanel:SpecialOnMouseUp()
-    if self:IsMouseMotionFocus() and rematch.utils:IsJournalUnlocked() then
-        rematch.textureHighlight:Show(self.Icon)
+function rematchRedux.loadoutPanel:SpecialOnMouseUp()
+    if self:IsMouseMotionFocus() and rematchRedux.utils:IsJournalUnlocked() then
+        rematchRedux.textureHighlight:Show(self.Icon)
     end
 end
 
-function rematch.loadoutPanel:SpecialOnClick(button)
-    if rematch.utils:IsJournalUnlocked() then
-        rematch.menus:Show("SpecialMenu",self,{slot=self:GetParent():GetID()},"cursor")
+function rematchRedux.loadoutPanel:SpecialOnClick(button)
+    if rematchRedux.utils:IsJournalUnlocked() then
+        rematchRedux.menus:Show("SpecialMenu",self,{slot=self:GetParent():GetID()},"cursor")
     end
 end
 
 --[[ script handlers for lock in topleft corner when journal locked ]]
 
-function rematch.loadoutPanel:LockOnEnter()
-    rematch.textureHighlight:Show(self)
+function rematchRedux.loadoutPanel:LockOnEnter()
+    rematchRedux.textureHighlight:Show(self)
     if not C_PetJournal.IsJournalUnlocked() then
-        rematch.tooltip:ShowSimpleTooltip(self,LOCKED,PET_JOURNAL_READONLY_TEXT)
+        rematchRedux.tooltip:ShowSimpleTooltip(self,LOCKED,PET_JOURNAL_READONLY_TEXT)
     elseif C_PetBattles.GetPVPMatchmakingInfo() then
-        rematch.tooltip:ShowSimpleTooltip(self,LOCKED,ERR_PETBATTLE_QUEUE_QUEUED)
+        rematchRedux.tooltip:ShowSimpleTooltip(self,LOCKED,ERR_PETBATTLE_QUEUE_QUEUED)
     else
         local slot = self:GetParent():GetParent():GetID()
-        if rematch.loadouts:IsSlotLocked(slot) then
-            local text,link,spellID,achievementID = rematch.loadouts:GetSlotLockedDetails(slot)
-            rematch.tooltip:ShowSimpleTooltip(self,text.." "..link)
+        if rematchRedux.loadouts:IsSlotLocked(slot) then
+            local text,link,spellID,achievementID = rematchRedux.loadouts:GetSlotLockedDetails(slot)
+            rematchRedux.tooltip:ShowSimpleTooltip(self,text.." "..link)
         end
     end
 end
 
-function rematch.loadoutPanel:LockOnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.tooltip:Hide()
+function rematchRedux.loadoutPanel:LockOnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
 -- entering the requirements link ([Battle Pet Training], [Newbie] or [Just a Pup]) for locked slots
-function rematch.loadoutPanel:RequirementsOnEnter()
+function rematchRedux.loadoutPanel:RequirementsOnEnter()
     local slot = self:GetParent():GetParent():GetID()
-    local _,_,spellID,achievementID = rematch.loadouts:GetSlotLockedDetails(slot)
-    rematch.tooltip:SetOwner(self)
+    local _,_,spellID,achievementID = rematchRedux.loadouts:GetSlotLockedDetails(slot)
+    rematchRedux.tooltip:SetOwner(self)
     if spellID then
-        rematch.tooltip:SetSpellByID(spellID)
+        rematchRedux.tooltip:SetSpellByID(spellID)
     elseif achievementID then
-        rematch.tooltip:SetAchievementByID(achievementID)
+        rematchRedux.tooltip:SetAchievementByID(achievementID)
     else
         return
     end
-    local corner,opposite = rematch.utils:GetCorner(rematch.frame,UIParent)
-    rematch.tooltip:SetPoint(corner,self,opposite)
-    rematch.tooltip:Show()
+    local corner,opposite = rematchRedux.utils:GetCorner(rematchRedux.frame,UIParent)
+    rematchRedux.tooltip:SetPoint(corner,self,opposite)
+    rematchRedux.tooltip:Show()
 end
 
-function rematch.loadoutPanel:RequirementsOnLeave()
-    rematch.tooltip:Hide()
+function rematchRedux.loadoutPanel:RequirementsOnLeave()
+    rematchRedux.tooltip:Hide()
 end

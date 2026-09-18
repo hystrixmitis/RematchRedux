@@ -5,7 +5,7 @@
 ## Version: 12.1.0
 ## SavedVariables: Rematch5Settings, Rematch5SavedTeams, Rematch5SavedGroups, Rematch5SavedTargets, Rematch4Saved, Rematch4Settings, RematchSaved, RematchSettings
 ## IconTexture: Interface\AddOns\RematchRedux\textures\icon
-## AddonCompartmentFunc: RematchToggleWindow
+## AddonCompartmentFunc: RematchReduxToggleWindow
 ## Category-enUS: Pet Battles
 ## Category-deDE: Haustierkämpfe
 ## Category-esES: Duelos de mascotas

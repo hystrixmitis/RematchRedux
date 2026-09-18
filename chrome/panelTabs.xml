@@ -1,6 +1,6 @@
 <Ui>
 
-    <Button name="RematchPanelTabTemplate" mixin="RematchPanelTabMixin" virtual="true">
+    <Button name="RematchReduxPanelTabTemplate" mixin="RematchReduxPanelTabMixin" virtual="true">
         <Size x="68" y="32"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -38,7 +38,7 @@
         </Scripts>
     </Button>
 
-    <Frame parentKey="PanelTabs" parent="RematchFrame">
+    <Frame parentKey="PanelTabs" parent="RematchReduxFrame">
         <Size x="0" y="32"/>
     </Frame>
 

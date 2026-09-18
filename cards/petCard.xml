@@ -3,7 +3,7 @@
     <Script file="petCardMixins.lua"/>
 
     <!-- horizontal line to break up sections of a pet card (the anchor is at the top, so only lower sections need one)-->
-    <Texture name="RematchPetCardLineTemplate" file="Interface\Tooltips\UI-Tooltip-Border" virtual="true">
+    <Texture name="RematchReduxPetCardLineTemplate" file="Interface\Tooltips\UI-Tooltip-Border" virtual="true">
         <Size x="0" y="5"/>
         <Anchors>
             <Anchor point="LEFT" relativePoint="TOPLEFT" x="1" y="0"/>
@@ -14,7 +14,7 @@
     </Texture>
 
     <!-- ability buttons at bottom of pet card include icon, name and pet type -->
-    <Button name="RematchPetCardAbilityTemplate" mixin="RematchPetCardAbilityMixin" registerForClicks="AnyUp" virtual="true">
+    <Button name="RematchReduxPetCardAbilityTemplate" mixin="RematchReduxPetCardAbilityMixin" registerForClicks="AnyUp" virtual="true">
         <Size x="120" y="32"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -79,7 +79,7 @@
     </Button>
 
     <!-- for text that spans the width of the pet card (possible breeds, collected) -->
-    <Frame name="RematchPetCardTextStatTemplate" virtual="true">
+    <Frame name="RematchReduxPetCardTextStatTemplate" virtual="true">
         <Size x="240" y="32"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -99,7 +99,7 @@
     </Frame>
 
     <!-- hp and xp bar at the bottom of stats -->
-    <Button name="RematchPetCardStatusBarTemplate" mixin="RematchPetCardStatusBarMixin" virtual="true">
+    <Button name="RematchReduxPetCardStatusBarTemplate" mixin="RematchReduxPetCardStatusBarMixin" virtual="true">
         <Size x="232" y="12"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -138,7 +138,7 @@
 
 	<!-- skurri is not used in all clients (and ruRU uses a different skurri)
 	     this is the cursive-like font used for the lore text on the back of the card -->
-	<FontFamily name="RematchPetCardLoreFont" virtual="true">
+	<FontFamily name="RematchReduxPetCardLoreFont" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Fonts\skurri.ttf" height="15">
 				<Color r="0" g="0" b="0"/>
@@ -167,7 +167,7 @@
 	</FontFamily>
 
 	<!-- smaller version of lore font for minimized pet cards -->
-	<FontFamily name="RematchPetCardLoreFontSmall" virtual="true">
+	<FontFamily name="RematchReduxPetCardLoreFontSmall" virtual="true">
 		<Member alphabet="roman">
 			<Font font="Fonts\skurri.ttf" height="12">
 				<Color r="0" g="0" b="0"/>
@@ -196,7 +196,7 @@
 	</FontFamily>
 
     <!-- the individual stats displayed on the front of the pet card, an Icon+Text -->
-    <Button name="RematchPetCardStatTemplate" mixin="RematchPetCardStatMixin" virtual="true">
+    <Button name="RematchReduxPetCardStatTemplate" mixin="RematchReduxPetCardStatMixin" virtual="true">
         <Size x="0" y="16"/>
         <HitRectInsets left="0" right="0" top="-1" bottom="-1"/>
         <Layers>
@@ -231,7 +231,7 @@
     </Button>
 
     <!-- Stats.BreedTable each row of breeds in the table -->
-	<Frame name="RematchBreedTableRowTemplate" virtual="true">
+	<Frame name="RematchReduxBreedTableRowTemplate" virtual="true">
 		<Size x="168" y="16"/>
 		<Layers>
 			<Layer level="BORDER">
@@ -266,13 +266,13 @@
 	<!-- ******************* -->
 
 	<!-- the main pet card. this is a Button so it can double-click to minimize/maximize like main window -->
-	<Button name="RematchPetCard" frameStrata="FULLSCREEN" parent="UIParent" flattenRenderLayers="true" clampedToScreen="true" enableMouse="true" movable="true" enableKeyboard="true" inherits="RematchDefaultPanelTemplate" hidden="true">
+	<Button name="RematchReduxPetCard" frameStrata="FULLSCREEN" parent="UIParent" flattenRenderLayers="true" clampedToScreen="true" enableMouse="true" movable="true" enableKeyboard="true" inherits="RematchReduxDefaultPanelTemplate" hidden="true">
 		<Size x="258" y="358"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
 		<Frames>
-            <Button parentKey="MinimizeButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="MinimizeButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPRIGHT" relativeKey="$parent.CloseButton" relativePoint="TOPLEFT" x="0" y="0"/>
                 </Anchors>
@@ -280,7 +280,7 @@
                     <KeyValue key="icon" value="minimize"/>
                 </KeyValues>
             </Button>
-            <Button parentKey="PinButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="PinButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="1" y="-1"/>
                 </Anchors>
@@ -288,7 +288,7 @@
                     <KeyValue key="icon" value="pin"/>
                 </KeyValues>
             </Button>
-            <Button parentKey="FlipButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="FlipButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.PinButton" relativePoint="TOPRIGHT" x="0" y="0"/>
                 </Anchors>
@@ -297,7 +297,7 @@
                 </KeyValues>
             </Button>
             <!-- border around always-visible part of card -->
-			<Frame parentKey="Content" ignoreParentAlpha="true" inherits="RematchBorderBackdropTemplate">
+			<Frame parentKey="Content" ignoreParentAlpha="true" inherits="RematchReduxBorderBackdropTemplate">
 				<Anchors> <!-- 254 width -->
 					<Anchor point="TOPLEFT" x="2" y="-22"/>
 					<Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
@@ -310,7 +310,7 @@
 							<Anchor point="TOPRIGHT" x="-2" y="-2"/>
 						</Anchors>
 						<Frames>
-							<Button parentKey="PetIcon" mixin="RematchPetCardTopButtonMixin" inherits="RematchRoundButtonTemplate">
+							<Button parentKey="PetIcon" mixin="RematchReduxPetCardTopButtonMixin" inherits="RematchReduxRoundButtonTemplate">
 								<Size x="40" y="40"/>
 								<Anchors>
 									<Anchor point="TOPLEFT" x="4" y="-4"/>
@@ -323,7 +323,7 @@
 									<OnClick method="OnClick"/>
 								</Scripts>
 							</Button>
-							<Button parentKey="TypeIcon" mixin="RematchPetCardTopButtonMixin" inherits="RematchRoundButtonTemplate">
+							<Button parentKey="TypeIcon" mixin="RematchReduxPetCardTopButtonMixin" inherits="RematchReduxRoundButtonTemplate">
 								<Size x="40" y="40"/>
 								<Anchors>
 									<Anchor point="TOPRIGHT" x="-4" y="-4"/>
@@ -363,7 +363,7 @@
 						<Layers>
 							<Layer level="BORDER">
 								<!-- line across top of Front of card just below Top section -->
-                        		<Texture inherits="RematchPetCardLineTemplate"/>
+                        		<Texture inherits="RematchReduxPetCardLineTemplate"/>
 							</Layer>
 						</Layers>
 						<Frames>
@@ -382,7 +382,7 @@
 									</Layer>
 									<Layer level="BORDER">
 										<!-- line across top of Abilities just below Stats section -->
-										<Texture inherits="RematchPetCardLineTemplate"/>
+										<Texture inherits="RematchReduxPetCardLineTemplate"/>
 										<!-- for pets without abilities, text to display such as This creature cannot battle -->
 										<FontString parentKey="AltText" inherits="GameFontNormal" justifyH="CENTER" justifyV="CENTER" text="BATTLE_PET_CANNOT_BATTLE" hidden="true">
 											<Anchors>
@@ -393,33 +393,33 @@
 									</Layer>
 								</Layers>
 								<Frames>
-									<Button parentArray="Buttons" parentKey="Ability1" inherits="RematchPetCardAbilityTemplate">
+									<Button parentArray="Buttons" parentKey="Ability1" inherits="RematchReduxPetCardAbilityTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" x="4" y="-4"/>
 										</Anchors>
 									</Button>
-									<Button parentArray="Buttons" parentKey="Ability2" inherits="RematchPetCardAbilityTemplate">
+									<Button parentArray="Buttons" parentKey="Ability2" inherits="RematchReduxPetCardAbilityTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeKey="$parent.Ability1" relativePoint="BOTTOMLEFT" x="0" y="-3"/>
 										</Anchors>
 									</Button>
-									<Button parentArray="Buttons" parentKey="Ability3" inherits="RematchPetCardAbilityTemplate">
+									<Button parentArray="Buttons" parentKey="Ability3" inherits="RematchReduxPetCardAbilityTemplate">
 										<Anchors>
 											<Anchor point="TOPLEFT" relativeKey="$parent.Ability2" relativePoint="BOTTOMLEFT" x="0" y="-3"/>
 										</Anchors>
 									</Button>
 
-									<Button parentArray="Buttons" parentKey="Ability4" inherits="RematchPetCardAbilityTemplate">
+									<Button parentArray="Buttons" parentKey="Ability4" inherits="RematchReduxPetCardAbilityTemplate">
 										<Anchors>
 											<Anchor point="TOPRIGHT" x="-4" y="-4"/>
 										</Anchors>
 									</Button>
-									<Button parentArray="Buttons" parentKey="Ability5" inherits="RematchPetCardAbilityTemplate">
+									<Button parentArray="Buttons" parentKey="Ability5" inherits="RematchReduxPetCardAbilityTemplate">
 										<Anchors>
 											<Anchor point="TOPRIGHT" relativeKey="$parent.Ability4" relativePoint="BOTTOMRIGHT" x="0" y="-3"/>
 										</Anchors>
 									</Button>
-									<Button parentArray="Buttons" parentKey="Ability6" inherits="RematchPetCardAbilityTemplate">
+									<Button parentArray="Buttons" parentKey="Ability6" inherits="RematchReduxPetCardAbilityTemplate">
 										<Anchors>
 											<Anchor point="TOPRIGHT" relativeKey="$parent.Ability5" relativePoint="BOTTOMRIGHT" x="0" y="-3"/>
 										</Anchors>
@@ -506,12 +506,12 @@
 								<Frames>
 									<!-- stat buttons like Favorite, Health, etc. are created in petCardStatButtons.lua -->
 									<!-- hp and xp bars at the bottom of stats -->
-									<Button parentKey="HpBar" inherits="RematchPetCardStatusBarTemplate" hidden="true"/>
-									<Button parentKey="XpBar" inherits="RematchPetCardStatusBarTemplate" hidden="true"/>
+									<Button parentKey="HpBar" inherits="RematchReduxPetCardStatusBarTemplate" hidden="true"/>
+									<Button parentKey="XpBar" inherits="RematchReduxPetCardStatusBarTemplate" hidden="true"/>
 									<!-- text across bottom of stats: alt to flip card, possible breeds, collected -->
-									<Frame parentKey="AltFlipHelp" inherits="RematchPetCardTextStatTemplate" hidden="true"/>
+									<Frame parentKey="AltFlipHelp" inherits="RematchReduxPetCardTextStatTemplate" hidden="true"/>
 									<!-- text across bottom of stats: list of possible breeds for the pet -->
-									<Button parentKey="PossibleBreeds" inherits="RematchPetCardTextStatTemplate" hidden="true">
+									<Button parentKey="PossibleBreeds" inherits="RematchReduxPetCardTextStatTemplate" hidden="true">
 										<Scripts>
 											<OnEnter>
 												self:OnEnter()
@@ -522,10 +522,10 @@
 										</Scripts>
 									</Button>
 									<!-- text across bottom of stats: Collected (0/3) and list of collected level rarity/breed -->
-									<Frame parentKey="Collected" inherits="RematchPetCardTextStatTemplate" hidden="true"/>
-									<!-- Buttons is a parentArray of stats created at this level in rematch.petCard:GetStatButton() -->
+									<Frame parentKey="Collected" inherits="RematchReduxPetCardTextStatTemplate" hidden="true"/>
+									<!-- Buttons is a parentArray of stats created at this level in rematchRedux.petCard:GetStatButton() -->
 									<!-- table of possible breeds and the stats at level 25 rare -->
-									<Frame parentKey="BreedTable" frameStrata="TOOLTIP" clampedToScreen="true" inherits="RematchShadowBackdropTemplate" hidden="true">
+									<Frame parentKey="BreedTable" frameStrata="TOOLTIP" clampedToScreen="true" inherits="RematchReduxShadowBackdropTemplate" hidden="true">
 										<Size x="184" y="180"/>
 										<Anchors>
 											<Anchor point="BOTTOMRIGHT" relativeKey="$parent.PossibleBreeds" relativePoint="TOPRIGHT"/>
@@ -609,7 +609,7 @@
 										</Layers>
 										<Frames>
 											<!-- petCard.Stats.BreedTables.Rows is an ordered table of rows, first one created here -->
-											<Frame parentArray="Rows" inherits="RematchBreedTableRowTemplate">
+											<Frame parentArray="Rows" inherits="RematchReduxBreedTableRowTemplate">
 												<Anchors>
 													<Anchor point="TOPLEFT" x="8" y="-50"/>
 												</Anchors>
@@ -687,7 +687,7 @@
 									</Layer>
 									<Layer level="BORDER">
 										<!-- line across top of section -->
-										<Texture inherits="RematchPetCardLineTemplate"/>
+										<Texture inherits="RematchReduxPetCardLineTemplate"/>
 									</Layer>
 									<Layer level="ARTWORK">
 										<FontString parentKey="DamageTaken" inherits="GameFontNormal" justifyH="CENTER">
@@ -806,7 +806,7 @@
 										</Texture>
 									</Layer>
 									<Layer level="BORDER">
-										<Texture inherits="RematchPetCardLineTemplate"/>
+										<Texture inherits="RematchReduxPetCardLineTemplate"/>
 									</Layer>
 									<Layer level="ARTWORK">
 										<!-- the actual source text -->
@@ -827,7 +827,7 @@
 								</Anchors>
 								<Layers>
 									<Layer level="BORDER">
-										<Texture inherits="RematchPetCardLineTemplate"/>
+										<Texture inherits="RematchReduxPetCardLineTemplate"/>
 									</Layer>
 									<Layer level="BACKGROUND">
 										<!-- loreBG background to lore -->
@@ -883,7 +883,7 @@
 									</Layer>
 									<Layer level="ARTWORK">
 										<!-- actual lore text -->
-										<FontString parentKey="Text" inherits="RematchPetCardLoreFont" justifyH="CENTER" justifyV="CENTER">
+										<FontString parentKey="Text" inherits="RematchReduxPetCardLoreFont" justifyH="CENTER" justifyV="CENTER">
 											<Anchors>
 												<Anchor point="TOPLEFT" x="14" y="-2"/>
 												<Anchor point="BOTTOMRIGHT" x="-18" y="2"/>

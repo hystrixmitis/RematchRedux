@@ -1,7 +1,7 @@
-local _,rematch = ...
-rematch.timer = {}
+local _, rematchRedux = ...
+rematchRedux.timer = {}
 
--- rematch.timer:Start(3,myfunc) will wait 3 seconds to run myfunc, restarting the clock if called again.
+-- rematchRedux.timer:Start(3,myfunc) will wait 3 seconds to run myfunc, restarting the clock if called again.
 -- Note: if an inline function is used (s.timer:Start(3,function() print("hi") end)), then each call will
 -- start a new timer; it uses the function as a key to which timer to restart
 
@@ -16,7 +16,7 @@ local frame = CreateFrame("Frame")
 frame:Hide()
 
 -- a function waiting to run will have its duration reset when the timer is restarted
-function rematch.timer:Start(duration,func,arg1,arg2,arg3)
+function rematchRedux.timer:Start(duration,func,arg1,arg2,arg3)
     assert(type(func)=="function" and type(duration)=="number","Invalid timer start.")
     isRunning[func] = true
     times[func] = duration
@@ -30,7 +30,7 @@ function rematch.timer:Start(duration,func,arg1,arg2,arg3)
 end
 
 -- stops the timer for a waiting function
-function rematch.timer:Stop(func)
+function rematchRedux.timer:Stop(func)
     if isRunning[func] then
         isRunning[func] = nil
         for i=#running,1,-1 do
@@ -65,6 +65,6 @@ frame:SetScript("OnUpdate",function(self,elapsed)
 end)
 
 -- returns true/false if the given function is on a timer waiting to run
-function rematch.timer:IsRunning(func)
+function rematchRedux.timer:IsRunning(func)
     return isRunning[func] and true or false
 end

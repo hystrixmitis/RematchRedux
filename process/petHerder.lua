@@ -1,18 +1,18 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.petHerder = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.petHerder = {}
 
 -- one of "cage", "favorite", "leveling", "marker:1"-"marker:8" and "marker:0"
 local actionID
 
 -- sets dialog text based on whether an action chosen in the PetHerderPicker dialog
 local function updateDialogText()
-    local canvas = rematch.dialog.Canvas
-    local actionID = rematch.petHerder:GetActionID()
+    local canvas = rematchRedux.dialog.Canvas
+    local actionID = rematchRedux.petHerder:GetActionID()
     if actionID then
-        canvas.Text:SetText(rematch.utils:GetFormattedActionName(actionID))
+        canvas.Text:SetText(rematchRedux.utils:GetFormattedActionName(actionID))
         canvas.Text2:SetText(L["Now click on pets in the pet list to use this action on the pets"])
         canvas.Text2:SetTextColor(1,0.82,0)
         canvas.Help:SetTextColor(0.85,0.85,0.85)
@@ -24,9 +24,9 @@ local function updateDialogText()
     end
 end
 
-rematch.events:Register(rematch.petHerder,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.petHerder,"PLAYER_LOGIN",function(self)
 
-	rematch.dialog:Register("PetHerder",{
+	rematchRedux.dialog:Register("PetHerder",{
 		title = L["Pet Herder"],
 		accept = L["Done"],
 		layouts = {
@@ -36,9 +36,9 @@ rematch.events:Register(rematch.petHerder,"PLAYER_LOGIN",function(self)
 		refreshFunc = function(self,info,subject,firstRun)
 			if firstRun then
                 ClearCursor()
-				--rematch.layout:SummonView("pets")
+				--rematchRedux.layout:SummonView("pets")
                 updateDialogText()
-                rematch.petHerder:SetActionID(nil)
+                rematchRedux.petHerder:SetActionID(nil)
 				self.PetHerderPicker:Update()
 				self.CheckButton:SetText(L["Allow caging pets in a team"])
 				self.Help:SetText(L["When the cursor changes to a \124TInterface\\Cursor\\Crosshairs:16\124t over a pet, click the pet to use the chosen action"])
@@ -46,15 +46,15 @@ rematch.events:Register(rematch.petHerder,"PLAYER_LOGIN",function(self)
 		end,
 		changeFunc = function(self,info,subject)
             updateDialogText()
-			local actionID = rematch.petHerder:GetActionID()
-			local dialogLayout = rematch.dialog:GetOpenLayout()
+			local actionID = rematchRedux.petHerder:GetActionID()
+			local dialogLayout = rematchRedux.dialog:GetOpenLayout()
 			if actionID=="cage" and dialogLayout~="Cage" then
-				rematch.dialog:ChangeLayout("Cage")
+				rematchRedux.dialog:ChangeLayout("Cage")
 			elseif actionID~="cage" and dialogLayout~="Default" then
-				rematch.dialog:ChangeLayout("Default")
+				rematchRedux.dialog:ChangeLayout("Default")
 			else -- selecting/unselecting an action may change elements enough to need a resize
-				rematch.dialog:Resize()
-                rematch.frame:Update() -- also may need to show/hide badges
+				rematchRedux.dialog:Resize()
+                rematchRedux.frame:Update() -- also may need to show/hide badges
 			end
 		end,
 	})
@@ -62,28 +62,28 @@ rematch.events:Register(rematch.petHerder,"PLAYER_LOGIN",function(self)
 end)
 
 -- sets the local actionID (typically from PetHerderPicker dialog)
-function rematch.petHerder:SetActionID(newActionID)
+function rematchRedux.petHerder:SetActionID(newActionID)
     actionID = newActionID or nil
 end
 
 -- returns the action chosen in the PerHerderPicker dialog control (or nil if no action chosen)
-function rematch.petHerder:GetActionID()
+function rematchRedux.petHerder:GetActionID()
     return actionID
 end
 
 -- returns true if dialog is up and an action chosen
-function rematch.petHerder:IsTargeting()
-    return self:GetActionID() and rematch.dialog:GetOpenDialog()=="PetHerder"
+function rematchRedux.petHerder:IsTargeting()
+    return self:GetActionID() and rematchRedux.dialog:GetOpenDialog()=="PetHerder"
 end
 
 -- meant to be called in a pet's OnEnter (so there is a pet under the mouse), makes the crosshairs dimmed if
 -- the pet can't be targeted with the current action
-function rematch.petHerder:SetCursorForPetID(petID)
-    local actionID = rematch.petHerder:GetActionID()
-    local petInfo = rematch.petInfo:Fetch(petID)
+function rematchRedux.petHerder:SetCursorForPetID(petID)
+    local actionID = rematchRedux.petHerder:GetActionID()
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     if not petID then
         SetCursor(nil)
-    elseif (actionID=="leveling" and petInfo.isOwned and petInfo.canBattle and petInfo.level and petInfo.level<25) or (actionID=="cage" and petInfo.isOwned and petInfo.isTradable and not petInfo.isInjured and not petInfo.isSlotted and (not petInfo.inTeams or rematch.dialog.Canvas.CheckButton:GetChecked())) or (actionID=="favorite" and petInfo.idType=="pet") or (actionID=="marker:0" and petInfo.marker) or (actionID~="leveling" and actionID~="cage" and actionID~="favorite" and actionID~="marker:0") then
+    elseif (actionID=="leveling" and petInfo.isOwned and petInfo.canBattle and petInfo.level and petInfo.level<25) or (actionID=="cage" and petInfo.isOwned and petInfo.isTradable and not petInfo.isInjured and not petInfo.isSlotted and (not petInfo.inTeams or rematchRedux.dialog.Canvas.CheckButton:GetChecked())) or (actionID=="favorite" and petInfo.idType=="pet") or (actionID=="marker:0" and petInfo.marker) or (actionID~="leveling" and actionID~="cage" and actionID~="favorite" and actionID~="marker:0") then
         SetCursor("Interface\\Cursor\\Crosshairs")
     else
         SetCursor("Interface\\Cursor\\UnableCrosshairs")
@@ -91,9 +91,9 @@ function rematch.petHerder:SetCursorForPetID(petID)
 end
 
 -- called from the OnClick of a petID, performs the chosen action if there is one
-function rematch.petHerder:HerdPetID(petID)
-    local actionID = rematch.petHerder:GetActionID()
-    local petInfo = rematch.petInfo:Fetch(petID)
+function rematchRedux.petHerder:HerdPetID(petID)
+    local actionID = rematchRedux.petHerder:GetActionID()
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     local speciesID = petInfo.speciesID
 
     if not actionID or not petInfo.isValid then
@@ -114,7 +114,7 @@ function rematch.petHerder:HerdPetID(petID)
             warning = L["Slotted pets can't be caged"]
         elseif not petInfo.isTradable then
             warning = L["This pet is not tradable"]
-        elseif petInfo.inTeams and not rematch.dialog.Canvas.CheckButton:GetChecked() then
+        elseif petInfo.inTeams and not rematchRedux.dialog.Canvas.CheckButton:GetChecked() then
             warning = L["This pet is in a team"]
         else
             C_PetJournal.CagePetByID(petID)
@@ -132,10 +132,10 @@ function rematch.petHerder:HerdPetID(petID)
         elseif not (petInfo.isOwned and petInfo.canBattle and petInfo.level and petInfo.level<25) then
             warning = L["This pet can't level"]
         elseif petInfo.isLeveling then
-            rematch.queue:RemovePetID(petID)
+            rematchRedux.queue:RemovePetID(petID)
             needsUpdate = true
         else
-            rematch.queue:AddPetID(petID)
+            rematchRedux.queue:AddPetID(petID)
             needsUpdate = true
         end
     elseif actionID=="marker:0" and speciesID then
@@ -156,12 +156,12 @@ function rematch.petHerder:HerdPetID(petID)
 
     -- if an action couldn't be done and has a warning, show it as a tooltip at the cursor
     if warning then
-        rematch.tooltip:ShowSimpleTooltip(self,nil,warning,"cursor")            
+        rematchRedux.tooltip:ShowSimpleTooltip(self,nil,warning,"cursor")            
     end
     -- if an action requires an update to the pet list/queue/UI, udpate it
     if needsUpdate then
-        rematch.filters:ForceUpdate()
-        rematch.frame:Update()   
+        rematchRedux.filters:ForceUpdate()
+        rematchRedux.frame:Update()   
     end
 
 end

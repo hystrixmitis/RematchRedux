@@ -1,7 +1,7 @@
 <Ui>
     <Script file="dropdown.lua"/>
 
-    <Button name="RematchDropDownTemplate" mixin="RematchDropDownMixin" virtual="true">
+    <Button name="RematchReduxDropDownTemplate" mixin="RematchReduxDropDownMixin" virtual="true">
         <Size x="120" y="24"/> <!-- this should always be 24 tall -->
         <Layers>
             <Layer level="BACKGROUND">
@@ -65,7 +65,7 @@
     </Button>
 
     <!-- a ComboBox is a dropdown where the Text is an EditBox instead of a FontString -->
-    <Button name="RematchComboBoxTemplate" mixin="RematchDropDownMixin" virtual="true">
+    <Button name="RematchReduxComboBoxTemplate" mixin="RematchReduxDropDownMixin" virtual="true">
         <Size x="120" y="24"/> <!-- this should always be 24 tall -->
         <KeyValues>
             <KeyValue key="forComboBox" value="true" type="boolean"/>
@@ -115,7 +115,7 @@
         </Layers>
         <Frames>
             <!-- editbox for displaying the current dropdown choice/entering something else -->
-            <EditBox parentKey="Text" autoFocus="true" mixin="RematchEditBoxMixin">
+            <EditBox parentKey="Text" autoFocus="true" mixin="RematchReduxEditBoxMixin">
                 <TextInsets>
                     <AbsInset left="2" right="20" top="1" bottom="-1"/>
                 </TextInsets>
@@ -124,7 +124,7 @@
                     <Anchor point="BOTTOMRIGHT" x="-18" y="1"/>
                 </Anchors>
                 <Frames>
-                    <Button parentKey="Clear" inherits="RematchClearButtonTemplate" hidden="false">
+                    <Button parentKey="Clear" inherits="RematchReduxClearButtonTemplate" hidden="false">
                         <Anchors>
                             <Anchor point="RIGHT" x="-3" y="0"/>
                         </Anchors>

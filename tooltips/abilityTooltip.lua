@@ -1,23 +1,23 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.abilityTooltip = RematchAbilityTooltip
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.abilityTooltip = RematchReduxAbilityTooltip
 
-rematch.events:Register(rematch.abilityTooltip,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.abilityTooltip,"PLAYER_LOGIN",function(self)
 	local font,size,flag = self.Top.Name:GetFont()
 	self.Top.Name:SetFont(font,size+2,flag)
 
     self.Hints.StrongVs:SetText(L["Vs"])
     self.Hints.WeakVs:SetText(L["Vs"])
 
-    rematch.tooltipManager:AddBehavior(self) -- add delay behavior to the ability tooltip
+    rematchRedux.tooltipManager:AddBehavior(self) -- add delay behavior to the ability tooltip
 end)
 
 -- updates the content of the ability tooltip; petID needed because parsed description varies based on pet's stats
 -- returns true if a valid ability is shown
-function rematch.abilityTooltip:Update(petID,abilityID)
-    local petInfo = rematch.petInfo:Fetch(petID)
+function rematchRedux.abilityTooltip:Update(petID,abilityID)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     if petInfo.isSpecialType or not petInfo.abilityList or #petInfo.abilityList==0 or not abilityID then
         return -- leave if this isn't a pet with abilities or an ability isn't given
     end
@@ -123,15 +123,15 @@ function rematch.abilityTooltip:Update(petID,abilityID)
 end
 
 -- shows the ability tooltip for petID/abilityID anchored to anchorTo; with reference being the frame
--- to reference for which corner to anchor to (rematch.frame, rematch.dialog, etc.)
-function rematch.abilityTooltip:ShowTooltip(anchorTo,petID,abilityID,reference)
+-- to reference for which corner to anchor to (rematchRedux.frame, rematchRedux.dialog, etc.)
+function rematchRedux.abilityTooltip:ShowTooltip(anchorTo,petID,abilityID,reference)
     if not reference then
         reference = UIParent
     end
-    if rematch.abilityTooltip:Update(petID,abilityID) then
-        local corner,opposite = rematch.utils:GetCorner(rematch.utils:GetFrameForReference(reference),UIParent)
-        rematch.abilityTooltip:ClearAllPoints()
-        rematch.abilityTooltip:SetPoint(corner,anchorTo,opposite)
-        rematch.abilityTooltip:Show()
+    if rematchRedux.abilityTooltip:Update(petID,abilityID) then
+        local corner,opposite = rematchRedux.utils:GetCorner(rematchRedux.utils:GetFrameForReference(reference),UIParent)
+        rematchRedux.abilityTooltip:ClearAllPoints()
+        rematchRedux.abilityTooltip:SetPoint(corner,anchorTo,opposite)
+        rematchRedux.abilityTooltip:Show()
     end
 end

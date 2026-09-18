@@ -1,14 +1,14 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.savedGroups = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.savedGroups = {}
 
 --[[
     Groups were in settings in previous versions but is now mostly in its own savedvar Rematch5SavedGroups.
     (order of groupIDs is still in settings under settings.GroupOrder)
 
-    rematch.savedGroups[groupID] - {
+    rematchRedux.savedGroups[groupID] - {
         groupID = "group:0", -- unique identifier of the group (required and persistent)
         name = "",  -- name of the group (required, can be duplicate name)
         icon = "", -- icon for the group (not used right now; may come back if huge demand)
@@ -27,20 +27,20 @@ Rematch5SavedGroups = {} -- savedvar, unordered table of group definitions index
 -- returns the first unused groupID to be used as a unique indentifier
 local function getNewUniqueGroupID()
     local groupID = 1
-    while rematch.savedGroups["group:"..groupID] do
+    while rematchRedux.savedGroups["group:"..groupID] do
         groupID = groupID + 1
     end
     return "group:"..groupID
 end
 
--- rematch.savedGroups[groupID] will return the savedGroup
+-- rematchRedux.savedGroups[groupID] will return the savedGroup
 local function getter(self,groupID)
     if groupID then
         return Rematch5SavedGroups[groupID]
     end
 end
 
--- rematch.savedGroups[groupID] = {group} will copy the contents of {group} to rematch.savedGroups[groupID]
+-- rematchRedux.savedGroups[groupID] = {group} will copy the contents of {group} to rematchRedux.savedGroups[groupID]
 local function setter(self,groupID,value)
     if groupID=="group:favorites" or groupID=="group:none" then
         -- never set favorites or ungrouped teams (raw savedvar used when needed)
@@ -58,8 +58,8 @@ local function teamAlphaSort(e1,e2)
     elseif not e1 and e2 then
         return false
     end
-    local team1 = rematch.savedTeams[e1]
-    local team2 = rematch.savedTeams[e2]
+    local team1 = rematchRedux.savedTeams[e1]
+    local team2 = rematchRedux.savedTeams[e2]
     if team1 and not team2 then
         return true
     elseif not team1 and team2 then
@@ -88,8 +88,8 @@ local function teamWinSort(e1,e2)
     elseif not e1 and e2 then
         return false
     end
-    local team1 = rematch.savedTeams[e1]
-    local team2 = rematch.savedTeams[e2]
+    local team1 = rematchRedux.savedTeams[e1]
+    local team2 = rematchRedux.savedTeams[e2]
     if team1 and not team2 then
         return true
     elseif not team1 and team2 then
@@ -130,43 +130,43 @@ end
 
 --[[ public functions ]]
 
--- iterator for groups: for groupID,group in rematch.savedGroups:AllGroups()
-function rematch.savedGroups:AllGroups()
+-- iterator for groups: for groupID,group in rematchRedux.savedGroups:AllGroups()
+function rematchRedux.savedGroups:AllGroups()
     return next, Rematch5SavedGroups, nil
 end
 
 -- creates a new group with the given name (can be same name as another group, it will still be a new separate group)
-function rematch.savedGroups:Create(name)
+function rematchRedux.savedGroups:Create(name)
     name = name:trim()
     assert(type(name)=="string" and name:len()>0,"Created group must have a name.")
     local groupID = getNewUniqueGroupID()
     local group = {name=name, groupID=groupID, teams={}, sortMode=C.GROUP_SORT_ALPHA, isExpanded=true}
-    rematch.savedGroups[groupID] = group
+    rematchRedux.savedGroups[groupID] = group
     tinsert(settings.GroupOrder,groupID) -- add this new group to the group order
-    return rematch.savedGroups[groupID]
+    return rematchRedux.savedGroups[groupID]
 end
 
 -- deletes a groupID; if andTeams is true, delete teams in the group too
-function rematch.savedGroups:Delete(groupID,andTeams)
+function rematchRedux.savedGroups:Delete(groupID,andTeams)
     if groupID and groupID~="group:favorites" and groupID~="group:none" then
-        for teamID,team in rematch.savedTeams:AllTeams() do
+        for teamID,team in rematchRedux.savedTeams:AllTeams() do
             if team.groupID==groupID then
                 if andTeams then
-                    rematch.savedTeams[teamID] = nil
+                    rematchRedux.savedTeams[teamID] = nil
                 else
                     team.groupID = C.UNGROUPED_TEAMS_GROUPID
                 end
             end
         end
-        rematch.utils:TableRemoveByValue(settings.GroupOrder,groupID)
-        rematch.savedGroups[groupID] = nil
-        rematch.savedTeams:TeamsChanged()
+        rematchRedux.utils:TableRemoveByValue(settings.GroupOrder,groupID)
+        rematchRedux.savedGroups[groupID] = nil
+        rematchRedux.savedTeams:TeamsChanged()
     end
 end
 
 -- returns the groupID of the given name
-function rematch.savedGroups:GetGroupIDByName(name)
-    for groupID,group in rematch.savedGroups:AllGroups() do
+function rematchRedux.savedGroups:GetGroupIDByName(name)
+    for groupID,group in rematchRedux.savedGroups:AllGroups() do
         if name:lower()==group.name:lower() then
             return groupID
         end
@@ -174,7 +174,7 @@ function rematch.savedGroups:GetGroupIDByName(name)
 end
 
 -- confirms groups are properly set up and fixes any issues (called on login and should be called after a wipe/upgrade)
-function rematch.savedGroups:Validate()
+function rematchRedux.savedGroups:Validate()
     local savedvar = Rematch5SavedGroups
     if type(savedvar)~="table" then
         Rematch5SavedGroups = {}
@@ -204,10 +204,10 @@ end
 
 -- fills all group.teams with the teams belonging to the group and their order
 local teamsInGroups = {} -- lookup table for quickly knowing if a team is in a group
-function rematch.savedGroups:Update()
+function rematchRedux.savedGroups:Update()
 
     -- update teamsInGroups for quick lookups to avoid a bazillion tContains running
-    for groupID,group in rematch.savedGroups:AllGroups() do
+    for groupID,group in rematchRedux.savedGroups:AllGroups() do
         if not teamsInGroups[groupID] then
             teamsInGroups[groupID] = {}
         else
@@ -222,24 +222,24 @@ function rematch.savedGroups:Update()
     end
 
     -- put teams in the ordered list group.teams that are not there
-    for teamID,team in rematch.savedTeams:AllTeams() do
+    for teamID,team in rematchRedux.savedTeams:AllTeams() do
         local groupID = team.groupID
         -- if team is in a group that doesn't exist, move team to ungrouped teams group
-        if not groupID or not rematch.savedGroups[groupID] then
+        if not groupID or not rematchRedux.savedGroups[groupID] then
             team.groupID = "group:none"
             groupID = "group:none"
         end
         -- if team is not in group.teams list, add to end
         if not teamsInGroups[groupID][teamID] then
-            tinsert(rematch.savedGroups[groupID].teams,teamID)
+            tinsert(rematchRedux.savedGroups[groupID].teams,teamID)
             teamsInGroups[groupID][teamID] = true
         end
     end
 
     -- now go through and remove any team that doesn't belong in the group (deleted or moved)
-    for groupID,group in rematch.savedGroups:AllGroups() do
+    for groupID,group in rematchRedux.savedGroups:AllGroups() do
         for i=#group.teams,1,-1 do
-            local team = rematch.savedTeams[group.teams[i]]
+            local team = rematchRedux.savedTeams[group.teams[i]]
             if not team or team.groupID~=groupID then
                 tremove(group.teams,i)
             end
@@ -247,14 +247,14 @@ function rematch.savedGroups:Update()
     end
 
     -- sort all groups that had a change in teams
-    for groupID,group in rematch.savedGroups:AllGroups() do
-        rematch.savedGroups:Sort(groupID)
+    for groupID,group in rematchRedux.savedGroups:AllGroups() do
+        rematchRedux.savedGroups:Sort(groupID)
     end
 
     -- turn off showTab on all groups beyond MAX_TEAM_TABS
     local numShownTabs = 0
     for _,groupID in ipairs(settings.GroupOrder) do
-        local group = rematch.savedGroups[groupID]
+        local group = rematchRedux.savedGroups[groupID]
         if group then
             if group.showTab and numShownTabs < C.MAX_TEAM_TABS then
                 numShownTabs = numShownTabs + 1
@@ -267,8 +267,8 @@ function rematch.savedGroups:Update()
 end
 
 -- sorts the group.teams in the given groupID based on the group's sortMode:
-function rematch.savedGroups:Sort(groupID)
-    local group = groupID and rematch.savedGroups[groupID]
+function rematchRedux.savedGroups:Sort(groupID)
+    local group = groupID and rematchRedux.savedGroups[groupID]
     if group then
         if group.sortMode==C.GROUP_SORT_ALPHA then -- sort by name
             table.sort(group.teams,teamAlphaSort)
@@ -281,7 +281,7 @@ function rematch.savedGroups:Sort(groupID)
 end
 
 -- returns the number of groups with a showTab enabled
-function rematch.savedGroups:GetNumTeamTabs()
+function rematchRedux.savedGroups:GetNumTeamTabs()
     local count = 0
     for groupID,group in self:AllGroups() do
         if group.showTab then
@@ -292,19 +292,19 @@ function rematch.savedGroups:GetNumTeamTabs()
 end
 
 -- this wipes all groups
-function rematch.savedGroups:Wipe()
+function rematchRedux.savedGroups:Wipe()
     Rematch5SavedGroups = {}
     wipe(settings.GroupOrder)
     wipe(settings.ExpandedGroups)
-    rematch.savedGroups:Validate()
-    rematch.savedTeams:TeamsChanged()
+    rematchRedux.savedGroups:Validate()
+    rematchRedux.savedTeams:TeamsChanged()
 end
 
-setmetatable(rematch.savedGroups,{__index=getter,__newindex=setter})
+setmetatable(rematchRedux.savedGroups,{__index=getter,__newindex=setter})
 
 -- on login, build out savedGroups structure (make sure this is called first, before savedTeams
 -- tries to do anything with savedGroups)
-rematch.events:Register(rematch.savedGroups,"PLAYER_LOGIN",function(self)
-    rematch.savedGroups:Validate()
-    --rematch.savedGroups:Update() -- this is done in savedTeams startup
+rematchRedux.events:Register(rematchRedux.savedGroups,"PLAYER_LOGIN",function(self)
+    rematchRedux.savedGroups:Validate()
+    --rematchRedux.savedGroups:Update() -- this is done in savedTeams startup
 end)

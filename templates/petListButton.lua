@@ -1,95 +1,95 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
---[[ RematchCommonPetListButtonMixin for both normal and compact list buttons ]]
+--[[ RematchReduxCommonPetListButtonMixin for both normal and compact list buttons ]]
 
-RematchCommonPetListButtonMixin = {}
+RematchReduxCommonPetListButtonMixin = {}
 
-function RematchCommonPetListButtonMixin:OnEnter()
-    rematch.textureHighlight:Show(self.Back)
-    rematch.cardManager:OnEnter(rematch.petCard,self,self.petID)
+function RematchReduxCommonPetListButtonMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self.Back)
+    rematchRedux.cardManager:OnEnter(rematchRedux.petCard,self,self.petID)
     if self.forQueue then
-        local petID,canLevel = rematch.utils:GetPetCursorInfo(true)
+        local petID,canLevel = rematchRedux.utils:GetPetCursorInfo(true)
         if petID and not canLevel then
-            rematch.tooltip:ShowSimpleTooltip(self,nil,L["This pet cannot level.\n\nIt can't be added to the leveling queue."],"cursor")
+            rematchRedux.tooltip:ShowSimpleTooltip(self,nil,L["This pet cannot level.\n\nIt can't be added to the leveling queue."],"cursor")
         end
     end
     -- if pet herder is up and action chosen, then we're targeting a pet to do something
-    if rematch.petHerder:IsTargeting() then
-        rematch.petHerder:SetCursorForPetID(self.petID)
+    if rematchRedux.petHerder:IsTargeting() then
+        rematchRedux.petHerder:SetCursorForPetID(self.petID)
     end
 end
 
-function RematchCommonPetListButtonMixin:OnLeave()
-    rematch.textureHighlight:Hide()
+function RematchReduxCommonPetListButtonMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
     if GetMouseFoci()[1]~=self.Icon then -- don't dismiss card if moving onto pet button
-        rematch.cardManager:OnLeave(rematch.petCard,self,self.petID)
+        rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,self.petID)
     end
     SetCursor(nil)
-    rematch.dialog.Canvas.PetHerderPicker.petID = nil
-    rematch.tooltip:Hide()
+    rematchRedux.dialog.Canvas.PetHerderPicker.petID = nil
+    rematchRedux.tooltip:Hide()
 end
 
-function RematchCommonPetListButtonMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxCommonPetListButtonMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchCommonPetListButtonMixin:OnMouseUp(button)
+function RematchReduxCommonPetListButtonMixin:OnMouseUp(button)
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self.Back)
+        rematchRedux.textureHighlight:Show(self.Back)
     end
 end
 
-function RematchCommonPetListButtonMixin:OnClick(button)
-    if rematch.petHerder:IsTargeting() then -- targeting with pet herder takes priority on clicks
+function RematchReduxCommonPetListButtonMixin:OnClick(button)
+    if rematchRedux.petHerder:IsTargeting() then -- targeting with pet herder takes priority on clicks
         if button=="RightButton" then
-            rematch.dialog:Hide()
+            rematchRedux.dialog:Hide()
         else
-            rematch.petHerder:HerdPetID(self.petID)
+            rematchRedux.petHerder:HerdPetID(self.petID)
         end
-    elseif rematch.petInfo:Fetch(self.petID).needsFanfare then -- for wrapped pets, show pet card (maximized)
+    elseif rematchRedux.petInfo:Fetch(self.petID).needsFanfare then -- for wrapped pets, show pet card (maximized)
         if settings.PetCardMinimized then
             settings.PetCardMinimized = false
-            rematch.petCard:Configure()
-            rematch.petCard:Update()
+            rematchRedux.petCard:Configure()
+            rematchRedux.petCard:Update()
         end
-        rematch.cardManager:OnClick(rematch.petCard,self,self.petID)
+        rematchRedux.cardManager:OnClick(rematchRedux.petCard,self,self.petID)
     elseif button=="RightButton" and not self.noPickup then -- on right-click summon menu
-        rematch.menus:Show("PetMenu",self,self.petID,"cursor")
+        rematchRedux.menus:Show("PetMenu",self,self.petID,"cursor")
     else -- all else show/lock/unlock card
-        rematch.cardManager:OnClick(rematch.petCard,self,self.petID)
+        rematchRedux.cardManager:OnClick(rematchRedux.petCard,self,self.petID)
     end
 end
 
-function RematchCommonPetListButtonMixin:OnDoubleClick()
+function RematchReduxCommonPetListButtonMixin:OnDoubleClick()
     if self.forQueue and settings.QueueDoubleClick then
-        local oldIndex = rematch.queue:GetPetIndex(self.petID)
+        local oldIndex = rematchRedux.queue:GetPetIndex(self.petID)
         if oldIndex and #settings.LevelingQueue>1 then
-            rematch.queue:MoveIndex(oldIndex,1)
-            rematch.queue:BlingPetID(self.petID)
+            rematchRedux.queue:MoveIndex(oldIndex,1)
+            rematchRedux.queue:BlingPetID(self.petID)
         end
-        rematch.petCard:Hide()
-    elseif not settings.NoSummonOnDblClick and rematch.petInfo:Fetch(self.petID).isOwned then
+        rematchRedux.petCard:Hide()
+    elseif not settings.NoSummonOnDblClick and rematchRedux.petInfo:Fetch(self.petID).isOwned then
         C_PetJournal.SummonPetByGUID(self.petID)
-        rematch.petCard:Hide()
+        rematchRedux.petCard:Hide()
     end
 end
 
-function RematchCommonPetListButtonMixin:OnDragStart()
-    local petInfo = rematch.petInfo:Fetch(self.petID)
+function RematchReduxCommonPetListButtonMixin:OnDragStart()
+    local petInfo = rematchRedux.petInfo:Fetch(self.petID)
     if petInfo.isOwned and petInfo.idType=="pet" and not self.noPickup then
         C_PetJournal.PickupPet(self.petID)
     end
 end
 
---[[ RematchNormalPetListButtonMixin for normal list buttons ]]
+--[[ RematchReduxNormalPetListButtonMixin for normal list buttons ]]
 
-RematchNormalPetListButtonMixin = {}
+RematchReduxNormalPetListButtonMixin = {}
 
-function RematchNormalPetListButtonMixin:Fill(petID,dim)
-    local petInfo = rematch.petInfo:Fetch(petID)
+function RematchReduxNormalPetListButtonMixin:Fill(petID,dim)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     self.petID = petID
     local notesWidth, breedWidth = 0,0
     local tint = dim and "grey" or petInfo.tint
@@ -104,7 +104,7 @@ function RematchNormalPetListButtonMixin:Fill(petID,dim)
 		local y = floor((petType-1)/4)*0.25
         self.TypeDecal:SetTexCoord(x,x+0.25,y,y+0.171875)
         self.TypeDecal:Show()
-        rematch.utils:TintTexture(self.TypeDecal,tint)
+        rematchRedux.utils:TintTexture(self.TypeDecal,tint)
     else
         self.TypeDecal:Hide()
     end
@@ -130,7 +130,7 @@ function RematchNormalPetListButtonMixin:Fill(petID,dim)
 
     -- place badges
     local badgeXoff = -1-notesWidth -- right xoffset is depending on notes shown
-    local badgesWidth = rematch.badges:AddBadges(self.Badges,"pets",petID,"TOPRIGHT",self,"TOPRIGHT",badgeXoff,-8,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(self.Badges,"pets",petID,"TOPRIGHT",self,"TOPRIGHT",badgeXoff,-8,-1)
 
     local left = 50 -- in normal mode, names begin 50px from left due to icon and a little padding for level bubble
     local right = -(4 + max(notesWidth+badgesWidth,breedWidth))
@@ -166,12 +166,12 @@ function RematchNormalPetListButtonMixin:Fill(petID,dim)
     end
 end
 
---[[ RematchCompactPetListButtonMixin for compact list buttons ]]
+--[[ RematchReduxCompactPetListButtonMixin for compact list buttons ]]
 
-RematchCompactPetListButtonMixin = {}
+RematchReduxCompactPetListButtonMixin = {}
 
-function RematchCompactPetListButtonMixin:Fill(petID,dim)
-    local petInfo = rematch.petInfo:Fetch(petID)
+function RematchReduxCompactPetListButtonMixin:Fill(petID,dim)
+    local petInfo = rematchRedux.petInfo:Fetch(petID)
     self.petID = petID
     local right = -37 -- offset from right edge for name/badges
     local tint = dim and "grey" or petInfo.tint
@@ -187,7 +187,7 @@ function RematchCompactPetListButtonMixin:Fill(petID,dim)
 		local y = floor((petType-1)/4)*0.25
         self.TypeDecal:SetTexCoord(x,x+0.25,y,y+0.171875)
         self.TypeDecal:Show()
-        rematch.utils:TintTexture(self.TypeDecal,tint)
+        rematchRedux.utils:TintTexture(self.TypeDecal,tint)
     else
         self.TypeDecal:Hide()
     end
@@ -212,7 +212,7 @@ function RematchCompactPetListButtonMixin:Fill(petID,dim)
 
     -- place badges
     local badgeXoff = right -- right xoffset is depending on notes shown
-    local badgesWidth = rematch.badges:AddBadges(self.Badges,"pets",petID,"TOPRIGHT",self,"TOPRIGHT",badgeXoff,-7,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(self.Badges,"pets",petID,"TOPRIGHT",self,"TOPRIGHT",badgeXoff,-7,-1)
 
     right = right - badgesWidth
 
@@ -232,51 +232,51 @@ function RematchCompactPetListButtonMixin:Fill(petID,dim)
     end
 end
 
---[[ RematchPetPickupIconMixin ]]
+--[[ RematchReduxPetPickupIconMixin ]]
 
-RematchPetPickupIconMixin = {}
+RematchReduxPetPickupIconMixin = {}
 
-function RematchPetPickupIconMixin:OnEnter()
-    rematch.textureHighlight:Show(self,self:GetParent().Back)
-    rematch.cardManager:OnEnter(rematch.petCard,self:GetParent(),self.petID)
+function RematchReduxPetPickupIconMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self,self:GetParent().Back)
+    rematchRedux.cardManager:OnEnter(rematchRedux.petCard,self:GetParent(),self.petID)
 end
 
-function RematchPetPickupIconMixin:OnLeave()
-    rematch.textureHighlight:Hide()
+function RematchReduxPetPickupIconMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
     if GetMouseFoci()[1]~=self:GetParent() then -- don't dismiss card if moving onto pet button
-        rematch.cardManager:OnLeave(rematch.petCard,self:GetParent(),self.petID)
+        rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self:GetParent(),self.petID)
     end
     -- if mouse went down while in this texture and never went up before it left, pet is being dragged
-    if rematch.textureDrag:IsDragging() and not GetCursorInfo() then
+    if rematchRedux.textureDrag:IsDragging() and not GetCursorInfo() then
         C_PetJournal.PickupPet(self.petID)
     end
 end
 
-function RematchPetPickupIconMixin:OnMouseDown(button)
-    rematch.textureHighlight:Hide()
+function RematchReduxPetPickupIconMixin:OnMouseDown(button)
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchPetPickupIconMixin:OnMouseUp(button)
+function RematchReduxPetPickupIconMixin:OnMouseUp(button)
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self,self:GetParent().Back)
+        rematchRedux.textureHighlight:Show(self,self:GetParent().Back)
         local parent = self:GetParent()
         local petID = parent.petID
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
 
         -- if pet is wrapped, then show/lock card to unwrap it
         if petInfo.needsFanfare then
             if settings.PetCardMinimized then
                 settings.PetCardMinimized = false
-                rematch.petCard:Configure()
-                rematch.petCard:Update()
+                rematchRedux.petCard:Configure()
+                rematchRedux.petCard:Update()
             end
-            rematch.cardManager:OnClick(rematch.petCard,self,self.petID)
+            rematchRedux.cardManager:OnClick(rematchRedux.petCard,self,self.petID)
             return
         end
 
         -- special case for dropping a pet onto a queue pet icon with a pet on cursor
-        if not rematch.textureDrag:IsDragging() then
-            local cursorPetID,cursorCanLevel = rematch.utils:GetPetCursorInfo(true)
+        if not rematchRedux.textureDrag:IsDragging() then
+            local cursorPetID,cursorCanLevel = rematchRedux.utils:GetPetCursorInfo(true)
             if parent.forQueue and cursorPetID and cursorCanLevel then
                 parent.OnReceiveDrag(parent)
                 return
@@ -284,10 +284,10 @@ function RematchPetPickupIconMixin:OnMouseUp(button)
         end
 
         if button=="RightButton" and not self.noPickup then -- on right-click summon menu
-            rematch.menus:Show(self:GetParent().forQueue and "QueueListMenu" or "PetMenu",self,petID,"cursor")
+            rematchRedux.menus:Show(self:GetParent().forQueue and "QueueListMenu" or "PetMenu",self,petID,"cursor")
         elseif petInfo.isOwned and petInfo.idType=="pet" and not self:GetParent().noPickup then
             -- ordinarily handled in card manager clicks: if casting leveling/rarity stone or shift-clicking pet
-            if rematch.utils:HandleSpecialPetClicks(petID) then
+            if rematchRedux.utils:HandleSpecialPetClicks(petID) then
                 return
             end
             C_PetJournal.PickupPet(petID)

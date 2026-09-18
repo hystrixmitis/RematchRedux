@@ -1,6 +1,6 @@
 <Ui>
 
-    <Frame parentKey="ToolBar" parent="RematchFrame" inherits="InsetFrameTemplate">
+    <Frame parentKey="ToolBar" parent="RematchReduxFrame" inherits="InsetFrameTemplate">
         <Frames>
             <!-- total pets button at left of toolbar-->
             <Button parentKey="TotalsButton">
@@ -122,7 +122,7 @@
 				</Frames>
             </Frame>
             <!-- toolbar buttons on right side of toolbar; anchored during config -->
-            <Button parentKey="HealButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="HealButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="HealButton"/>
                     <KeyValue key="icon" value="Interface\Icons\spell_misc_petheal"/>
@@ -132,7 +132,7 @@
 					<Attribute name="spell" value="125439"/>
 				</Attributes>
             </Button>
-            <Button parentKey="BandageButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="BandageButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="BandageButton"/>
                     <KeyValue key="icon" value="Interface\Icons\inv_misc_bandage_05"/>
@@ -142,7 +142,7 @@
 					<Attribute name="item" value="item:86143"/>
 				</Attributes>
             </Button>
-            <Button parentKey="SafariHatButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="SafariHatButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="SafariHatButton"/>
                     <KeyValue key="icon" value="Interface\Icons\inv_helm_cloth_petsafari_a_01"/>
@@ -189,7 +189,7 @@
 					</Frame>
 				</Frames>
             </Button>
-            <Button parentKey="LesserPetTreatButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="LesserPetTreatButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="LesserPetTreatButton"/>
                     <KeyValue key="icon" value="Interface\Icons\inv_misc_food_53"/>
@@ -199,7 +199,7 @@
 					<Attribute name="item" value="item:98112"/>
 				</Attributes>
             </Button>
-            <Button parentKey="PetTreatButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="PetTreatButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="PetTreatButton"/>
                     <KeyValue key="icon" value="Interface\Icons\inv_misc_food_65"/>
@@ -209,7 +209,7 @@
 					<Attribute name="item" value="item:98114"/>
 				</Attributes>
             </Button>
-            <Button parentKey="LevelingStoneButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="LevelingStoneButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="LevelingStoneButton"/>
                     <KeyValue key="icon" value="Interface\ICONS\Icon_UpgradeStone_legendary"/>
@@ -219,7 +219,7 @@
 					<Attribute name="item" value="item:116429"/>
 				</Attributes>
             </Button>
-            <Button parentKey="RarityStoneButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="RarityStoneButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="RarityStoneButton"/>
                     <KeyValue key="icon" value="Interface\ICONS\Icon_UpgradeStone_Rare"/>
@@ -229,23 +229,23 @@
 					<Attribute name="item" value="item:98715"/>
 				</Attributes>
             </Button>
-            <Button parentKey="ImportTeamButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="ImportTeamButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="ImportTeamButton"/>
                     <KeyValue key="icon" value="Interface\ICONS\Ability_Vehicle_LoadSelfCatapult"/>
                     <KeyValue key="tooltipTitle" value="Import Teams"/>
-                    <KeyValue key="tooltipBody" value="Import a single team or many teams that were exported from Rematch."/>
+                    <KeyValue key="tooltipBody" value="Import a single team or many teams that were exported from RematchRedux."/>
                 </KeyValues>
             </Button>
-            <Button parentKey="ExportTeamButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="ExportTeamButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="ExportTeamButton"/>
                     <KeyValue key="icon" value="Interface\ICONS\Ability_Vehicle_PlayerLoaded"/>
                     <KeyValue key="tooltipTitle" value="Export Teams"/>
-                    <KeyValue key="tooltipBody" value="Export the loaded team for sharing with others or later importing back into Rematch."/>
+                    <KeyValue key="tooltipBody" value="Export the loaded team for sharing with others or later importing back into RematchRedux."/>
                 </KeyValues>
             </Button>
-            <Button parentKey="SaveAsButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="SaveAsButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="SaveAsButton"/>
                     <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\save"/>
@@ -253,7 +253,7 @@
                     <KeyValue key="tooltipBody" value="Save the currently loaded pets to a new team."/>
                 </KeyValues>
             </Button>
-            <Button parentKey="RandomTeamButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="RandomTeamButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="RandomTeamButton"/>
                     <KeyValue key="icon" value="Interface\Icons\INV_Misc_Dice_01"/>
@@ -262,13 +262,13 @@
                     <!-- <KeyValue key="alwaysUpdate" value="true" type="boolean"/> -->
                 </KeyValues>
             </Button>
-            <Button parentKey="SummonPetButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="SummonPetButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="SummonPetButton"/>
                     <KeyValue key="icon" value="Interface\Icons\INV_Pet_Achievement_CaptureAPetFromEachFamily_Battle"/>
                 </KeyValues>
             </Button>
-            <Button parentKey="FindBattleButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="FindBattleButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="FindBattleButton"/>
                     <KeyValue key="icon" value="Interface\Icons\PetBattle_Attack"/>
@@ -276,7 +276,7 @@
                     <KeyValue key="tooltipBody" value="BATTLE_PETS_FIND_BATTLE_TOOLTIP"/>
                 </KeyValues>
             </Button>
-            <Button parentKey="PetSatchelButton" parentArray="Buttons" inherits="RematchToolbarButtonTemplate">
+            <Button parentKey="PetSatchelButton" parentArray="Buttons" inherits="RematchReduxToolbarButtonTemplate">
                 <KeyValues>
                     <KeyValue key="button" value="PetSatchelButton"/>
                     <KeyValue key="icon" value="Interface\Icons\inv_misc_bag_cenarionherbbag"/>

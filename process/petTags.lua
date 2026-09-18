@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.petTags = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.petTags = {}
 
 --[[
    A PetTag is a short string to describe a pet and its abilities.
@@ -32,7 +32,7 @@ rematch.petTags = {}
       ZU:  Unknown
 
    For leveling queue:
-   - To create a tag for a leveling queue pet: rematch.petTags:Create(petID,true)
+   - To create a tag for a leveling queue pet: rematchRedux.petTags:Create(petID,true)
    - The first character of the tag is always 'Q', the second is the level and third is rarity.
    - The preferred pet for the queue is the first pet at that level and rarity or higher, up to
      and including level 24.
@@ -44,15 +44,15 @@ local tagInfo = {} -- reused for generating new tags or parsing tags
 -- petID can be a journal petID, speciesID, leveling, ignored or random pet
 -- abilities can be abilityIDs or a number 0, 1 or 2
 -- if first ability is 'Q', then this tag is for the leveling queue
-function rematch.petTags:Create(petID,...)
-   local petInfo = rematch.petInfo:Fetch(petID)
+function rematchRedux.petTags:Create(petID,...)
+   local petInfo = rematchRedux.petInfo:Fetch(petID)
    -- add abilities to tag
    if petInfo.speciesID and petInfo.isValid then
       wipe(tagInfo)
       if select(1,...)=="Q" then -- this pet is for the queue
          tinsert(tagInfo,"Q")
-         tinsert(tagInfo,rematch.utils:ToBase32(petInfo.level or 0))
-         tinsert(tagInfo,rematch.utils:ToBase32(petInfo.rarity or 0))
+         tinsert(tagInfo,rematchRedux.utils:ToBase32(petInfo.level or 0))
+         tinsert(tagInfo,rematchRedux.utils:ToBase32(petInfo.rarity or 0))
       else -- this pet is not for the queue, populate abilities
          for i=1,3 do
             local abilityID = floor(select(i,...) or 0)
@@ -70,9 +70,9 @@ function rematch.petTags:Create(petID,...)
          end
       end
       -- add breed to tag (or 0 if no breed)
-      tinsert(tagInfo,rematch.utils:ToBase32(petInfo.breedID or 0))
+      tinsert(tagInfo,rematchRedux.utils:ToBase32(petInfo.breedID or 0))
       -- add speciesID to tag
-      tinsert(tagInfo,rematch.utils:ToBase32(petInfo.speciesID))
+      tinsert(tagInfo,rematchRedux.utils:ToBase32(petInfo.speciesID))
       -- return final tag
       return table.concat(tagInfo,"")
    elseif petInfo.idType=="leveling" then
@@ -80,20 +80,20 @@ function rematch.petTags:Create(petID,...)
    elseif petInfo.idType=="ignored" then
       return "ZI" -- ignored slot
    elseif petInfo.idType=="random" then
-      return "ZR"..(rematch.utils:ToBase32(petInfo.petType or 0)) -- random pet
+      return "ZR"..(rematchRedux.utils:ToBase32(petInfo.petType or 0)) -- random pet
    elseif petInfo.idType=="unnotable" then
-      return "ZN"..(rematch.utils:ToBase32(petInfo.npcID or 0)) -- unnotable pet
+      return "ZN"..(rematchRedux.utils:ToBase32(petInfo.npcID or 0)) -- unnotable pet
    end
    -- if we reached here, this pet can't be turned into a tag
    return "ZU" -- unknown
 end
 
 -- returns the three abilityIDs in the tag, if defined; abilityID 0 is undefined
-function rematch.petTags:GetAbilities(tag)
-   local speciesID = rematch.petTags:GetSpecies(tag)
+function rematchRedux.petTags:GetAbilities(tag)
+   local speciesID = rematchRedux.petTags:GetSpecies(tag)
    if speciesID then
       wipe(tagInfo)
-      local petInfo = rematch.altInfo:Fetch(speciesID)
+      local petInfo = rematchRedux.altInfo:Fetch(speciesID)
       for i=1,3 do
          local abilityOffset = tonumber(tag:sub(i,i),32)
          if abilityOffset==1 or abilityOffset==2 then
@@ -107,7 +107,7 @@ function rematch.petTags:GetAbilities(tag)
 end
 
 -- returns the species in the tag, if defined (may be nil for leveling, ignored or random)
-function rematch.petTags:GetSpecies(tag)
+function rematchRedux.petTags:GetSpecies(tag)
    if type(tag)=="string" then
       return tonumber(tag:sub(5,-1),32)
    end
@@ -115,7 +115,7 @@ end
 
 -- returns the best-matched collected petID from the tag, that's not one of the given notPetIDs,
 -- or the speciesID or special petID (0, "ignored", "random:x") if not a collected pet
-function rematch.petTags:FindPetID(tag,excludePetIDs)
+function rematchRedux.petTags:FindPetID(tag,excludePetIDs)
 
    if type(tag)~="string" then
       return -- all tags are string, no petID
@@ -126,18 +126,18 @@ function rematch.petTags:FindPetID(tag,excludePetIDs)
    elseif tag:match("^ZR%w") then
       return "random:"..tonumber(tag:match("^ZR(%w+)"),32)
    else -- this is a full tag
-      local speciesID = rematch.petTags:GetSpecies(tag)
+      local speciesID = rematchRedux.petTags:GetSpecies(tag)
       if not speciesID then
          return
       end
       -- first see if there's either 0 or 1 copy of this speciesID
-      local petInfo = rematch.petInfo:Fetch(speciesID)
+      local petInfo = rematchRedux.petInfo:Fetch(speciesID)
       if not petInfo.isValid then
          return -- this is not a valid pet
       elseif petInfo.count==0 then
          return speciesID -- pet is not collected
       elseif petInfo.count==1 then
-         local speciesPetIDs = rematch.roster:GetSpeciesPetIDs(speciesID)
+         local speciesPetIDs = rematchRedux.roster:GetSpeciesPetIDs(speciesID)
          local petID = speciesPetIDs and speciesPetIDs[1]
          --local _,petID = C_PetJournal.FindPetIDByName(petInfo.speciesName)
          if petID and (petID~=noPetID1 and petID~=noPetID1 and petID~=noPetID1) then
@@ -161,9 +161,9 @@ function rematch.petTags:FindPetID(tag,excludePetIDs)
       local bestPetID
       local bestWeight = 0
       -- now look for a pet that's at least minLevel and minRarity and at most maxLevel
-      for _,petID in ipairs(rematch.roster:GetSpeciesPetIDs(speciesID)) do
+      for _,petID in ipairs(rematchRedux.roster:GetSpeciesPetIDs(speciesID)) do
          if not excludePetIDs or not excludePetIDs[petID] then
-            local petInfo = rematch.petInfo:Fetch(petID)
+            local petInfo = rematchRedux.petInfo:Fetch(petID)
             if petInfo.level and petInfo.level>=minLevel and petInfo.level<=maxLevel and petInfo.rarity and petInfo.rarity>=minRarity and petInfo.canBattle then
                -- if we reached here, this petID is not an excluded pet and it also meets the level and rarity requirements
                -- now calculate a weight of this pet and replace the bestPetID if the weight is better

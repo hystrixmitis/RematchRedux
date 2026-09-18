@@ -1,6 +1,6 @@
 <Ui>
 
-    <Button name="RematchMinimapButton" parent="Minimap" toplevel="true" frameStrata="HIGH" registerForClicks="AnyUp" registerForDrag="LeftButton" hidden="true">
+    <Button name="RematchReduxMinimapButton" parent="Minimap" toplevel="true" frameStrata="HIGH" registerForClicks="AnyUp" registerForDrag="LeftButton" hidden="true">
         <Size x="31" y="31"/>
         <Anchors>
             <Anchor point="CENTER"/>

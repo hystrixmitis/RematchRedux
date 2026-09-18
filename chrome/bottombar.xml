@@ -1,32 +1,32 @@
 <Ui>
-    <Frame parentKey="BottomBar" parent="RematchFrame">
+    <Frame parentKey="BottomBar" parent="RematchReduxFrame">
         <Frames>
-            <Button parentKey="SummonButton" inherits="RematchPanelButtonTemplate,RematchTooltipScripts">
+            <Button parentKey="SummonButton" inherits="RematchReduxPanelButtonTemplate,RematchReduxTooltipScripts">
                 <Size x="120" y="23"/>
                 <Anchors>
                     <Anchor point="BOTTOMLEFT"/>
                 </Anchors>
             </Button>
-            <Button parentKey="FindBattleButton" inherits="RematchPanelButtonTemplate,RematchTooltipScripts">
+            <Button parentKey="FindBattleButton" inherits="RematchReduxPanelButtonTemplate,RematchReduxTooltipScripts">
                 <Size x="120" y="23"/>
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT"/>
                 </Anchors>
             </Button>
-            <Button parentKey="SaveAsButton" inherits="RematchPanelButtonTemplate,RematchTooltipScripts">
+            <Button parentKey="SaveAsButton" inherits="RematchReduxPanelButtonTemplate,RematchReduxTooltipScripts">
                 <Size x="120" y="23"/>
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT" relativeKey="$parent.FindBattleButton" relativePoint="BOTTOMLEFT"/>
                 </Anchors>
             </Button>
-            <Button parentKey="SaveButton" inherits="RematchPanelButtonTemplate,RematchTooltipScripts">
+            <Button parentKey="SaveButton" inherits="RematchReduxPanelButtonTemplate,RematchReduxTooltipScripts">
                 <Size x="120" y="23"/>
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT" relativeKey="$parent.SaveAsButton" relativePoint="BOTTOMLEFT"/>
                 </Anchors>
             </Button>
 
-            <CheckButton parentKey="UseRematchCheckButton" inherits="RematchCheckButtonTemplate,RematchTooltipScripts">
+            <CheckButton parentKey="UseRematchReduxCheckButton" inherits="RematchReduxCheckButtonTemplate,RematchReduxTooltipScripts">
                 <Anchors>
                     <Anchor point="LEFT" relativeKey="$parent.SummonButton" relativePoint="RIGHT" x="0" y="0"/>
                 </Anchors>

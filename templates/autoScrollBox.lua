@@ -1,6 +1,6 @@
-local _,rematch = ...
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
 --[[
     Wrapper for Blizzard's recently expanded ScrollBox control with support for expanding/collapsing headers,
@@ -102,10 +102,10 @@ local selectFrames = {} -- indexed by autoscrollbox(self), unordered {selectName
 
 local allLists = {} -- lookup table of all AutoScrollBox frames that get set up (indexed by autoscrollbox)
 
-RematchAutoScrollBoxMixin = {}
+RematchReduxAutoScrollBoxMixin = {}
 
 -- sets up the scrollbox definition, view, factories and data provider; this should be called only once
-function RematchAutoScrollBoxMixin:Setup(definition)
+function RematchReduxAutoScrollBoxMixin:Setup(definition)
     -- some verification that necessities are defined
     assert(type(definition)=="table","Invalid AutoScrollBox definition table")
     assert(type(definition.allData)=="table","Missing allData for AutoScrollBox")
@@ -133,10 +133,10 @@ function RematchAutoScrollBoxMixin:Setup(definition)
         self.searchBox:SetScript("OnTextChanged",function(editBox) -- note editBox rather than self; keeping self reference to AutoScrollBox
             local text = editBox:GetText()
             local newMask
-            if text and text:match(rematch.constants.PET_ID_PATTERN) then
+            if text and text:match(rematchRedux.constants.PET_ID_PATTERN) then
                 newMask = text -- special case if search is a petID (Battle-0-000000000000), don't desensitize it
             else
-                newMask = rematch.utils:DesensitizeText(text)
+                newMask = rematchRedux.utils:DesensitizeText(text)
             end
             if newMask~=self.searchMask then
                 self.searchMask = newMask
@@ -193,7 +193,7 @@ function RematchAutoScrollBoxMixin:Setup(definition)
 end
 
 -- updates the scrollbox to reflect both the contents of allData and the header/search effect if any
-function RematchAutoScrollBoxMixin:Update()
+function RematchReduxAutoScrollBoxMixin:Update()
     -- first clear the CaptureButton; we don't know how far the list extends yet
     self.CaptureButton:ClearAllPoints()
     self.CaptureButton:Hide()
@@ -227,7 +227,7 @@ function RematchAutoScrollBoxMixin:Update()
 end
 
 -- if any list has a speed set, all lists are set to the same speed
-function RematchAutoScrollBoxMixin:SetSpeed(speed)
+function RematchReduxAutoScrollBoxMixin:SetSpeed(speed)
     if speed==C.MOUSE_SPEED_SLOW or speed==C.MOUSE_SPEED_NORMAL or speed==C.MOUSE_SPEED_MEDIUM or speed==C.MOUSE_SPEED_FAST then
         settings.MousewheelSpeed = speed
     else
@@ -239,13 +239,13 @@ function RematchAutoScrollBoxMixin:SetSpeed(speed)
 end
 
 -- returns true if the list has enough content that it's scrollable
-function RematchAutoScrollBoxMixin:IsScrollable()
+function RematchReduxAutoScrollBoxMixin:IsScrollable()
     return self.ScrollBar:HasScrollableExtent()
 end
 
 -- for lists that aren't scrollable, get the last displayed listbutton (for drag/drop interactions with CaptureButton)
 -- (when the list is full and scrollable this is the last defined button that's visible--but may be off edge of bottom)
-function RematchAutoScrollBoxMixin:GetLastListButton()
+function RematchReduxAutoScrollBoxMixin:GetLastListButton()
     local frames = self.ScrollBox:GetFrames()
     for i=#frames,1,-1 do
         if frames[i]:IsVisible() then
@@ -257,7 +257,7 @@ end
 -- refreshes the contents of the visible buttons; this is intended for select/unselecting and
 -- other minor interactions with the scrollbox. if any data may change or scrolling happen, use
 -- autoscrollbox:Update() instead
-function RematchAutoScrollBoxMixin:Refresh()
+function RematchReduxAutoScrollBoxMixin:Refresh()
     for _,frame in ipairs(self.ScrollBox:GetFrames()) do
         local data = frame.data
         if not frame:IsVisible() or not data then
@@ -285,24 +285,24 @@ function RematchAutoScrollBoxMixin:Refresh()
 end
 
 -- locks headers so they can't be expanded/collapsed
-function RematchAutoScrollBoxMixin:LockHeaders()
+function RematchReduxAutoScrollBoxMixin:LockHeaders()
     self.headersLocked = true
     self:Refresh()
 end
 
 -- unlocks headers so they can be expanded/collapsed
-function RematchAutoScrollBoxMixin:UnlockHeaders()
+function RematchReduxAutoScrollBoxMixin:UnlockHeaders()
     self.headersLocked = false
     self:Refresh()
 end
 
 -- returns current lock state of headers
-function RematchAutoScrollBoxMixin:IsHeadersLocked()
+function RematchReduxAutoScrollBoxMixin:IsHeadersLocked()
     return self.headersLocked
 end
 
 -- changes to/from normal and compact modes (rebuilds view too)
-function RematchAutoScrollBoxMixin:SetCompactMode(isCompact)
+function RematchReduxAutoScrollBoxMixin:SetCompactMode(isCompact)
     local newCompact = isCompact and true or false
     if self:GetCompactMode()~=newCompact then -- only need to change if value is different
         self.isCompact = newCompact
@@ -312,14 +312,14 @@ function RematchAutoScrollBoxMixin:SetCompactMode(isCompact)
 end
 
 -- gets the current compact mode
-function RematchAutoScrollBoxMixin:GetCompactMode()
+function RematchReduxAutoScrollBoxMixin:GetCompactMode()
     return self.isCompact and true or false
 end
 
 -- this expands a header and scrolls it to the top, clearing search if any happening;
 -- the calling function should also clear the searchbox if it has instructions/other stuff
 -- collapseOthers will collapse all other headers
-function RematchAutoScrollBoxMixin:ExpandHeader(data,collapseOthers)
+function RematchReduxAutoScrollBoxMixin:ExpandHeader(data,collapseOthers)
     if not self:IsHeadersLocked() and self.expandedHeaders and self.headerCriteria(self,data) then
         -- clear search
         self.searchMask = ""
@@ -339,7 +339,7 @@ function RematchAutoScrollBoxMixin:ExpandHeader(data,collapseOthers)
 end
 
 -- toggles the given header and updates the list if expandedHeaders was defined
-function RematchAutoScrollBoxMixin:ToggleHeader(data)
+function RematchReduxAutoScrollBoxMixin:ToggleHeader(data)
     if self.expandedHeaders and not self:IsSearching() and not self:IsHeadersLocked() and self.headerCriteria(self,data) then
         self.expandedHeaders[data] = not self.expandedHeaders[data] or nil -- toggle true/nil
         self:Update()
@@ -350,7 +350,7 @@ function RematchAutoScrollBoxMixin:ToggleHeader(data)
 end
 
 -- collapses or expands all headers in self.expandedHeaders and updates the list
-function RematchAutoScrollBoxMixin:ToggleAllHeaders()
+function RematchReduxAutoScrollBoxMixin:ToggleAllHeaders()
     if self.expandedHeaders and not self:IsSearching() and not self:IsHeadersLocked() then
         if self:IsAnyExpanded() then
             wipe(self.expandedHeaders)
@@ -366,7 +366,7 @@ function RematchAutoScrollBoxMixin:ToggleAllHeaders()
 end
 
 -- collapses all  headers
-function RematchAutoScrollBoxMixin:CollapseAllHeaders(noUpdate)
+function RematchReduxAutoScrollBoxMixin:CollapseAllHeaders(noUpdate)
     if self.expandedHeaders and next(self.expandedHeaders) then
         wipe(self.expandedHeaders)
         if not noRefresh then
@@ -376,12 +376,12 @@ function RematchAutoScrollBoxMixin:CollapseAllHeaders(noUpdate)
 end
 
 -- collapses all headers except for the one that contains data (expands if not expanded), and keeps data in view
-function RematchAutoScrollBoxMixin:CollapseAllButData(data)
+function RematchReduxAutoScrollBoxMixin:CollapseAllButData(data)
     if self.expandedHeaders then
         -- first verify if anything needs done
         local expandedCount = 0
         local expandedData
-        if rematch.utils:GetSize(self.expandedHeaders)==1 then -- if only one header expanded
+        if rematchRedux.utils:GetSize(self.expandedHeaders)==1 then -- if only one header expanded
             for _,atData in ipairs(self.displayData) do
                 if atData==data then -- and data is within that expanded header
                     return -- then our work is done, leave
@@ -410,23 +410,23 @@ function RematchAutoScrollBoxMixin:CollapseAllButData(data)
 end
 
 -- returns true if the given data is an expanded header
-function RematchAutoScrollBoxMixin:IsHeaderExpanded(data)
+function RematchReduxAutoScrollBoxMixin:IsHeaderExpanded(data)
     return self.expandedHeaders and self.expandedHeaders[data] or false
 end
 
 -- returns true if at least one header is expanded
-function RematchAutoScrollBoxMixin:IsAnyExpanded()
+function RematchReduxAutoScrollBoxMixin:IsAnyExpanded()
     return next(self.expandedHeaders) and true or false
 end
 
 -- returns true if a search is in progress (non-empty mask and there's a searchHit function)
-function RematchAutoScrollBoxMixin:IsSearching()
+function RematchReduxAutoScrollBoxMixin:IsSearching()
     return self.searchMask and self.searchHit and self.searchMask~="" and not disableSearch
 end
 
 -- puts the named select onto the button that contains data, if any (or clears if none or it's not in view)
 -- when the list is going to be updated by the calling function already, noRefresh = true to skip the refresh
-function RematchAutoScrollBoxMixin:Select(name,data,noRefresh)
+function RematchReduxAutoScrollBoxMixin:Select(name,data,noRefresh)
     local selectFrame = selectFrames[self] and selectFrames[self][name]
     if selectFrame and selectFrame.data~=data then
         selectFrame.data = data
@@ -437,7 +437,7 @@ function RematchAutoScrollBoxMixin:Select(name,data,noRefresh)
 end
 
 -- returns the data currently selected for the named select
-function RematchAutoScrollBoxMixin:GetSelected(name)
+function RematchReduxAutoScrollBoxMixin:GetSelected(name)
     local selectFrame = selectFrames[self] and selectFrames[self][name]
     if selectFrame then
         return selectFrame.data
@@ -445,13 +445,13 @@ function RematchAutoScrollBoxMixin:GetSelected(name)
 end
 
 -- creates or updates a selectFrame of the given properties, to use with autoscrollbox:Select(name,data)
-function RematchAutoScrollBoxMixin:SetupSelect(name,def)
+function RematchReduxAutoScrollBoxMixin:SetupSelect(name,def)
     assert(type(name)=="string" and type(def)=="table","Invalid AutoScrollBox SetupSelect")
     if not selectFrames[self] then
         selectFrames[self] = {}
     end
     if name and not selectFrames[self][name] then
-        selectFrames[self][name] = CreateFrame("Frame",nil,self,def.tint and "RematchAutoScrollBoxTintTemplate" or "RematchAutoScrollBoxSelectTemplate")
+        selectFrames[self][name] = CreateFrame("Frame",nil,self,def.tint and "RematchReduxAutoScrollBoxTintTemplate" or "RematchReduxAutoScrollBoxSelectTemplate")
     end
     local selectFrame = selectFrames[self][name]
     -- color is {red,greem,blue[,alpha]}
@@ -496,12 +496,12 @@ function RematchAutoScrollBoxMixin:SetupSelect(name,def)
 end
 
 -- scrolls to the top of the list
-function RematchAutoScrollBoxMixin:ScrollToTop()
+function RematchReduxAutoScrollBoxMixin:ScrollToTop()
     self.ScrollBox:ScrollToOffset(0,floor(self:GetHeight()+0.5))
 end
 
 -- scrolls the list so that the given data is at top
-function RematchAutoScrollBoxMixin:ScrollDataToTop(data)
+function RematchReduxAutoScrollBoxMixin:ScrollDataToTop(data)
     local height = 0
     for index,atData in ipairs(self.displayData) do
         if atData==data then
@@ -514,7 +514,7 @@ end
 
 -- if a header is not within the frame, or its contents extend beyond the bottom of the frame, scroll the header
 -- up until contents are in view or the header is at the top of the frame
-function RematchAutoScrollBoxMixin:ScrollHeaderIntoView(data)
+function RematchReduxAutoScrollBoxMixin:ScrollHeaderIntoView(data)
     if not data or not self.headerCriteria or not self.headerCriteria(self,data) then
         return -- data isn't a header, get out of here
     end
@@ -562,7 +562,7 @@ function RematchAutoScrollBoxMixin:ScrollHeaderIntoView(data)
 end
 
 -- if the data is not already in view, scroll it into view, potentially expanding the header it's in if so
-function RematchAutoScrollBoxMixin:ScrollDataIntoView(data)
+function RematchReduxAutoScrollBoxMixin:ScrollDataIntoView(data)
     -- first if this is a header, use ScrollHeaderIntoView instead (so if expanded it will bring contents up too)
     if self.headerCriteria and self.headerCriteria(self,data) then
         self:ScrollHeaderIntoView(data)
@@ -604,7 +604,7 @@ function RematchAutoScrollBoxMixin:ScrollDataIntoView(data)
 end
 
 -- flashes a list button by moving the Bling frame
-function RematchAutoScrollBoxMixin:BlingData(data)
+function RematchReduxAutoScrollBoxMixin:BlingData(data)
     if not self:IsDataVisible(data) then
         self:ScrollDataIntoView(data) -- first scroll it into view if it's not visible
     end
@@ -626,7 +626,7 @@ function RematchAutoScrollBoxMixin:BlingData(data)
 end
 
 -- returns true if the data is in the visible list (one of the displayed list buttons contains data)
-function RematchAutoScrollBoxMixin:IsDataVisible(data)
+function RematchReduxAutoScrollBoxMixin:IsDataVisible(data)
     for _,frame in pairs(self.ScrollBox:GetFrames()) do
         if frame.data==data and frame:IsVisible() then
             return true -- data is visible
@@ -636,7 +636,7 @@ function RematchAutoScrollBoxMixin:IsDataVisible(data)
 end
 
 -- alternate form of IsDataInVisible that also returns data about where it is
-function RematchAutoScrollBoxMixin:IsDataInView(data)
+function RematchReduxAutoScrollBoxMixin:IsDataInView(data)
     local height = 0 -- running total offset from top
     local frameHeight = floor(self:GetHeight() + 0.5)
     -- define top/bottom boundry
@@ -657,7 +657,7 @@ function RematchAutoScrollBoxMixin:IsDataInView(data)
 end
 
 -- returns the frame data is in, if it's visible
-function RematchAutoScrollBoxMixin:GetDataFrame(data)
+function RematchReduxAutoScrollBoxMixin:GetDataFrame(data)
     for _,frame in pairs(self.ScrollBox:GetFrames()) do
         if frame.data==data and frame:IsVisible() then
             return frame
@@ -667,16 +667,16 @@ end
 
 --[[ scroll to end button mixin ]]
 
-RematchAutoScrollBoxScrollToEndMixin = {}
+RematchReduxAutoScrollBoxScrollToEndMixin = {}
 
-function RematchAutoScrollBoxScrollToEndMixin:OnMouseDown()
+function RematchReduxAutoScrollBoxScrollToEndMixin:OnMouseDown()
     if not self.isDisabled then
         self.Texture:SetTexCoord(0,1,0.5,1)
         self.Highlight:SetTexCoord(0,1,0.5,1)
     end
 end
 
-function RematchAutoScrollBoxScrollToEndMixin:OnMouseUp()
+function RematchReduxAutoScrollBoxScrollToEndMixin:OnMouseUp()
     if not self.isDisabled then
         self.Texture:SetTexCoord(0,1,0,0.5)
         self.Highlight:SetTexCoord(0,1,0,0.5)
@@ -684,14 +684,14 @@ function RematchAutoScrollBoxScrollToEndMixin:OnMouseUp()
 end
 
 -- self.scrollMethod should be "ScrollToBegin" or "ScrollToEnd", the ScrollBox method to scroll to top/bottom
-function RematchAutoScrollBoxScrollToEndMixin:OnClick(button)
+function RematchReduxAutoScrollBoxScrollToEndMixin:OnClick(button)
     local scrollBox = self:GetParent().ScrollBox
     scrollBox[self.scrollMethod](scrollBox)
     PlaySound(SOUNDKIT.IG_CHAT_BOTTOM)
 end
 
 -- to minimize work since this can be called many times while scrolling, this only does work if button needs enabled
-function RematchAutoScrollBoxScrollToEndMixin:SetToEnable()
+function RematchReduxAutoScrollBoxScrollToEndMixin:SetToEnable()
     if self.isDisabled then
         self.isDisabled = false
         self:GetScript("OnMouseUp")(self)
@@ -702,7 +702,7 @@ function RematchAutoScrollBoxScrollToEndMixin:SetToEnable()
 end
 
 -- to minimize work since this can be called many times while scrolling, this only does work if button needs disabled
-function RematchAutoScrollBoxScrollToEndMixin:SetToDisable()
+function RematchReduxAutoScrollBoxScrollToEndMixin:SetToDisable()
     if not self.isDisabled then
         self:GetScript("OnMouseUp")(self)
         self:SetAlpha(0.5)

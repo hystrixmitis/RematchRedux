@@ -1,11 +1,11 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
 --[[
 
-    Rematch refers to pets as a single number or string, depending on their context. This reference,
+    RematchRedux refers to pets as a single number or string, depending on their context. This reference,
     called a petID, can be one of nine idTypes:
 
         idType      example petID value    description
@@ -113,9 +113,9 @@ local settings = rematch.settings
     If a separate petInfo is needed (such as doing a comparison of one pet against another), then you can
     create a new petInfo with a :Create() from any other petInfo:
 
-        local myPetInfo = rematch.petInfo:Create()
+        local myPetInfo = rematchRedux.petInfo:Create()
 
-    At the end of this file, rematch.altInfo is created as an alternative to rematch.petInfo for this purpose.
+    At the end of this file, rematchRedux.altInfo is created as an alternative to rematchRedux.petInfo for this purpose.
 
     How it works:
 
@@ -143,7 +143,7 @@ local settings = rematch.settings
 ]]
 
 
--- if an alternate petInfo needs made, use: local altInfo = rematch.petInfo:Create()
+-- if an alternate petInfo needs made, use: local altInfo = rematchRedux.petInfo:Create()
 
 local GetPetInfoByPetID = C_PetJournal.GetPetInfoByPetID
 local GetPetInfoBySpeciesID = C_PetJournal.GetPetInfoBySpeciesID
@@ -264,7 +264,7 @@ function funcs:Stats()
     self.power = power
     self.speed = speed
     if rarity then
-        self.color = rematch.utils:GetRarityColor(rarity-1)
+        self.color = rematchRedux.utils:GetRarityColor(rarity-1)
     end
 end
 
@@ -423,7 +423,7 @@ end
 
 -- the breed of an owned pet in the journal, a link or in battle
 function funcs:Breed()
-    local source = rematch.breedInfo:GetBreedSource()
+    local source = rematchRedux.breedInfo:GetBreedSource()
     local idType = self.idType
     if source and self.isValid and self.canBattle and (idType=="pet" or idType=="link" or idType=="battle") then
         local breedID,breedName
@@ -447,7 +447,7 @@ function funcs:Breed()
             breedName = self.numPossibleBreeds==0 and "NEW" or "???"
         end
         self.breedID = breedID
-        self.breedName = breedName or rematch.breedInfo:GetBreedNameByID(breedID)
+        self.breedName = breedName or rematchRedux.breedInfo:GetBreedNameByID(breedID)
         self.hasBreed = true
     else
         self.hasBreed = false
@@ -460,7 +460,7 @@ function funcs:PossibleBreeds()
     local possibleBreedNames = reusedTables[self].possibleBreedNames
     wipe(possibleBreedIDs)
     wipe(possibleBreedNames)
-    local source = rematch.breedInfo:GetBreedSource()
+    local source = rematchRedux.breedInfo:GetBreedSource()
     local speciesID = self.speciesID
     if source and type(speciesID)=="number" and self.canBattle then
         local data -- table to contain possible breeds
@@ -476,7 +476,7 @@ function funcs:PossibleBreeds()
         if data and type(data)=="table" then
             for _,breed in ipairs(data) do
                 tinsert(possibleBreedIDs,breed)
-                tinsert(possibleBreedNames,rematch.breedInfo:GetBreedNameByID(breed))
+                tinsert(possibleBreedNames,rematchRedux.breedInfo:GetBreedNameByID(breed))
             end
         end
         self.possibleBreedIDs = possibleBreedIDs
@@ -496,12 +496,12 @@ end
 
 -- isSpeciesAt25 is true if there's a version of this pet's species at level 25
 function funcs:SpeciesAt25()
-    self.isSpeciesAt25 = rematch.collectionInfo:IsSpeciesAt25(self.speciesID)
+    self.isSpeciesAt25 = rematchRedux.collectionInfo:IsSpeciesAt25(self.speciesID)
 end
 
 -- isMovesetAt25 is true if there's a pet of any species with this moveset at level 25
 function funcs:MovesetAt25()
-    self.isMovesetAt25 = rematch.collectionInfo:IsMovesetAt25(self.moveset)
+    self.isMovesetAt25 = rematchRedux.collectionInfo:IsMovesetAt25(self.moveset)
 end
 
 function funcs:Notes()
@@ -512,7 +512,7 @@ end
 
 -- sets expansionID and expansionName to describe the expansion the pet is from
 function funcs:Expansion()
-    local expansionID = rematch.speciesInfo:GetExpansion(self.speciesID)
+    local expansionID = rematchRedux.speciesInfo:GetExpansion(self.speciesID)
     if expansionID then
         self.expansionID = expansionID
         self.expansionName = _G["EXPANSION_NAME"..expansionID]
@@ -521,12 +521,12 @@ end
 
 -- sourceID is 1=Drop, 2=Quest, 3=Vendor, etc.
 function funcs:Source()
-    self.sourceID = rematch.speciesInfo:GetSourceID(self.speciesID)
+    self.sourceID = rematchRedux.speciesInfo:GetSourceID(self.speciesID)
 end
 
 -- whether the petID is in a team and how many teams
 function funcs:Teams()
-    local numTeams = rematch.savedTeams and rematch.savedTeams:GetNumTeamsWithPet(self.petID) or 0
+    local numTeams = rematchRedux.savedTeams and rematchRedux.savedTeams:GetNumTeamsWithPet(self.petID) or 0
     self.inTeams = numTeams > 0
     self.numTeams = numTeams
 end
@@ -564,7 +564,7 @@ end
 -- true/false if pet is in the leveling queue
 -- note: if queue is mid-process, this is unreliable; check the settings.LevelingQueue then
 function funcs:IsLeveling()
-    self.isLeveling = rematch.queue:IsPetLeveling(self.petID)
+    self.isLeveling = rematchRedux.queue:IsPetLeveling(self.petID)
 end
 
 -- returns the pet name with color codes
@@ -578,7 +578,7 @@ function funcs:FormattedName()
 end
 
 function funcs:Stickied()
-    self.isStickied = rematch.sort:IsPetIDStickied(self.petID)
+    self.isStickied = rematchRedux.sort:IsPetIDStickied(self.petID)
 end
 
 ------------------------------------------------------------------------------------------------
@@ -662,7 +662,7 @@ function fillInfoByPetID(self,petID)
     self.customName = customName
     self.speciesName = speciesName
     -- canBattle can be false for GetPetInfoByPetID when it can be true for GetPetInfoBySpeciesID (/sigh)
-    canBattle = rematch.speciesInfo:CanBattle(speciesID)
+    canBattle = rematchRedux.speciesInfo:CanBattle(speciesID)
     if canBattle then -- only define level and xp for pets that can battle
         self.level = level
         self.xp = xp
@@ -687,7 +687,7 @@ function fillInfoBySpeciesID(self,speciesID)
     self.speciesID = speciesID
     self.icon = icon
     if not self.icon then
-        self.icon = C.REMATCH_ICON
+        self.icon = C.REMATCHREDUX_ICON
     end
 end
 
@@ -765,7 +765,7 @@ function lookup(self,stat)
     return rawget(self,stat) -- and return the value now, either already cached or just-pulled value
 end
 
--- creates a new petInfo if needed (rematch.petInfo is the primary one. rematch.petInfo (or any
+-- creates a new petInfo if needed (rematchRedux.petInfo is the primary one. rematchRedux.petInfo (or any
 -- petInfo can spawn a new one with petInfo:Create()))
 function create()
     local info = {}
@@ -786,6 +786,6 @@ function create()
 end
 
 -- create the main petInfo used throughout the addon
-rematch.petInfo = create()
+rematchRedux.petInfo = create()
 -- creating an alternate one in case we need to fetch two concurrently (comparing others)
-rematch.altInfo = rematch.petInfo:Create()
+rematchRedux.altInfo = rematchRedux.petInfo:Create()
