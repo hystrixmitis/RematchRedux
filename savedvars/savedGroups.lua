@@ -5,7 +5,7 @@ local settings = rematchRedux.settings
 rematchRedux.savedGroups = {}
 
 --[[
-    Groups were in settings in previous versions but is now mostly in its own savedvar Rematch5SavedGroups.
+    Groups were in settings in previous versions but is now mostly in its own savedvar RematchReduxSavedGroups.
     (order of groupIDs is still in settings under settings.GroupOrder)
 
     rematchRedux.savedGroups[groupID] - {
@@ -20,7 +20,7 @@ rematchRedux.savedGroups = {}
     }
 ]]
 
-Rematch5SavedGroups = {} -- savedvar, unordered table of group definitions indexed by groupID
+RematchReduxSavedGroups = {} -- savedvar, unordered table of group definitions indexed by groupID
 
 --[[ local functions ]]
 
@@ -36,7 +36,7 @@ end
 -- rematchRedux.savedGroups[groupID] will return the savedGroup
 local function getter(self,groupID)
     if groupID then
-        return Rematch5SavedGroups[groupID]
+        return RematchReduxSavedGroups[groupID]
     end
 end
 
@@ -45,9 +45,9 @@ local function setter(self,groupID,value)
     if groupID=="group:favorites" or groupID=="group:none" then
         -- never set favorites or ungrouped teams (raw savedvar used when needed)
     elseif groupID and type(value)=="nil" then
-        Rematch5SavedGroups[groupID] = nil -- deleting a group
+        RematchReduxSavedGroups[groupID] = nil -- deleting a group
     elseif groupID and type(groupID)=="string" and type(value)=="table" and value.groupID==groupID then
-        Rematch5SavedGroups[groupID] = CopyTable(value) -- creating a group
+        RematchReduxSavedGroups[groupID] = CopyTable(value) -- creating a group
     end
 end
 
@@ -132,7 +132,7 @@ end
 
 -- iterator for groups: for groupID,group in rematchRedux.savedGroups:AllGroups()
 function rematchRedux.savedGroups:AllGroups()
-    return next, Rematch5SavedGroups, nil
+    return next, RematchReduxSavedGroups, nil
 end
 
 -- creates a new group with the given name (can be same name as another group, it will still be a new separate group)
@@ -175,10 +175,10 @@ end
 
 -- confirms groups are properly set up and fixes any issues (called on login and should be called after a wipe/upgrade)
 function rematchRedux.savedGroups:Validate()
-    local savedvar = Rematch5SavedGroups
+    local savedvar = RematchReduxSavedGroups
     if type(savedvar)~="table" then
-        Rematch5SavedGroups = {}
-        savedvar = Rematch5SavedGroups
+        RematchReduxSavedGroups = {}
+        savedvar = RematchReduxSavedGroups
     end
     local group = savedvar["group:favorites"]
     if not group or group.groupID~="group:favorites" or group.name~=L["Favorite Teams"] then
@@ -293,7 +293,7 @@ end
 
 -- this wipes all groups
 function rematchRedux.savedGroups:Wipe()
-    Rematch5SavedGroups = {}
+    RematchReduxSavedGroups = {}
     wipe(settings.GroupOrder)
     wipe(settings.ExpandedGroups)
     rematchRedux.savedGroups:Validate()

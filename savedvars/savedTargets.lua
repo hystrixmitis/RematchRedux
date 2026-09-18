@@ -21,11 +21,11 @@ rematchRedux.savedTargets = {}
     (Use rematchRedux.targetInfo to get information about a targetID)
 ]]
 
-Rematch5SavedTargets = {} -- savedvar indexed by targetID, an ordered list of teamIDs for this target
+RematchReduxSavedTargets = {} -- savedvar indexed by targetID, an ordered list of teamIDs for this target
 
 -- iterator for targets: for targetID,teams in rematchRedux.savedTargets:AllTargets()
 function rematchRedux.savedTargets:AllTargets()
-    return next, Rematch5SavedTargets, nil
+    return next, RematchReduxSavedTargets, nil
 end
 
 -- fills all savedTargets with teamIDs picked up from savedTeams
@@ -115,16 +115,16 @@ function rematchRedux.savedTargets:Set(targetID,newTeams)
     end
     -- update savedvar, bypassing setter
     if #newTeams==0 then -- the new teams has no targets, removed savedTargets
-        Rematch5SavedTargets[targetID] = nil
+        RematchReduxSavedTargets[targetID] = nil
     else -- otherwise update savedTargets with new teams without using locked-down setter
         -- create a savedvar for target if one doesn't already exist
-        if not Rematch5SavedTargets[targetID] then
-            Rematch5SavedTargets[targetID] = {}
+        if not RematchReduxSavedTargets[targetID] then
+            RematchReduxSavedTargets[targetID] = {}
         end
         -- then copy newTeams to the savedvar (preserver order)
-        wipe(Rematch5SavedTargets[targetID])
+        wipe(RematchReduxSavedTargets[targetID])
         for _,teamID in ipairs(newTeams) do
-            tinsert(Rematch5SavedTargets[targetID],teamID)
+            tinsert(RematchReduxSavedTargets[targetID],teamID)
         end
     end
     -- finally, do a TeamsChanged so everything is ensured to be in sync
@@ -139,7 +139,7 @@ function rematchRedux.savedTargets:GetTeams(targetID)
     if type(targetID)=="string" then
         targetID = rematchRedux.targetInfo:GetNpcID(targetID)
     end
-    local teams = targetID and Rematch5SavedTargets[targetID]
+    local teams = targetID and RematchReduxSavedTargets[targetID]
     if not teams then
         return nil -- this target has no teams, return nothing
     elseif (#teams==1 or not settings.InteractPreferUninjured) and teams[1] and rematchRedux.savedTeams[teams[1]] then
@@ -170,7 +170,7 @@ function rematchRedux.savedTargets:GetTeams(targetID)
     end
 end
 
--- getting a rematchRedux.savedTargets[npcID] will return the Rematch5SavedTargets for that npcID
+-- getting a rematchRedux.savedTargets[npcID] will return the RematchReduxSavedTargets for that npcID
 local function getter(self,targetID)
     -- for quickly looking up whether a target has a saved tean it uses npcID, but lists use target:npcID; convert target:npcID to just the numeric npcID if so
     if type(targetID)=="string" then
@@ -179,8 +179,8 @@ local function getter(self,targetID)
             targetID = npcID
         end
     end
-    if Rematch5SavedTargets[targetID] then
-        return Rematch5SavedTargets[targetID]
+    if RematchReduxSavedTargets[targetID] then
+        return RematchReduxSavedTargets[targetID]
     else
         return rawget(self,targetID)
     end
@@ -189,7 +189,7 @@ end
 -- rematchRedux.savedTargets[x] should only ever assign an empty table or nil; all other changes to savedTargets should be through Update or Set
 local function setter(self,targetID,value)
     if not value or (type(value)=="table" and not next(value)) then
-        Rematch5SavedTargets[targetID] = value
+        RematchReduxSavedTargets[targetID] = value
     end
 end
 

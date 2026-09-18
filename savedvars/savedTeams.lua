@@ -25,7 +25,7 @@ rematchRedux.savedTeams = {}
 
 ]]
 
-Rematch5SavedTeams = {} -- actual savedvar for the teams (don't reference this directly)
+RematchReduxSavedTeams = {} -- actual savedvar for the teams (don't reference this directly)
 
 -- some teams are not a savedvar but can be used/referenced like one and serve a special role
 local metaTeams = {
@@ -37,15 +37,13 @@ local metaTeams = {
     counter = {teamID="counter",name=C.COUNTER_TEAM_NAME,pets={},tags={}}, -- for random counter teams from target panel
 }
 
--- indexed by petID, the count of teams that contain the petID (updated in updatePets())
-local numPetsByTeamID = {}
--- indexed by team name, the teamID that has the name
-local teamIDsByName = {}
--- number of teams (updated during afterTeamsChange)
-local numTeams = 0
+
+local numPetsByTeamID = {} -- indexed by petID, the count of teams that contain the petID (updated in updatePets())
+local teamIDsByName = {} -- indexed by team name, the teamID that has the name
+local numTeams = 0 -- number of teams (updated during afterTeamsChange)
 
 -- ordered list of team events and the args to pass when they fire at the end of afterTeamsChanged
-dispatch = {}
+local eventQueue = {}
 
 --[[ local functions ]]
 
@@ -99,7 +97,7 @@ end
 -- returns an unused team:<number> for use as a unique teamID
 local function getNewUniqueTeamID()
     local teamID = 1
-    while Rematch5SavedTeams["team:"..teamID] do
+    while RematchReduxSavedTeams["team:"..teamID] do
         teamID = teamID + 1
     end
     return "team:"..teamID
@@ -110,7 +108,7 @@ local function getter(self,key)
     if metaTeams[key] then
         return metaTeams[key]
     else -- every other teamID should be a number
-        return Rematch5SavedTeams[key] -- otherwise returns the savedvar team of the given temID
+        return RematchReduxSavedTeams[key] -- otherwise returns the savedvar team of the given temID
     end
 end
 
@@ -123,17 +121,17 @@ local function setter(self,key,value)
         if metaTeams[key] then -- if nil'ing a metateam, empty it but don't nil it
             copyTeam(metaTeams.empty,metaTeams[key])
         else -- otherwise nil the saved team
-            Rematch5SavedTeams[key] = nil
-            tinsert(dispatch,{"REMATCHREDUX_TEAM_DELETED",key})
+            RematchReduxSavedTeams[key] = nil
+            tinsert(eventQueue,{"REMATCHREDUX_TEAM_DELETED",key})
             rematchRedux.savedTeams:TeamsChanged()
         end
     elseif validateTeamStructure(value) then -- if assigning another team to this team
         value.name = value.name:trim()
         if metaTeams[key] then -- if setting a metaTeam value, then copy the team
             copyTeam(value,metaTeams[key])
-        elseif Rematch5SavedTeams[key] then -- team already exists, replace contents
-            copyTeam(value,Rematch5SavedTeams[key])
-            tinsert(dispatch,{"REMATCHREDUX_TEAM_UPDATED",key})
+        elseif RematchReduxSavedTeams[key] then -- team already exists, replace contents
+            copyTeam(value,RematchReduxSavedTeams[key])
+            tinsert(eventQueue,{"REMATCHREDUX_TEAM_UPDATED",key})
             rematchRedux.savedTeams:TeamsChanged()
         end
     end
@@ -177,11 +175,11 @@ local function afterTeamsChanged()
     updatePets()
     updateNames()
     -- if any REMATCHREDUX_TEAM_CREATED, REMATCHREDUX_TEAM_DELETED, REMATCHREDUX_TEAM_UPDATED events are waiting to fire them, fire them here
-    if #dispatch>0 then
-        for _,info in ipairs(dispatch) do
+    if #eventQueue>0 then
+        for _,info in ipairs(eventQueue) do
             rematchRedux.events:Fire(info[1],info[2],info[3],info[4])
         end
-        wipe(dispatch)
+        wipe(eventQueue)
     end
     -- and then fire a generic REMATCHREDUX_TEAMS_CHANGED
     rematchRedux.events:Fire("REMATCHREDUX_TEAMS_CHANGED")
@@ -194,7 +192,7 @@ end
 
 -- iterator for all teams (a normal loop over rematchRedux.savedTeams is a loop over a near-empty table with just a couple functions)
 function rematchRedux.savedTeams:AllTeams()
-    return next, Rematch5SavedTeams, nil
+    return next, RematchReduxSavedTeams, nil
 end
 
 -- empties a metateam ("sideline" or "temporary")
@@ -205,7 +203,7 @@ function rematchRedux.savedTeams:Reset(teamID)
     copyTeam(metaTeams.empty,metaTeams[teamID])
 end
 
--- constructor for a new team; creates a new teamID in Rematch5SavedTeams from the sideline team
+-- constructor for a new team; creates a new teamID in RematchReduxSavedTeams from the sideline team
 function rematchRedux.savedTeams:Create()
     local sideline = metaTeams.sideline
     assert(sideline,"Sideline team is malformed. Can't create a new team.")
@@ -224,8 +222,8 @@ function rematchRedux.savedTeams:Create()
         team.groupID = "group:none"
     end
     -- and save
-    Rematch5SavedTeams[team.teamID] = team
-    tinsert(dispatch,{"REMATCHREDUX_TEAM_CREATED",team.teamID})
+    RematchReduxSavedTeams[team.teamID] = team
+    tinsert(eventQueue,{"REMATCHREDUX_TEAM_CREATED",team.teamID})
     rematchRedux.savedTeams:TeamsChanged()
     return team
 end
@@ -301,8 +299,8 @@ end
 
 -- deletes all teams
 function rematchRedux.savedTeams:Wipe()
-    Rematch5SavedTeams = {}
-    tinsert(dispatch,{"REMATCHREDUX_TEAMS_WIPED"})
+    RematchReduxSavedTeams = {}
+    tinsert(eventQueue,{"REMATCHREDUX_TEAMS_WIPED"})
     rematchRedux.savedTeams:TeamsChanged()
 end
 
@@ -326,6 +324,6 @@ setmetatable(rematchRedux.savedTeams,{__index=getter,__newindex=setter})
 
 -- after pets are loaded (this fires from roster), do housekeeping (roster will already call ValidateAllTeams)
 rematchRedux.events:Register(rematchRedux.savedTeams,"REMATCHREDUX_PETS_LOADED",function()
-    tinsert(dispatch,{"REMATCHREDUX_TEAMS_READY"})
+    tinsert(eventQueue,{"REMATCHREDUX_TEAMS_READY"})
     rematchRedux.savedTeams:TeamsChanged()
 end)
