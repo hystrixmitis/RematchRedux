@@ -1,22 +1,10 @@
 local _, rematchRedux = ...
 local defaultSettings = rematchRedux.defaultSettings
-rematchRedux.settings = {}
+rematchRedux.settings = {} -- permanently empty shell; never reassigned again
 
 _G.RematchReduxSettings = {} -- actual savedvar
 
--- returns a copy of the defaults at the top of this file (only creates one copy for session to reduce overhead)
--- We declare it first so the rematchRedux.settings.GetDefaults assignment operates on the proper table, not a copy of the table. 
--- This is important because the settings table is used to store the actual savedvar, and we want to make sure
--- that the defaults are only used to fill in missing keys, not to overwrite existing keys.
-
-local copyOfDefaultSettings
-local function GetDefaults()
-    if not copyOfDefaultSettings then
-        copyOfDefaultSettings = CopyTable(defaultSettings)
-    end
-    return copyOfDefaultSettings
-end
-
+-- eagerly fill any missing defaults once, at ADDON_LOADED
 rematchRedux.events:Register(rematchRedux.settings,"ADDON_LOADED",function(self,addon)
     if addon == "RematchRedux" then
         for key,defaultValue in pairs(defaultSettings) do
@@ -24,11 +12,29 @@ rematchRedux.events:Register(rematchRedux.settings,"ADDON_LOADED",function(self,
                 RematchReduxSettings[key] = type(defaultValue) == "table" and CopyTable(defaultValue) or defaultValue
             end
         end
-        rematchRedux.settings = RematchReduxSettings -- same table from here on, not a copy
-        rematchRedux.settings.GetDefaults = GetDefaults -- attach now that rematchRedux.settings points at the real table
         rematchRedux.events:Unregister(self,"ADDON_LOADED")
     end
 end)
+
+-- metatable must remain empty of real settings data for this to reliably work
+local function getter(self,key)
+    return RematchReduxSettings[key]
+end
+
+local function setter(self,key,value)
+    RematchReduxSettings[key] = value -- write through to the real savedvar
+end
+setmetatable(rematchRedux.settings,{__index=getter,__newindex=setter})
+
+-- returns a copy of the defaultSettings (computed once per session)
+local copyOfDefaultSettings
+function rematchRedux.settings:GetDefaults()
+    if not copyOfDefaultSettings then
+        copyOfDefaultSettings = CopyTable(defaultSettings)
+    end
+
+    return copyOfDefaultSettings
+end
 
 -- on login do savedvar maintenance
 rematchRedux.events:Register(rematchRedux.settings,"PLAYER_LOGIN",function(self)
