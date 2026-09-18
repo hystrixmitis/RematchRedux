@@ -3,7 +3,7 @@
 ## Notes: A pet journal alternative for managing pets and teams
 ## Author: HystrixMitis (originally by Gello)
 ## Version: 12.1.0
-## SavedVariables: Rematch5Settings, Rematch5SavedTeams, Rematch5SavedGroups, Rematch5SavedTargets, Rematch4Saved, Rematch4Settings, RematchSaved, RematchSettings
+## SavedVariables: RematchReduxSettings, RematchReduxSavedTeams, RematchReduxSavedGroups, RematchReduxSavedTargets
 ## IconTexture: Interface\AddOns\RematchRedux\textures\icon
 ## AddonCompartmentFunc: RematchReduxToggleWindow
 ## Category-enUS: Pet Battles
@@ -26,11 +26,11 @@ main\events.lua
 main\main.lua
 main\slash.lua
 
+savedvars\defaultSettings.lua
 savedvars\settings.lua
 savedvars\savedTeams.lua
 savedvars\savedGroups.lua
 savedvars\savedTargets.lua
-savedvars\convert.lua
 
 utils\utils.lua
 utils\debug.lua

@@ -6,11 +6,6 @@ rematchRedux.main = {}
 local inWorld -- returned by IsPlayerInWorld; true/false if player is in the world (not in a loading screen)
 
 rematchRedux.events:Register(rematchRedux.main,"PLAYER_LOGIN",function(self)
-
-    -- Rematch 4.x to Rematch 5.x upgrade should be handled before any other PLAYER_LOGIN
-    -- (rematchRedux.main is the first to register for PLAYER_LOGIN from toc)
-    rematchRedux.convert:ConversionCheck()
-
     hooksecurefunc(C_PetJournal,"SetAbility",function(slotIndex,spellIndex,petSpellID)
         rematchRedux.timer:Start(0,rematchRedux.main.FireAbilitiesChanged)
     end)

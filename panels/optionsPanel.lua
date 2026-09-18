@@ -176,7 +176,7 @@ rematchRedux.events:Register(rematchRedux.optionsPanel,"PLAYER_LOGIN",function(s
             self.Feedback:Set("warning",L["Warning: This cannot be undone!"])
         end,
         acceptFunc = function(self,info,subject)
-            for k,v in pairs(settings:GetDefaults()) do
+            for k,v in pairs(settings.GetDefaults()) do
                 if type(v)~="table" then
                     settings[k] = v
                 end
@@ -640,7 +640,7 @@ end
 function rematchRedux.optionsPanel.OptionsManagementWidget.ExportButton:OnClick()
     -- building a table so it can be sorted
     local results = {}
-    for k,v in pairs(settings:GetDefaults()) do
+    for k,v in pairs(settings.GetDefaults()) do
         if type(v)=="table" then -- table contents aren't saved, just a count of its contents
             tinsert(results,k.."="..rematchRedux.utils:GetSize(settings[k]))
         elseif v~=settings[k] then
@@ -674,7 +674,7 @@ end
 -- resets all non-table options to default, sets non-table options in import to given values, then reloads the UI
 -- this is used for troubleshooting to mimic another user's options that was exported from the Export button in options
 function rematchRedux.optionsPanel:ImportOptions(import)
-    local defaults = settings:GetDefaults()
+    local defaults = settings.GetDefaults()
     -- wipe all number, boolean or string settings
     for var,value in pairs(defaults) do
         if type(value)=="number" or type(value)=="boolean" or type(value)=="string" then

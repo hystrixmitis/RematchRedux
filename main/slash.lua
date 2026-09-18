@@ -12,8 +12,6 @@ local settings = rematchRedux.settings
     /rematch targetdata          : generates data for a new target to add to targetData.lua
     /rematch delete all teams    : wipes all teams and groups
     /rematch reset everything    : wipes all settings, teams, groups, etc. and restores addon to initial state
-    /rematch reupgrade           : wipes all teams, groups and settings and re-imports everything from Rematch4 savedvars
-
 ]]
 
 
@@ -47,10 +45,10 @@ SlashCmdList["REMATCH"] = function(msg)
                 self.Feedback:Set("warning",L["Warning: This cannot be undone!"])
             end,
             acceptFunc = function(self,info,subject)
-                wipe(Rematch5Settings)
-                wipe(Rematch5SavedTeams)
-                wipe(Rematch5SavedGroups)
-                wipe(Rematch5SavedTargets)
+                wipe(RematchReduxSettings)
+                wipe(RematchReduxSavedTeams)
+                wipe(RematchReduxSavedGroups)
+                wipe(RematchReduxSavedTargets)
                 ReloadUI()
             end
         })
