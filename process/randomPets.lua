@@ -141,7 +141,7 @@ function rematchRedux.randomPets:PickCounter(speciesID,info)
         end
     end
     -- pick the ability type used most for toughVs
-    local toughMax, toughVs = 0
+    local toughMax, toughVs = 0, nil
     for abilityType,count in pairs(toughCounts) do
         if count > toughMax then
             toughVs = abilityType
@@ -159,7 +159,8 @@ function rematchRedux.randomPets:PickCounter(speciesID,info)
     info.rules = C.RANDOM_RULES_LENIENT -- always use lenient rules when picking counters
     -- pick a random pet
     local petID = self:PickRandomPetID(info)
-    local petInfo = rematchRedux.petInfo:Fetch(petID)
+    
+    petInfo = rematchRedux.petInfo:Fetch(petID)
     -- now pick abilities that are strongVs
     wipe(counterAbilities)
     for i,abilityID in ipairs(petInfo.abilityList) do

@@ -518,7 +518,7 @@ end
 
 function RematchReduxTeamListPetButtonMixin:OnLeave()
     rematchRedux.textureHighlight:Hide()
-    rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self:GetParent(),self.petID)
+    rematchRedux.cardManager:OnLeave( rematchRedux.petCard )
 end
 
 function RematchReduxTeamListPetButtonMixin:OnMouseDown()

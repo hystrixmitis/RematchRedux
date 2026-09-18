@@ -136,7 +136,7 @@ function RematchReduxPetCardStatMixin:OnMouseUp()
     if info then
         self.Highlight:Show()
         if self.Icon then
-            rematchRedux.textureHighlight:Hide(self.Icon)
+            rematchRedux.textureHighlight:Hide()
         end
     end
 end

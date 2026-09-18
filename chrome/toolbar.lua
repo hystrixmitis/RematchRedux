@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.toolbar = rematchRedux.frame.ToolBar
+rematchRedux.toolbar = rematchRedux.frame.ToolBar ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("toolbar")
 
 -- toolbarLayout is the toolbar layout used by each mode (0-minimized, 1-single, etc.). Notes:
@@ -29,11 +29,11 @@ rematchRedux.toolbar.petSatchelButtons = {
 
 rematchRedux.events:Register(rematchRedux.toolbar,"PLAYER_LOGIN",function(self)
     -- steal the TopTileStreaks inherited from BasicFrameTemplate and put them behind the toolbar
-    rematchRedux.frame.TopTileStreaks:SetParent(rematchRedux.toolbar)
-    rematchRedux.frame.TopTileStreaks:SetPoint("TOPLEFT")
-    rematchRedux.frame.TopTileStreaks:SetPoint("TOPRIGHT")
+    rematchRedux.frame.TopTileStreaks:SetParent(rematchRedux.toolbar) ---@diagnostic disable-line: undefined-field
+    rematchRedux.frame.TopTileStreaks:SetPoint("TOPLEFT") ---@diagnostic disable-line: undefined-field
+    rematchRedux.frame.TopTileStreaks:SetPoint("TOPRIGHT") ---@diagnostic disable-line: undefined-field
 
-    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",REMATCHREDUX_TEAM_LOADEDOADED)
+    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",self.REMATCHREDUX_TEAM_LOADED)
     rematchRedux.timer:Start(0.1,rematchRedux.toolbar.CacheSafariHat)
 end)
 
@@ -132,7 +132,7 @@ function rematchRedux.toolbar:OnShow()
     rematchRedux.events:Register(self,"UNIT_AURA",self.UNIT_AURA)
     rematchRedux.events:Register(self,"BAG_UPDATE_DELAYED",self.BAG_UPDATE_DELAYED)
     rematchRedux.events:Register(self,"PET_BATTLE_QUEUE_STATUS",self.PET_BATTLE_QUEUE_STATUS)
-    rematchRedux.events:Register(self,"REMATCHREDUX_LOADOUTS_CHANGED",REMATCHREDUX_ATCH_LOADOUTS_CHANGED)
+    rematchRedux.events:Register(self,"REMATCHREDUX_LOADOUTS_CHANGED",self.REMATCHREDUX_LOADOUTS_CHANGED)
     rematchRedux.events:Unregister(self,"REMATCHREDUX_TEAM_LOADED") -- only register while toolbar not shown
     rematchRedux.toolbar:SPELL_UPDATE_COOLDOWN()
 end
@@ -144,7 +144,7 @@ function rematchRedux.toolbar:OnHide()
     rematchRedux.events:Unregister(self,"BAG_UPDATE_DELAYED")
     rematchRedux.events:Unregister(self,"PET_BATTLE_QUEUE_STATUS")
     rematchRedux.events:Unregister(self,"REMATCHREDUX_LOADOUTS_CHANGED")
-    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",REMATCHREDUX_TEAM_LOADEDOADED)
+    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",self.REMATCHREDUX_TEAM_LOADED)
 end
 
 -- safari hat is a toy and needs to be applied by name; forcing a cache on login to get the name

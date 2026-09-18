@@ -10,7 +10,7 @@ local timeout = 0 -- timeout counter to stop trying to load
 local loadingTeamID -- teamID being loaded
 
 -- local functions to perform the load
-local startLoad, runLoad, finishLoad
+local startLoad, runLoad, finishLoad, updatePlan
 local getExcludePetIDs
 
 -- indexed by pet slot, an issue with the team being loaded (C.UNPLANNED_PET_MISSING for missing pet, C.UNPLANNED_LOW_LEVEL for random pet under 25)
@@ -116,7 +116,7 @@ function startLoad(teamID)
     if team then
         -- if all pets in a team are random, then use lenient rule
         local randomRules = C.RANDOM_RULES_LENIENT
-        for i=1,3 do
+        for slot = 1, 3 do
             if rematchRedux.loadouts:GetSpecialPetIDType(team.pets[slot])~="random" then
                 randomRules = settings.RandomPetRules -- a non-random pet in team, used saved random rules
             end
@@ -160,19 +160,20 @@ function startLoad(teamID)
                         end
                     end
                     pickIndex = pickIndex + 1
-                elseif petInfo.idType=="pet" and petInfo.isValid and petInfo.isOwned and petInfo.isSummonable then
-                    local ability1,ability2,ability3 = rematchRedux.petTags:GetAbilities(team.tags[slot])
+                elseif petInfo.idType =="pet" and petInfo.isValid and petInfo.isOwned and petInfo.isSummonable then
+                    local ability1, ability2, ability3 = rematchRedux.petTags:GetAbilities( team.tags[slot] )
                     local allowPetID = rematchRedux.loadouts:GetLoadoutInfo(slot) -- if pet is replacing one already in the slot, allow keeping this one
                     local healthiestPetID = rematchRedux.loadTeam:FindHealthiestPetID(petID,excludePetIDs,allowPetID) -- returns same petID if option disabled
-                    tinsert(loadPlan,{slot,healthiestPetID,ability1,ability2,ability3})
+                    tinsert( loadPlan, {slot, healthiestPetID, ability1, ability2, ability3} )
                     excludePetIDs[healthiestPetID] = true
-                elseif petInfo.idType=="pet" and not petInfo.isValid then
+                elseif petInfo.idType == "pet" and not petInfo.isValid then
                     local newPetID = rematchRedux.petTags:FindPetID(team.tags[slot],excludePetIDs)
                     if newPetID then
-                        tinsert(loadPlan,{slot,newPetID,ability1,ability2,ability3})
+                        local ability1, ability2, ability3 = rematchRedux.petTags:GetAbilities( team.tags[slot] )
+                        tinsert( loadPlan, {slot, newPetID, ability1, ability2, ability3} )
                         excludePetIDs[newPetID] = true
                     end
-                elseif petInfo.idType=="random" then
+                elseif petInfo.idType == "random" then
                     local petType = tonumber(petID:match("^random:(%d+)"))
                     local randomPetID = rematchRedux.randomPets:PickRandomPetID({petType=petType,rules=randomRules,excludePetIDs=excludePetIDs})
                     if randomPetID then

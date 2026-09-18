@@ -116,8 +116,8 @@ function rematchRedux.abilityTooltip:Update(petID,abilityID)
     tooltip:Hide() -- default tooltip's work is done; hide it
 
     -- finally, resize based on height of content
-    height = self.Top:GetHeight() + -yoff + C.ABILITY_TOOLTIP_OUTER_PADDING + (noHints and 0 or self.Hints:GetHeight()) + 2
-    self:SetHeight(height)
+    local height = self.Top:GetHeight() + -yoff + C.ABILITY_TOOLTIP_OUTER_PADDING + (noHints and 0 or self.Hints:GetHeight()) + 2
+    self:SetHeight( height )
 
     return true -- if we made it here, the ability was valid
 end

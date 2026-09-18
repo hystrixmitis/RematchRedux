@@ -159,8 +159,8 @@ function rematchRedux.targetInfo:GetNpcName(npcID,noDisplay)
         tooltip:SetOwner(UIParent,"ANCHOR_NONE")
         tooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d-0000000000",npcID))
         if tooltip:NumLines()>0 then
-            local name = RematchReduxTooltipScanTextLeft1:GetText()
-            if name and name:len()>0 then
+            local name = _G.RematchReduxTooltipScanTextLeft1:GetText()
+            if name and name:len() > 0 then
                 targetNameCache[npcID] = name
                 targetsToCache[npcID] = nil
                 return name..subname
@@ -170,7 +170,7 @@ function rematchRedux.targetInfo:GetNpcName(npcID,noDisplay)
         if not targetsToCache[npcID] then
             targetsToCache[npcID] = GetTime()
         end
-        if GetTime()-targetsToCache[npcID] < C.CACHE_TIMEOUT then -- haven't exceeded timeout duration, return temp name
+        if GetTime() - targetsToCache[npcID] < C.CACHE_TIMEOUT then -- haven't exceeded timeout duration, return temp name
             if not noDisplay then -- if name wasn't cached and we're displaying it, come back in a bit and update UI (could be team or target list or elsewhere that needs update)
                 rematchRedux.timer:Start(C.CACHE_WAIT,rematchRedux.frame.Update) 
             end

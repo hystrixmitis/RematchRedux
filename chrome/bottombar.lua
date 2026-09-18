@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.bottombar = rematchRedux.frame.BottomBar
+rematchRedux.bottombar = rematchRedux.frame.BottomBar ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("bottombar")
 
 rematchRedux.events:Register(rematchRedux.bottombar,"PLAYER_LOGIN",function(self)

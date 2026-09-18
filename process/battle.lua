@@ -77,7 +77,7 @@ end
 
 function rematchRedux.battle.NotesButton:OnLeave()
     self.Highlight:Hide()
-    rematchRedux.cardManager:OnLeave(rematchRedux.notes,self,rematchRedux.settings.currentTeamID)
+    rematchRedux.cardManager:OnLeave(rematchRedux.notes)
 end
 
 function rematchRedux.battle.NotesButton:OnMouseDown()
@@ -162,7 +162,7 @@ end
 
 -- as battle is ending, record if it was a pvp battle
 function rematchRedux.battle:PET_BATTLE_FINAL_ROUND(winner)
-    self.wasInPVP = not C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy)
+    self.wasInPVP = not C_PetBattles.IsPlayerNPC( Enum.BattlePetOwner.Enemy )
 end
 
 -- this is called in pairs, so don't use toggle without checking if it's visible

@@ -24,7 +24,7 @@ local breedNames = {nil,nil,"B/B","P/P","S/S","H/H","H/P","P/S","H/S","P/B","S/B
 -- future runs will just return the saved source (so this only looks for a breed addon once)
 -- addons are used in this priority: BattlePetBreedID, PetTracker_Breeds then LibPetBreedInfo-1.0
 function rematchRedux.breedInfo:GetBreedSource()
-    if breedSource==nil then -- can be false if a prior search for a source didn't find any
+    if breedSource == nil then -- can be false if a prior search for a source didn't find any
         if settings.BreedSource=="BattlePetBreedID" and C_AddOns.IsAddOnLoaded("BattlePetBreedID") then
             breedSource = "BattlePetBreedID"
         elseif settings.BreedSource=="PetTracker" and C_AddOns.IsAddOnLoaded("PetTracker") and C_AddOns.GetAddOnMetadata("PetTracker","Version")~="10.2.7" then
@@ -34,19 +34,22 @@ function rematchRedux.breedInfo:GetBreedSource()
         elseif C_AddOns.IsAddOnLoaded("BattlePetBreedID") then
             breedSource = "BattlePetBreedID"
             settings.BreedSource = breedSource
-        elseif C_AddOns.IsAddOnLoaded("PetTracker") and PetTracker and PetTracker.Pet and PetTracker.Pet.GetBreed and C_AddOns.GetAddOnMetadata("PetTracker","Version")~="10.2.7" then
+        elseif C_AddOns.IsAddOnLoaded("PetTracker") and _G.PetTracker and _G.PetTracker.Pet and _G.PetTracker.Pet.GetBreed and C_AddOns.GetAddOnMetadata("PetTracker","Version")~="10.2.7" then
             breedSource = "PetTracker"
             settings.BreedSource = breedSource
         end
+
         if breedSource then
-            breedSourceName = C_AddOns.GetAddOnMetadata(breedSource,"Title")
+            breedSourceName = C_AddOns.GetAddOnMetadata(breedSource, "Title") ---@diagnostic disable-line: type-mismatch
         else
             breedSource = false -- none found, only attempt to find a source once
         end
     end
+
     if breedSource~="PetTracker" and settings.BreedFormat==C.BREED_FORMAT_ICONS then
         settings.BreedFormat = C.BREED_FORMAT_LETTERS
     end
+    
     return breedSource,breedSourceName
 end
 
@@ -76,11 +79,11 @@ function rematchRedux.breedInfo:GetBreedNameByID(breedID,full)
         return breedNames[breedID] and breedID
     elseif settings.BreedFormat==C.BREED_FORMAT_LETTERS then
         return breedNames[breedID]
-    elseif breedSource=="PetTracker" and PetTracker.Breeds.Names[breedID] then
+    elseif breedSource=="PetTracker" and _G.PetTracker.Breeds.Names[breedID] then
         if full then
-            return PetTracker.Breeds:Icon(breedID,.85) .. " " .. PetTracker.Breeds.Names[breedID]
+            return _G.PetTracker.Breeds:Icon(breedID,.85) .. " " .. _G.PetTracker.Breeds.Names[breedID]
         else
-            return PetTracker.Breeds:Icon(breedID,.85)
+            return _G.PetTracker.Breeds:Icon(breedID,.85)
         end
     end
 end
@@ -92,7 +95,7 @@ function rematchRedux.breedInfo:GetBreedTable(speciesID)
     local petInfo = rematchRedux.altInfo:Fetch(speciesID) -- to get possible breeds
     if petInfo.numPossibleBreeds then
         if breedSource=="BattlePetBreedID" then
-            local data = BPBID_Arrays
+            local data = _G.BPBID_Arrays
             for _,breed in ipairs(petInfo.possibleBreedIDs) do
                 local health = ceil((data.BasePetStats[speciesID][1] + data.BreedStats[breed][1]) * 25 * ((data.RealRarityValues[4] - 0.5) * 2 + 1) * 5 + 100 - 0.5)
                 local power = ceil((data.BasePetStats[speciesID][2] + data.BreedStats[breed][2]) * 25 * ((data.RealRarityValues[4] - 0.5) * 2 + 1) - 0.5)
@@ -100,8 +103,8 @@ function rematchRedux.breedInfo:GetBreedTable(speciesID)
                 tinsert(breedTable,{breed,health,power,speed})
             end
         elseif breedSource=="PetTracker" then
-            local breedsTable = PetTracker.SpecieBreeds
-            local statsTable = PetTracker.Predict.BreedStats
+            local breedsTable = _G.PetTracker.SpecieBreeds
+            local statsTable = _G.PetTracker.Predict.BreedStats
             if breedsTable[speciesID] then
                 for _,breed in pairs(breedsTable[speciesID]) do
                     local health, power, speed = unpack(statsTable[breed])

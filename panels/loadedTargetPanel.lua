@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.loadedTargetPanel = rematchRedux.frame.LoadedTargetPanel
+rematchRedux.loadedTargetPanel = rematchRedux.frame.LoadedTargetPanel ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("loadedTargetPanel")
 
 rematchRedux.events:Register(rematchRedux.loadedTargetPanel,"PLAYER_LOGIN",function(self)

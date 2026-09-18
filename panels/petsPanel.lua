@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.petsPanel = rematchRedux.frame.PetsPanel
+rematchRedux.petsPanel = rematchRedux.frame.PetsPanel ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("petsPanel")
 
 local petList = {} -- ordered list of petIDs to display

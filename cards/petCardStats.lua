@@ -322,7 +322,7 @@ rematchRedux.petCardStats = {
             rematchRedux.cardManager:OnEnter(rematchRedux.notes,self,petInfo.petID)
         end,
         leave = function(self,petInfo)
-            rematchRedux.cardManager:OnLeave(rematchRedux.notes,self,petInfo.petID)
+            rematchRedux.cardManager:OnLeave(rematchRedux.notes)
         end,
         click = function(self,petInfo)
             rematchRedux.cardManager:OnClick(rematchRedux.notes,self,petInfo.petID)

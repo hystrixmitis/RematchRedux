@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.panelTabs = rematchRedux.frame.PanelTabs
+rematchRedux.panelTabs = rematchRedux.frame.PanelTabs ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("panelTabs")
 
 -- ordered list of frame references to created tabs

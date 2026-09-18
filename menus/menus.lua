@@ -387,7 +387,7 @@ function rematchRedux.menus:RefreshMenus()
                 if button:IsVisible() then
                     local info = button.info
                     -- update check/radio
-                    local isRadio = evaluate(info.radio,info,subject)
+                    local isRadio = evaluate( info.radio, info, menuFrame.subject )
                     if info.check or isRadio then
                         button.isChecked = evaluate(info.isChecked,info,menuFrame.subject)
                         rematchRedux.menus:ButtonSetChecked(button,button.isChecked,isRadio)
@@ -440,6 +440,7 @@ end
 function RematchReduxMenuFrameMixin:OnUpdate(elapsed)
     local focus = GetMouseFoci()[1]
     -- testing if over a menu by getting the menuName beneath the mouse and confirming it's a registered menu
+    ---@diagnostic disable-next-line: undefined-field
     local menuName = focus and (focus.menuName or (focus and focus:GetParent() and focus:GetParent().menuName))
     if menuName and allMenus[menuName] or ((menuFrames[1] and menuFrames[1].relativeTo and menuFrames[1].relativeTo:IsMouseOver()) or rematchRedux.menus.sideButtons:IsMouseOver()) then
         self.timer = 0 -- reset timer if over a menu

@@ -199,7 +199,9 @@ end
 
 -- export button for loaded teams will sideline the loaded pets with the current team if one loaded
 function preClicks:ExportTeamButton(button)
-    rematchRedux.saveDialog:SidelineLoadouts(newTeam)
+    -- This line below originally had an undeclared global variable which evaluated to nil, making it always false.
+    -- It appears to be working in the addon, so I'm deliberately passing false now to trigger that path in SidelineLoadouts()
+    rematchRedux.saveDialog:SidelineLoadouts( false )
     rematchRedux.dialog:ShowDialog("ExportSingleTeam",{teamID="sideline"})
 end
 
@@ -292,6 +294,7 @@ function tooltips:ItemTooltip()
         postTooltip(self,repeatDelay)
     end
 end
+
 tooltips.BandageButton = tooltips.ItemTooltip
 tooltips.PetTreatButton = tooltips.ItemTooltip
 tooltips.LesserPetTreatButton = tooltips.ItemTooltip
@@ -313,7 +316,7 @@ function RematchReduxToolbarButtonMixin:OnEnter()
     rematchRedux.textureHighlight:Show(self.Icon)
     local button = self.button
     if button and rematchRedux.toolbar[button] and tooltips[button] then
-        tooltips[button](rematchRedux.toolbar[button])
+        tooltips[button]( rematchRedux.toolbar[button] ) ---@diagnostic disable-line: type-mismatch
     end
 end
 
@@ -359,7 +362,7 @@ end
 function RematchReduxToolbarButtonMixin:Update(fromEvent)
     local button = self.button
     if (not fromEvent or self.needsUpdate or self.alwaysUpdate) and button and rematchRedux.toolbar[button] and updates[button] then
-        updates[button](rematchRedux.toolbar[button])
+        updates[button](rematchRedux.toolbar[button]) ---@diagnostic disable-line: type-mismatch
         self.needsUpdate = nil
     end
 end

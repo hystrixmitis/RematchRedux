@@ -2,7 +2,7 @@ local _, rematchRedux = ...
 local L = rematchRedux.localization
 local C = rematchRedux.constants
 local settings = rematchRedux.settings
-rematchRedux.optionsPanel = rematchRedux.frame.OptionsPanel
+rematchRedux.optionsPanel = rematchRedux.frame.OptionsPanel ---@diagnostic disable-line: undefined-field
 rematchRedux.frame:Register("optionsPanel")
 
 -- ordered list of indexes into rematchRedux.optionsList to display
