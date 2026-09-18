@@ -2,7 +2,7 @@
 
     <Script file="dialogMixins.lua"/>
 
-    <Texture name="RematchDialogPetHerderButtonTemplate" mixin="RematchTextureMouseMixin" virtual="true">
+    <Texture name="RematchReduxDialogPetHerderButtonTemplate" mixin="RematchReduxTextureMouseMixin" virtual="true">
         <Size x="26" y="26"/>
         <Scripts>
             <OnEnter method="OnEnter"/>
@@ -13,7 +13,7 @@
     </Texture>
 
 
-    <Button name="RematchDialogTopTeamsListButtonTemplate" mixin="RematchDialogTopTeamsListButtonMixin" registerForClicks="AnyUp" virtual="true">
+    <Button name="RematchReduxDialogTopTeamsListButtonTemplate" mixin="RematchReduxDialogTopTeamsListButtonMixin" registerForClicks="AnyUp" virtual="true">
         <Size x="268" y="26"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -57,7 +57,7 @@
                 </FontString>
             </Layer>
             <Layer level="BORDER">
-                <Texture parentArray="Pets" mixin="RematchDialogTopTeamsListPetButtonMixin">
+                <Texture parentArray="Pets" mixin="RematchReduxDialogTopTeamsListPetButtonMixin">
                     <Size x="22" y="22"/>
                     <Anchors>
                         <Anchor point="LEFT" x="20" y="0"/>
@@ -73,7 +73,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
                 </Texture>
-                <Texture parentArray="Pets" mixin="RematchDialogTopTeamsListPetButtonMixin" file="Interface\Icons\INV_Misc_QuestionMark">
+                <Texture parentArray="Pets" mixin="RematchReduxDialogTopTeamsListPetButtonMixin" file="Interface\Icons\INV_Misc_QuestionMark">
                     <Size x="22" y="22"/>
                     <Anchors>
                         <Anchor point="LEFT" x="43" y="0"/>
@@ -89,7 +89,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
                 </Texture>
-                <Texture parentArray="Pets" mixin="RematchDialogTopTeamsListPetButtonMixin" file="Interface\Icons\INV_Misc_QuestionMark">
+                <Texture parentArray="Pets" mixin="RematchReduxDialogTopTeamsListPetButtonMixin" file="Interface\Icons\INV_Misc_QuestionMark">
                     <Size x="22" y="22"/>
                     <Anchors>
                         <Anchor point="LEFT" x="66" y="0"/>
@@ -116,11 +116,11 @@
         </Scripts>
     </Button>
 
-    <Frame name="RematchDialogBarChartBarTemplate" virtual="true">
+    <Frame name="RematchReduxDialogBarChartBarTemplate" virtual="true">
         <Size x="22" y="186"/>
         <Layers>
             <Layer level="ARTWORK">
-                <Texture parentKey="Icon" mixin="RematchDialogBarChartIconMixin" file="Interface\Icons\INV_Misc_QuestionMark">
+                <Texture parentKey="Icon" mixin="RematchReduxDialogBarChartIconMixin" file="Interface\Icons\INV_Misc_QuestionMark">
                     <Size x="22" y="22"/>
                     <Anchors>
                         <Anchor point="BOTTOM" x="0" y="-1"/>
@@ -149,7 +149,7 @@
     </Frame>
 
     <!-- simplified button for displaying a pet in various controls -->
-    <Button name="RematchDialogPetButtonTemplate" mixin="RematchFillPetMixin,RematchDialogPetButtonMixin" virtual="true">
+    <Button name="RematchReduxDialogPetButtonTemplate" mixin="RematchReduxFillPetMixin,RematchReduxDialogPetButtonMixin" virtual="true">
         <Size x="44" y="44"/>
         <Layers>
             <Layer level="BORDER">
@@ -203,7 +203,7 @@
     </Button>
 
     <!-- template for a single line of data for ListData control -->
-    <Frame name="RematchDialogListItemTemplate" virtual="true">
+    <Frame name="RematchReduxDialogListItemTemplate" virtual="true">
         <Size x="0" y="18"/>
         <Layers>
             <Layer level="ARTWORK">
@@ -222,15 +222,15 @@
     </Frame>
 
     <!-- template for a single pet and its 3 abilities -->
-    <Frame name="RematchDialogPetWithAbilitiesTemplate" mixin="RematchDialogPetWithAbilitiesMixin" virtual="true">
+    <Frame name="RematchReduxDialogPetWithAbilitiesTemplate" mixin="RematchReduxDialogPetWithAbilitiesMixin" virtual="true">
         <Size x="76" y="76"/>
         <Frames>
-            <Button parentKey="Pet" inherits="RematchDialogPetButtonTemplate">
+            <Button parentKey="Pet" inherits="RematchReduxDialogPetButtonTemplate">
                 <Anchors>
                     <Anchor point="LEFT"/>
                 </Anchors>
             </Button>
-            <Frame parentKey="AbilityBar" mixin="RematchFillAbilityBarMixin">
+            <Frame parentKey="AbilityBar" mixin="RematchReduxFillAbilityBarMixin">
                 <Size x="26" y="76"/>
                 <Anchors>
                     <Anchor point="RIGHT"/>
@@ -242,7 +242,7 @@
                     </Layer>
                 </Layers>
                 <Frames>
-                    <Button parentArray="Abilities" inherits="RematchMiniAbilityBarButtonTemplate" id="1">
+                    <Button parentArray="Abilities" inherits="RematchReduxMiniAbilityBarButtonTemplate" id="1">
                         <KeyValues>
                             <KeyValue key="noClick" value="true" type="boolean"/>
                         </KeyValues>
@@ -250,7 +250,7 @@
                             <Anchor point="TOP" x="0" y="-2"/>
                         </Anchors>
                     </Button>
-                    <Button parentArray="Abilities" inherits="RematchMiniAbilityBarButtonTemplate" id="2">
+                    <Button parentArray="Abilities" inherits="RematchReduxMiniAbilityBarButtonTemplate" id="2">
                         <KeyValues>
                             <KeyValue key="noClick" value="true" type="boolean"/>
                         </KeyValues>
@@ -258,7 +258,7 @@
                             <Anchor point="CENTER"/>
                         </Anchors>
                     </Button>
-                    <Button parentArray="Abilities" inherits="RematchMiniAbilityBarButtonTemplate" id="3">
+                    <Button parentArray="Abilities" inherits="RematchReduxMiniAbilityBarButtonTemplate" id="3">
                         <KeyValues>
                             <KeyValue key="noClick" value="true" type="boolean"/>
                         </KeyValues>
@@ -272,7 +272,7 @@
     </Frame>
 
     <!-- template for GroupPicker list buttons, stripped down version of team header list buttons -->
-    <Button name="RematchDialogGroupPickerListButtonTemplate" mixin="RematchDialogGroupPickerListButtonMixin" virtual="true">
+    <Button name="RematchReduxDialogGroupPickerListButtonTemplate" mixin="RematchReduxDialogGroupPickerListButtonMixin" virtual="true">
         <Size x="0" y="26"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -332,14 +332,14 @@
         </Scripts>
     </Button>
 
-    <Button name="RematchDialogColorPickerSwatchTemplate" mixin="RematchDialogColorPickerSwatchTemplateMixin" inherits="RematchColorSwatchTemplate" virtual="true">
+    <Button name="RematchReduxDialogColorPickerSwatchTemplate" mixin="RematchReduxDialogColorPickerSwatchTemplateMixin" inherits="RematchReduxColorSwatchTemplate" virtual="true">
         <Scripts>
             <OnClick method="OnClick"/>
         </Scripts>
     </Button>
 
     <!-- used for preferences and win record, small editbox with a label to left of it -->
-    <EditBox name="RematchDialogNumberEditBoxTemplate" mixin="RematchDialogNumberEditBoxMixin" inherits="RematchEditBoxTemplate,RematchTooltipScripts" virtual="true">
+    <EditBox name="RematchReduxDialogNumberEditBoxTemplate" mixin="RematchReduxDialogNumberEditBoxMixin" inherits="RematchReduxEditBoxTemplate,RematchReduxTooltipScripts" virtual="true">
         <Size x="72" y="24"/>
         <Layers>
             <Layer level="ARTWORK">
@@ -358,7 +358,7 @@
     </EditBox>
 
     <!-- for read-only preferences, editbox is text -->
-    <Frame name="RematchDialogPreferencesReadOnlyTemplate" virtual="true">
+    <Frame name="RematchReduxDialogPreferencesReadOnlyTemplate" virtual="true">
         <Size x="72" y="24"/>
         <Layers>
             <Layer level="ARTWORK">
@@ -378,11 +378,11 @@
     </Frame>
 
     <!-- row of icons for the icon picker control -->
-    <Button name="RematchDialogIconPickerRowTemplate" virtual="true">
+    <Button name="RematchReduxDialogIconPickerRowTemplate" virtual="true">
         <Size x="0" y="32"/>
         <Layers>
             <Layer level="ARTWORK">
-                <Texture parentArray="Icons" mixin="RematchDialogIconPickerIconMixin">
+                <Texture parentArray="Icons" mixin="RematchReduxDialogIconPickerIconMixin">
                     <Size x="30" y="30"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="1" y="-1"/>
@@ -395,7 +395,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
                 </Texture>
-                <Texture parentArray="Icons" mixin="RematchDialogIconPickerIconMixin">
+                <Texture parentArray="Icons" mixin="RematchReduxDialogIconPickerIconMixin">
                     <Size x="30" y="30"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="33" y="-1"/>
@@ -408,7 +408,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
                 </Texture>
-                <Texture parentArray="Icons" mixin="RematchDialogIconPickerIconMixin">
+                <Texture parentArray="Icons" mixin="RematchReduxDialogIconPickerIconMixin">
                     <Size x="30" y="30"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="65" y="-1"/>
@@ -421,7 +421,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
                 </Texture>
-                <Texture parentArray="Icons" mixin="RematchDialogIconPickerIconMixin">
+                <Texture parentArray="Icons" mixin="RematchReduxDialogIconPickerIconMixin">
                     <Size x="30" y="30"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="97" y="-1"/>
@@ -434,7 +434,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
                 </Texture>
-                <Texture parentArray="Icons" mixin="RematchDialogIconPickerIconMixin">
+                <Texture parentArray="Icons" mixin="RematchReduxDialogIconPickerIconMixin">
                     <Size x="30" y="30"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="129" y="-1"/>
@@ -447,7 +447,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
                 </Texture>
-                <Texture parentArray="Icons" mixin="RematchDialogIconPickerIconMixin">
+                <Texture parentArray="Icons" mixin="RematchReduxDialogIconPickerIconMixin">
                     <Size x="30" y="30"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="161" y="-1"/>
@@ -460,7 +460,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
                 </Texture>
-                <Texture parentArray="Icons" mixin="RematchDialogIconPickerIconMixin">
+                <Texture parentArray="Icons" mixin="RematchReduxDialogIconPickerIconMixin">
                     <Size x="30" y="30"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="193" y="-1"/>
@@ -477,14 +477,14 @@
         </Layers>
     </Button>
 
-    <Frame name="RematchDialog" frameStrata="DIALOG" parent="UIParent" clampedToScreen="true" movable="true" topLevel="true" hidden="true" inherits="RematchDefaultPanelTemplateWithInset">
+    <Frame name="RematchReduxDialog" frameStrata="DIALOG" parent="UIParent" clampedToScreen="true" movable="true" topLevel="true" hidden="true" inherits="RematchReduxDefaultPanelTemplateWithInset">
         <Size x="300" y="200"/>
         <Anchors>
             <Anchor point="CENTER"/>
         </Anchors>
         <Frames>
             <!-- Minimize titlebar button in topright -->
-            <Button parentKey="MinimizeButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="MinimizeButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPRIGHT" relativeKey="$parent.CloseButton" relativePoint="TOPLEFT" x="0" y="0"/>
                 </Anchors>
@@ -493,7 +493,7 @@
                 </KeyValues>
             </Button>
             <!-- Cancel panel button in bottomright -->
-            <Button parentKey="CancelButton" mixin="RematchDialogPanelButtonMixin" inherits="RematchPanelButtonTemplate">
+            <Button parentKey="CancelButton" mixin="RematchReduxDialogPanelButtonMixin" inherits="RematchReduxPanelButtonTemplate">
                 <Size x="96" y="23"/>
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT" x="-6" y="3"/>
@@ -503,7 +503,7 @@
                 </Scripts>
             </Button>
             <!-- Other panel button in bottomleft -->
-            <Button parentKey="OtherButton" mixin="RematchDialogPanelButtonMixin" inherits="RematchPanelButtonTemplate,,RematchTooltipScripts">
+            <Button parentKey="OtherButton" mixin="RematchReduxDialogPanelButtonMixin" inherits="RematchReduxPanelButtonTemplate,RematchReduxTooltipScripts">
                 <Size x="96" y="23"/>
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" x="4" y="3"/>
@@ -513,7 +513,7 @@
                 </Scripts>
             </Button>
             <!-- Accept panel button in bottom center-->
-            <Button parentKey="AcceptButton" mixin="RematchDialogPanelButtonMixin" inherits="RematchPanelButtonTemplate">
+            <Button parentKey="AcceptButton" mixin="RematchReduxDialogPanelButtonMixin" inherits="RematchReduxPanelButtonTemplate">
                 <Size x="96" y="23"/>
                 <Anchors>
                     <Anchor point="LEFT" relativeKey="$parent.OtherButton" relativePoint="RIGHT"/>
@@ -542,8 +542,8 @@
                 </Layers>
             </Frame>
             <!-- All controls are children of this canvas; the anchors are defined in the dialog.ShowDialog -->
-            <!-- For controls made in other xml files, parent="RematchDialogCanvas" -->
-            <Frame parentKey="Canvas" name="RematchDialogCanvas">
+            <!-- For controls made in other xml files, parent="RematchReduxDialogCanvas" -->
+            <Frame parentKey="Canvas" name="RematchReduxDialogCanvas">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="9" y="-30"/>
                     <Anchor point="BOTTOMRIGHT" x="-11" y="61"/>
@@ -551,7 +551,7 @@
                 <Frames>
 
                     <!-- Text is for generic text. canvas.Text:SetText() to set text/resize -->
-                    <Frame parentKey="Text" mixin="RematchDialogTextMixin">
+                    <Frame parentKey="Text" mixin="RematchReduxDialogTextMixin">
                         <Size x="0" y="12"/>
                         <Layers>
                             <Layer level="ARTWORK">
@@ -566,7 +566,7 @@
                     </Frame>
 
                     <!-- Text2 is for generic text. canvas.Text2:SetText() to set text/resize -->
-                    <Frame parentKey="Text2" mixin="RematchDialogTextMixin">
+                    <Frame parentKey="Text2" mixin="RematchReduxDialogTextMixin">
                         <Size x="0" y="12"/>
                         <Layers>
                             <Layer level="ARTWORK">
@@ -581,7 +581,7 @@
                     </Frame>
 
                     <!-- SmallText is for smaller generic text. canvas.SmallText:SetText() to set text/resize -->
-                    <Frame parentKey="SmallText" mixin="RematchDialogTextMixin">
+                    <Frame parentKey="SmallText" mixin="RematchReduxDialogTextMixin">
                         <Size x="0" y="12"/>
                         <Layers>
                             <Layer level="ARTWORK">
@@ -597,7 +597,7 @@
                     </Frame>
 
                     <!-- SmallText2 is for smaller generic text. canvas.SmallText2:SetText() to set text/resize -->
-                    <Frame parentKey="SmallText2" mixin="RematchDialogTextMixin">
+                    <Frame parentKey="SmallText2" mixin="RematchReduxDialogTextMixin">
                         <Size x="0" y="12"/>
                         <Layers>
                             <Layer level="ARTWORK">
@@ -613,7 +613,7 @@
                     </Frame>
 
                     <!-- Help is a clone of SmallText except it's hidden if the Hide Extra Help (HideMenuHelp) option is enabled -->
-                    <Frame parentKey="Help" mixin="RematchDialogTextMixin">
+                    <Frame parentKey="Help" mixin="RematchReduxDialogTextMixin">
                         <Size x="0" y="12"/>
                         <Layers>
                             <Layer level="ARTWORK">
@@ -629,7 +629,7 @@
                     </Frame>
 
                     <!-- Feedback for warning/success/etc icon+text. canvas.Feedback:Set(icon,text) -->
-                    <Frame parentKey="Feedback" mixin="RematchDialogFeedbackMixin">
+                    <Frame parentKey="Feedback" mixin="RematchReduxDialogFeedbackMixin">
                         <Size x="0" y="32"/>
                         <Layers>
                             <Layer level="ARTWORK">
@@ -651,7 +651,7 @@
                     </Frame>
 
                     <!-- EditBox for single-line input. canvas.EditBox:SetLabel() for side text, SetText() for editbox text -->
-                    <Frame parentKey="EditBox" mixin="RematchDialogEditBoxMixin">
+                    <Frame parentKey="EditBox" mixin="RematchReduxDialogEditBoxMixin">
                         <Size x="0" y="32"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="250" type="number"/>
@@ -666,7 +666,7 @@
                             </Layer>
                         </Layers>
                         <Frames>
-                            <EditBox parentKey="EditBox" inherits="RematchEditBoxTemplate" autofocus="true">
+                            <EditBox parentKey="EditBox" inherits="RematchReduxEditBoxTemplate" autofocus="true">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.Label" relativePoint="RIGHT" x="4" y="0"/>
                                     <Anchor point="RIGHT"/>
@@ -679,7 +679,7 @@
                     </Frame>
 
                     <!-- MultiLineEditBox for a scrollable editbox with spool support (see mixin) -->
-                    <Frame parentKey="MultiLineEditBox" mixin="RematchDialogMultiLineEditBoxMixin" inherits="RematchInsetFrameTemplate">
+                    <Frame parentKey="MultiLineEditBox" mixin="RematchReduxDialogMultiLineEditBoxMixin" inherits="RematchReduxInsetFrameTemplate">
                         <Size x="0" y="166"/>
                         <Frames>
                             <ScrollFrame parentKey="ScrollFrame" inherits="MinimalScrollFrameTemplate">
@@ -744,10 +744,10 @@
                     </Frame>
 
                     <!-- CheckButton is for one-off checks; canvas.CheckButton:SetChecked() to set checked, canvas.CheckButton:SetText() for text -->
-                    <Frame parentKey="CheckButton" mixin="RematchDialogCheckButtonMixin">
+                    <Frame parentKey="CheckButton" mixin="RematchReduxDialogCheckButtonMixin">
                         <Size x="0" y="28"/>
                         <Frames>
-                            <CheckButton parentKey="Check" inherits="RematchCheckButtonTemplate">
+                            <CheckButton parentKey="Check" inherits="RematchReduxCheckButtonTemplate">
                                 <Anchors>
                                     <Anchor point="CENTER"/>
                                 </Anchors>
@@ -759,18 +759,18 @@
                     </Frame>
 
                     <!-- For ExportTeam dialog, to include targets, preferences or notes in the export -->
-                    <Frame parentKey="IncludeCheckButtons" mixin="RematchDialogIncludeCheckButtons">
+                    <Frame parentKey="IncludeCheckButtons" mixin="RematchReduxDialogIncludeCheckButtons">
                         <Size x="160" y="44"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="160" type="number"/>
                         </KeyValues>
                         <Frames>
-                            <CheckButton parentKey="IncludePreferences" inherits="RematchCheckButtonTemplate">
+                            <CheckButton parentKey="IncludePreferences" inherits="RematchReduxCheckButtonTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" x="0" y="0"/>
                                 </Anchors>
                             </CheckButton>
-                            <CheckButton parentKey="IncludeNotes" inherits="RematchCheckButtonTemplate">
+                            <CheckButton parentKey="IncludeNotes" inherits="RematchReduxCheckButtonTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" x="0" y="-22"/>
                                 </Anchors>
@@ -782,7 +782,7 @@
                     </Frame>
 
                     <!-- Icon is for a single large icon; use canvas.Icon:SetTexture() and canvas.Icon:SetTexCoords() -->
-                    <Frame parentKey="Icon" mixin="RematchDialogIconMixin">
+                    <Frame parentKey="Icon" mixin="RematchReduxDialogIconMixin">
                         <Size x="0" y="32"/>
                         <Layers>
                             <Layer level="ARTWORK">
@@ -797,13 +797,13 @@
                     </Frame>
 
                     <!-- ColorPicker presents a set of 7 colors to choose from -->
-                    <Frame parentKey="ColorPicker" mixin="RematchDialogColorPickerMixin">
+                    <Frame parentKey="ColorPicker" mixin="RematchReduxDialogColorPickerMixin">
                         <Size x="190" y="32"/>
                         <KeyValues>
                             <KeyValue key="color" value="E6E6E6"/>
                         </KeyValues>
                         <Frames>
-                            <Button parentArray="Swatches" inherits="RematchDialogColorPickerSwatchTemplate">
+                            <Button parentArray="Swatches" inherits="RematchReduxDialogColorPickerSwatchTemplate">
                                 <!-- default color has no color value; gold headers, white teams -->
                                 <Anchors>
                                     <Anchor point="TOP" x="-86" y="-2"/>
@@ -817,7 +817,7 @@
                     </Frame>
 
                     <!-- DropDown control with a label -->
-                    <Frame parentKey="DropDown" mixin="RematchDialogDropDownMixin">
+                    <Frame parentKey="DropDown" mixin="RematchReduxDialogDropDownMixin">
                         <Size x="200" y="24"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="200" type="number"/>
@@ -832,7 +832,7 @@
                             </Layer>
                         </Layers>
                         <Frames>
-                            <Button parentKey="DropDown" inherits="RematchDropDownTemplate">
+                            <Button parentKey="DropDown" inherits="RematchReduxDropDownTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.Label" relativePoint="RIGHT" x="2" y="0"/>
                                     <Anchor point="RIGHT"/>
@@ -842,10 +842,10 @@
                     </Frame>
 
                     <!-- Pet is a single pet in a listbutton format (with icon on left, badges on right) -->
-                    <Button parentKey="Pet" mixin="RematchDialogPetMixin">
+                    <Button parentKey="Pet" mixin="RematchReduxDialogPetMixin">
                         <Size x="246" y="44"/>
                         <Frames>
-                            <Button parentKey="ListButtonPet" inherits="RematchNormalPetListButtonTemplate">
+                            <Button parentKey="ListButtonPet" inherits="RematchReduxNormalPetListButtonTemplate">
                                 <KeyValues>
                                     <KeyValue key="noPickup" value="true" type="boolean"/>
                                     <KeyValue key="alwaysShowBreed" value="true" type="boolean"/>
@@ -859,10 +859,10 @@
                     </Button>
 
                     <!-- Team is a single team in listbutton format, with name, pets and badges -->
-                    <Button parentKey="Team" mixin="RematchDialogTeamMixin">
+                    <Button parentKey="Team" mixin="RematchReduxDialogTeamMixin">
                         <Size x="246" y="44"/>
                         <Frames>
-                            <Button parentKey="ListButtonTeam" inherits="RematchNormalTeamListButtonTemplate">
+                            <Button parentKey="ListButtonTeam" inherits="RematchReduxNormalTeamListButtonTemplate">
                                 <KeyValues>
                                     <KeyValue key="noPickup" value="true" type="boolean"/>
                                 </KeyValues>
@@ -875,30 +875,30 @@
                     </Button>
 
                     <!-- LayoutTabs is for setting up tabbed dialogs -->
-                    <Frame parentKey="LayoutTabs" mixin="RematchDialogLayoutTabsMixin">
+                    <Frame parentKey="LayoutTabs" mixin="RematchReduxDialogLayoutTabsMixin">
                         <Size x="0" y="26"/>
                         <Frames>
-                            <Button parentArray="Tabs" parentKey="Tab1" inherits="RematchStretchTabTemplate" id="1">
+                            <Button parentArray="Tabs" parentKey="Tab1" inherits="RematchReduxStretchTabTemplate" id="1">
                                 <Anchors>
                                     <Anchor point="TOPLEFT"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Tabs" parentKey="Tab2" inherits="RematchStretchTabTemplate" id="2">
+                            <Button parentArray="Tabs" parentKey="Tab2" inherits="RematchReduxStretchTabTemplate" id="2">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeKey="$parent.Tab1" relativePoint="TOPRIGHT"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Tabs" parentKey="Tab3" inherits="RematchStretchTabTemplate" id="3">
+                            <Button parentArray="Tabs" parentKey="Tab3" inherits="RematchReduxStretchTabTemplate" id="3">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeKey="$parent.Tab2" relativePoint="TOPRIGHT"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Tabs" parentKey="Tab4" inherits="RematchStretchTabTemplate" id="4">
+                            <Button parentArray="Tabs" parentKey="Tab4" inherits="RematchReduxStretchTabTemplate" id="4">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeKey="$parent.Tab3" relativePoint="TOPRIGHT"/>
                                 </Anchors>
                             </Button>
-                            <Button parentKey="Clear" inherits="RematchClearButtonTemplate" hidden="true">
+                            <Button parentKey="Clear" inherits="RematchReduxClearButtonTemplate" hidden="true">
                                 <Anchors>
                                     <Anchor point="TOPRIGHT" x="0" y="-2"/>
                                 </Anchors>
@@ -933,28 +933,28 @@
                     </Frame>
 
                     <!-- ReadOnly Preferences for current preferences that can't be edited -->
-                    <Frame parentKey="PreferencesReadOnly" mixin="RematchDialogPreferencesReadOnlyMixin">
+                    <Frame parentKey="PreferencesReadOnly" mixin="RematchReduxDialogPreferencesReadOnlyMixin">
                         <Size x="260" y="131"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="260" type="number"/>
                         </KeyValues>
                         <Frames>
-                            <Frame parentKey="MaxLevel" inherits="RematchDialogPreferencesReadOnlyTemplate">
+                            <Frame parentKey="MaxLevel" inherits="RematchReduxDialogPreferencesReadOnlyTemplate">
                                 <Anchors>
                                     <Anchor point="TOPRIGHT" x="0" y="0"/>
                                 </Anchors>
                             </Frame>
-                            <Frame parentKey="MinLevel" inherits="RematchDialogPreferencesReadOnlyTemplate">
+                            <Frame parentKey="MinLevel" inherits="RematchReduxDialogPreferencesReadOnlyTemplate">
                                 <Anchors>
                                     <Anchor point="RIGHT" relativeKey="$parent.MaxLevel" relativePoint="LEFT" x="-40" y="0"/>
                                 </Anchors>
                             </Frame>
-                            <Frame parentKey="MaxHealth" inherits="RematchDialogPreferencesReadOnlyTemplate">
+                            <Frame parentKey="MaxHealth" inherits="RematchReduxDialogPreferencesReadOnlyTemplate">
                                 <Anchors>
                                     <Anchor point="TOPRIGHT" x="0" y="-30"/>
                                 </Anchors>
                             </Frame>
-                            <Frame parentKey="MinHealth" inherits="RematchDialogPreferencesReadOnlyTemplate">
+                            <Frame parentKey="MinHealth" inherits="RematchReduxDialogPreferencesReadOnlyTemplate">
                                 <Anchors>
                                     <Anchor point="RIGHT" relativeKey="$parent.MaxHealth" relativePoint="LEFT" x="-40" y="0"/>
                                 </Anchors>
@@ -1090,13 +1090,13 @@
                     </Frame>
 
                     <!-- Leveling Preferences -->
-                    <Frame parentKey="Preferences" mixin="RematchDialogPreferencesMixin">
+                    <Frame parentKey="Preferences" mixin="RematchReduxDialogPreferencesMixin">
                         <Size x="260" y="131"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="260" type="number"/>
                         </KeyValues>
                         <Frames>
-                            <EditBox parentKey="MaxLevel" inherits="RematchDialogNumberEditBoxTemplate">
+                            <EditBox parentKey="MaxLevel" inherits="RematchReduxDialogNumberEditBoxTemplate">
                                 <KeyValues>
                                     <KeyValue key="tabNext" value="MinHealth"/>
                                 </KeyValues>
@@ -1104,7 +1104,7 @@
                                     <Anchor point="TOPRIGHT" x="0" y="0"/>
                                 </Anchors>
                             </EditBox>
-                            <EditBox parentKey="MinLevel" inherits="RematchDialogNumberEditBoxTemplate">
+                            <EditBox parentKey="MinLevel" inherits="RematchReduxDialogNumberEditBoxTemplate">
                                 <KeyValues>
                                     <KeyValue key="tabNext" value="MaxLevel"/>
                                 </KeyValues>
@@ -1112,7 +1112,7 @@
                                     <Anchor point="RIGHT" relativeKey="$parent.MaxLevel" relativePoint="LEFT" x="-40" y="0"/>
                                 </Anchors>
                             </EditBox>
-                            <EditBox parentKey="MaxHealth" inherits="RematchDialogNumberEditBoxTemplate">
+                            <EditBox parentKey="MaxHealth" inherits="RematchReduxDialogNumberEditBoxTemplate">
                                 <KeyValues>
                                     <KeyValue key="tabNext" value="MinLevel"/>
                                 </KeyValues>
@@ -1120,7 +1120,7 @@
                                     <Anchor point="TOPRIGHT" x="0" y="-30"/>
                                 </Anchors>
                             </EditBox>
-                            <EditBox parentKey="MinHealth" inherits="RematchDialogNumberEditBoxTemplate">
+                            <EditBox parentKey="MinHealth" inherits="RematchReduxDialogNumberEditBoxTemplate">
                                 <KeyValues>
                                     <KeyValue key="tabNext" value="MaxHealth"/>
                                 </KeyValues>
@@ -1128,7 +1128,7 @@
                                     <Anchor point="RIGHT" relativeKey="$parent.MaxHealth" relativePoint="LEFT" x="-40" y="0"/>
                                 </Anchors>
                             </EditBox>
-                            <CheckButton parentKey="AllowMM" inherits="RematchCheckButtonTemplate,RematchTooltipScripts">
+                            <CheckButton parentKey="AllowMM" inherits="RematchReduxCheckButtonTemplate,RematchReduxTooltipScripts">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" x="46" y="-56"/>
                                 </Anchors>
@@ -1159,7 +1159,7 @@
                                     </Layer>
                                     <Layer level="ARTWORK">
                                         <!-- these 10 pet type buttons are textures and can't inherit script handlers yet -->
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Humanoid">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Humanoid">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="1" y="-1"/>
@@ -1174,7 +1174,7 @@
                                                 <OnMouseUp method="OnMouseUp"/>
                                             </Scripts>
                                         </Texture>
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Dragon">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Dragon">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="27" y="-1"/>
@@ -1189,7 +1189,7 @@
                                                 <OnMouseUp method="OnMouseUp"/>
                                             </Scripts>
                                         </Texture>
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Flying">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Flying">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="53" y="-1"/>
@@ -1204,7 +1204,7 @@
                                                 <OnMouseUp method="OnMouseUp"/>
                                             </Scripts>
                                         </Texture>
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Undead">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Undead">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="79" y="-1"/>
@@ -1219,7 +1219,7 @@
                                                 <OnMouseUp method="OnMouseUp"/>
                                             </Scripts>
                                         </Texture>
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Critter">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Critter">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="105" y="-1"/>
@@ -1234,7 +1234,7 @@
                                                 <OnMouseUp method="OnMouseUp"/>
                                             </Scripts>
                                         </Texture>
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Magical">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Magical">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="131" y="-1"/>
@@ -1249,7 +1249,7 @@
                                                 <OnMouseUp method="OnMouseUp"/>
                                             </Scripts>
                                         </Texture>
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Elemental">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Elemental">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="157" y="-1"/>
@@ -1264,7 +1264,7 @@
                                                 <OnMouseUp method="OnMouseUp"/>
                                             </Scripts>
                                         </Texture>
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Beast">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Beast">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="183" y="-1"/>
@@ -1279,7 +1279,7 @@
                                                 <OnMouseUp method="OnMouseUp"/>
                                             </Scripts>
                                         </Texture>
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Water">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Water">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="209" y="-1"/>
@@ -1294,7 +1294,7 @@
                                                 <OnMouseUp method="OnMouseUp"/>
                                             </Scripts>
                                         </Texture>
-                                        <Texture parentArray="Buttons" mixin="RematchDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Mechanical">
+                                        <Texture parentArray="Buttons" mixin="RematchReduxDialogExpectedDDMixin" file="Interface\Icons\Pet_Type_Mechanical">
                                             <Size x="23" y="23"/>
                                             <Anchors>
                                                 <Anchor point="TOPLEFT" x="235" y="-1"/>
@@ -1359,7 +1359,7 @@
                     </Frame>
 
                     <!-- scrollable list of icons with a search box to filter icons -->
-                    <Frame parentKey="IconPicker" mixin="RematchDialogIconPickerMixin">
+                    <Frame parentKey="IconPicker" mixin="RematchReduxDialogIconPickerMixin">
                         <Size x="260" y="268"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="260" type="number"/>
@@ -1387,13 +1387,13 @@
                         </Layers>
                         <Frames>
                             <!-- search box to right of icon -->
-                            <EditBox parentKey="SearchBox" inherits="RematchSearchBoxTemplate">
+                            <EditBox parentKey="SearchBox" inherits="RematchReduxSearchBoxTemplate">
                                 <Size x="180" y="24"/>
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="8" y="0"/>
                                 </Anchors>
                             </EditBox>
-                            <Frame parentKey="List" inherits="RematchAutoScrollBoxTemplate">
+                            <Frame parentKey="List" inherits="RematchReduxAutoScrollBoxTemplate">
                                 <Size x="253" y="230"/>
                                 <Anchors>
                                     <Anchor point="TOP" x="4" y="-36"/>
@@ -1408,7 +1408,7 @@
                     </Frame>
 
                     <!-- two-panel control with autoscrollboxes to manage a list of teams or targets -->
-                    <Frame parentKey="TeamPicker" mixin="RematchDialogTeamPickerMixin">
+                    <Frame parentKey="TeamPicker" mixin="RematchReduxDialogTeamPickerMixin">
                         <Size x="280" y="220"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="280" type="number"/>
@@ -1417,14 +1417,14 @@
                             <!-- Lister is the panel that has Add/Delete/Up/Down and a selectable list of teams/targets -->
                             <Frame parentKey="Lister" setAllPoints="true">
                                 <Frames>
-                                    <Frame parentKey="Top" inherits="RematchPanelInsetFrameTemplate">
+                                    <Frame parentKey="Top" inherits="RematchReduxPanelInsetFrameTemplate">
                                         <Size x="0" y="29"/>
                                         <Anchors>
                                             <Anchor point="TOPLEFT"/>
                                             <Anchor point="TOPRIGHT"/>
                                         </Anchors>
                                         <Frames>
-                                            <Button parentKey="AddButton" inherits="RematchGreyPanelButtonTemplate">
+                                            <Button parentKey="AddButton" inherits="RematchReduxGreyPanelButtonTemplate">
                                                 <Size x="68" y="24"/>
                                                 <Anchors>
                                                     <Anchor point="TOPLEFT" x="4" y="-3"/>
@@ -1433,7 +1433,7 @@
                                                     <KeyValue key="coord" value="68x24"/>
                                                 </KeyValues>
                                             </Button>
-                                            <Button parentKey="DeleteButton" inherits="RematchGreyPanelButtonTemplate">
+                                            <Button parentKey="DeleteButton" inherits="RematchReduxGreyPanelButtonTemplate">
                                                 <Size x="68" y="24"/>
                                                 <Anchors>
                                                     <Anchor point="TOPLEFT" relativeKey="$parent.AddButton" relativePoint="TOPRIGHT" x="0" y="0"/>
@@ -1442,7 +1442,7 @@
                                                     <KeyValue key="coord" value="68x24"/>
                                                 </KeyValues>
                                             </Button>
-                                            <Button parentKey="DownButton" inherits="RematchGreyPanelButtonTemplate">
+                                            <Button parentKey="DownButton" inherits="RematchReduxGreyPanelButtonTemplate">
                                                 <Size x="68" y="24"/>
                                                 <Anchors>
                                                     <Anchor point="TOPRIGHT" x="-4" y="-3"/>
@@ -1451,7 +1451,7 @@
                                                     <KeyValue key="coord" value="68x24"/>
                                                 </KeyValues>
                                             </Button>
-                                            <Button parentKey="UpButton" inherits="RematchGreyPanelButtonTemplate">
+                                            <Button parentKey="UpButton" inherits="RematchReduxGreyPanelButtonTemplate">
                                                 <Size x="68" y="24"/>
                                                 <Anchors>
                                                     <Anchor point="TOPRIGHT" relativeKey="$parent.DownButton" relativePoint="TOPLEFT" x="0" y="0"/>
@@ -1462,7 +1462,7 @@
                                             </Button>
                                         </Frames>
                                     </Frame>
-                                    <Frame parentKey="List" inherits="RematchAutoScrollBoxTemplate">
+                                    <Frame parentKey="List" inherits="RematchReduxAutoScrollBoxTemplate">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.Top" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
                                             <Anchor point="BOTTOMRIGHT"/>
@@ -1473,19 +1473,19 @@
                             <!-- Picker is the panel that has All/Search/Cancel and a list of teams/targets to add to Lister -->
                             <Frame parentKey="Picker" setAllPoints="true" hidden="true">
                                 <Frames>
-                                    <Frame parentKey="Top" inherits="RematchPanelInsetFrameTemplate">
+                                    <Frame parentKey="Top" inherits="RematchReduxPanelInsetFrameTemplate">
                                         <Size x="0" y="29"/>
                                         <Anchors>
                                             <Anchor point="TOPLEFT"/>
                                             <Anchor point="TOPRIGHT"/>
                                         </Anchors>
                                         <Frames>
-                                            <Button parentKey="AllButton" inherits="RematchAllButtonTemplate">
+                                            <Button parentKey="AllButton" inherits="RematchReduxAllButtonTemplate">
                                                 <Anchors>
                                                     <Anchor point="TOPLEFT" x="3" y="-3"/>
                                                 </Anchors>
                                             </Button>
-                                            <Button parentKey="CancelButton" inherits="RematchGreyPanelButtonTemplate">
+                                            <Button parentKey="CancelButton" inherits="RematchReduxGreyPanelButtonTemplate">
                                                 <Size x="68" y="24"/>
                                                 <Anchors>
                                                     <Anchor point="TOPRIGHT" x="-3" y="-3"/>
@@ -1494,7 +1494,7 @@
                                                     <KeyValue key="coord" value="68x24"/>
                                                 </KeyValues>
                                             </Button>
-                                            <EditBox parentKey="SearchBox" inherits="RematchSearchBoxTemplate">
+                                            <EditBox parentKey="SearchBox" inherits="RematchReduxSearchBoxTemplate">
                                                 <Anchors>
                                                     <Anchor point="TOPLEFT" relativeKey="$parent.AllButton" relativePoint="TOPRIGHT" x="-1" y="0"/>
                                                     <Anchor point="TOPRIGHT" relativeKey="$parent.CancelButton" relativePoint="TOPLEFT" x="1" y="0"/>
@@ -1502,7 +1502,7 @@
                                             </EditBox>
                                         </Frames>
                                     </Frame>
-                                    <Frame parentKey="List" inherits="RematchAutoScrollBoxTemplate">
+                                    <Frame parentKey="List" inherits="RematchReduxAutoScrollBoxTemplate">
                                         <Anchors>
                                             <Anchor point="TOPLEFT" relativeKey="$parent.Top" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
                                             <Anchor point="BOTTOMRIGHT"/>
@@ -1517,20 +1517,20 @@
                     </Frame>
 
                     <!-- two-panel control with autoscrollboxes to manage a list of teams or targets -->
-                    <Frame parentKey="GroupPicker" mixin="RematchDialogGroupPickerMixin">
+                    <Frame parentKey="GroupPicker" mixin="RematchReduxDialogGroupPickerMixin">
                         <Size x="280" y="220"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="280" type="number"/>
                         </KeyValues>
                         <Frames>
-                            <Frame parentKey="Top" inherits="RematchPanelInsetFrameTemplate">
+                            <Frame parentKey="Top" inherits="RematchReduxPanelInsetFrameTemplate">
                                 <Size x="0" y="29"/>
                                 <Anchors>
                                     <Anchor point="TOPLEFT"/>
                                     <Anchor point="TOPRIGHT"/>
                                 </Anchors>
                                 <Frames>
-                                    <Button parentKey="CancelButton" inherits="RematchGreyPanelButtonTemplate">
+                                    <Button parentKey="CancelButton" inherits="RematchReduxGreyPanelButtonTemplate">
                                         <Size x="68" y="24"/>
                                         <Anchors>
                                             <Anchor point="TOPRIGHT" x="-3" y="-3"/>
@@ -1552,7 +1552,7 @@
                                     </Layer>
                                 </Layers>
                             </Frame>
-                            <Frame parentKey="List" inherits="RematchAutoScrollBoxTemplate">
+                            <Frame parentKey="List" inherits="RematchReduxAutoScrollBoxTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeKey="$parent.Top" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
                                     <Anchor point="BOTTOMRIGHT"/>
@@ -1566,7 +1566,7 @@
                     </Frame>
 
                     <!-- combobox and label for an editbox with dropdown choices for values -->
-                    <Frame parentKey="ComboBox" mixin="RematchDialogComboBoxMixin">
+                    <Frame parentKey="ComboBox" mixin="RematchReduxDialogComboBoxMixin">
                         <Size x="0" y="24"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="250" type="number"/>
@@ -1581,7 +1581,7 @@
                             </Layer>
                         </Layers>
                         <Frames>
-                            <Button parentKey="ComboBox" inherits="RematchComboBoxTemplate">
+                            <Button parentKey="ComboBox" inherits="RematchReduxComboBoxTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.Label" relativePoint="RIGHT" x="2" y="0"/>
                                     <Anchor point="RIGHT"/>
@@ -1594,23 +1594,23 @@
                     </Frame>
 
                     <!-- three pets with their abilities for showing a team in save/edit dialogs -->
-                    <Frame parentKey="TeamWithAbilities" mixin="RematchDialogTeamWithAbilitiesMixin">
+                    <Frame parentKey="TeamWithAbilities" mixin="RematchReduxDialogTeamWithAbilitiesMixin">
                         <Size x="250" y="76"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="250" type="number"/>
                         </KeyValues>
                         <Frames>
-                            <Button parentArray="Pets" inherits="RematchDialogPetWithAbilitiesTemplate">
+                            <Button parentArray="Pets" inherits="RematchReduxDialogPetWithAbilitiesTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Pets" inherits="RematchDialogPetWithAbilitiesTemplate">
+                            <Button parentArray="Pets" inherits="RematchReduxDialogPetWithAbilitiesTemplate">
                                 <Anchors>
                                     <Anchor point="CENTER"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Pets" inherits="RematchDialogPetWithAbilitiesTemplate">
+                            <Button parentArray="Pets" inherits="RematchReduxDialogPetWithAbilitiesTemplate">
                                 <Anchors>
                                     <Anchor point="RIGHT"/>
                                 </Anchors>
@@ -1619,23 +1619,23 @@
                     </Frame>
 
                     <!-- three pets with their abilities for showing the other team in a comparison/override dialog -->
-                    <Frame parentKey="OtherTeamWithAbilities" mixin="RematchDialogTeamWithAbilitiesMixin">
+                    <Frame parentKey="OtherTeamWithAbilities" mixin="RematchReduxDialogTeamWithAbilitiesMixin">
                         <Size x="250" y="76"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="250" type="number"/>
                         </KeyValues>
                         <Frames>
-                            <Button parentArray="Pets" inherits="RematchDialogPetWithAbilitiesTemplate">
+                            <Button parentArray="Pets" inherits="RematchReduxDialogPetWithAbilitiesTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Pets" inherits="RematchDialogPetWithAbilitiesTemplate">
+                            <Button parentArray="Pets" inherits="RematchReduxDialogPetWithAbilitiesTemplate">
                                 <Anchors>
                                     <Anchor point="CENTER"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Pets" inherits="RematchDialogPetWithAbilitiesTemplate">
+                            <Button parentArray="Pets" inherits="RematchReduxDialogPetWithAbilitiesTemplate">
                                 <Anchors>
                                     <Anchor point="RIGHT"/>
                                 </Anchors>
@@ -1645,7 +1645,7 @@
 
                     <!-- GroupSelect is a control styled like EditBox with a label to the left; but this time
                          a button to the right styled like a team header listbutton -->
-                    <Frame parentKey="GroupSelect" mixin="RematchDialogGroupSelectMixin">
+                    <Frame parentKey="GroupSelect" mixin="RematchReduxDialogGroupSelectMixin">
                         <Size x="0" y="28"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="250" type="number"/>
@@ -1778,7 +1778,7 @@
                     </Frame>
 
 
-                    <Frame parentKey="WinRecord" mixin="RematchDialogWinRecordMixin">
+                    <Frame parentKey="WinRecord" mixin="RematchReduxDialogWinRecordMixin">
                         <Size x="260" y="152"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="260" type="number"/>
@@ -1802,7 +1802,7 @@
                             </Layer>
                         </Layers>
                         <Frames>
-                            <EditBox parentKey="Wins" inherits="RematchDialogNumberEditBoxTemplate">
+                            <EditBox parentKey="Wins" inherits="RematchReduxDialogNumberEditBoxTemplate">
                                 <Anchors>
                                     <Anchor point="TOP" x="0" y="-32"/>
                                 </Anchors>
@@ -1810,7 +1810,7 @@
                                     <KeyValue key="tabNext" value="Losses"/>
                                 </KeyValues>
                             </EditBox>
-                            <Button parentKey="WinsMinus" inherits="RematchSmallGreyButtonTemplate">
+                            <Button parentKey="WinsMinus" inherits="RematchReduxSmallGreyButtonTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.Wins" relativePoint="RIGHT" x="2" y="0"/>
                                 </Anchors>
@@ -1824,7 +1824,7 @@
                                     </OnClick>
                                 </Scripts>
                             </Button>
-                            <Button parentKey="WinsPlus" inherits="RematchSmallGreyButtonTemplate">
+                            <Button parentKey="WinsPlus" inherits="RematchReduxSmallGreyButtonTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.WinsMinus" relativePoint="RIGHT" x="0" y="0"/>
                                 </Anchors>
@@ -1838,7 +1838,7 @@
                                     </OnClick>
                                 </Scripts>
                             </Button>
-                            <EditBox parentKey="Losses" inherits="RematchDialogNumberEditBoxTemplate">
+                            <EditBox parentKey="Losses" inherits="RematchReduxDialogNumberEditBoxTemplate">
                                 <Anchors>
                                     <Anchor point="TOP" relativeKey="$parent.Wins" relativePoint="BOTTOM" x="0" y="-8"/>
                                 </Anchors>
@@ -1846,7 +1846,7 @@
                                     <KeyValue key="tabNext" value="Draws"/>
                                 </KeyValues>
                             </EditBox>
-                            <Button parentKey="LossesMinus" inherits="RematchSmallGreyButtonTemplate">
+                            <Button parentKey="LossesMinus" inherits="RematchReduxSmallGreyButtonTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.Losses" relativePoint="RIGHT" x="2" y="0"/>
                                 </Anchors>
@@ -1860,7 +1860,7 @@
                                     </OnClick>
                                 </Scripts>
                             </Button>
-                            <Button parentKey="LossesPlus" inherits="RematchSmallGreyButtonTemplate">
+                            <Button parentKey="LossesPlus" inherits="RematchReduxSmallGreyButtonTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.LossesMinus" relativePoint="RIGHT" x="0" y="0"/>
                                 </Anchors>
@@ -1874,7 +1874,7 @@
                                     </OnClick>
                                 </Scripts>
                             </Button>
-                            <EditBox parentKey="Draws" inherits="RematchDialogNumberEditBoxTemplate">
+                            <EditBox parentKey="Draws" inherits="RematchReduxDialogNumberEditBoxTemplate">
                                 <Anchors>
                                     <Anchor point="TOP" relativeKey="$parent.Losses" relativePoint="BOTTOM" x="0" y="-8"/>
                                 </Anchors>
@@ -1882,7 +1882,7 @@
                                     <KeyValue key="tabNext" value="Wins"/>
                                 </KeyValues>
                             </EditBox>
-                            <Button parentKey="DrawsMinus" inherits="RematchSmallGreyButtonTemplate">
+                            <Button parentKey="DrawsMinus" inherits="RematchReduxSmallGreyButtonTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.Draws" relativePoint="RIGHT" x="2" y="0"/>
                                 </Anchors>
@@ -1896,7 +1896,7 @@
                                     </OnClick>
                                 </Scripts>
                             </Button>
-                            <Button parentKey="DrawsPlus" inherits="RematchSmallGreyButtonTemplate">
+                            <Button parentKey="DrawsPlus" inherits="RematchReduxSmallGreyButtonTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT" relativeKey="$parent.DrawsMinus" relativePoint="RIGHT" x="0" y="0"/>
                                 </Anchors>
@@ -1917,13 +1917,13 @@
                     </Frame>
 
                     <!-- control for displaying multiple lines of text and data with the text in two columns -->
-                    <Frame parentKey="ListData" mixin="RematchDialogListDataMixin">
+                    <Frame parentKey="ListData" mixin="RematchReduxDialogListDataMixin">
                         <Size x="0" y="22"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="0" type="number"/>
                         </KeyValues>
                         <Frames>
-                            <Frame parentArray="ListItems" inherits="RematchDialogListItemTemplate">
+                            <Frame parentArray="ListItems" inherits="RematchReduxDialogListItemTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT"/>
                                     <Anchor point="TOPRIGHT"/>
@@ -1933,7 +1933,7 @@
                     </Frame>
 
                     <!-- control for choosen whether to make new copies or overwrite team name collisions -->
-                    <Frame parentKey="ConflictRadios" mixin="RematchDialogConflictRadiosMixin">
+                    <Frame parentKey="ConflictRadios" mixin="RematchReduxDialogConflictRadiosMixin">
                         <Size x="0" y="64"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="0" type="number"/>
@@ -1948,7 +1948,7 @@
                             </Layer>
                         </Layers>
                         <Frames>
-                            <CheckButton parentKey="CreateCopyRadio" inherits="RematchRadioButtonTemplate">
+                            <CheckButton parentKey="CreateCopyRadio" inherits="RematchReduxRadioButtonTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" x="0" y="-16"/>
                                 </Anchors>
@@ -1958,7 +1958,7 @@
                                     </OnClick>
                                 </Scripts>
                             </CheckButton>
-                            <CheckButton parentKey="OverwriteRadio" inherits="RematchRadioButtonTemplate">
+                            <CheckButton parentKey="OverwriteRadio" inherits="RematchReduxRadioButtonTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" x="0" y="-38"/>
                                 </Anchors>
@@ -1975,10 +1975,10 @@
                     </Frame>
 
                     <!-- control to display a normal teamlistbutton with buttons to select multiple teams -->
-                    <Frame parentKey="MultiTeam" mixin="RematchDialogMultiTeamMixin">
+                    <Frame parentKey="MultiTeam" mixin="RematchReduxDialogMultiTeamMixin">
                         <Size x="246" y="44"/>
                         <Frames>
-                            <Button parentKey="ListButtonTeam" inherits="RematchNormalTeamListButtonTemplate">
+                            <Button parentKey="ListButtonTeam" inherits="RematchReduxNormalTeamListButtonTemplate">
                                 <KeyValues>
                                     <KeyValue key="noPickup" value="true" type="boolean"/>
                                 </KeyValues>
@@ -2010,7 +2010,7 @@
                                     </Layer>
                                 </Layers>
                             </Button>
-                            <Button parentKey="PrevTeamButton" inherits="RematchSmallGreyButtonTemplate">
+                            <Button parentKey="PrevTeamButton" inherits="RematchReduxSmallGreyButtonTemplate">
                                 <KeyValues>
                                     <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0.5,0.625,0.25,0.375"/>
@@ -2024,7 +2024,7 @@
                                     </OnClick>
                                 </Scripts>
                             </Button>
-                            <Button parentKey="NextTeamButton" inherits="RematchSmallGreyButtonTemplate">
+                            <Button parentKey="NextTeamButton" inherits="RematchReduxSmallGreyButtonTemplate">
                                 <KeyValues>
                                     <KeyValue key="icon" value="Interface\AddOns\RematchRedux\textures\texticons"/>
                                     <KeyValue key="coords" value="0.625,0.75,0.25,0.375"/>
@@ -2041,7 +2041,7 @@
                         </Frames>
                     </Frame>
 
-                    <Frame parentKey="Slider" mixin="RematchDialogSliderMixin">
+                    <Frame parentKey="Slider" mixin="RematchReduxDialogSliderMixin">
                         <Size x="0" y="60"/>
                         <Layers>
                             <Layer level="ARTWORK">
@@ -2069,17 +2069,17 @@
                     <Frame parentKey="TeamWarning">
                         <Size x="164" y="64"/>
                         <Frames>
-                            <Button parentArray="Pets" inherits="RematchDialogPetButtonTemplate">
+                            <Button parentArray="Pets" inherits="RematchReduxDialogPetButtonTemplate">
                                 <Anchors>
                                     <Anchor point="CENTER" x="-60" y="0"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Pets" inherits="RematchDialogPetButtonTemplate">
+                            <Button parentArray="Pets" inherits="RematchReduxDialogPetButtonTemplate">
                                 <Anchors>
                                     <Anchor point="CENTER"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Pets" inherits="RematchDialogPetButtonTemplate">
+                            <Button parentArray="Pets" inherits="RematchReduxDialogPetButtonTemplate">
                                 <Anchors>
                                     <Anchor point="CENTER" x="60" y="0"/>
                                 </Anchors>
@@ -2301,13 +2301,13 @@
                     </Frame>
 
                     <!-- wide dropdown with no label for choosing bar chart for collection statistics -->
-                    <Frame parentKey="BarChartDropDown" mixin="RematchDialogDropDownMixin">
+                    <Frame parentKey="BarChartDropDown" mixin="RematchReduxDialogDropDownMixin">
                         <Size x="200" y="24"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="220" type="number"/>
                         </KeyValues>
                         <Frames>
-                            <Button parentKey="DropDown" inherits="RematchDropDownTemplate">
+                            <Button parentKey="DropDown" inherits="RematchReduxDropDownTemplate">
                                 <Anchors>
                                     <Anchor point="LEFT"/>
                                     <Anchor point="RIGHT"/>
@@ -2317,13 +2317,13 @@
                     </Frame>
 
                     <!-- vertical bar chart for collection statistics -->
-                    <Frame parentKey="BarChart" mixin="RematchDialogBarChartMixin">
+                    <Frame parentKey="BarChart" mixin="RematchReduxDialogBarChartMixin">
                         <Size x="250" y="186"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="250" type="number"/>
                         </KeyValues>
                         <Frames>
-                            <Frame parentArray="Bars" inherits="RematchDialogBarChartBarTemplate">
+                            <Frame parentArray="Bars" inherits="RematchReduxDialogBarChartBarTemplate">
                                 <Anchors>
                                     <Anchor point="BOTTOMLEFT"/>
                                 </Anchors>
@@ -2332,7 +2332,7 @@
                     </Frame>
 
                     <!-- summary data for team battles -->
-                    <Frame parentKey="BattleSummary" mixin="RematchDialogBattleSummaryMixin">
+                    <Frame parentKey="BattleSummary" mixin="RematchReduxDialogBattleSummaryMixin">
                         <Size x="250" y="90"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="250" type="number"/>
@@ -2402,7 +2402,7 @@
                     </Frame>
 
                     <!-- list of top 10 teams for battle summary -->
-                    <Frame parentKey="TopTeams" mixin="RematchDialogTopTeamsMixin">
+                    <Frame parentKey="TopTeams" mixin="RematchReduxDialogTopTeamsMixin">
                         <Size x="268" y="284"/>
                         <KeyValues>
                             <KeyValue key="fixedWidth" value="268" type="number"/>
@@ -2422,7 +2422,7 @@
                             </Layer>
                         </Layers>
                         <Frames>
-                            <Button parentArray="Buttons" inherits="RematchDialogTopTeamsListButtonTemplate">
+                            <Button parentArray="Buttons" inherits="RematchReduxDialogTopTeamsListButtonTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" x="0" y="-22"/>
                                 </Anchors>
@@ -2445,7 +2445,7 @@
                             </Layer>
                             <Layer level="BORDER">
                                 <!-- cage -->
-                                <Texture parentArray="Buttons" file="Interface\Icons\INV_Box_PetCarrier_01" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\Icons\INV_Box_PetCarrier_01" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="4" y="-4"/>
                                     </Anchors>
@@ -2455,7 +2455,7 @@
                 					<TexCoords left="0.0625" right="0.9375" top="0.0625" bottom="0.9375"/>
                                 </Texture>
                                 <!-- favorite -->
-                                <Texture parentArray="Buttons" file="Interface\Icons\Achievement_GuildPerk_MrPopularity" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Achievement_GuildPerk_MrPopularity" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="37" y="-4"/>
                                     </Anchors>
@@ -2465,7 +2465,7 @@
                 					<TexCoords left="0.0625" right="0.9375" top="0.0625" bottom="0.9375"/>
                                 </Texture>
                                 <!-- leveling -->
-                                <Texture parentArray="Buttons" file="Interface\AddOns\RematchRedux\textures\levelingicon" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\AddOns\RematchRedux\textures\levelingicon" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="70" y="-4"/>
                                     </Anchors>
@@ -2475,7 +2475,7 @@
                 					<TexCoords left="0.0625" right="0.9375" top="0.0625" bottom="0.9375"/>
                                 </Texture>
                                 <!-- marker:8 skull -->
-                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="103" y="-4"/>
                                     </Anchors>
@@ -2485,7 +2485,7 @@
                                     <TexCoords left="0.75" right="1" top="0.25" bottom="0.5"/>
                                 </Texture>
                                 <!-- marker:7 cross -->
-                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="136" y="-4"/>
                                     </Anchors>
@@ -2495,7 +2495,7 @@
                                     <TexCoords left="0.5" right="0.75" top="0.25" bottom="0.5"/>
                                 </Texture>
                                 <!-- marker:6 square -->
-                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="169" y="-4"/>
                                     </Anchors>
@@ -2505,7 +2505,7 @@
                                     <TexCoords left="0.25" right="0.5" top="0.25" bottom="0.5"/>
                                 </Texture>
                                 <!-- marker:5 moon -->
-                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="4" y="-37"/>
                                     </Anchors>
@@ -2515,7 +2515,7 @@
                                     <TexCoords left="0" right="0.25" top="0.25" bottom="0.5"/>
                                 </Texture>
                                 <!-- marker:4 triangle -->
-                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="37" y="-37"/>
                                     </Anchors>
@@ -2525,7 +2525,7 @@
                                     <TexCoords left="0.75" right="1" top="0" bottom="0.25"/>
                                 </Texture>
                                 <!-- marker:3 diamond -->
-                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="70" y="-37"/>
                                     </Anchors>
@@ -2535,7 +2535,7 @@
                                     <TexCoords left="0.5" right="0.75" top="0" bottom="0.25"/>
                                 </Texture>
                                 <!-- marker:2 circle -->
-                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="103" y="-37"/>
                                     </Anchors>
@@ -2545,7 +2545,7 @@
                                     <TexCoords left="0.25" right="0.5" top="0" bottom="0.25"/>
                                 </Texture>
                                 <!-- marker:1 star -->
-                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\TargetingFrame\UI-RaidTargetingIcons" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="136" y="-37"/>
                                     </Anchors>
@@ -2555,7 +2555,7 @@
                                     <TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
                                 </Texture>
                                 <!-- marker:0 remove markers -->
-                                <Texture parentArray="Buttons" file="Interface\PaperDollInfoFrame\UI-GearManager-LeaveItem-Transparent" inherits="RematchDialogPetHerderButtonTemplate">
+                                <Texture parentArray="Buttons" file="Interface\PaperDollInfoFrame\UI-GearManager-LeaveItem-Transparent" inherits="RematchReduxDialogPetHerderButtonTemplate">
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="169" y="-37"/>
                                     </Anchors>

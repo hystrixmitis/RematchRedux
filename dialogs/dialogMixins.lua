@@ -1,63 +1,63 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
 --[[ Red panel buttons across bottom of dialog ]]
 
-RematchDialogPanelButtonMixin = {}
+RematchReduxDialogPanelButtonMixin = {}
 
-function RematchDialogPanelButtonMixin:OnClick()
-    local info = rematch.dialog:GetDialogInfo()
+function RematchReduxDialogPanelButtonMixin:OnClick()
+    local info = rematchRedux.dialog:GetDialogInfo()
     if not info then
         return
     end
     -- for acceptFunc or otherFunc (if defined) run them before closing dialog in case any OnHides reset controls
-    if self==rematch.dialog.AcceptButton and info.acceptFunc then
-        info.acceptFunc(rematch.dialog.Canvas,info,info.subject)
+    if self==rematchRedux.dialog.AcceptButton and info.acceptFunc then
+        info.acceptFunc(rematchRedux.dialog.Canvas,info,info.subject)
         if info.stayOnAccept then
             return -- don't hide dialog if stayOnAccept defined
         end
-    elseif self==rematch.dialog.OtherButton and info.otherFunc then
-        info.otherFunc(rematch.dialog.Canvas,info,info.subject)
+    elseif self==rematchRedux.dialog.OtherButton and info.otherFunc then
+        info.otherFunc(rematchRedux.dialog.Canvas,info,info.subject)
         if info.stayOnOther then
             return -- don't hide dialog if stayOnOther defined
         end
     end
-    rematch.dialog:Hide()
+    rematchRedux.dialog:Hide()
     -- run cancelFunc after the dialog hides in case another dialog wants to be shown in this cancelFunc
-    if self==rematch.dialog.CancelButton and info.cancelFunc then
-        info.cancelFunc(rematch.dialog.Canvas,info,info.subject)
+    if self==rematchRedux.dialog.CancelButton and info.cancelFunc then
+        info.cancelFunc(rematchRedux.dialog.Canvas,info,info.subject)
     end
 end
 
 --[[ Text, SmallText and Help dialog controls ]]
 
-RematchDialogTextMixin = {}
+RematchReduxDialogTextMixin = {}
 
-function RematchDialogTextMixin:SetText(text)
+function RematchReduxDialogTextMixin:SetText(text)
     self.Text:SetText(text)
     self:SetHeight(self.Text:GetStringHeight())
 end
 
-function RematchDialogTextMixin:SetTextColor(r,g,b)
+function RematchReduxDialogTextMixin:SetTextColor(r,g,b)
     self.Text:SetTextColor(r,g,b)
 end
 
-function RematchDialogTextMixin:Reset()
-    if self==rematch.dialog.Canvas.Help then
+function RematchReduxDialogTextMixin:Reset()
+    if self==rematchRedux.dialog.Canvas.Help then
         self.Text:SetTextColor(0.85,0.85,0.85)
     end
 end
 
 --[[ Feedback dialog control ]]
 
-RematchDialogFeedbackMixin = {}
+RematchReduxDialogFeedbackMixin = {}
 
 -- for Feedback widget with an icon+text, this function is called from canvas.Feedback:Set(icon,text)
 -- and will set the icon to one for "warning", "info", "success", "failure" or "unknown" and color text appropriately
 -- if icon is none of those, then it will use that icon and set text to white
-function RematchDialogFeedbackMixin:Set(icon,text)
+function RematchReduxDialogFeedbackMixin:Set(icon,text)
     if icon=="warning" then
         self.Icon:SetTexture("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew")
         self.Text:SetTextColor(1,0.5,0.25)
@@ -84,34 +84,34 @@ function RematchDialogFeedbackMixin:Set(icon,text)
 end
 
 -- for dialogs that "hide" feedback by setting its alpha to 0, reset to make it visible for other dialogs
-function RematchDialogFeedbackMixin:Reset()
+function RematchReduxDialogFeedbackMixin:Reset()
     self:SetAlpha(1)
 end
 
 --[[ EditBox dialog control ]]
 
-RematchDialogEditBoxMixin = {}
+RematchReduxDialogEditBoxMixin = {}
 
-function RematchDialogEditBoxMixin:SetText(text,highlight)
+function RematchReduxDialogEditBoxMixin:SetText(text,highlight)
     self.EditBox:SetText(text)
     if highlight then
         self.EditBox:HighlightText()
     end
 end
 
-function RematchDialogEditBoxMixin:SetTextColor(r,g,b)
+function RematchReduxDialogEditBoxMixin:SetTextColor(r,g,b)
     self.EditBox:SetTextColor(r,g,b)
 end
 
-function RematchDialogEditBoxMixin:SetLabel(text)
+function RematchReduxDialogEditBoxMixin:SetLabel(text)
     self.Label:SetText(text)
 end
 
-function RematchDialogEditBoxMixin:GetText()
+function RematchReduxDialogEditBoxMixin:GetText()
     return self.EditBox:GetText()
 end
 
-function RematchDialogEditBoxMixin:SetEnabled(enable)
+function RematchReduxDialogEditBoxMixin:SetEnabled(enable)
     self.EditBox:SetEnabled(enable)
     if not enabled then
         self.EditBox:ClearHighlightText()
@@ -122,56 +122,56 @@ function RematchDialogEditBoxMixin:SetEnabled(enable)
     end
 end
 
-function RematchDialogEditBoxMixin:OnLoad()
+function RematchReduxDialogEditBoxMixin:OnLoad()
     self.EditBox:SetScript("OnEscapePressed",function(self)
-        rematch.dialog.CancelButton:Click()
+        rematchRedux.dialog.CancelButton:Click()
     end)
     self.EditBox:SetScript("OnTabPressed",function(self)
-        if rematch.dialog.Canvas.MultiLineEditBox:IsVisible() then
-            rematch.dialog.Canvas.MultiLineEditBox:SetFocus(true)
+        if rematchRedux.dialog.Canvas.MultiLineEditBox:IsVisible() then
+            rematchRedux.dialog.Canvas.MultiLineEditBox:SetFocus(true)
         end
     end)
     self.EditBox:SetScript("OnEnterPressed",function(self)
-        if rematch.dialog.AcceptButton:IsEnabled() then
-            rematch.dialog.AcceptButton:Click()
+        if rematchRedux.dialog.AcceptButton:IsEnabled() then
+            rematchRedux.dialog.AcceptButton:Click()
         end
     end)
     self.EditBox:SetScript("OnTextChanged",function(self)
-        rematch.dialog:OnChange() -- function to call the changeFunc
+        rematchRedux.dialog:OnChange() -- function to call the changeFunc
     end)
 end
 
 --[[ MultiLineEditBox dialog control ]]
 
-RematchDialogMultiLineEditBoxMixin = {}
+RematchReduxDialogMultiLineEditBoxMixin = {}
 
-function RematchDialogMultiLineEditBoxMixin:SetText(text,highlight)
+function RematchReduxDialogMultiLineEditBoxMixin:SetText(text,highlight)
     if type(text)~="table" then
         self.ScrollFrame.EditBox:SetText(text or "")
         if highlight then
             self.ScrollFrame.EditBox:HighlightText()
         end
     else
-        rematch.utils.SpoolText(self,self.ScrollFrame.EditBox,text,highlight)
+        rematchRedux.utils.SpoolText(self,self.ScrollFrame.EditBox,text,highlight)
     end
 end
 
-function RematchDialogMultiLineEditBoxMixin:GetText()
+function RematchReduxDialogMultiLineEditBoxMixin:GetText()
     return self.ScrollFrame.EditBox:GetText()
 end
 
-function RematchDialogMultiLineEditBoxMixin:SetFocus(getFocus)
+function RematchReduxDialogMultiLineEditBoxMixin:SetFocus(getFocus)
     self.ScrollFrame.EditBox:SetFocus(getFocus)
 end
 
-function RematchDialogMultiLineEditBoxMixin:ScrollToTop()
+function RematchReduxDialogMultiLineEditBoxMixin:ScrollToTop()
     self.ScrollFrame.EditBox:SetCursorPosition(0)
 end
 
-function RematchDialogMultiLineEditBoxMixin:OnLoad()
+function RematchReduxDialogMultiLineEditBoxMixin:OnLoad()
     -- EditBox
     self.ScrollFrame.EditBox:SetScript("OnEscapePressed",function(self)
-        rematch.dialog:Hide()
+        rematchRedux.dialog:Hide()
     end)
     self.ScrollFrame.EditBox:SetScript("OnTabPressed",function(self)
         self:Insert("  ")
@@ -184,7 +184,7 @@ function RematchDialogMultiLineEditBoxMixin:OnLoad()
     end)
     self.ScrollFrame.EditBox:SetScript("OnTextChanged",function(self,userInput)
         if userInput then
-            rematch.dialog.OnChange(self)
+            rematchRedux.dialog.OnChange(self)
         end
     end)
     -- setup ScrollFrame
@@ -211,39 +211,39 @@ function RematchDialogMultiLineEditBoxMixin:OnLoad()
     end)
 end
 
-function RematchDialogMultiLineEditBoxMixin:OnHide()
+function RematchReduxDialogMultiLineEditBoxMixin:OnHide()
     self:SetHeight(C.DIALOG_MULTILINE_EDITBOX_HEIGHT)
 end
 
 --[[ CheckButton dialog control ]]
 
-RematchDialogCheckButtonMixin = {}
+RematchReduxDialogCheckButtonMixin = {}
 
-function RematchDialogCheckButtonMixin:SetText(text)
+function RematchReduxDialogCheckButtonMixin:SetText(text)
     self.Check:SetText(text)
     self.Check:ClearAllPoints()
     self.Check:SetPoint("CENTER",2-(self.Check.Text:GetStringWidth()/2),0)
 end
 
-function RematchDialogCheckButtonMixin:SetChecked(isChecked)
+function RematchReduxDialogCheckButtonMixin:SetChecked(isChecked)
     self.Check:SetChecked(isChecked)
 end
 
-function RematchDialogCheckButtonMixin:GetChecked()
+function RematchReduxDialogCheckButtonMixin:GetChecked()
     return self.Check:GetChecked()
 end
 
-function RematchDialogCheckButtonMixin:OnLoad()
+function RematchReduxDialogCheckButtonMixin:OnLoad()
     self.Check:SetScript("OnClick",function(self)
-        rematch.dialog.OnChange(self)
+        rematchRedux.dialog.OnChange(self)
     end)
 end
 
-function RematchDialogCheckButtonMixin:SetEnabled(isEnabled)
+function RematchReduxDialogCheckButtonMixin:SetEnabled(isEnabled)
     self.Check:SetEnabled(isEnabled)
 end
 
-function RematchDialogCheckButtonMixin:Reset()
+function RematchReduxDialogCheckButtonMixin:Reset()
     self.Check:Enable()
     self.Check:SetChecked(false)
     self.Check.tooltipTitle = nil
@@ -252,21 +252,21 @@ end
 
 --[[ Icon dialog control ]]
 
-RematchDialogIconMixin = {}
+RematchReduxDialogIconMixin = {}
 
-function RematchDialogIconMixin:SetTexture(texture)
+function RematchReduxDialogIconMixin:SetTexture(texture)
     self.Texture:SetTexture(texture)
 end
 
-function RematchDialogIconMixin:SetTexCoord(...)
+function RematchReduxDialogIconMixin:SetTexCoord(...)
     self.Texture:SetTexCoord(...)
 end
 
 --[[ ColorPicker dialog control ]]
 
-RematchDialogColorPickerMixin = {}
+RematchReduxDialogColorPickerMixin = {}
 
-function RematchDialogColorPickerMixin:OnLoad()
+function RematchReduxDialogColorPickerMixin:OnLoad()
     self.Swatches[1]:SetColor() -- set first swatch to nil/default color
     local colors = {}
     -- add expansion colors first
@@ -278,7 +278,7 @@ function RematchDialogColorPickerMixin:OnLoad()
         tinsert(colors,color)
     end
     for i=1,#colors do
-        self.Swatches[i+1] = CreateFrame("Button",nil,self,"RematchDialogColorPickerSwatchTemplate")
+        self.Swatches[i+1] = CreateFrame("Button",nil,self,"RematchReduxDialogColorPickerSwatchTemplate")
         if (i)%9==0 then
             self.Swatches[i+1]:SetPoint("TOPLEFT",self.Swatches[i-8],"BOTTOMLEFT",0,-4)
         else
@@ -289,13 +289,13 @@ function RematchDialogColorPickerMixin:OnLoad()
     self:SetHeight(ceil((#colors+1)/9)*24-4+8)
 end
 
-function RematchDialogColorPickerMixin:Update()
+function RematchReduxDialogColorPickerMixin:Update()
     for i=1,#self.Swatches do
         self.Swatches[i].Selected:SetShown(self.Swatches[i].color==self.color)
     end
 end
 
-function RematchDialogColorPickerMixin:Set(color)
+function RematchReduxDialogColorPickerMixin:Set(color)
     if not color then
         self:Reset()
     else
@@ -304,56 +304,56 @@ function RematchDialogColorPickerMixin:Set(color)
     end
 end
 
-function RematchDialogColorPickerMixin:Reset()
+function RematchReduxDialogColorPickerMixin:Reset()
     self.color = nil
     self:Update()
 end
 
 -- Swatches in color picker dialog control
 
-RematchDialogColorPickerSwatchTemplateMixin = {}
+RematchReduxDialogColorPickerSwatchTemplateMixin = {}
 
-function RematchDialogColorPickerSwatchTemplateMixin:OnClick()
+function RematchReduxDialogColorPickerSwatchTemplateMixin:OnClick()
     self:GetParent().color = self.color
     self:GetParent():Update()
-    rematch.dialog.OnChange(self:GetParent())
+    rematchRedux.dialog.OnChange(self:GetParent())
 end
 
 --[[ DropDown dialog control ]]
 
-RematchDialogDropDownMixin = {}
+RematchReduxDialogDropDownMixin = {}
 
-function RematchDialogDropDownMixin:SetLabel(text)
+function RematchReduxDialogDropDownMixin:SetLabel(text)
     if self.Label then
         self.Label:SetText(text)
     end
 end
 
-function RematchDialogDropDownMixin:GetSelection()
+function RematchReduxDialogDropDownMixin:GetSelection()
     return self.DropDown:GetSelection()
 end
 
---[[ RematchDialogPetMixin ]]
+--[[ RematchReduxDialogPetMixin ]]
 
-RematchDialogPetMixin = {}
+RematchReduxDialogPetMixin = {}
 
-function RematchDialogPetMixin:Fill(petID)
+function RematchReduxDialogPetMixin:Fill(petID)
     self.ListButtonPet:Fill(petID)
 end
 
---[[ RematchDialogTeamMixin ]]
+--[[ RematchReduxDialogTeamMixin ]]
 
-RematchDialogTeamMixin = {}
+RematchReduxDialogTeamMixin = {}
 
-function RematchDialogTeamMixin:Fill(teamID)
+function RematchReduxDialogTeamMixin:Fill(teamID)
     self.ListButtonTeam:Fill(teamID)
 end
 
 --[[ LayoutTabs dialog control ]]
 
-RematchDialogLayoutTabsMixin = {}
+RematchReduxDialogLayoutTabsMixin = {}
 
-function RematchDialogLayoutTabsMixin:OnLoad()
+function RematchReduxDialogLayoutTabsMixin:OnLoad()
     for _,tab in ipairs(self.Tabs) do
         tab:SetScript("OnClick",self.TabOnClick)
     end
@@ -363,7 +363,7 @@ end
 -- hasStuffFunc returns true if this tab has stuff to clear (blue highlight in tab)
 -- clearStuffFunc clears the content in the tab
 -- clicking one of the tabs changes to the associated named layout
-function RematchDialogLayoutTabsMixin:SetTabs(layouts)
+function RematchReduxDialogLayoutTabsMixin:SetTabs(layouts)
     assert(type(layouts)=="table" and type(layouts[1])=="table" and #layouts[1]>=2,"Invalid LayoutTabs. Must be {{tab_name, layout_name}, {tab_name, layout_name}, etc.}")
     self.layouts = layouts
     local numTabs = min(#layouts,#self.Tabs) -- maxing at 4 tabs
@@ -380,7 +380,7 @@ function RematchDialogLayoutTabsMixin:SetTabs(layouts)
     self.Clear:SetScript("OnClick",function() -- note self is the mixin here using closure
         local tabNeedsCleared
         for i=1,#self.layouts do
-            if rematch.dialog:GetDialogInfo().layoutTab==self.layouts[i][2] and type(self.layouts[i][3])=="function" and self.layouts[i][3](self:GetParent()) then
+            if rematchRedux.dialog:GetDialogInfo().layoutTab==self.layouts[i][2] and type(self.layouts[i][3])=="function" and self.layouts[i][3](self:GetParent()) then
                 tabNeedsCleared = i -- the current tab needs cleared
             end
         end
@@ -394,18 +394,18 @@ function RematchDialogLayoutTabsMixin:SetTabs(layouts)
     end)
 end
 
-function RematchDialogLayoutTabsMixin:TabOnClick()
+function RematchReduxDialogLayoutTabsMixin:TabOnClick()
     local tabs = self:GetParent().Tabs
     for i=1,#tabs do
         tabs[i]:SetSelected(self:GetID()==i)
     end
-    rematch.menus:Hide()
-    rematch.dialog:GetDialogInfo().layoutTab = self:GetParent().layouts[self:GetID()][2]
-    rematch.dialog:ChangeLayout(self.layout)
+    rematchRedux.menus:Hide()
+    rematchRedux.dialog:GetDialogInfo().layoutTab = self:GetParent().layouts[self:GetID()][2]
+    rematchRedux.dialog:ChangeLayout(self.layout)
 end
 
 -- goes to a layout tab by layoutname ("Default", "Preferences", etc; non-localized)
-function RematchDialogLayoutTabsMixin:GoToTab(layoutTab)
+function RematchReduxDialogLayoutTabsMixin:GoToTab(layoutTab)
     -- go through each layout and click the one named
     for i,tab in ipairs(self.layouts) do
         if tab[2]==layoutTab then
@@ -415,7 +415,7 @@ function RematchDialogLayoutTabsMixin:GoToTab(layoutTab)
 end
 
 -- hide the HasStuff blue highlight when layout tabs are hidden
-function RematchDialogLayoutTabsMixin:OnHide()
+function RematchReduxDialogLayoutTabsMixin:OnHide()
     for _,tab in ipairs(self.Tabs) do
         tab.HasStuff:Hide()
     end
@@ -423,7 +423,7 @@ function RematchDialogLayoutTabsMixin:OnHide()
 end
 
 -- call in a dialog's OnChange to update the highlights and whether the clear button is shown
-function RematchDialogLayoutTabsMixin:Update()
+function RematchReduxDialogLayoutTabsMixin:Update()
     local hasStuff = false
     for i=1,#self.layouts do
         if self.layouts[i][3] and type(self.layouts[i][3])=="function" and self.layouts[i][3](self:GetParent()) then
@@ -438,31 +438,31 @@ end
 
 --[[ Small editboxes in preferences dialog control (min/max health/level) ]]
 
-RematchDialogNumberEditBoxMixin = {}
+RematchReduxDialogNumberEditBoxMixin = {}
 
-function RematchDialogNumberEditBoxMixin:OnTextChanged()
+function RematchReduxDialogNumberEditBoxMixin:OnTextChanged()
     local text=self:GetText()
-    local valid=text:gsub("[^\.0123456789]","")
+    local valid=text:gsub("[^.0123456789]","")
     if text~=valid then
         self:SetText(valid)
     end
     self.Clear:SetShown(valid and valid:len()>0)
-    rematch.dialog:OnChange()
+    rematchRedux.dialog:OnChange()
 end
 
-function RematchDialogNumberEditBoxMixin:OnTabPressed()
+function RematchReduxDialogNumberEditBoxMixin:OnTabPressed()
     if self.tabNext and self:GetParent()[self.tabNext] then
         self:GetParent()[self.tabNext]:SetFocus()
     end
 end
 
-function RematchDialogNumberEditBoxMixin:OnEnterPressed()
-    if rematch.dialog.AcceptButton:IsEnabled() then
-        rematch.dialog.AcceptButton:Click()
+function RematchReduxDialogNumberEditBoxMixin:OnEnterPressed()
+    if rematchRedux.dialog.AcceptButton:IsEnabled() then
+        rematchRedux.dialog.AcceptButton:Click()
     end
 end
 
-function RematchDialogNumberEditBoxMixin:AllowEdits(enabled)
+function RematchReduxDialogNumberEditBoxMixin:AllowEdits(enabled)
     if enabled then
         self:Enable()
         self.Label:SetTextColor(1,0.82,0)
@@ -476,9 +476,9 @@ end
 
 --[[ Preferences dialog control ]]
 
-RematchDialogPreferencesMixin = {}
+RematchReduxDialogPreferencesMixin = {}
 
-function RematchDialogPreferencesMixin:OnLoad()
+function RematchReduxDialogPreferencesMixin:OnLoad()
     -- labels
     self.LevelLabel:SetText(L["Level"])
     self.MinLevel.Label:SetText(L["Min:"])
@@ -501,13 +501,13 @@ function RematchDialogPreferencesMixin:OnLoad()
     self.AllowMM.tooltipBody = L["Allow low-health and low-level Magic or Mechanical pets to ignore the Minimum Health or Level, since their racials allow them to often survive a hit that would ordinarily kill them."]
 
     self.AllowMM:SetScript("OnClick",function(self)
-        rematch.dialog:OnChange()
+        rematchRedux.dialog:OnChange()
         PlaySound(C.SOUND_CHECKBUTTON)
     end)
 end
 
 -- sets the preferences control to the given values (unordered table of minHP, maxHP, minXP, maxXP, allowMM, expectedDD)
-function RematchDialogPreferencesMixin:Set(values)
+function RematchReduxDialogPreferencesMixin:Set(values)
     if type(values)~="table" then
         values = {} -- nothing given, clear everything
     end
@@ -518,13 +518,13 @@ function RematchDialogPreferencesMixin:Set(values)
     self.AllowMM:SetChecked(values.allowMM and true)
     self.expectedDD = tonumber(values.expectedDD)
     self:UpdateExpectedDamage()
-    rematch.dialog:OnChange()
+    rematchRedux.dialog:OnChange()
 end
 
 -- returns the currently picked preferences in the control as an unordered table
 -- if utable given, preferences will be stored in that table; otherwise a reused table returned
 local preferencesResults = {} -- reused to minimize garbage creation; but be careful not to assign this table reference to anything!
-function RematchDialogPreferencesMixin:Get(utable)
+function RematchReduxDialogPreferencesMixin:Get(utable)
     local results = utable or preferencesResults
     wipe(results)
     results.minHP = tonumber(self.MinHealth:GetText())
@@ -537,7 +537,7 @@ function RematchDialogPreferencesMixin:Get(utable)
 end
 
 -- if disable is true, desaturate all buttons
-function RematchDialogPreferencesMixin:UpdateExpectedDamage()
+function RematchReduxDialogPreferencesMixin:UpdateExpectedDamage()
     self.ExpectedDamage.Selected:Hide()
     for i=1,10 do
         if self.expectedDD==i and not self.isDisabled then
@@ -554,11 +554,11 @@ function RematchDialogPreferencesMixin:UpdateExpectedDamage()
 end
 
 -- returns true if any control has a value that needs cleared
-function RematchDialogPreferencesMixin:IsAnyUsed()
+function RematchReduxDialogPreferencesMixin:IsAnyUsed()
     return (tonumber(self.MinHealth:GetText()) or tonumber(self.MaxHealth:GetText()) or tonumber(self.MinLevel:GetText()) or tonumber(self.MaxLevel:GetText()) or self.AllowMM:GetChecked() or self.expectedDD) and true or false
 end
 
-function RematchDialogPreferencesMixin:SetEnabled(enable)
+function RematchReduxDialogPreferencesMixin:SetEnabled(enable)
     self.isDisabled = not enable
     self.MinLevel:AllowEdits(enable)
     self.MaxLevel:AllowEdits(enable)
@@ -581,44 +581,44 @@ function RematchDialogPreferencesMixin:SetEnabled(enable)
 end
 
 -- automatically called when dialog closes, re-enables preferences if it wasn't enabled
-function RematchDialogPreferencesMixin:Reset()
+function RematchReduxDialogPreferencesMixin:Reset()
     self:SetEnabled(true)
 end
 
 --[[ Preferences Expected Damage buttons ]]
 
-RematchDialogExpectedDDMixin = {}
+RematchReduxDialogExpectedDDMixin = {}
 
-function RematchDialogExpectedDDMixin:OnEnter()
+function RematchReduxDialogExpectedDDMixin:OnEnter()
     if not self:GetParent():GetParent().isDisabled then
-        rematch.textureHighlight:Show(self)
+        rematchRedux.textureHighlight:Show(self)
     end
     local minHP = tonumber(self:GetParent():GetParent().MinHealth:GetText())
     if not minHP then
-        rematch.tooltip:ShowSimpleTooltip(self,L["Expected Damage Taken"],L["The minimum health of pets can be adjusted by the type of damage they are expected to receive."])
+        rematchRedux.tooltip:ShowSimpleTooltip(self,L["Expected Damage Taken"],L["The minimum health of pets can be adjusted by the type of damage they are expected to receive."])
     else
-        rematch.tooltip:ShowSimpleTooltip(self,format(L["Damage Expected: %s"],rematch.utils:PetTypeAsText(self.key)))
-        rematch.tooltip:AddLine(format(L["Minimum Health: %d"],minHP))
-        rematch.tooltip:AddLine(format(L["  For %s pets: \124cffffffff%d"],rematch.utils:PetTypeAsText(C.HINTS_OFFENSE[self.key][1]),minHP*1.5))
-        rematch.tooltip:AddLine(format(L["  For %s pets: \124cffffffff%d"],rematch.utils:PetTypeAsText(C.HINTS_OFFENSE[self.key][2]),minHP*2/3))
-        rematch.tooltip:Show()
+        rematchRedux.tooltip:ShowSimpleTooltip(self,format(L["Damage Expected: %s"],rematchRedux.utils:PetTypeAsText(self.key)))
+        rematchRedux.tooltip:AddLine(format(L["Minimum Health: %d"],minHP))
+        rematchRedux.tooltip:AddLine(format(L["  For %s pets: \124cffffffff%d"],rematchRedux.utils:PetTypeAsText(C.HINTS_OFFENSE[self.key][1]),minHP*1.5))
+        rematchRedux.tooltip:AddLine(format(L["  For %s pets: \124cffffffff%d"],rematchRedux.utils:PetTypeAsText(C.HINTS_OFFENSE[self.key][2]),minHP*2/3))
+        rematchRedux.tooltip:Show()
     end
 end
 
-function RematchDialogExpectedDDMixin:OnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.tooltip:Hide()
+function RematchReduxDialogExpectedDDMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
-function RematchDialogExpectedDDMixin:OnMouseDown()
+function RematchReduxDialogExpectedDDMixin:OnMouseDown()
     if not self:GetParent():GetParent().isDisabled then
-        rematch.textureHighlight:Hide()
+        rematchRedux.textureHighlight:Hide()
     end
 end
 
-function RematchDialogExpectedDDMixin:OnMouseUp()
+function RematchReduxDialogExpectedDDMixin:OnMouseUp()
     if self:IsMouseMotionFocus() and not self:GetParent():GetParent().isDisabled then
-        rematch.textureHighlight:Show(self)
+        rematchRedux.textureHighlight:Show(self)
         local preferences = self:GetParent():GetParent() -- texture -> ExpectedDamage -> Preferences
         if preferences.expectedDD==self.key then
             preferences.expectedDD = nil
@@ -626,15 +626,15 @@ function RematchDialogExpectedDDMixin:OnMouseUp()
             preferences.expectedDD = self.key
         end
         preferences:UpdateExpectedDamage()
-        rematch.dialog:OnChange()
+        rematchRedux.dialog:OnChange()
     end
 end
 
 --[[ Read-Only Preferences for non-editable display of preferences ]]
 
-RematchDialogPreferencesReadOnlyMixin = {}
+RematchReduxDialogPreferencesReadOnlyMixin = {}
 
-function RematchDialogPreferencesReadOnlyMixin:OnLoad()
+function RematchReduxDialogPreferencesReadOnlyMixin:OnLoad()
     -- labels
     self.LevelLabel:SetText(L["Level"])
     self.MinLevel.Label:SetText(L["Min:"])
@@ -645,26 +645,26 @@ function RematchDialogPreferencesReadOnlyMixin:OnLoad()
     self.ExpectedDamage.Label:SetText(L["Expected Damage Taken:"])
 end
 
-function RematchDialogPreferencesReadOnlyMixin:Set(values)
+function RematchReduxDialogPreferencesReadOnlyMixin:Set(values)
     if type(values)~="table" then
         values = {} -- nothing given, clear everything
     end
     local minHP = tonumber(values.minHP)
-    rematch.utils:SetDimText(self.MinHealth.Label,not minHP)
+    rematchRedux.utils:SetDimText(self.MinHealth.Label,not minHP)
     self.MinHealth.Text:SetText(minHP or "")
     local maxHP = tonumber(values.maxHP)
-    rematch.utils:SetDimText(self.MaxHealth.Label,not maxHP)
+    rematchRedux.utils:SetDimText(self.MaxHealth.Label,not maxHP)
     self.MaxHealth.Text:SetText(tonumber(values.maxHP) or "")
     local minXP = tonumber(values.minXP)
-    rematch.utils:SetDimText(self.MinLevel.Label,not minXP)
+    rematchRedux.utils:SetDimText(self.MinLevel.Label,not minXP)
     self.MinLevel.Text:SetText(minXP or "")
     local maxXP = tonumber(values.maxXP)
-    rematch.utils:SetDimText(self.MaxLevel.Label,not maxXP)
+    rematchRedux.utils:SetDimText(self.MaxLevel.Label,not maxXP)
     self.MaxLevel.Text:SetText(maxXP or "")
-    rematch.utils:SetDimText(self.LevelLabel,not minXP and not maxXP)
-    rematch.utils:SetDimText(self.HealthLabel,not minHP and not maxHP)
+    rematchRedux.utils:SetDimText(self.LevelLabel,not minXP and not maxXP)
+    rematchRedux.utils:SetDimText(self.HealthLabel,not minHP and not maxHP)
 
-    rematch.utils:SetDimText(self.ExpectedDamage.Label,not values.expectedDD)
+    rematchRedux.utils:SetDimText(self.ExpectedDamage.Label,not values.expectedDD)
     self.ExpectedDamage.Selected:Hide()
     for i=1,10 do
         if values.expectedDD==i then
@@ -683,7 +683,7 @@ function RematchDialogPreferencesReadOnlyMixin:Set(values)
         self.AllowMMLabel:SetText(format(L["%s %s or %s"],L["Allow any"],C.MAGIC_DISABLED_TEXT_ICON,C.MECHANICAL_DISABLED_TEXT_ICON))
         self.AllowMMLabel:SetTextColor(0.5,0.5,0.5)
     end
-    rematch.utils:SetDimText(self.AllowMMLabel,not values.allowMM)
+    rematchRedux.utils:SetDimText(self.AllowMMLabel,not values.allowMM)
 end
 
 --[[ IconPicker functions ]]
@@ -691,43 +691,43 @@ end
 local iconRows = {} -- ordered list of indexes 1..n for each row of icons to display
 local iconSearch = ""
 
-RematchDialogIconPickerMixin = {}
+RematchReduxDialogIconPickerMixin = {}
 
-function RematchDialogIconPickerMixin:OnLoad()
+function RematchReduxDialogIconPickerMixin:OnLoad()
     self.SearchBox.Instructions:SetText(L["Search Icons"])
 
     self.List:Setup({
         allData = iconRows,
-        normalTemplate = "RematchDialogIconPickerRowTemplate",
+        normalTemplate = "RematchReduxDialogIconPickerRowTemplate",
         normalFill = self.FillNormal,
         normalHeight = 26
     })
 
 end
 
-function RematchDialogIconPickerMixin:OnShow()
+function RematchReduxDialogIconPickerMixin:OnShow()
     self.SearchBox:SetScript("OnTextChanged",function() self:UpdateList() end)
     if self.SearchBox:GetText()~="" then
         self.SearchBox.Clear:Click()
     end
 end
 
-function RematchDialogIconPickerMixin:OnHide()
+function RematchReduxDialogIconPickerMixin:OnHide()
     self.SearchBox:SetScript("OnTextChanged",nil)
 end
 
-function RematchDialogIconPickerMixin:UpdateList()
+function RematchReduxDialogIconPickerMixin:UpdateList()
     -- recreate a list of rows based on the number of icons (potentially reduced by a search happening)
     wipe(iconRows)
     iconSearch = self.SearchBox:GetText()
-    for i=1,ceil(#rematch.allIcons:GetIcons(iconSearch)/7) do
+    for i=1,ceil(#rematchRedux.allIcons:GetIcons(iconSearch)/7) do
         tinsert(iconRows,i)
     end
     self.List:Update()
 end
 
-function RematchDialogIconPickerMixin:FillNormal(row)
-    local allIcons = rematch.allIcons:GetIcons(iconSearch)
+function RematchReduxDialogIconPickerMixin:FillNormal(row)
+    local allIcons = rematchRedux.allIcons:GetIcons(iconSearch)
     local numIcons = #allIcons
     local offset = (row-1)*7
     for i=1,#self.Icons do
@@ -743,43 +743,43 @@ function RematchDialogIconPickerMixin:FillNormal(row)
     end
 end
 
-function RematchDialogIconPickerMixin:SetIcon(icon)
+function RematchReduxDialogIconPickerMixin:SetIcon(icon)
     self.Icon:SetTexture(icon)
     self.icon = icon
 end
 
-function RematchDialogIconPickerMixin:GetIcon()
-    return self.icon or C.REMATCH_ICON
+function RematchReduxDialogIconPickerMixin:GetIcon()
+    return self.icon or C.REMATCHREDUX_ICON
 end
 
 --[[ IconPicker Icon "button"(texture) script handlers ]]
 
-RematchDialogIconPickerIconMixin = {}
+RematchReduxDialogIconPickerIconMixin = {}
 
-function RematchDialogIconPickerIconMixin:OnEnter()
-    rematch.textureHighlight:Show(self)
+function RematchReduxDialogIconPickerIconMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self)
 end
 
-function RematchDialogIconPickerIconMixin:OnLeave()
-    rematch.textureHighlight:Hide()
+function RematchReduxDialogIconPickerIconMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchDialogIconPickerIconMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxDialogIconPickerIconMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchDialogIconPickerIconMixin:OnMouseUp()
+function RematchReduxDialogIconPickerIconMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self)
+        rematchRedux.textureHighlight:Show(self)
         self:GetParent():GetParent():GetParent():GetParent():GetParent():SetIcon(self.fileID)
     end
 end
 
 --[[ TeamPicker is a control to list and pick teams or targets that contains a List autoscrollbox and a Picker autoscrollbox ]]
 
-RematchDialogTeamPickerMixin = {}
+RematchReduxDialogTeamPickerMixin = {}
 
-function RematchDialogTeamPickerMixin:OnLoad()
+function RematchReduxDialogTeamPickerMixin:OnLoad()
     self.Lister.Top.AddButton:SetText(C.ADD_TEXT_ICON..L[" Add"])
     self.Lister.Top.DeleteButton:SetText(C.DELETE_TEXT_ICON..L[" Delete"])
     self.Lister.Top.UpButton:SetText(C.UP_TEXT_ICON..L[" Up"])
@@ -795,7 +795,7 @@ function RematchDialogTeamPickerMixin:OnLoad()
     -- setup autoScrollBox for Lister, the list of teams/targets/groups
     self.Lister.List:Setup({
         allData = self.teamList,
-        normalTemplate = "RematchCompactTeamListButtonTemplate",
+        normalTemplate = "RematchReduxCompactTeamListButtonTemplate",
         normalFill = self.FillLister,
         normalHeight = 26,
         selects = {
@@ -806,14 +806,14 @@ function RematchDialogTeamPickerMixin:OnLoad()
     -- setup autoScrollBox
     self.Picker.List:Setup({
         allData = self.pickList,
-        normalTemplate = "RematchCompactTeamListButtonTemplate",
+        normalTemplate = "RematchReduxCompactTeamListButtonTemplate",
         normalFill = self.FillPicker,
         normalHeight = 26,
-        headerTemplate = "RematchHeaderTeamListButtonTemplate",
+        headerTemplate = "RematchReduxHeaderTeamListButtonTemplate",
         headerFill = self.FillHeader,
         headerCriteria = self.IsHeader,
         headerHeight = 26,
-        placeholderTemplate = "RematchPlaceholderListButtonTemplate",
+        placeholderTemplate = "RematchReduxPlaceholderListButtonTemplate",
         placeholderFill = self.FillPlaceholder,
         placeholderCriteria = self.IsPlaceholder,
         placeholderHeight = 26,
@@ -821,7 +821,7 @@ function RematchDialogTeamPickerMixin:OnLoad()
         allButton = self.Picker.Top.AllButton,
         searchBox = self.Picker.Top.SearchBox,
         searchHit = self.PickerSearchHit,
-        onScroll = rematch.menus.Hide,
+        onScroll = rematchRedux.menus.Hide,
     })
     for _,button in ipairs({"AddButton","DeleteButton","UpButton","DownButton"}) do
         self.Lister.Top[button]:SetScript("OnClick",self[button.."OnClick"])
@@ -833,7 +833,7 @@ function RematchDialogTeamPickerMixin:OnLoad()
     self.Picker.List.TeamOnClick = self.PickerButtonOnClick
 end
 
-function RematchDialogTeamPickerMixin:SetList(listType,teamList)
+function RematchReduxDialogTeamPickerMixin:SetList(listType,teamList)
     assert(listType==C.LIST_TYPE_TEAM or listType==C.LIST_TYPE_TARGET or listType==C.LIST_TYPE_GROUP,"Invalid list type for dialog team list")
     assert(type(teamList)=="table","Invalid list for dialog team list")
     self.listType = listType
@@ -847,12 +847,12 @@ function RematchDialogTeamPickerMixin:SetList(listType,teamList)
     self:UpdateLister()
 end
 
-function RematchDialogTeamPickerMixin:GetList()
+function RematchReduxDialogTeamPickerMixin:GetList()
     return CopyTable(self.teamList) -- don't pass a reference to this table to minimize anything messing it up
 end
 
 -- when dialog hides, this will wipe the lists/search
-function RematchDialogTeamPickerMixin:Reset()
+function RematchReduxDialogTeamPickerMixin:Reset()
     wipe(self.teamList)
     wipe(self.pickList)
     wipe(self.pickHeaders)
@@ -860,22 +860,22 @@ function RematchDialogTeamPickerMixin:Reset()
 end
 
 -- for use with clear button on layout tabs, clears list and returns to lister
-function RematchDialogTeamPickerMixin:Clear()
+function RematchReduxDialogTeamPickerMixin:Clear()
     wipe(self.teamList)
     self.Picker:Hide()
     self.Lister:Show()
     self:UpdateLister()
-    rematch.dialog:OnChange()
+    rematchRedux.dialog:OnChange()
 end
 
 --[[ Lister functions ]]
 
-function RematchDialogTeamPickerMixin:FillLister(id)
+function RematchReduxDialogTeamPickerMixin:FillLister(id)
     self:Fill(id)
 end
 
 -- updates the Lister list (if justButtons not true) and the Add/Delete/Up/Down buttons
-function RematchDialogTeamPickerMixin:UpdateLister(justButtons)
+function RematchReduxDialogTeamPickerMixin:UpdateLister(justButtons)
     if not justButtons then
         self.Lister.List:Update()
     end
@@ -893,7 +893,7 @@ function RematchDialogTeamPickerMixin:UpdateLister(justButtons)
 end
 
 -- click of a teamID/targetID in the Lister panel always selects the teamID/targetID and updates the list
-function RematchDialogTeamPickerMixin:ListerButtonOnClick(button)
+function RematchReduxDialogTeamPickerMixin:ListerButtonOnClick(button)
     if button~="RightButton" then
         local list = self:GetParent():GetParent():GetParent() -- the AutoScrollBox List
         local parent = list:GetParent():GetParent() -- the TeamPicker control
@@ -902,15 +902,15 @@ function RematchDialogTeamPickerMixin:ListerButtonOnClick(button)
     end
 end
 
-function RematchDialogTeamPickerMixin:AddButtonOnClick()
+function RematchReduxDialogTeamPickerMixin:AddButtonOnClick()
     local parent = self:GetParent():GetParent():GetParent() -- the TeamPicker control
     parent.Lister:Hide()
     parent.Picker:Show()
     if parent.listType==C.LIST_TYPE_TARGET then
         wipe(parent.pickList)
-        rematch.targetsPanel:PopulateTargetList(parent.pickList)
+        rematchRedux.targetsPanel:PopulateTargetList(parent.pickList)
     elseif parent.listType==C.LIST_TYPE_TEAM then
-        rematch.teamsPanel:PopulateTeamList(parent.pickList)
+        rematchRedux.teamsPanel:PopulateTeamList(parent.pickList)
     else
         wipe(parent.pickList)
     end
@@ -918,52 +918,52 @@ function RematchDialogTeamPickerMixin:AddButtonOnClick()
 end
 
 -- deletes the selected id from the teamList
-function RematchDialogTeamPickerMixin:DeleteButtonOnClick()
+function RematchReduxDialogTeamPickerMixin:DeleteButtonOnClick()
     local list = self:GetParent():GetParent().List -- the AutoScrollBox List
     local parent = self:GetParent():GetParent():GetParent() -- the TeamPicker control
     local selectedData = list:GetSelected("Selected")
-    local index = rematch.utils:GetIndexByValue(parent.teamList,selectedData)
+    local index = rematchRedux.utils:GetIndexByValue(parent.teamList,selectedData)
     if index then
-        rematch.utils:TableRemoveByValue(parent.teamList,selectedData)
+        rematchRedux.utils:TableRemoveByValue(parent.teamList,selectedData)
         local newData = parent.teamList[max(index-1,1)] -- it's okay if it's nil (list empty)
         list:Select("Selected",newData,true) -- change selection to the previous teamID/targetID that remains
         parent:UpdateLister()
-        rematch.dialog:OnChange()
+        rematchRedux.dialog:OnChange()
     end
 end
 
 -- moves the selected id up the teamList
-function RematchDialogTeamPickerMixin:UpButtonOnClick()
+function RematchReduxDialogTeamPickerMixin:UpButtonOnClick()
     local list = self:GetParent():GetParent().List -- the AutoScrollBox List
     local parent = self:GetParent():GetParent():GetParent() -- the TeamPicker control
     local selectedData = list:GetSelected("Selected")
-    local index = rematch.utils:GetIndexByValue(parent.teamList,selectedData)
+    local index = rematchRedux.utils:GetIndexByValue(parent.teamList,selectedData)
     if index>1 then
         local tempData = parent.teamList[index-1] -- swap values at index and index-1
         parent.teamList[index-1] = selectedData
         parent.teamList[index] = tempData
         parent:UpdateLister()
-        rematch.dialog:OnChange()
+        rematchRedux.dialog:OnChange()
     end
 end
 
 -- moves the selected id down the teamList
-function RematchDialogTeamPickerMixin:DownButtonOnClick()
+function RematchReduxDialogTeamPickerMixin:DownButtonOnClick()
     local list = self:GetParent():GetParent().List -- the AutoScrollBox List
     local parent = self:GetParent():GetParent():GetParent() -- the TeamPicker control
     local selectedData = list:GetSelected("Selected")
-    local index = rematch.utils:GetIndexByValue(parent.teamList,selectedData)
+    local index = rematchRedux.utils:GetIndexByValue(parent.teamList,selectedData)
     if index < #parent.teamList then
         local tempData = parent.teamList[index+1] -- swap values at index and index+1
         parent.teamList[index+1] = selectedData
         parent.teamList[index] = tempData
         parent:UpdateLister()
-        rematch.dialog:OnChange()
+        rematchRedux.dialog:OnChange()
     end
 end
 
 -- click of Cancel in the Picker part of the control, returns to Lister frame
-function RematchDialogTeamPickerMixin:CancelButtonOnClick()
+function RematchReduxDialogTeamPickerMixin:CancelButtonOnClick()
     local parent = self:GetParent():GetParent():GetParent() -- the TeamPicker control
     parent.Picker:Hide()
     parent.Lister:Show()
@@ -971,59 +971,59 @@ end
 
 --[[ Picker functions ]]
 
-function RematchDialogTeamPickerMixin:FillPicker(id)
+function RematchReduxDialogTeamPickerMixin:FillPicker(id)
     self:Fill(id)
 end
 
-function RematchDialogTeamPickerMixin:FillHeader(id)
+function RematchReduxDialogTeamPickerMixin:FillHeader(id)
     self:Fill(id)
 end
 
 -- if listType is target, then picker is display teams and vice versa
-function RematchDialogTeamPickerMixin:FillPlaceholder(id)
+function RematchReduxDialogTeamPickerMixin:FillPlaceholder(id)
     local list = self:GetParent():GetParent():GetParent() -- the AutoScrollBox List
     local parent = list:GetParent():GetParent() -- the TeamPicker control
     if parent.listType==C.LIST_TYPE_TEAM then
-        rematch.teamsPanel.FillPlaceholder(self,id)
+        rematchRedux.teamsPanel.FillPlaceholder(self,id)
     elseif parent.listType==C.LIST_TYPE_TARGET then
-        rematch.targetsPanel.FillPlaceholder(self,id)
+        rematchRedux.targetsPanel.FillPlaceholder(self,id)
     end
 end
 
-function RematchDialogTeamPickerMixin:IsHeader(id)
+function RematchReduxDialogTeamPickerMixin:IsHeader(id)
     return type(id)=="string" and (id:match("^group:") or id:match("^header")) and true or false
 end
 
-function RematchDialogTeamPickerMixin:IsPlaceholder(id)
+function RematchReduxDialogTeamPickerMixin:IsPlaceholder(id)
     return type(id)=="string" and id:match("^placeholder:") and true or false
 end
 
-function RematchDialogTeamPickerMixin:PickerHeaderOnClick()
+function RematchReduxDialogTeamPickerMixin:PickerHeaderOnClick()
     local list = self:GetParent():GetParent():GetParent() -- the AutoScrollBox List
     list:ToggleHeader(self.groupID or self.headerID)
 end
 
-function RematchDialogTeamPickerMixin:PickerButtonOnClick(button)
+function RematchReduxDialogTeamPickerMixin:PickerButtonOnClick(button)
     local list = self:GetParent():GetParent():GetParent() -- the AutoScrollBox List
     local parent = list:GetParent():GetParent() -- the TeamPicker control
     local id = self.teamID or self.targetID
     if id then
-        rematch.utils:TableInsertDistinct(parent.teamList,id)
+        rematchRedux.utils:TableInsertDistinct(parent.teamList,id)
         parent.Picker:Hide()
         parent.Lister:Show()
         parent.Lister.List:Select("Selected",id)
         parent:UpdateLister()
         parent.Lister.List:BlingData(id)
-        rematch.dialog:OnChange()
+        rematchRedux.dialog:OnChange()
     end
 end
 
-function RematchDialogTeamPickerMixin:PickerSearchHit(mask,id)
+function RematchReduxDialogTeamPickerMixin:PickerSearchHit(mask,id)
     local parent = self:GetParent():GetParent() -- the TeamPicker control
     if parent.listType==C.LIST_TYPE_TEAM then -- if list type is target, searching teams
-        return rematch.teamsPanel.SearchHit(self,mask,id)
+        return rematchRedux.teamsPanel.SearchHit(self,mask,id)
     elseif parent.listType==C.LIST_TYPE_TARGET then -- if list type is team, searching targets
-        return rematch.targetsPanel.SearchHit(self,mask,id)
+        return rematchRedux.targetsPanel.SearchHit(self,mask,id)
     else
         return false
     end
@@ -1031,14 +1031,14 @@ end
 
 --[[ group picker ]]
 
-RematchDialogGroupPickerMixin = {}
+RematchReduxDialogGroupPickerMixin = {}
 
-function RematchDialogGroupPickerMixin:OnLoad()
+function RematchReduxDialogGroupPickerMixin:OnLoad()
     self.Top.CancelButton.Text:SetText(CANCEL)
     self.Top.Label:SetText(L["Choose a group for this team"])
 
     self.Top.CancelButton:SetScript("OnClick",function(self)
-        rematch.dialog:ChangeLayout(self:GetParent():GetParent().returnLayout or "Default")
+        rematchRedux.dialog:ChangeLayout(self:GetParent():GetParent().returnLayout or "Default")
     end)
 
     self.groupList = {} -- ordered list of groupIDs to list
@@ -1046,7 +1046,7 @@ function RematchDialogGroupPickerMixin:OnLoad()
     -- setup autoScrollBox for Lister, the list of teams/targets/groups
     self.List:Setup({
         allData = self.groupList,
-        normalTemplate = "RematchDialogGroupPickerListButtonTemplate",
+        normalTemplate = "RematchReduxDialogGroupPickerListButtonTemplate",
         normalFill = self.FillGroup,
         normalHeight = 26
     })
@@ -1054,7 +1054,7 @@ end
 
 -- sets the layout to return to when group picked or cancelled
 -- if noSideline is true then it also makes the list take up the whole control without a "Pick a team" cancel prompt
-function RematchDialogGroupPickerMixin:SetReturn(layoutName,noSideline)
+function RematchReduxDialogGroupPickerMixin:SetReturn(layoutName,noSideline)
     self.returnLayout = layoutName
     self.noSideline = noSideline
     if noSideline then
@@ -1066,7 +1066,7 @@ function RematchDialogGroupPickerMixin:SetReturn(layoutName,noSideline)
     end
 end
 
-function RematchDialogGroupPickerMixin:Update()
+function RematchReduxDialogGroupPickerMixin:Update()
     wipe(self.groupList)
     for _,groupID in ipairs(settings.GroupOrder) do
         tinsert(self.groupList,groupID)
@@ -1074,86 +1074,86 @@ function RematchDialogGroupPickerMixin:Update()
     self.List:Update()
 end
 
-function RematchDialogGroupPickerMixin:OnShow()
+function RematchReduxDialogGroupPickerMixin:OnShow()
     self:Update()
     self.List:ScrollToTop()
 end
 
-function RematchDialogGroupPickerMixin:FillGroup(groupID)
+function RematchReduxDialogGroupPickerMixin:FillGroup(groupID)
     self.groupID = groupID
-    self.Text:SetText(rematch.utils:GetFormattedGroupName(groupID))
-    local group = groupID and rematch.savedGroups[groupID]
+    self.Text:SetText(rematchRedux.utils:GetFormattedGroupName(groupID))
+    local group = groupID and rematchRedux.savedGroups[groupID]
     self.Icon:SetTexture(group and group.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
     local xoff = -22
-    local badgesWidth = rematch.badges:AddBadges(self.Badges,"groups",groupID,"RIGHT",self.Icon,"LEFT",-2,-1,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(self.Badges,"groups",groupID,"RIGHT",self.Icon,"LEFT",-2,-1,-1)
     xoff = xoff - badgesWidth
     self.Text:SetPoint("BOTTOMRIGHT",xoff,2)
 end
 
-RematchDialogGroupPickerListButtonMixin = {}
+RematchReduxDialogGroupPickerListButtonMixin = {}
 
-function RematchDialogGroupPickerListButtonMixin:OnEnter()
-    rematch.textureHighlight:Show(self.Back)
+function RematchReduxDialogGroupPickerListButtonMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self.Back)
 end
 
-function RematchDialogGroupPickerListButtonMixin:OnLeave()
-    rematch.textureHighlight:Hide()
+function RematchReduxDialogGroupPickerListButtonMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchDialogGroupPickerListButtonMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxDialogGroupPickerListButtonMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchDialogGroupPickerListButtonMixin:OnMouseUp()
+function RematchReduxDialogGroupPickerListButtonMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self.Back)
+        rematchRedux.textureHighlight:Show(self.Back)
     end
 end
 
 -- this is used for the GroupPicker
-function RematchDialogGroupPickerListButtonMixin:OnClick(button)
+function RematchReduxDialogGroupPickerListButtonMixin:OnClick(button)
     if button~="RightButton" then
         local picker = self:GetParent():GetParent():GetParent():GetParent()
         if not picker.noSideline then
-            rematch.savedTeams.sideline.groupID = self.groupID
+            rematchRedux.savedTeams.sideline.groupID = self.groupID
         end
         settings.LastSelectedGroup = self.groupID
-        rematch.dialog:OnChange()
-        rematch.dialog:ChangeLayout(picker.returnLayout or "Default")
+        rematchRedux.dialog:OnChange()
+        rematchRedux.dialog:ChangeLayout(picker.returnLayout or "Default")
     end
 end
 
 --[[ combobox is a combination editbox and dropdown ]]
 
-RematchDialogComboBoxMixin = {}
+RematchReduxDialogComboBoxMixin = {}
 
-function RematchDialogComboBoxMixin:OnLoad()
+function RematchReduxDialogComboBoxMixin:OnLoad()
     self.ComboBox.Text:SetScript("OnEscapePressed",function(self,...)
-        rematch.dialog.CancelButton:Click()
+        rematchRedux.dialog.CancelButton:Click()
     end)
     self.ComboBox.Text:SetScript("OnEnterPressed",function(self,...)
-        if rematch.dialog.AcceptButton:IsEnabled() then
-            rematch.dialog.AcceptButton:Click()
+        if rematchRedux.dialog.AcceptButton:IsEnabled() then
+            rematchRedux.dialog.AcceptButton:Click()
         end
     end)
     self.ComboBox.Text:SetScript("OnTextChanged",function(self,...)
-        rematch.dialog:OnChange() -- function to call the changeFunc when text changes
+        rematchRedux.dialog:OnChange() -- function to call the changeFunc when text changes
     end)
 end
 
-function RematchDialogComboBoxMixin:SetText(text)
+function RematchReduxDialogComboBoxMixin:SetText(text)
     self.ComboBox.Text:SetText(text)
 end
 
-function RematchDialogComboBoxMixin:GetText()
+function RematchReduxDialogComboBoxMixin:GetText()
     return self.ComboBox.Text:GetText()
 end
 
-function RematchDialogComboBoxMixin:SetLabel(text)
+function RematchReduxDialogComboBoxMixin:SetLabel(text)
     self.Label:SetText(text)
 end
 
-function RematchDialogComboBoxMixin:SetList(list)
+function RematchReduxDialogComboBoxMixin:SetList(list)
     local menu = {}
     for index,text in ipairs(list) do
         tinsert(menu,{text=text,value=index})
@@ -1161,61 +1161,61 @@ function RematchDialogComboBoxMixin:SetList(list)
     self.ComboBox:BasicSetup(menu)
 end
 
-function RematchDialogComboBoxMixin:SetTextColor(r,g,b)
+function RematchReduxDialogComboBoxMixin:SetTextColor(r,g,b)
     self.ComboBox.Text:SetTextColor(r,g,b)
 end
 
 
 --[[ pet button with pet card mouse events ]]
 
-RematchDialogPetButtonMixin = {}
+RematchReduxDialogPetButtonMixin = {}
 
-function RematchDialogPetButtonMixin:OnEnter()
-    rematch.textureHighlight:Show(self.Icon)
-    rematch.cardManager:OnEnter(rematch.petCard,self,self.petID)
+function RematchReduxDialogPetButtonMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self.Icon)
+    rematchRedux.cardManager:OnEnter(rematchRedux.petCard,self,self.petID)
 end
 
-function RematchDialogPetButtonMixin:OnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.cardManager:OnLeave(rematch.petCard,self,self.petID)
+function RematchReduxDialogPetButtonMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,self.petID)
 end
 
-function RematchDialogPetButtonMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxDialogPetButtonMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchDialogPetButtonMixin:OnMouseUp()
+function RematchReduxDialogPetButtonMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self.Icon)
+        rematchRedux.textureHighlight:Show(self.Icon)
     end
 end
 
-function RematchDialogPetButtonMixin:OnClick()
-    rematch.cardManager:OnClick(rematch.petCard,self,self.petID)
+function RematchReduxDialogPetButtonMixin:OnClick()
+    rematchRedux.cardManager:OnClick(rematchRedux.petCard,self,self.petID)
 end
 
 
 --[[ pet with abilities is a single pet button with an ability bar]]
 
-RematchDialogPetWithAbilitiesMixin = {}
+RematchReduxDialogPetWithAbilitiesMixin = {}
 
 -- fills the pet and abilities
-function RematchDialogPetWithAbilitiesMixin:Fill(petID,ability1,ability2,ability3)
+function RematchReduxDialogPetWithAbilitiesMixin:Fill(petID,ability1,ability2,ability3)
     self.Pet.petID = petID
     self.Pet:FillPet(petID)
     self.AbilityBar:FillAbilityBar(petID,ability1,ability2,ability3)
 end
 
 -- fills the pet and abilities from the given loadout slot
-function RematchDialogPetWithAbilitiesMixin:FillFromLoadout(slot)
+function RematchReduxDialogPetWithAbilitiesMixin:FillFromLoadout(slot)
     self:Fill(C_PetJournal.GetPetLoadOutInfo(slot))
 end
 
 -- fills the pets and abilities from the given teamID slot
-function RematchDialogPetWithAbilitiesMixin:FillFromTeamID(slot,teamID)
-    local team = rematch.savedTeams[teamID]
+function RematchReduxDialogPetWithAbilitiesMixin:FillFromTeamID(slot,teamID)
+    local team = rematchRedux.savedTeams[teamID]
     if team then
-        self:Fill(team.pets[slot],rematch.petTags:GetAbilities(team.tags[slot]))
+        self:Fill(team.pets[slot],rematchRedux.petTags:GetAbilities(team.tags[slot]))
     else -- if team doesn't exist, make it an empty pet and abilities
         self:Fill("empty")
     end
@@ -1223,25 +1223,25 @@ end
 
 --[[ team with abilities is 3 pets with abilities ]]
 
-RematchDialogTeamWithAbilitiesMixin = {}
+RematchReduxDialogTeamWithAbilitiesMixin = {}
 
-function RematchDialogTeamWithAbilitiesMixin:FillFromLoadout()
+function RematchReduxDialogTeamWithAbilitiesMixin:FillFromLoadout()
     for i=1,3 do
         self.Pets[i]:FillFromLoadout(i)
     end
 end
 
-function RematchDialogTeamWithAbilitiesMixin:FillFromTeamID(teamID)
+function RematchReduxDialogTeamWithAbilitiesMixin:FillFromTeamID(teamID)
     for i=1,3 do
         self.Pets[i]:FillFromTeamID(i,teamID)
     end
 end
 
---[[ RematchDialogGroupSelectMixin ]]
+--[[ RematchReduxDialogGroupSelectMixin ]]
 
-RematchDialogGroupSelectMixin = {}
+RematchReduxDialogGroupSelectMixin = {}
 
-function RematchDialogGroupSelectMixin:OnLoad()
+function RematchReduxDialogGroupSelectMixin:OnLoad()
     self.Label:SetText(L["Group:"])
     self.Button:SetScript("OnEnter",function(self)
         for i=1,3 do
@@ -1260,35 +1260,35 @@ function RematchDialogGroupSelectMixin:OnLoad()
         end
     end)
     self.Button:SetScript("OnClick",function(self)
-        rematch.dialog:ChangeLayout(self:GetParent().returnLayout or "GroupPick")
+        rematchRedux.dialog:ChangeLayout(self:GetParent().returnLayout or "GroupPick")
     end)
 end
 
-function RematchDialogGroupSelectMixin:Fill(groupID)
+function RematchReduxDialogGroupSelectMixin:Fill(groupID)
     groupID = groupID or "group:none"
-    local group = rematch.savedGroups[groupID] or rematch.savedGroups["group:none"]
-    self.Button.Name:SetText(rematch.utils:GetFormattedGroupName(groupID))
+    local group = rematchRedux.savedGroups[groupID] or rematchRedux.savedGroups["group:none"]
+    self.Button.Name:SetText(rematchRedux.utils:GetFormattedGroupName(groupID))
     self.Button.Icon:SetTexture(group.icon)
     local xoff = -22
-    local badgesWidth = rematch.badges:AddBadges(self.Button.Badges,"groups",groupID,"RIGHT",self.Button.Icon,"LEFT",-2,-1,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(self.Button.Badges,"groups",groupID,"RIGHT",self.Button.Icon,"LEFT",-2,-1,-1)
     xoff = xoff - badgesWidth
     self.Button.Name:SetPoint("RIGHT",xoff,-1)
 end
 
 -- sets the layout to return to when the button is clicked
-function RematchDialogGroupSelectMixin:SetReturn(layoutName)
+function RematchReduxDialogGroupSelectMixin:SetReturn(layoutName)
     self.returnLayout = layoutName
 end
 
-function RematchDialogGroupSelectMixin:Reset()
+function RematchReduxDialogGroupSelectMixin:Reset()
     self.returnLayout = nil
 end
 
---[[ RematchDialogWinRecordMixin ]]
+--[[ RematchReduxDialogWinRecordMixin ]]
 
-RematchDialogWinRecordMixin = {}
+RematchReduxDialogWinRecordMixin = {}
 
-function RematchDialogWinRecordMixin:OnLoad()
+function RematchReduxDialogWinRecordMixin:OnLoad()
     self.Wins.Label:SetText(format("%s%s ",C.HEX_GREEN,L["Wins:"]))
     self.Wins:SetJustifyH("CENTER")
     self.Losses.Label:SetText(format("%s%s ",C.HEX_RED,L["Losses:"]))
@@ -1299,7 +1299,7 @@ end
 
 -- updates the display of total battles and disables the minus buttons for stats at 0 (which are nil; winrecord never keeps a 0 value)
 -- (this doesn't update editboxes, that's only done in a Set which also calls this)
-function RematchDialogWinRecordMixin:Update()
+function RematchReduxDialogWinRecordMixin:Update()
     local winrecord = self:Get()
     self.WinsMinus:SetEnabled(winrecord.wins and true or false)
     self.LossesMinus:SetEnabled(winrecord.losses and true or false)
@@ -1324,27 +1324,27 @@ end
 
 -- clicking a + or - beside one of the editboxes will increment/decrement the value in the editbox (empty of 0)
 -- parentKey is either "Wins", "Losses" or "Draws"; modifier is either -1 or +1
-function RematchDialogWinRecordMixin:AdjustEditBox(parentKey,modifier)
+function RematchReduxDialogWinRecordMixin:AdjustEditBox(parentKey,modifier)
     local value = max(0,tonumber(self[parentKey]:GetText()) or 0) + modifier
     -- the OnTextChanged in the editbox will trigger an OnChange that does an Update
     self[parentKey]:SetText(value<1 and "" or value)
 end
 
 -- sets the winrecord control to the given values (unordered table of wins, losses, draws, battles)
-function RematchDialogWinRecordMixin:Set(winrecord)
+function RematchReduxDialogWinRecordMixin:Set(winrecord)
     if type(winrecord)~="table" then
         winrecord = {} -- nothing given, clear everything
     end
     self.Wins:SetText(winrecord.wins or "")
     self.Losses:SetText(winrecord.losses or "")
     self.Draws:SetText(winrecord.draws or "")
-    rematch.dialog:OnChange()
+    rematchRedux.dialog:OnChange()
 end
 
 -- returns the current winrecord values in the control as an unordered table
 -- if utable given, winrecord will be stored in that table; otherwise a reused table returned
 local winrecordResults = {} -- reused to minimize garbage creation; but be careful not to assign this table reference to anything!
-function RematchDialogWinRecordMixin:Get(utable)
+function RematchReduxDialogWinRecordMixin:Get(utable)
     local results = utable or winrecordResults
     wipe(results)
     results.wins = tonumber(self.Wins:GetText())
@@ -1356,38 +1356,38 @@ end
 
 --[[ IncludeCheckButtons ]]
 
-RematchDialogIncludeCheckButtons = {}
+RematchReduxDialogIncludeCheckButtons = {}
 
-function RematchDialogIncludeCheckButtons:OnLoad()
+function RematchReduxDialogIncludeCheckButtons:OnLoad()
     self.IncludePreferences:SetText(L["Include Preferences"])
     self.IncludeNotes:SetText(L["Include Notes"])
-    self.IncludePreferences:SetScript("OnClick",function() rematch.dialog:OnChange() end)
-    self.IncludeNotes:SetScript("OnClick",function() rematch.dialog:OnChange() end)
+    self.IncludePreferences:SetScript("OnClick",function() rematchRedux.dialog:OnChange() end)
+    self.IncludeNotes:SetScript("OnClick",function() rematchRedux.dialog:OnChange() end)
 end
 
 -- sets the check for settings and enables/disbaled for the given teamID (if any)
-function RematchDialogIncludeCheckButtons:Update(teamID)
+function RematchReduxDialogIncludeCheckButtons:Update(teamID)
     self.IncludePreferences:SetChecked(settings.ExportIncludePreferences)
     self.IncludeNotes:SetChecked(settings.ExportIncludeNotes)
-    self.IncludePreferences:SetEnabled(not teamID or (rematch.savedTeams[teamID] and rematch.savedTeams[teamID].preferences and true or false))
-    self.IncludeNotes:SetEnabled(not teamID or (rematch.savedTeams[teamID] and rematch.savedTeams[teamID].notes and true or false))
+    self.IncludePreferences:SetEnabled(not teamID or (rematchRedux.savedTeams[teamID] and rematchRedux.savedTeams[teamID].preferences and true or false))
+    self.IncludeNotes:SetEnabled(not teamID or (rematchRedux.savedTeams[teamID] and rematchRedux.savedTeams[teamID].notes and true or false))
 end
 
---[[ RematchDialogListDataMixin ]]
+--[[ RematchReduxDialogListDataMixin ]]
 
-RematchDialogListDataMixin = {}
+RematchReduxDialogListDataMixin = {}
 
 -- data should be an ordered list with a sub-ordered list of values, for example:
 -- { {"This is line 1",1},
 --   {"This is second line","two"}
 --   {"This line","III"}, etc. }
-function RematchDialogListDataMixin:Set(data)
+function RematchReduxDialogListDataMixin:Set(data)
     local maxLabelWidth = 0
     local maxDataWidth = 0
     local height = 0
     for i,info in ipairs(data) do
         if not self.ListItems[i] then -- if a ListItem isn't made for this row yet, make one
-            self.ListItems[i] = CreateFrame("Frame",nil,self,"RematchDialogListItemTemplate")
+            self.ListItems[i] = CreateFrame("Frame",nil,self,"RematchReduxDialogListItemTemplate")
             self.ListItems[i]:SetPoint("TOPLEFT",self.ListItems[i-1],"BOTTOMLEFT")
             self.ListItems[i]:SetPoint("TOPRIGHT",self.ListItems[i-1],"BOTTOMRIGHT")
         end
@@ -1407,39 +1407,39 @@ function RematchDialogListDataMixin:Set(data)
     self:SetWidth(maxLabelWidth+maxDataWidth+8)
 end
 
---[[ RematchDialogConflictRadiosMixin ]]
+--[[ RematchReduxDialogConflictRadiosMixin ]]
 
-RematchDialogConflictRadiosMixin = {}
+RematchReduxDialogConflictRadiosMixin = {}
 
-function RematchDialogConflictRadiosMixin:OnLoad()
+function RematchReduxDialogConflictRadiosMixin:OnLoad()
     self.Label:SetText(L["When teams/groups share the same name:"])
     self.CreateCopyRadio:SetText(L["Create a new copy"])
     self.OverwriteRadio:SetText(L["Overwrite existing one"])
     self:SetWidth(max(self.CreateCopyRadio.Text:GetStringWidth(),self.OverwriteRadio.Text:GetStringWidth())+30)
 end
 
-function RematchDialogConflictRadiosMixin:Update()
+function RematchReduxDialogConflictRadiosMixin:Update()
     local overwrite = settings.ImportConflictOverwrite
     self.CreateCopyRadio:SetChecked(not overwrite)
     self.OverwriteRadio:SetChecked(overwrite)
 end
 
-function RematchDialogConflictRadiosMixin:SetImportConflictOverwrite(overwrite)
+function RematchReduxDialogConflictRadiosMixin:SetImportConflictOverwrite(overwrite)
     settings.ImportConflictOverwrite = overwrite
     self:Update()
-    rematch.dialog:OnChange()
+    rematchRedux.dialog:OnChange()
 end
 
-function RematchDialogConflictRadiosMixin:IsOverwrite()
+function RematchReduxDialogConflictRadiosMixin:IsOverwrite()
     return settings.ImportConflictOverwrite
 end
 
---[[ RematchDialogMultiTeamMixin ]]
+--[[ RematchReduxDialogMultiTeamMixin ]]
 
-RematchDialogMultiTeamMixin = {}
+RematchReduxDialogMultiTeamMixin = {}
 
 -- takes an ordered list of teamIDs and displays the first one with option to select different teams
-function RematchDialogMultiTeamMixin:SetTeams(teams,index)
+function RematchReduxDialogMultiTeamMixin:SetTeams(teams,index)
     if type(teams)~="table" then
         teams = {}
         index = nil
@@ -1452,16 +1452,16 @@ function RematchDialogMultiTeamMixin:SetTeams(teams,index)
     self:Update()
 end
 
-function RematchDialogMultiTeamMixin:Update()
+function RematchReduxDialogMultiTeamMixin:Update()
     local teamID = type(self.teams)=="table" and self.index and self.teams[self.index]
-    local team = teamID and rematch.savedTeams[teamID]
+    local team = teamID and rematchRedux.savedTeams[teamID]
     self.ListButtonTeam:SetShown(team and true or false)
     self.ListButtonTeam.teamID = teamID
     self.ListButtonTeam:Fill(teamID)
     -- regular team list button fill doesn't do status; do that here
     if team and team.pets then
         for i=1,3 do
-            local petInfo = rematch.petInfo:Fetch(team.pets[i])
+            local petInfo = rematchRedux.petInfo:Fetch(team.pets[i])
             if petInfo.isDead then
                 self.ListButtonTeam.Status[i]:SetTexCoord(0,0.3125,0,0.625)
                 self.ListButtonTeam.Status[i]:Show()
@@ -1477,27 +1477,27 @@ function RematchDialogMultiTeamMixin:Update()
     self.NextTeamButton:SetEnabled(self.index~=#self.teams)
 end
 
-function RematchDialogMultiTeamMixin:PrevTeam()
+function RematchReduxDialogMultiTeamMixin:PrevTeam()
     self.index = max(self.index-1,1)
     self:Update()
 end
 
-function RematchDialogMultiTeamMixin:NextTeam()
+function RematchReduxDialogMultiTeamMixin:NextTeam()
     self.index = min(self.index+1,#self.teams)
     self:Update()
 end
 
 -- returns the currently-chosen teamID
-function RematchDialogMultiTeamMixin:GetTeamID()
+function RematchReduxDialogMultiTeamMixin:GetTeamID()
     local teamID = self.ListButtonTeam.teamID
-    return rematch.savedTeams[teamID] and teamID
+    return rematchRedux.savedTeams[teamID] and teamID
 end
 
---[[ RematchDialogSliderMixin ]]
+--[[ RematchReduxDialogSliderMixin ]]
 
-RematchDialogSliderMixin = {}
+RematchReduxDialogSliderMixin = {}
 
-function RematchDialogSliderMixin:OnLoad()
+function RematchReduxDialogSliderMixin:OnLoad()
     self.Slider:RegisterCallback("OnValueChanged",function(_,value)
         local oldValue = self.value
         self.value = value
@@ -1513,7 +1513,7 @@ end
 -- here steps is number of steps, so 50 to 200 with 5 increment would be
 -- labelFormat is a string.format pattern for the label above the slider, such as "Scale: %d%%"
 -- onValueChangedFunc will be called with (self,value) where self is the slider dialog control
-function RematchDialogSliderMixin:Setup(value,minValue,maxValue,steps,labelFormat,onValueChangedFunc)
+function RematchReduxDialogSliderMixin:Setup(value,minValue,maxValue,steps,labelFormat,onValueChangedFunc)
     self.Slider:Init(value,minValue,maxValue,steps)
     self.labelFormat = labelFormat or "%s"
     self.value = value -- initial value
@@ -1523,27 +1523,27 @@ function RematchDialogSliderMixin:Setup(value,minValue,maxValue,steps,labelForma
     self:Update()
 end
 
-function RematchDialogSliderMixin:Update()
+function RematchReduxDialogSliderMixin:Update()
     local labelFormat = self.labelFormat or "%s"
     self.Label:SetText(format(labelFormat,self.value or ""))
 end
 
-function RematchDialogSliderMixin:Reset()
+function RematchReduxDialogSliderMixin:Reset()
     self.onValueChanged = nil
 end
 
---[[ RematchDialogBarChartMixin ]]
+--[[ RematchReduxDialogBarChartMixin ]]
 
-RematchDialogBarChartMixin = {}
+RematchReduxDialogBarChartMixin = {}
 
 -- sets the chart to display the given info, which is an ordered list of:
 -- [1] = {icon="file", value=number, max=maxValue, r=red, g=green, b=blue}
-function RematchDialogBarChartMixin:Set(info)
+function RematchReduxDialogBarChartMixin:Set(info)
     local numBars = #info
     -- create new bars if any needed
     for i=2,numBars do
         if not self.Bars[i] then
-            self.Bars[i] = CreateFrame("Frame",nil,self,"RematchDialogBarChartBarTemplate")
+            self.Bars[i] = CreateFrame("Frame",nil,self,"RematchReduxDialogBarChartBarTemplate")
             self.Bars[i]:SetPoint("BOTTOMLEFT",self.Bars[i-1],"BOTTOMRIGHT")
         end
     end
@@ -1566,12 +1566,12 @@ function RematchDialogBarChartMixin:Set(info)
     end
 end
 
---[[ RematchDialogBattleSummaryMixin ]]
+--[[ RematchReduxDialogBattleSummaryMixin ]]
 
-RematchDialogBattleSummaryMixin= {}
+RematchReduxDialogBattleSummaryMixin= {}
 
 -- fills the BattleSummary control with totals of all team battles and returns teamID of team that won the most
-function RematchDialogBattleSummaryMixin:Fill(stats)
+function RematchReduxDialogBattleSummaryMixin:Fill(stats)
     if type(stats)=="table" then
         local battles = stats.battles or 0
         self.TotalBattles:SetText(format(L["%s%d\124r Battles for %s%d\124r Teams"],C.HEX_WHITE,battles,C.HEX_WHITE,stats.teams or 0))
@@ -1584,30 +1584,30 @@ function RematchDialogBattleSummaryMixin:Fill(stats)
     end
 end
 
---[[ RematchDialogBarChartIconMixin ]]
+--[[ RematchReduxDialogBarChartIconMixin ]]
 
-RematchDialogBarChartIconMixin = {}
+RematchReduxDialogBarChartIconMixin = {}
 
-function RematchDialogBarChartIconMixin:OnEnter()
-    rematch.textureHighlight:Show(self)
-    local openLayout = rematch.dialog:GetOpenLayout()
+function RematchReduxDialogBarChartIconMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self)
+    local openLayout = rematchRedux.dialog:GetOpenLayout()
     local prefix = (openLayout=="Types" and "BATTLE_PET_NAME_") or (openLayout=="Sources" and "BATTLE_PET_SOURCE_")
     if prefix and self.index then
-        rematch.tooltip:ShowSimpleTooltip(self,nil,_G[prefix..self.index] or "")
+        rematchRedux.tooltip:ShowSimpleTooltip(self,nil,_G[prefix..self.index] or "")
     end
 end
 
-function RematchDialogBarChartIconMixin:OnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.tooltip:Hide()
+function RematchReduxDialogBarChartIconMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
---[[ RematchDialogTopTeamsMixin ]]
+--[[ RematchReduxDialogTopTeamsMixin ]]
 
-RematchDialogTopTeamsMixin = {}
+RematchReduxDialogTopTeamsMixin = {}
 
 -- teams is an ordered list of teams {teamID,totalWins,percentWins}
-function RematchDialogTopTeamsMixin:Fill(teams)
+function RematchReduxDialogTopTeamsMixin:Fill(teams)
     self.TeamsLabel:SetText(format(L["Top %d Winning Teams"],#teams))
     local height = 22
     for _,button in ipairs(self.Buttons) do
@@ -1615,13 +1615,13 @@ function RematchDialogTopTeamsMixin:Fill(teams)
     end
     for i,info in pairs(teams) do
         if not self.Buttons[i] then
-            self.Buttons[i] = CreateFrame("Button",nil,self,"RematchDialogTopTeamsListButtonTemplate")
+            self.Buttons[i] = CreateFrame("Button",nil,self,"RematchReduxDialogTopTeamsListButtonTemplate")
             self.Buttons[i]:SetPoint("TOPLEFT",self.Buttons[i-1],"BOTTOMLEFT")
         end
         self.Buttons[i].teamID = info[1]
-        local team = rematch.savedTeams[info[1]]
+        local team = rematchRedux.savedTeams[info[1]]
         self.Buttons[i].Rank:SetText(format("%d.",i))
-        self.Buttons[i].Name:SetText(rematch.utils:GetFormattedTeamName(info[1]))
+        self.Buttons[i].Name:SetText(rematchRedux.utils:GetFormattedTeamName(info[1]))
         self.Buttons[i].Wins:SetText(info[2])
         local percent = floor(info[3]*100+0.5)
         self.Buttons[i].Percent:SetText(percent.."%")
@@ -1634,7 +1634,7 @@ function RematchDialogTopTeamsMixin:Fill(teams)
         self.Buttons[i].Wins:SetTextColor(r,g,b)
         self.Buttons[i].Percent:SetTextColor(r,g,b)
         for j=1,3 do
-            local petInfo = rematch.petInfo:Fetch(team.pets[j])
+            local petInfo = rematchRedux.petInfo:Fetch(team.pets[j])
             self.Buttons[i].Pets[j].petID = team.pets[j]
             self.Buttons[i].Pets[j]:SetTexture(petInfo.icon)
         end
@@ -1645,59 +1645,59 @@ function RematchDialogTopTeamsMixin:Fill(teams)
 end
 
 -- mouse events for TopTeam list buttons
-RematchDialogTopTeamsListButtonMixin = {}
+RematchReduxDialogTopTeamsListButtonMixin = {}
 
-function RematchDialogTopTeamsListButtonMixin:OnEnter()
-    rematch.textureHighlight:Show(self.Back)
+function RematchReduxDialogTopTeamsListButtonMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self.Back)
     if not settings.HideTruncatedTooltips and self.Name:IsTruncated() then
-        rematch.tooltip:ShowSimpleTooltip(self,nil,self.Name:GetText() or "","BOTTOM",self.Name,"TOP",0,5,true)
+        rematchRedux.tooltip:ShowSimpleTooltip(self,nil,self.Name:GetText() or "","BOTTOM",self.Name,"TOP",0,5,true)
     end
 end
 
-function RematchDialogTopTeamsListButtonMixin:OnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.tooltip:Hide()
+function RematchReduxDialogTopTeamsListButtonMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
-function RematchDialogTopTeamsListButtonMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxDialogTopTeamsListButtonMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchDialogTopTeamsListButtonMixin:OnMouseUp()
+function RematchReduxDialogTopTeamsListButtonMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self.Back)
+        rematchRedux.textureHighlight:Show(self.Back)
     end
 end
 
-function RematchDialogTopTeamsListButtonMixin:OnClick(button)
-    if rematch.savedTeams:IsUserTeam(self.teamID) then
-        rematch.layout:SummonView("teams")
-        rematch.teamsPanel.List:ScrollDataIntoView(self.teamID)
-        rematch.teamsPanel.List:BlingData(self.teamID)
+function RematchReduxDialogTopTeamsListButtonMixin:OnClick(button)
+    if rematchRedux.savedTeams:IsUserTeam(self.teamID) then
+        rematchRedux.layout:SummonView("teams")
+        rematchRedux.teamsPanel.List:ScrollDataIntoView(self.teamID)
+        rematchRedux.teamsPanel.List:BlingData(self.teamID)
     end
 end
 
 -- mouse events for TopTeams pets in each list button
-RematchDialogTopTeamsListPetButtonMixin = {}
+RematchReduxDialogTopTeamsListPetButtonMixin = {}
 
-function RematchDialogTopTeamsListPetButtonMixin:OnEnter()
-    rematch.textureHighlight:Show(self,self:GetParent().Back)
-    rematch.cardManager:OnEnter(rematch.petCard,self:GetParent(),self.petID) -- anchor to parent
+function RematchReduxDialogTopTeamsListPetButtonMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self,self:GetParent().Back)
+    rematchRedux.cardManager:OnEnter(rematchRedux.petCard,self:GetParent(),self.petID) -- anchor to parent
 end
 
-function RematchDialogTopTeamsListPetButtonMixin:OnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.cardManager:OnLeave(rematch.petCard,self:GetParent(),self.petID)
+function RematchReduxDialogTopTeamsListPetButtonMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self:GetParent(),self.petID)
 end
 
-function RematchDialogTopTeamsListPetButtonMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxDialogTopTeamsListPetButtonMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchDialogTopTeamsListPetButtonMixin:OnMouseUp()
+function RematchReduxDialogTopTeamsListPetButtonMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self,self:GetParent().Back)
-        rematch.cardManager:OnClick(rematch.petCard,self:GetParent(),self.petID)
+        rematchRedux.textureHighlight:Show(self,self:GetParent().Back)
+        rematchRedux.cardManager:OnClick(rematchRedux.petCard,self:GetParent(),self.petID)
     end
 end
 
@@ -1707,7 +1707,7 @@ PetHerderPickerMixin = {}
 
 function PetHerderPickerMixin:Update()
     for _,button in ipairs(self.Buttons) do
-        local actionID = rematch.petHerder:GetActionID()
+        local actionID = rematchRedux.petHerder:GetActionID()
         if actionID then
             button:SetDesaturated(button.actionID~=actionID)
             if button.actionID==actionID then
@@ -1728,36 +1728,36 @@ end
 
 -- when dialog closes, reset actionID
 function PetHerderPickerMixin:Reset()
-    rematch.petHerder:SetActionID(nil)
+    rematchRedux.petHerder:SetActionID(nil)
 end
 
 -- click of one of the pet herder actions
 function PetHerderPickerMixin:ButtonOnClick()
     local picker = self:GetParent()
-    if self.actionID==rematch.petHerder:GetActionID() then
-        rematch.petHerder:SetActionID(nil)
+    if self.actionID==rematchRedux.petHerder:GetActionID() then
+        rematchRedux.petHerder:SetActionID(nil)
     else
-        rematch.petHerder:SetActionID(self.actionID)
+        rematchRedux.petHerder:SetActionID(self.actionID)
     end
     picker:Update()
-    rematch.dialog:OnChange()
+    rematchRedux.dialog:OnChange()
 end
 
 -- need to watch for something being picked up on the cursor while in pet herder targeting mode
 -- while this dialog control is on screen
 function PetHerderPickerMixin:OnShow()
-    rematch.events:Register(self,"CURSOR_CHANGED",self.CURSOR_CHANGED)
-    rematch.frame:Update()
+    rematchRedux.events:Register(self,"CURSOR_CHANGED",self.CURSOR_CHANGED)
+    rematchRedux.frame:Update()
 end
 
 function PetHerderPickerMixin:OnHide()
-    rematch.events:Unregister(self,"CURSOR_CHANGED")
+    rematchRedux.events:Unregister(self,"CURSOR_CHANGED")
     SetCursor(nil)
-    rematch.frame:Update()
+    rematchRedux.frame:Update()
 end
 
 function PetHerderPickerMixin:CURSOR_CHANGED()
-    if rematch.dialog:GetOpenDialog()=="PetHerder" and GetCursorInfo() then
-        rematch.dialog:Hide()
+    if rematchRedux.dialog:GetOpenDialog()=="PetHerder" and GetCursorInfo() then
+        rematchRedux.dialog:Hide()
     end
 end

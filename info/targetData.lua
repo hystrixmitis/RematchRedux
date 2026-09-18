@@ -1,11 +1,11 @@
-local _,rematch = ...
-local L = rematch.localization
-rematch.targetData = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+rematchRedux.targetData = {}
 
 --[[
     This file contains the raw data for all notable targets: tamers, pet dungeons, world quests, etc.
 
-    The format of each record in rematch.targetData.notableTargets:
+    The format of each record in rematchRedux.targetData.notableTargets:
         headerID: mapID if a number, or named string otherwise; the target list headers
         npcID: the npcID of the target
         mapID: the mapID the target is in (at the most "zoomed-in" level)
@@ -25,7 +25,7 @@ rematch.targetData = {}
 -- the order of targets in this table is the order they will be listed. generally it should be most recent
 -- content first, though one-off additions like Anthea added to Pandaria in the Shadowlands expansions is
 -- added to the top of the Pandaria targets.
-rematch.targetData.notableTargets = {
+rematchRedux.targetData.notableTargets = {
     -- Isle of Dorn (2248)
     {2248,223446,2248,10,nil,"battlepet:4551:25:4:1587:297:297","battlepet:4550:25:3:1481:276:276","battlepet:4549:25:3:1481:374:276"}, -- Isle of Dorn, Collector Dyna
     {2248,223407,2248,10,nil,"battlepet:4561:25:5:2426:300:338"}, -- Isle of Dorn, Awakened Custodian
@@ -444,7 +444,7 @@ rematch.targetData.notableTargets = {
 }
 
 -- table of npcID's and the npcID they should actually refer to
-rematch.targetData.redirects = {
+rematchRedux.targetData.redirects = {
     [89129] = 85420, -- Carrotus Maximus at Frostwall -> Carrotus Maximus at Lunarfall
     [85463] = 89130, -- Gorefu Frostwall -> Gorefu at Lunarfall
     [85419] = 89131, -- Gnawface at Frostwall -> Gnawface at Lunarfall
@@ -496,7 +496,7 @@ rematch.targetData.redirects = {
 }
 
 -- when targets share the same name and need a (sub name) to differentiate them; add them here
-rematch.targetData.subnames = {
+rematchRedux.targetData.subnames = {
     [200684] = ITEM_QUALITY5_DESC, -- Vortex (Legendary)
     [200682] = ITEM_QUALITY4_DESC, -- Vortex (Epic)
     [200685] = ITEM_QUALITY3_DESC, -- Vortex (Rare)
@@ -516,9 +516,9 @@ rematch.targetData.subnames = {
 
 
 -- lookup table of headerID = expansionID
-rematch.targetData.headerExpansions = {}
-for _,info in ipairs(rematch.targetData.notableTargets) do
+rematchRedux.targetData.headerExpansions = {}
+for _,info in ipairs(rematchRedux.targetData.notableTargets) do
     if info[1] and info[4] then
-        rematch.targetData.headerExpansions["header:"..info[1]] =  info[4]
+        rematchRedux.targetData.headerExpansions["header:"..info[1]] =  info[4]
     end
 end

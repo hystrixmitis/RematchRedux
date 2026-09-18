@@ -1,26 +1,26 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.filters = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.filters = {}
 
 --[[
     In past versions, roster+filters+petlist were combined into a huge intertwined mess. Going forward, just as roster is
     now a data source and that's it, filters now manages filters and that's it. All filters are set, reset and cleared
     via these functions:
 
-        rematch.filters:Set(filterGroup,key,value)
-        rematch.filters:Clear(filterGroup)
+        rematchRedux.filters:Set(filterGroup,key,value)
+        rematchRedux.filters:Clear(filterGroup)
 
     With these supporting functions:
 
-        rematch.filters:WhatsFiltered() -- returns a comma-delimited list of filters currently active
-        rematch.fitlers:ShouldPetDisplay(petID) -- returns true if given petID/speciesID meets all active filters
+        rematchRedux.filters:WhatsFiltered() -- returns a comma-delimited list of filters currently active
+        rematchRedux.filters:ShouldPetDisplay(petID) -- returns true if given petID/speciesID meets all active filters
 
     To add new filters:
     - Add an entry to filterGroups below. (All filters must be in that table and have a unique filterKey.)
-    - Add a rematch.filters.funcs[filterGroup], where self is the petInfo of a pet to evaluate, that returns true if the pet should list and false otherwise
-    - If a function needs to run before a filter run (to set up temp tables and such), create a rematch.filters.preFuncs[filterGroup]
+    - Add a rematchRedux.filters.funcs[filterGroup], where self is the petInfo of a pet to evaluate, that returns true if the pet should list and false otherwise
+    - If a function needs to run before a filter run (to set up temp tables and such), create a rematchRedux.filters.preFuncs[filterGroup]
 ]]
 
 -- this is a list of tables where filter settings are saved in settings.Filters and the localized
@@ -65,17 +65,17 @@ local otherGroups = {
 -- the filtered list of petIDs/speciesIDs when the current filters are applied
 local filteredPetList = {}
 
--- populated by rematch.filters:UpdateFiltersUsed(), ordered list of the above filterGroups that are not empty
+-- populated by rematchRedux.filters:UpdateFiltersUsed(), ordered list of the above filterGroups that are not empty
 local filtersUsed = {}
 _filtersUsed = filtersUsed
 
 -- dirty flag becomes true when the filtered list should be rebuilt (any filters change); if false then no need to re-run a filter
 local dirty = true
 
-local strongVsCache = rematch.odTable:Create() -- on-demand table to cache strongvs results
+local strongVsCache = rematchRedux.odTable:Create() -- on-demand table to cache strongvs results
 local strongNeeded = {} -- reused table to track which strong vs have passed
 local searchRelevance = {} -- cache for search results of petID/speciesIDs
-local abilityRelevance = rematch.odTable:Create() -- cache for search results of abilities
+local abilityRelevance = rematchRedux.odTable:Create() -- cache for search results of abilities
 local sortStats = {} -- as pets pass evaluation, save the chosen sort stat here
 local favoritesCache = {} -- lookup table of petIDs that are favorited for sort purposes
 
@@ -88,16 +88,16 @@ local searchStats = {
 
 local currentZone -- while Other -> Current Zone is enabled, this will update to the current zone the player is in (nil if not watching)
 
--- indexed by filter name (filterGroup[index][1]), the functions to run for each filterGroup (rematch.filters.funcs.Search, rematch.filters.funcs.Stats, etc.)
-rematch.filters.funcs = {}
--- for filters that need to do something before a filter pass, create a function here (rematch.filters.preFuncs.Moveset)
-rematch.filters.preFuncs = {}
--- for filters that need to do something after a filter pass, create a function here (rematch.filters.postFuncs.Search)
-rematch.filters.postFuncs = {}
+-- indexed by filter name (filterGroup[index][1]), the functions to run for each filterGroup (rematchRedux.filters.funcs.Search, rematchRedux.filters.funcs.Stats, etc.)
+rematchRedux.filters.funcs = {}
+-- for filters that need to do something before a filter pass, create a function here (rematchRedux.filters.preFuncs.Moveset)
+rematchRedux.filters.preFuncs = {}
+-- for filters that need to do something after a filter pass, create a function here (rematchRedux.filters.postFuncs.Search)
+rematchRedux.filters.postFuncs = {}
 
 
 -- on login, make sure settings.Filters savedvar is set up properly
-rematch.events:Register(rematch.filters,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.filters,"PLAYER_LOGIN",function(self)
     -- make sure the Filters table is a table
     if type(settings.Filters)~="table" then
         settings.Filters = {}
@@ -113,7 +113,7 @@ end)
 --[[ filter manipulation ]]
 
 -- sets a filterGroup key to the given value
-function rematch.filters:Set(filterGroup,key,value)
+function rematchRedux.filters:Set(filterGroup,key,value)
     assert(filterGroup,"invalid filterGroup")
     if value==false then -- the emptiness of a filterGroup depends on no keys, so no false allowed
         value = nil
@@ -123,12 +123,12 @@ function rematch.filters:Set(filterGroup,key,value)
 end
 
 -- returns the current value of the filterGroup key
-function rematch.filters:Get(filterGroup,key)
+function rematchRedux.filters:Get(filterGroup,key)
     return settings.Filters[filterGroup][key]
 end
 
 -- returns true if the filterGroup has no keys turned on
-function rematch.filters:IsClear(filterGroup)
+function rematchRedux.filters:IsClear(filterGroup)
     if filterGroup=="Sort" and not settings.ResetSortWithFilters then -- ignore Sort unless Reset Sort With Filters checked
         return true
     end
@@ -136,7 +136,7 @@ function rematch.filters:IsClear(filterGroup)
 end
 
 -- returns true if the filterGroup only has the given key enabled and no others
-function rematch.filters:HasJust(filterGroup,key)
+function rematchRedux.filters:HasJust(filterGroup,key)
     local found = false
     for k,v in pairs(settings.Filters[filterGroup]) do
         if k~=key then -- a key other than the one given is enabled, fails
@@ -149,7 +149,7 @@ function rematch.filters:HasJust(filterGroup,key)
 end
 
 -- clears a specific filterGroup
-function rematch.filters:Clear(filterGroup)
+function rematchRedux.filters:Clear(filterGroup)
     if filterGroup and settings.Filters[filterGroup] then
         wipe(settings.Filters[filterGroup])
     end
@@ -157,28 +157,28 @@ function rematch.filters:Clear(filterGroup)
 end
 
 -- clears all filterGroups
-function rematch.filters:ClearAll()
+function rematchRedux.filters:ClearAll()
     for _,info in ipairs(filterGroups) do
         if info[1]=="Sort" and not settings.ResetSortWithFilters then
             -- do nothing if clearing Sort and Reset Sort With Filters is unchecked
         elseif info[1]=="Search" and settings.ResetExceptSearch then
             -- do nothing if clearing Search and Don't Reset Search With Filters is checked
         else
-            rematch.filters:Clear(info[1])
+            rematchRedux.filters:Clear(info[1])
         end
     end
     dirty = true
 end
 
 -- sets dirty flag to force a rebuild of the list
-function rematch.filters:ForceUpdate()
+function rematchRedux.filters:ForceUpdate()
     dirty = true
 end
 
 -- returns true if all filterGroups are clear
-function rematch.filters:IsAllClear()
+function rematchRedux.filters:IsAllClear()
     for _,info in ipairs(filterGroups) do
-        if not rematch.filters:IsClear(info[1]) then
+        if not rematchRedux.filters:IsClear(info[1]) then
             return false
         end
     end
@@ -187,7 +187,7 @@ end
 
 -- returns the filters used in a comma-separated list, like "Search, Collected, Strong Vs"
 -- also returns true/false if search is the only filter being used
-function rematch.filters:GetFilterList(filters)
+function rematchRedux.filters:GetFilterList(filters)
     local list = ""
     if not filters then -- if no filters table provided, then use current filters
         filters = settings.Filters
@@ -218,93 +218,93 @@ end
 
 --[[ Special Filters ]]
 
-function rematch.filters:SetSimilarFilter(speciesID)
-    rematch.filters:ClearAll()
-    local abilityList = rematch.petInfo:Fetch(speciesID).abilityList
+function rematchRedux.filters:SetSimilarFilter(speciesID)
+    rematchRedux.filters:ClearAll()
+    local abilityList = rematchRedux.petInfo:Fetch(speciesID).abilityList
     if abilityList then
         for _,abilityID in pairs(abilityList) do
-            rematch.filters:Set("Similar",abilityID,true)
+            rematchRedux.filters:Set("Similar",abilityID,true)
         end
     end
 end
 
-function rematch.filters:SetMovesetFilter(speciesID)
-    rematch.filters:ClearAll()
-    local moveset = rematch.petInfo:Fetch(speciesID).moveset
+function rematchRedux.filters:SetMovesetFilter(speciesID)
+    rematchRedux.filters:ClearAll()
+    local moveset = rematchRedux.petInfo:Fetch(speciesID).moveset
     if moveset then
-        rematch.filters:Set("Moveset",moveset,true)
+        rematchRedux.filters:Set("Moveset",moveset,true)
     end
 end
 
 
 --[[ Search Filter Parsing ]]
 
-function rematch.filters:SetSearch(text)
+function rematchRedux.filters:SetSearch(text)
     -- wipe any existing search; this will set dirty flag too
-    rematch.filters:Clear("Search")
-    rematch.filters:Clear("Stats")
+    rematchRedux.filters:Clear("Search")
+    rematchRedux.filters:Clear("Stats")
     if not text or text:len()==0 then -- no search text, leave
         return
     end
     settings.Filters.RawSearchText = text -- before any parsing/changes are done, keep the original text
     -- pull out any stat operations and put them into Stats filterGroup (in the gsub function)
-    text = text:gsub("(%w+[<>=]%d+)",rematch.filters.ParseStatOperators)
-    text = text:gsub("(%w+=%d+%-%d)",rematch.filters.ParseStatRange)
-    text = text:gsub("([<>=]%d+)",rematch.filters.ParseLegacyLevelOperators)
-    text = text:gsub("(%d+%-%d+)",rematch.filters.ParseLegacyLevelRange)
+    text = text:gsub("(%w+[<>=]%d+)",rematchRedux.filters.ParseStatOperators)
+    text = text:gsub("(%w+=%d+%-%d)",rematchRedux.filters.ParseStatRange)
+    text = text:gsub("([<>=]%d+)",rematchRedux.filters.ParseLegacyLevelOperators)
+    text = text:gsub("(%d+%-%d+)",rematchRedux.filters.ParseLegacyLevelRange)
     text = text:trim()
     -- any remaining text is intended for a traditional search
     if text:len()>0 then
-        local pattern = rematch.utils:DesensitizeText(text)
+        local pattern = rematchRedux.utils:DesensitizeText(text)
         if pattern:match("^\".-\"$") then -- if there are quotes around remaing search term, this is an ^exact search$
             pattern = "^"..pattern:gsub("^\"",""):gsub("\"$","").."$" -- strip out quotes and append ^ and $
         end
-        rematch.filters:Set("Search","Pattern",pattern)
-        rematch.filters:Set("Search","Length",text:len())
+        rematchRedux.filters:Set("Search","Pattern",pattern)
+        rematchRedux.filters:Set("Search","Length",text:len())
     end
 end
 
 -- =25 or >17 or <23 by themselves can be used in place of level=25, level>17, level<23
-function rematch.filters.ParseLegacyLevelOperators(capture)
+function rematchRedux.filters.ParseLegacyLevelOperators(capture)
     local operator,value = capture:match("^([<>=])(%d+)$")
     value = tonumber(value)
     if operator and value then
-        if operator=="=" then rematch.filters:Set("Stats","Level",{value,value}) return "" end
-        if operator=="<" then rematch.filters:Set("Stats","Level",{1,value-1}) return "" end
-        if operator==">" then rematch.filters:Set("Stats","Level",{value+1,25}) return "" end
+        if operator=="=" then rematchRedux.filters:Set("Stats","Level",{value,value}) return "" end
+        if operator=="<" then rematchRedux.filters:Set("Stats","Level",{1,value-1}) return "" end
+        if operator==">" then rematchRedux.filters:Set("Stats","Level",{value+1,25}) return "" end
     end
 end
 
 -- 8-15 by itself can be used in place of level=8-15
-function rematch.filters.ParseLegacyLevelRange(capture)
+function rematchRedux.filters.ParseLegacyLevelRange(capture)
     local low,high = capture:match("^(%d+)%-(%d+)$")
     low = tonumber(low)
     high = tonumber(high)
-    if low and high then rematch.filters:Set("Stats","Level",{low,high}) return "" end
+    if low and high then rematchRedux.filters:Set("Stats","Level",{low,high}) return "" end
 end
 
 -- level=25 or power>230 or speed<230 or health>1000
-function rematch.filters.ParseStatOperators(capture)
+function rematchRedux.filters.ParseStatOperators(capture)
     local stat,operator,value = capture:match("^(%w+)([<>=])(%d+)$")
     value = tonumber(value)
     if stat and value then
         stat = searchStats[(stat or ""):lower()]
         if stat then
-            if operator=="=" then rematch.filters:Set("Stats",stat,{value,value}) return "" end
-            if operator=="<" then rematch.filters:Set("Stats",stat,{1,value-1}) return "" end
-            if operator==">" then rematch.filters:Set("Stats",stat,{value+1,9999}) return "" end
+            if operator=="=" then rematchRedux.filters:Set("Stats",stat,{value,value}) return "" end
+            if operator=="<" then rematchRedux.filters:Set("Stats",stat,{1,value-1}) return "" end
+            if operator==">" then rematchRedux.filters:Set("Stats",stat,{value+1,9999}) return "" end
         end
     end
 end
 
 -- level=13-14 or health=1500-2300 or speed=100-200 or power=137-874
-function rematch.filters.ParseStatRange(capture)
+function rematchRedux.filters.ParseStatRange(capture)
     local stat,low,high = capture:match("^(%w+)=(%d+)%-(%d+)")
     low = tonumber(low)
     high = tonumber(high)
     if low and high then
         stat = searchStats[(stat or ""):lower()]
-        if stat then rematch.filters:Set("Stats",stat,{low,high}) return "" end
+        if stat then rematchRedux.filters:Set("Stats",stat,{low,high}) return "" end
     end
 end
 
@@ -312,7 +312,7 @@ end
 --[[ filter functions ]]
 
 -- Collected/Not Collected is unique in that a filter value (Collected.Owned) means DO NOT list these pets (since default is to list all of them, they will remain checked in default state)
-function rematch.filters.funcs:Collected(petInfo)
+function rematchRedux.filters.funcs:Collected(petInfo)
     local idType = petInfo.idType
     if self.Owned and idType=="pet" then -- if Collected is unchecked (this one is reverse) and this is a collected pet, don't list
         return false
@@ -323,18 +323,18 @@ function rematch.filters.funcs:Collected(petInfo)
 end
 
 -- Only Favorites will only list favorited pets
-function rematch.filters.funcs:Favorite(petInfo)
+function rematchRedux.filters.funcs:Favorite(petInfo)
     return petInfo.isFavorite
 end
 
 -- Pet Families/pet type is a list of 1-10 petTypes
-function rematch.filters.funcs:Types(petInfo)
+function rematchRedux.filters.funcs:Types(petInfo)
     return self[petInfo.petType]
 end
 
 -- Strong Vs will return true only if every chosen Strong Vs pet type is strong against the chosen types (can be more than one)
 -- self (like all these other filters.funcs) is the filter's table, {[2]=true,[10]=true} is strong vs dragonkin and mechanical
-function rematch.filters.funcs:Strong(petInfo)
+function rematchRedux.filters.funcs:Strong(petInfo)
     if not settings.StrongVsLevel then -- if Pet Filter Options: Use Level In Strong Vs Filter is unchecked, we can use a cache to speed this up
         local speciesID = petInfo.speciesID
         if not speciesID then
@@ -374,21 +374,21 @@ function rematch.filters.funcs:Strong(petInfo)
 end
 
 -- Tough Vs submenu
-function rematch.filters.funcs:Tough(petInfo)
+function rematchRedux.filters.funcs:Tough(petInfo)
     return self[petInfo.toughVs]
 end
 
 -- Rarity submenu
-function rematch.filters.funcs:Rarity(petInfo)
+function rematchRedux.filters.funcs:Rarity(petInfo)
     return self[petInfo.rarity]
 end
 
-function rematch.filters.funcs:Expansion(petInfo)
+function rematchRedux.filters.funcs:Expansion(petInfo)
     return self[petInfo.expansionID]
 end
 
 -- Level submenu
-function rematch.filters.funcs:Level(petInfo)
+function rematchRedux.filters.funcs:Level(petInfo)
     if not petInfo.canBattle then
         return false -- pets that can't battle never show in level filters
     end
@@ -419,11 +419,11 @@ function rematch.filters.funcs:Level(petInfo)
     return true
 end
 
-function rematch.filters.funcs:Sources(petInfo)
+function rematchRedux.filters.funcs:Sources(petInfo)
     return self[petInfo.sourceID]
 end
 
-function rematch.filters.funcs:Breed(petInfo)
+function rematchRedux.filters.funcs:Breed(petInfo)
     local breed = petInfo.breedID
     if breed==0 then
         breed = 13 -- for filters, 3-12 is the breeds and 13 is NEW
@@ -432,7 +432,7 @@ function rematch.filters.funcs:Breed(petInfo)
 end
 
 -- Similar filter finds any pets that have at least 3 of the same abilities
-function rematch.filters.funcs:Similar(petInfo)
+function rematchRedux.filters.funcs:Similar(petInfo)
     local abilityList = petInfo.abilityList
     local numMatches = 0
     if abilityList then
@@ -449,30 +449,30 @@ function rematch.filters.funcs:Similar(petInfo)
 end
 
 -- Moveset filter finds all pets that have the exact same moveset
-function rematch.filters.funcs:Moveset(petInfo)
+function rematchRedux.filters.funcs:Moveset(petInfo)
     return self[petInfo.moveset]
 end
 
 -- pre-func for Script filters sets up the script environment to run the Code
-function rematch.filters.preFuncs:Script()
-    rematch.scriptFilter:SetupEnvironment()
+function rematchRedux.filters.preFuncs:Script()
+    rematchRedux.scriptFilter:SetupEnvironment()
 end
 
--- Script filter will evaluate the pet against the rematch.scriptFilter environment
-function rematch.filters.funcs:Script(petInfo)
-    return rematch.scriptFilter:Evaluate(petInfo)
+-- Script filter will evaluate the pet against the rematchRedux.scriptFilter environment
+function rematchRedux.filters.funcs:Script(petInfo)
+    return rematchRedux.scriptFilter:Evaluate(petInfo)
 end
 
 -- Pet Marker is 1-8 for actual marks or 9 for 'None'; though speciesIDs without a mark have nil in settings.PetMarkers
-function rematch.filters.funcs:Marker(petInfo)
+function rematchRedux.filters.funcs:Marker(petInfo)
     local marker = petInfo.marker or 9
     return self[marker]
 end
 
 -- "Other" filter group has many radio button options. rather than run a gauntlet over each, only enabled ones are checked
 -- by looping over the enabled filters and running their separate functions
-function rematch.filters.funcs:Other(petInfo)
-    local otherFuncs = rematch.filters.otherFuncs
+function rematchRedux.filters.funcs:Other(petInfo)
+    local otherFuncs = rematchRedux.filters.otherFuncs
     for key,value in pairs(self) do
         if otherFuncs[key] and not otherFuncs[key](self,petInfo,value) then
             return false
@@ -484,10 +484,10 @@ end
 --[[ Other filter funcs ]]
 
 -- "Other" sub-functions, where name of function is the key in the "Other" filter group and value is the value of the key
-rematch.filters.otherFuncs = {}
+rematchRedux.filters.otherFuncs = {}
 
 -- Other -> Leveling (Leveling, NotLeveling)
-function rematch.filters.otherFuncs:Leveling(petInfo,value)
+function rematchRedux.filters.otherFuncs:Leveling(petInfo,value)
     if value=="Leveling" and not petInfo.isLeveling then
         return false
     elseif value=="NotLeveling" and petInfo.isLeveling then
@@ -497,7 +497,7 @@ function rematch.filters.otherFuncs:Leveling(petInfo,value)
 end
 
 -- Other -> Tradable (Tradable, NotTradable)
-function rematch.filters.otherFuncs:Tradable(petInfo,value)
+function rematchRedux.filters.otherFuncs:Tradable(petInfo,value)
     if value=="Tradable" and not petInfo.isTradable then
         return false
     elseif value=="NotTradable" and petInfo.isTradable then
@@ -507,7 +507,7 @@ function rematch.filters.otherFuncs:Tradable(petInfo,value)
 end
 
 -- Other -> Battle (Battle, NotBattle)
-function rematch.filters.otherFuncs:Battle(petInfo,value)
+function rematchRedux.filters.otherFuncs:Battle(petInfo,value)
     if value=="Battle" and not petInfo.canBattle then
         return false
     elseif value=="NotBattle" and petInfo.canBattle then
@@ -517,7 +517,7 @@ function rematch.filters.otherFuncs:Battle(petInfo,value)
 end
 
 -- Other -> Quantity (Qty1, Qty2, Qty3)
-function rematch.filters.otherFuncs:Quantity(petInfo,value)
+function rematchRedux.filters.otherFuncs:Quantity(petInfo,value)
     local count = petInfo.count or 0
     if value=="Qty3" and count<3 then
         return false
@@ -530,7 +530,7 @@ function rematch.filters.otherFuncs:Quantity(petInfo,value)
 end
 
 -- Other -> Team (InTeam, NotInTeam)
-function rematch.filters.otherFuncs:Team(petInfo,value)
+function rematchRedux.filters.otherFuncs:Team(petInfo,value)
     if value=="InTeam" and not petInfo.inTeams then
         return false
     elseif value=="NotInTeam" and petInfo.inTeams then
@@ -540,12 +540,12 @@ function rematch.filters.otherFuncs:Team(petInfo,value)
 end
 
 -- Other -> Moveset (UniqueMoveset, SharedMoveset)
-function rematch.filters.otherFuncs:Moveset(petInfo,value)
+function rematchRedux.filters.otherFuncs:Moveset(petInfo,value)
     local moveset = petInfo.moveset
     if not petInfo.canBattle or not moveset then
         return false -- not going to count pets that can't battle
     end
-    local isUnique = rematch.collectionInfo:IsMovesetUnique(moveset)
+    local isUnique = rematchRedux.collectionInfo:IsMovesetUnique(moveset)
     if value=="UniqueMoveset" and not isUnique then
         return false
     elseif value=="SharedMoveset" and isUnique then
@@ -555,21 +555,21 @@ function rematch.filters.otherFuncs:Moveset(petInfo,value)
 end
 
 -- Other -> Has Notes (value is implicitly true if this filter is enabled)
-function rematch.filters.otherFuncs:HasNotes(petInfo)
+function rematchRedux.filters.otherFuncs:HasNotes(petInfo)
     return petInfo.hasNotes
 end
 
 -- Other -> Hidden Pets (value is implicitly true if this filter is enabled)
-function rematch.filters.otherFuncs:Hidden(petInfo)
+function rematchRedux.filters.otherFuncs:Hidden(petInfo)
     local speciesID = petInfo.speciesID
     return speciesID and settings.HiddenPets[speciesID] or false
 end
 
 -- Other -> Current Zone (value is implicitly true if this filter is enabled)
 -- in addition, to track zone changes, use of this filter will start watching for ZONE_CHANGED_NEW_AREA if not already
-function rematch.filters.otherFuncs:CurrentZone(petInfo)
+function rematchRedux.filters.otherFuncs:CurrentZone(petInfo)
     if not currentZone then -- if this is the first filter run where filter is enabled, turn on zone updates
-        rematch.events:Register(rematch.filters,"ZONE_CHANGED_NEW_AREA",rematch.filters.ZONE_CHANGED_NEW_AREA)
+        rematchRedux.events:Register(rematchRedux.filters,"ZONE_CHANGED_NEW_AREA",rematchRedux.filters.ZONE_CHANGED_NEW_AREA)
         currentZone = GetRealZoneText() or ""
     end
     if currentZone~="" and petInfo.sourceText and petInfo.sourceText:match(GetRealZoneText()) then
@@ -580,21 +580,21 @@ function rematch.filters.otherFuncs:CurrentZone(petInfo)
 end
 
 -- new zone isn't immediately available on ZONE_CHANGED_NEW_AREA; on zone change wait a second before updating
-function rematch.filters:ZONE_CHANGED_NEW_AREA()
-    if rematch.filters:Get("Other","CurrentZone") then -- if Current Zone filter enabled
-        rematch.timer:Start(1,rematch.filters.UpdateCurrentZone) -- wait a second and update currentZone
+function rematchRedux.filters:ZONE_CHANGED_NEW_AREA()
+    if rematchRedux.filters:Get("Other","CurrentZone") then -- if Current Zone filter enabled
+        rematchRedux.timer:Start(1,rematchRedux.filters.UpdateCurrentZone) -- wait a second and update currentZone
     else -- filter is no longer enabled, stop watching for zone updates
-        rematch.events:Unregister(rematch.filters,"ZONE_CHANGED_NEW_AREA")
+        rematchRedux.events:Unregister(rematchRedux.filters,"ZONE_CHANGED_NEW_AREA")
         currentZone = nil -- nil currentZone
     end
 end
 
 -- this runs 1.0 second after zoning into a new area while Other -> Current Zone is enabled
-function rematch.filters:UpdateCurrentZone()
+function rematchRedux.filters:UpdateCurrentZone()
     currentZone = GetRealZoneText() or ""
-    rematch.filters:ForceUpdate() -- set dirty flag so next filter will run
-    if rematch.petsPanel:IsVisible() then -- and if pet list on screen then do a filter run now
-        rematch.petsPanel:Update()
+    rematchRedux.filters:ForceUpdate() -- set dirty flag so next filter will run
+    if rematchRedux.petsPanel:IsVisible() then -- and if pet list on screen then do a filter run now
+        rematchRedux.petsPanel:Update()
     end
 end
 
@@ -602,7 +602,7 @@ end
 
 -- Stats is generated from the search filters (SetSearch and the Parse gsub functions) and confirms the defined
 -- stats are within the defined ranges
-function rematch.filters.funcs:Stats(petInfo)
+function rematchRedux.filters.funcs:Stats(petInfo)
     if not petInfo.isOwned or not petInfo.canBattle then
         return -- all pets with stat searches must be collected pets that can battle
     end
@@ -626,16 +626,16 @@ function rematch.filters.funcs:Stats(petInfo)
 end
 
 -- after a filter pass, wipe the caches used
-function rematch.filters.postFuncs:Search()
+function rematchRedux.filters.postFuncs:Search()
     wipe(searchRelevance)
     wipe(abilityRelevance)
 end
 
 -- for now doing a single term search
-function rematch.filters.funcs:Search(petInfo)
+function rematchRedux.filters.funcs:Search(petInfo)
     local pattern = self.Pattern
     local length = self.Length
-    local match = rematch.utils.match
+    local match = rematchRedux.utils.match
     local speciesID = petInfo.speciesID
 
     -- if petInfo is invalid (perhaps pet in roster just released)
@@ -714,19 +714,19 @@ end
 --[[ pre-filter run ]]
 
 -- prior to filtering all pets, do some housekeeping, which includes running preFuncs if any are needed
-function rematch.filters:PreRun()
+function rematchRedux.filters:PreRun()
     -- update filtersUsed so we don't waste time evaluating unused filters
     wipe(filtersUsed)
     for _,info in ipairs(filterGroups) do
-        if not rematch.filters:IsClear(info[1]) then
+        if not rematchRedux.filters:IsClear(info[1]) then
             tinsert(filtersUsed,info[1])
         end
     end
     -- reset petInfo in case anything lingering from execution path we're on
-    rematch.petInfo:Reset()
+    rematchRedux.petInfo:Reset()
     -- run preFuncs for each active filterGroup, if it has one
     for _,filterGroup in ipairs(filtersUsed) do
-        local func = rematch.filters.preFuncs[filterGroup]
+        local func = rematchRedux.filters.preFuncs[filterGroup]
         if func then
             func(settings.Filters[filterGroup])
         end
@@ -734,20 +734,20 @@ function rematch.filters:PreRun()
     -- empty the current filteredPetList
     wipe(filteredPetList)
     -- set up sort for gathering cache info
-    rematch.sort:PrepareSort()
+    rematchRedux.sort:PrepareSort()
 end
 
 -- after filtering all pets, do cleanup housekeeping, such as wiping cache tables
-function rematch.filters:PostRun()
+function rematchRedux.filters:PostRun()
     -- run any postFuncs
     for _,filterGroup in ipairs(filtersUsed) do
-        local func = rematch.filters.postFuncs[filterGroup]
+        local func = rematchRedux.filters.postFuncs[filterGroup]
         if func then
             func(settings.Filters[filterGroup])
         end
     end
     -- wipe sort caches
-    rematch.sort:Cleanup()
+    rematchRedux.sort:Cleanup()
     -- the filtered list doesn't need re-evaluated if this dirty flag doesn't change
     dirty = false
     -- all done!
@@ -756,7 +756,7 @@ end
 --[[ evaluate ]]
 
 -- returns true if the given petInfo should display in the pet list given the current filters; false otherwise
-function rematch.filters:Evaluate(petInfo)
+function rematchRedux.filters:Evaluate(petInfo)
 
     -- this is an option and not a filter; Pet Filter Options: Hide Non-Battle Pets; to never list companion pets that can't battle
     if settings.HideNonBattlePets and not petInfo.canBattle then
@@ -766,13 +766,13 @@ function rematch.filters:Evaluate(petInfo)
     -- if Allow Hidden Pets is enabled and this pet is hidden, don't list it
     if settings.AllowHiddenPets then
         local speciesID = petInfo.speciesID
-        if speciesID and settings.HiddenPets[speciesID] and not rematch.filters:Get("Other","Hidden") then
+        if speciesID and settings.HiddenPets[speciesID] and not rematchRedux.filters:Get("Other","Hidden") then
             return false
         end
     end
 
     for _,filterGroup in ipairs(filtersUsed) do
-        local func = rematch.filters.funcs[filterGroup]
+        local func = rematchRedux.filters.funcs[filterGroup]
         if func then
             if not func(settings.Filters[filterGroup],petInfo) then -- if filter function returns false, this pet should not list
                 return false -- immediately return; no need to test other filters
@@ -785,30 +785,30 @@ end
 
 -- runs all filters and returns an ordered list of petID/speciesIDs that meet all filters
 -- force is true to ignore the dirty flag and do a filter run regarldess whether any data has changed
-function rematch.filters:RunFilters(force)
+function rematchRedux.filters:RunFilters(force)
     if not dirty and not force then -- if we already did this work and nothing has changed since, return the same filtered list
         return filteredPetList
     end
     -- do housekeeping before evaluating pets
-    rematch.filters:PreRun()
+    rematchRedux.filters:PreRun()
     -- evaluate each pet in the roster to see if it should list
-    for petID in rematch.roster:AllPets() do
-        local petInfo = rematch.petInfo:Fetch(petID)
-        if rematch.filters:Evaluate(petInfo) then
+    for petID in rematchRedux.roster:AllPets() do
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
+        if rematchRedux.filters:Evaluate(petInfo) then
             tinsert(filteredPetList,petID)
-            rematch.sort:AddSortValues(petID)
+            rematchRedux.sort:AddSortValues(petID)
         end
     end
     -- filteredPetList is the filtered list of pets; now sort them
-    rematch.sort:RunSort(filteredPetList)
+    rematchRedux.sort:RunSort(filteredPetList)
     -- do cleanup after evaluating and sorting pets
-    rematch.filters:PostRun()
+    rematchRedux.filters:PostRun()
     return filteredPetList
 end
 
 -- returns a reference to searchRelevance lookup table if a search is happening; nil otherwise
-function rematch.filters:GetSearchRelevance()
-    if not rematch.filters:IsClear("Search") then
+function rematchRedux.filters:GetSearchRelevance()
+    if not rematchRedux.filters:IsClear("Search") then
         return searchRelevance
     end
 end
@@ -819,7 +819,7 @@ end
 -- a nil sortKey means to use the default sort for that level (the goal is to have an empty settings.Filters.Sort for all defaults)
 -- setting a sort should also set the subsorts to their default value; except when that sort is already used by a higher sort
 -- (in this case use the first numerical sortKey 1-8 that's not used)
-function rematch.filters:SetSort(sortLevel,sortKey)
+function rematchRedux.filters:SetSort(sortLevel,sortKey)
     if sortLevel==1 then
         if sortKey==C.SORT_DEFAULT_LEVEL_1 then -- default for level 1 sort is C.SORT_NAME
             settings.Filters.Sort[sortLevel] = nil
@@ -850,17 +850,17 @@ function rematch.filters:SetSort(sortLevel,sortKey)
         end
     end
     -- when a primary or secondary sort is chosen, make sure the subsorts are possible; and if not, switch them to the first available
-    if not rematch.filters:IsSortKeyAvailable(2,rematch.filters:GetSort(2)) then
-        rematch.filters:SetSort(2,rematch.filters:GetFirstAvailableSort())
+    if not rematchRedux.filters:IsSortKeyAvailable(2,rematchRedux.filters:GetSort(2)) then
+        rematchRedux.filters:SetSort(2,rematchRedux.filters:GetFirstAvailableSort())
     end
-    if not rematch.filters:IsSortKeyAvailable(3,rematch.filters:GetSort(3)) then
-        rematch.filters:SetSort(3,rematch.filters:GetFirstAvailableSort())
+    if not rematchRedux.filters:IsSortKeyAvailable(3,rematchRedux.filters:GetSort(3)) then
+        rematchRedux.filters:SetSort(3,rematchRedux.filters:GetFirstAvailableSort())
     end
     dirty = true
 end
 
 -- returns the sort order at the given sortLevel (special handling for nil since nil is a default sort order)
-function rematch.filters:GetSort(sortLevel)
+function rematchRedux.filters:GetSort(sortLevel)
     local sortKey = settings.Filters.Sort[sortLevel]
     if sortLevel==1 and not sortKey then
         return C.SORT_DEFAULT_LEVEL_1 -- default is C.SORT_NAME
@@ -874,10 +874,10 @@ function rematch.filters:GetSort(sortLevel)
 end
 
 -- returns true if no parent sort uses the given sortKey
-function rematch.filters:IsSortKeyAvailable(sortLevel,sortKey)
-    if sortLevel==2 and sortKey==rematch.filters:GetSort(1) then
+function rematchRedux.filters:IsSortKeyAvailable(sortLevel,sortKey)
+    if sortLevel==2 and sortKey==rematchRedux.filters:GetSort(1) then
         return false
-    elseif sortLevel==3 and (sortKey==rematch.filters:GetSort(1) or sortKey==rematch.filters:GetSort(2)) then
+    elseif sortLevel==3 and (sortKey==rematchRedux.filters:GetSort(1) or sortKey==rematchRedux.filters:GetSort(2)) then
         return false
     else
         return true
@@ -886,11 +886,11 @@ end
 
 -- when two sortLevels want to do the same sort, this function will return the first sort not used in all 3 sortLevels
 -- the sort chosen is the first available of the sortKeys in their numerical order, the first of: name, level, rarity
-function rematch.filters:GetFirstAvailableSort()
+function rematchRedux.filters:GetFirstAvailableSort()
     for sortKey=1,4 do -- only need to do 3 really since this is only used for two sortLevels, but doing an extra to be certain
         local found = false
         for sortLevel=1,3 do
-            if rematch.filters:GetSort(sortLevel)==sortKey then
+            if rematchRedux.filters:GetSort(sortLevel)==sortKey then
                 found = true
             end
         end
@@ -901,10 +901,10 @@ function rematch.filters:GetFirstAvailableSort()
 end
 
 -- replaces the existing filters with a saved filter
-function rematch.filters:LoadFavoriteFilter(filters)
+function rematchRedux.filters:LoadFavoriteFilter(filters)
     for _,filterInfo in pairs(filterGroups) do
         local filterGroup = filterInfo[1]
-        rematch.filters:Clear(filterGroup) -- even rolling over sort and search (which may not reset on a ClearAll)
+        rematchRedux.filters:Clear(filterGroup) -- even rolling over sort and search (which may not reset on a ClearAll)
         local savedGroup = filters[filterGroup]
         if not savedGroup then
             filters[filterGroup] = {} -- for older saved filters, in case new ones are added

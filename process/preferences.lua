@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.preferences = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.preferences = {}
 
 local currentPreferences = {} -- combination of group and team preferences, if any
 
@@ -11,9 +11,9 @@ local function isPreferenceUsed(preference)
     return (preference and next(preference)) and true or false
 end
 
-rematch.events:Register(rematch.preferences,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.preferences,"PLAYER_LOGIN",function(self)
 
-    rematch.dialog:Register("CurrentPreferences",{
+    rematchRedux.dialog:Register("CurrentPreferences",{
         title = L["Current Leveling Preferences"],
         accept = SAVE,
         cancel = CANCEL,
@@ -27,36 +27,36 @@ rematch.events:Register(rematch.preferences,"PLAYER_LOGIN",function(self)
         refreshFunc = function(self,info,subject,firstRun)
             if firstRun then
                 -- making a copy of current group, team and default preferences for editing (reference would modify original)
-                self.Preferences.currentPreferences = CopyTable(rematch.preferences:GetCurrentPreferences() or {})
-                self.Preferences.groupPreferences = CopyTable(rematch.preferences:GetGroupPreferences(subject.groupID) or {})
-                self.Preferences.teamPreferences = CopyTable(rematch.preferences:GetTeamPreferences(subject.teamID) or {})
+                self.Preferences.currentPreferences = CopyTable(rematchRedux.preferences:GetCurrentPreferences() or {})
+                self.Preferences.groupPreferences = CopyTable(rematchRedux.preferences:GetGroupPreferences(subject.groupID) or {})
+                self.Preferences.teamPreferences = CopyTable(rematchRedux.preferences:GetTeamPreferences(subject.teamID) or {})
                 self.Preferences.defaultPreferences = CopyTable(settings.DefaultPreferences)
                 self.LayoutTabs:SetTabs({
                     {L["Current"],"Default"},
-                    {L["Team"],"Team",function() return isPreferenceUsed(self.Preferences.teamPreferences) end,function() wipe(self.Preferences.teamPreferences) rematch.dialog:Refresh() end},
-                    {L["Group"],"Group",function() return isPreferenceUsed(self.Preferences.groupPreferences) end,function() wipe(self.Preferences.groupPreferences) rematch.dialog:Refresh() end},
-                    {L["Default"],"Global",function() return isPreferenceUsed(self.Preferences.defaultPreferences) end,function() wipe(self.Preferences.defaultPreferences) rematch.dialog:Refresh() end}
+                    {L["Team"],"Team",function() return isPreferenceUsed(self.Preferences.teamPreferences) end,function() wipe(self.Preferences.teamPreferences) rematchRedux.dialog:Refresh() end},
+                    {L["Group"],"Group",function() return isPreferenceUsed(self.Preferences.groupPreferences) end,function() wipe(self.Preferences.groupPreferences) rematchRedux.dialog:Refresh() end},
+                    {L["Default"],"Global",function() return isPreferenceUsed(self.Preferences.defaultPreferences) end,function() wipe(self.Preferences.defaultPreferences) rematchRedux.dialog:Refresh() end}
                 })
             end
             -- these run every refresh (above is only on first run)
-            local openLayout = rematch.dialog:GetOpenLayout()
-            local isUserTeam = rematch.savedTeams:IsUserTeam(subject.teamID)
+            local openLayout = rematchRedux.dialog:GetOpenLayout()
+            local isUserTeam = rematchRedux.savedTeams:IsUserTeam(subject.teamID)
             local textColor = ((openLayout=="Group" or openLayout=="Team") and not isUserTeam) and C.HEX_GREY or C.HEX_GOLD
             if openLayout=="Default" then
                 self.Text:SetText(L["Current Leveling Preferences"])
                 self.SmallText:SetText(L["Combined team, group and default preferences"])
-                rematch.preferences:CombinePreferences(self.Preferences.currentPreferences,self.Preferences.teamPreferences,self.Preferences.groupPreferences,self.Preferences.defaultPreferences)
+                rematchRedux.preferences:CombinePreferences(self.Preferences.currentPreferences,self.Preferences.teamPreferences,self.Preferences.groupPreferences,self.Preferences.defaultPreferences)
                 self.PreferencesReadOnly:Set(self.Preferences.currentPreferences)
                 self.Help:SetText(L["Leveling preferences choose which pets are picked first in the leveling queue. All criteria are optional."])
             elseif openLayout=="Group" then
                 self.Text:SetText(format("%s%s",textColor,L["Loaded Team's Group Preferences"]))
-                self.SmallText:SetText(isUserTeam and rematch.utils:GetFormattedGroupName(subject.groupID) or format("%s%s",C.HEX_RED,L["No saved team loaded"]))
+                self.SmallText:SetText(isUserTeam and rematchRedux.utils:GetFormattedGroupName(subject.groupID) or format("%s%s",C.HEX_RED,L["No saved team loaded"]))
                 self.Preferences:Set(self.Preferences.groupPreferences)
                 self.Preferences:SetEnabled(isUserTeam)
                 self.Help:SetText(L["Group preferences are saved to the loaded team's group and override default preferences."])
             elseif openLayout=="Team" then
                 self.Text:SetText(format("%s%s",textColor,L["Loaded Team Preferences"]))
-                self.SmallText:SetText(isUserTeam and rematch.utils:GetFormattedTeamName(subject.teamID) or format("%s%s",C.HEX_RED,L["No saved team loaded"]))
+                self.SmallText:SetText(isUserTeam and rematchRedux.utils:GetFormattedTeamName(subject.teamID) or format("%s%s",C.HEX_RED,L["No saved team loaded"]))
                 self.Preferences:Set(self.Preferences.teamPreferences)
                 self.Preferences:SetEnabled(isUserTeam)
                 self.Help:SetText(L["Team preferences are saved to the loaded team and override default and group preferences."])
@@ -70,7 +70,7 @@ rematch.events:Register(rematch.preferences,"PLAYER_LOGIN",function(self)
             self.LayoutTabs:Update()
         end,
         changeFunc = function(self,info,subject)
-            local openLayout = rematch.dialog:GetOpenLayout()
+            local openLayout = rematchRedux.dialog:GetOpenLayout()
             if openLayout=="Group" then
                 self.Preferences:Get(self.Preferences.groupPreferences)
             elseif openLayout=="Team" then
@@ -81,7 +81,7 @@ rematch.events:Register(rematch.preferences,"PLAYER_LOGIN",function(self)
             self.LayoutTabs:Update()
         end,
         acceptFunc = function(self,info,subject)
-            local team = subject.teamID and rematch.savedTeams[subject.teamID]
+            local team = subject.teamID and rematchRedux.savedTeams[subject.teamID]
             if team then
                 if isPreferenceUsed(self.Preferences.teamPreferences) then
                     team.preferences = CopyTable(self.Preferences.teamPreferences)
@@ -89,7 +89,7 @@ rematch.events:Register(rematch.preferences,"PLAYER_LOGIN",function(self)
                     team.preferences = nil
                 end
             end
-            local group = subject.groupID and rematch.savedGroups[subject.groupID]
+            local group = subject.groupID and rematchRedux.savedGroups[subject.groupID]
             if group then
                 if isPreferenceUsed(self.Preferences.groupPreferences) then
                     group.preferences = CopyTable(self.Preferences.groupPreferences)
@@ -100,22 +100,22 @@ rematch.events:Register(rematch.preferences,"PLAYER_LOGIN",function(self)
             -- default preferences always has a table, even if empty
             settings.DefaultPreferences = CopyTable(self.Preferences.defaultPreferences)
             -- in case user switched to team panel
-            rematch.timer:Start(0,rematch.frame.Update,rematch.frame)
-            rematch.queue:Process()
+            rematchRedux.timer:Start(0,rematchRedux.frame.Update,rematchRedux.frame)
+            rematchRedux.queue:Process()
         end
     })
 
     -- if current preferences dialog is up when a team loads/unloads, close the dialog (to avoid confusion about the previously loaded team's preferences)
-    rematch.events:Register(self,"REMATCH_TEAM_LOADED",function(self,event,...)
-        if rematch.dialog:GetOpenDialog()=="CurrentPreferences" then
-            rematch.dialog:HideDialog()
+    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",function(self,event,...)
+        if rematchRedux.dialog:GetOpenDialog()=="CurrentPreferences" then
+            rematchRedux.dialog:HideDialog()
         end
     end)
 
 end)
 
 -- returns a combination of group and team preferences, if any, or an empty table if neither
-function rematch.preferences:GetCurrentPreferences(teamID)
+function rematchRedux.preferences:GetCurrentPreferences(teamID)
     wipe(currentPreferences)
 
     if not teamID then
@@ -128,14 +128,14 @@ function rematch.preferences:GetCurrentPreferences(teamID)
         end
     end
 
-    local teamPreferences = rematch.preferences:GetTeamPreferences(teamID)
+    local teamPreferences = rematchRedux.preferences:GetTeamPreferences(teamID)
     if isPreferenceUsed(teamPreferences) then
         for k,v in pairs(teamPreferences) do
             currentPreferences[k] = v
         end
     end
 
-    local groupPreferences = rematch.preferences:GetGroupPreferences(teamID and rematch.savedTeams[teamID] and rematch.savedTeams[teamID].groupID)
+    local groupPreferences = rematchRedux.preferences:GetGroupPreferences(teamID and rematchRedux.savedTeams[teamID] and rematchRedux.savedTeams[teamID].groupID)
     if isPreferenceUsed(groupPreferences) then
         for k,v in pairs(groupPreferences) do
             currentPreferences[k] = v
@@ -146,7 +146,7 @@ function rematch.preferences:GetCurrentPreferences(teamID)
 end
 
 -- combines group and team preferences into the combinePreferences table
-function rematch.preferences:CombinePreferences(combinedPreferences,teamPreferences,groupPreferences,defaultPreferences)
+function rematchRedux.preferences:CombinePreferences(combinedPreferences,teamPreferences,groupPreferences,defaultPreferences)
     assert(type(combinedPreferences)=="table" and type(teamPreferences)=="table" and type(groupPreferences)=="table" and type(defaultPreferences)=="table","Can't combine preferences without all preference tables.")
     wipe(combinedPreferences)
     -- apply default preferences first
@@ -164,17 +164,17 @@ function rematch.preferences:CombinePreferences(combinedPreferences,teamPreferen
 end
 
 -- returns true if there are any preferences for default, current teamID or current teamID's groupID, false otherwise
-function rematch.preferences:HasCurrentPreferences()
+function rematchRedux.preferences:HasCurrentPreferences()
 
     if isPreferenceUsed(settings.DefaultPreferences) then
         return true -- a default preference is used
     end
 
-    if isPreferenceUsed(rematch.preferences:GetTeamPreferences(settings.currentTeamID)) then
+    if isPreferenceUsed(rematchRedux.preferences:GetTeamPreferences(settings.currentTeamID)) then
         return true -- a team preference is used
     end
 
-    if isPreferenceUsed(rematch.preferences:GetGroupPreferences(settings.currentTeamID and rematch.savedTeams[settings.currentTeamID] and rematch.savedTeams[settings.currentTeamID].groupID)) then
+    if isPreferenceUsed(rematchRedux.preferences:GetGroupPreferences(settings.currentTeamID and rematchRedux.savedTeams[settings.currentTeamID] and rematchRedux.savedTeams[settings.currentTeamID].groupID)) then
         return true -- a group preference is used
     end
 
@@ -182,21 +182,21 @@ function rematch.preferences:HasCurrentPreferences()
 end
 
 -- returns the preferences for the teamID, or nil if none
-function rematch.preferences:GetTeamPreferences(teamID)
-    if teamID and rematch.savedTeams[teamID] then
-        return rematch.savedTeams[teamID].preferences
+function rematchRedux.preferences:GetTeamPreferences(teamID)
+    if teamID and rematchRedux.savedTeams[teamID] then
+        return rematchRedux.savedTeams[teamID].preferences
     end
 end
 
 -- returns the preferences for the groupID, or nil if none
-function rematch.preferences:GetGroupPreferences(groupID)
-    if groupID and rematch.savedGroups[groupID] then
-        return rematch.savedGroups[groupID].preferences
+function rematchRedux.preferences:GetGroupPreferences(groupID)
+    if groupID and rematchRedux.savedGroups[groupID] then
+        return rematchRedux.savedGroups[groupID].preferences
     end
 end
 
 -- returns the body of a tooltip for the current preferences
-function rematch.preferences:GetTooltipBody()
+function rematchRedux.preferences:GetTooltipBody()
     local preferences = self:GetCurrentPreferences()
     local anyUsed = false
 
@@ -220,10 +220,10 @@ function rematch.preferences:GetTooltipBody()
     if preferences.minHP then
         body = body..format("%s: %s%s\124r\n",L["Minimum health"],C.HEX_WHITE,preferences.minHP)
         if preferences.allowMM then
-            body = body..format(format(L["  Allow any %s or %s\n"],rematch.utils:PetTypeAsText(6,16),rematch.utils:PetTypeAsText(10,16)))
+            body = body..format(format(L["  Allow any %s or %s\n"],rematchRedux.utils:PetTypeAsText(6,16),rematchRedux.utils:PetTypeAsText(10,16)))
         end
         if preferences.expectedDD then
-            body = body..format(format(L["  Expected damage taken: %s\n"],rematch.utils:PetTypeAsText(preferences.expectedDD,16)))
+            body = body..format(format(L["  Expected damage taken: %s\n"],rematchRedux.utils:PetTypeAsText(preferences.expectedDD,16)))
         end
     end
     if preferences.maxHP then
@@ -231,7 +231,7 @@ function rematch.preferences:GetTooltipBody()
     end
 
     -- if no current preferences, then add a "None" under Current Preferences:
-    if not rematch.preferences:HasCurrentPreferences() then
+    if not rematchRedux.preferences:HasCurrentPreferences() then
         body = body..L["None\n"]
     end
 
@@ -248,24 +248,24 @@ function rematch.preferences:GetTooltipBody()
 end
 
 -- pauses preferences if paused is true; resumes otherwise
-function rematch.preferences:SetPaused(paused)
+function rematchRedux.preferences:SetPaused(paused)
     settings.PreferencesPaused = paused and true or false
     --  update queue panel and possibly loaded team panel
-    if rematch.queuePanel:IsVisible() then
-        rematch.queuePanel:Update()
+    if rematchRedux.queuePanel:IsVisible() then
+        rematchRedux.queuePanel:Update()
     end
-    if settings.ShowLoadedTeamPreferences and rematch.loadedTeamPanel:IsVisible() then
-        rematch.loadedTeamPanel:Update()
+    if settings.ShowLoadedTeamPreferences and rematchRedux.loadedTeamPanel:IsVisible() then
+        rematchRedux.loadedTeamPanel:Update()
     end
 end
 
 -- toggles the preferences paused
-function rematch.preferences:TogglePause()
-    rematch.preferences:SetPaused(not settings.PreferencesPaused)
-    if rematch.menus:IsMenuOpen("QueueMenu") then
-        rematch.menus:RefreshMenus() -- in case menu is open and something outside menu toggled it, update menu
+function rematchRedux.preferences:TogglePause()
+    rematchRedux.preferences:SetPaused(not settings.PreferencesPaused)
+    if rematchRedux.menus:IsMenuOpen("QueueMenu") then
+        rematchRedux.menus:RefreshMenus() -- in case menu is open and something outside menu toggled it, update menu
     end
-    rematch.queue:Process()
+    rematchRedux.queue:Process()
     -- if mouse is over a preferences button when it was clicked, then update its tooltip
     local focus = GetMouseFoci()[1]
     if focus and focus.isPreferencesButton then
@@ -274,13 +274,13 @@ function rematch.preferences:TogglePause()
 end
 
 -- returns true if the given petID passes the criteria of the given preferences (or current if no preferences given)
-function rematch.preferences:IsPetPreferred(petID,preferences)
+function rematchRedux.preferences:IsPetPreferred(petID,preferences)
 
     if not preferences then
         preferences = self:GetCurrentPreferences()
     end
-    -- this should not be rematch.petInfo but a
-    local petInfo = rematch.altInfo:Fetch(petID) -- using altInfo so it doesn't clobber petInfo from upstream
+    -- this should not be rematchRedux.petInfo but a
+    local petInfo = rematchRedux.altInfo:Fetch(petID) -- using altInfo so it doesn't clobber petInfo from upstream
     local preferred = petInfo.level and petInfo.isOwned and petInfo.isSummonable -- assume the pet is preferred if it's owned and has a level
 
     if settings.PreferencesPaused then

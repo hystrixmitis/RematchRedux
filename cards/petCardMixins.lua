@@ -1,149 +1,149 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
-RematchPetCardTopButtonMixin = {}
+RematchReduxPetCardTopButtonMixin = {}
 
-function RematchPetCardTopButtonMixin:OnEnter()
+function RematchReduxPetCardTopButtonMixin:OnEnter()
     self.Highlight:Show()
     if not settings.PetCardNoMouseoverFlip then
-        rematch.petCard.softFlip = true
-        rematch.petCard:FlipCard()
+        rematchRedux.petCard.softFlip = true
+        rematchRedux.petCard:FlipCard()
     end
 end
 
-function RematchPetCardTopButtonMixin:OnLeave()
+function RematchReduxPetCardTopButtonMixin:OnLeave()
     self.Highlight:Hide()
     if not settings.PetCardNoMouseoverFlip then
-        rematch.petCard.softFlip = false
-        rematch.petCard:FlipCard()
+        rematchRedux.petCard.softFlip = false
+        rematchRedux.petCard:FlipCard()
     end
 end
 
-function RematchPetCardTopButtonMixin:OnMouseDown()
+function RematchReduxPetCardTopButtonMixin:OnMouseDown()
     self.Highlight:Hide()
 end
 
-function RematchPetCardTopButtonMixin:OnMouseUp()
+function RematchReduxPetCardTopButtonMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
         self.Highlight:Show()
     end
 end
 
 -- click of a top button will flip the card (unless it's a special type like leveling, random, ignored)
-function RematchPetCardTopButtonMixin:OnClick()
-    local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+function RematchReduxPetCardTopButtonMixin:OnClick()
+    local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
     if not petInfo.isSpecialType then
-        rematch.petCard.hardFlip = not rematch.petCard.hardFlip
-        rematch.petCard:FlipCard()
+        rematchRedux.petCard.hardFlip = not rematchRedux.petCard.hardFlip
+        rematchRedux.petCard:FlipCard()
     end
 end
 
-RematchPetCardAbilityMixin = {}
+RematchReduxPetCardAbilityMixin = {}
 
-function RematchPetCardAbilityMixin:OnEnter()
+function RematchReduxPetCardAbilityMixin:OnEnter()
     self.Highlight:Show()
-    rematch.textureHighlight:Show(self.Icon)
-    rematch.menus:Hide()
-    rematch.abilityTooltip:ShowTooltip(self,rematch.petCard.petID,self.abilityID,rematch.petCard)
+    rematchRedux.textureHighlight:Show(self.Icon)
+    rematchRedux.menus:Hide()
+    rematchRedux.abilityTooltip:ShowTooltip(self,rematchRedux.petCard.petID,self.abilityID,rematchRedux.petCard)
 end
 
-function RematchPetCardAbilityMixin:OnLeave()
+function RematchReduxPetCardAbilityMixin:OnLeave()
     self.Highlight:Hide()
-    rematch.textureHighlight:Hide()
-    rematch.abilityTooltip:Hide()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.abilityTooltip:Hide()
 end
 
-function RematchPetCardAbilityMixin:OnClick(button)
-    if rematch.utils:HandleSpecialAbilityClicks(self.abilityID,rematch.petCard.petID) then
+function RematchReduxPetCardAbilityMixin:OnClick(button)
+    if rematchRedux.utils:HandleSpecialAbilityClicks(self.abilityID,rematchRedux.petCard.petID) then
         return
     elseif button=="RightButton" then
-        rematch.menus:Show("AbilityMenu",self,self.abilityID,"cursor")
+        rematchRedux.menus:Show("AbilityMenu",self,self.abilityID,"cursor")
     end
 end
 
-RematchPetCardStatusBarMixin = {}
+RematchReduxPetCardStatusBarMixin = {}
 
-function RematchPetCardStatusBarMixin:OnEnter()
+function RematchReduxPetCardStatusBarMixin:OnEnter()
     self.Text:Show()
 end
 
-function RematchPetCardStatusBarMixin:OnLeave()
+function RematchReduxPetCardStatusBarMixin:OnLeave()
     if not settings.PetCardAlwaysShowHPXPText then
         self.Text:Hide()
     end
 end
 
-RematchPetCardStatMixin = {}
+RematchReduxPetCardStatMixin = {}
 
 -- stat buttons are created on demand, and need to be added to clickable elements for card manager
-function RematchPetCardStatMixin:OnLoad()
-    rematch.cardManager:AddClickableElementToCard(rematch.petCard,self)
+function RematchReduxPetCardStatMixin:OnLoad()
+    rematchRedux.cardManager:AddClickableElementToCard(rematchRedux.petCard,self)
     self:EnableMouse(false) -- start off transparent to mouse clicks
 end
 
-function RematchPetCardStatMixin:OnEnter()
-    local info = rematch.petCardStats[self:GetID()]
+function RematchReduxPetCardStatMixin:OnEnter()
+    local info = rematchRedux.petCardStats[self:GetID()]
     if info then
         self.Highlight:Show()
         if self.Icon then
-            rematch.textureHighlight:Show(self.Icon)
+            rematchRedux.textureHighlight:Show(self.Icon)
         end
-        local petInfo = rematch.petInfo:Fetch(rematch.petCard.petID)
+        local petInfo = rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID)
 
         if info.enter then
             info.enter(self,petInfo)
         elseif info.altTooltip=="Breed" and (settings.PetCardMinimized or settings.PetCardHidePossibleBreeds) then -- special case for Breed stat, show BreedTable if possible breeds hidden
-            rematch.petCard:ShowBreedTable(self)
+            rematchRedux.petCard:ShowBreedTable(self)
         else
-            local tooltipTitle = rematch.utils:Evaluate(rematch.utils:Evaluate(info.tooltipTitle,rematch.petCard,petInfo))
-            local tooltipBody = rematch.utils:Evaluate(rematch.utils:Evaluate(info.tooltipBody,rematch.petCard,petInfo))
+            local tooltipTitle = rematchRedux.utils:Evaluate(rematchRedux.utils:Evaluate(info.tooltipTitle,rematchRedux.petCard,petInfo))
+            local tooltipBody = rematchRedux.utils:Evaluate(rematchRedux.utils:Evaluate(info.tooltipBody,rematchRedux.petCard,petInfo))
             if tooltipTitle then
-                rematch.tooltip:ShowSimpleTooltip(self,tooltipTitle,tooltipBody)
+                rematchRedux.tooltip:ShowSimpleTooltip(self,tooltipTitle,tooltipBody)
             end
         end
     end
 end
 
-function RematchPetCardStatMixin:OnLeave()
-    local info = rematch.petCardStats[self:GetID()]
+function RematchReduxPetCardStatMixin:OnLeave()
+    local info = rematchRedux.petCardStats[self:GetID()]
     if info then
         self.Highlight:Hide()
         if self.Icon then
-            rematch.textureHighlight:Hide()
+            rematchRedux.textureHighlight:Hide()
         end
-        rematch.petCard:HideBreedTable()
+        rematchRedux.petCard:HideBreedTable()
         if info.leave then
-            info.leave(self,rematch.petInfo:Fetch(rematch.petCard.petID))
+            info.leave(self,rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID))
         end
     end
-    rematch.tooltip:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
-function RematchPetCardStatMixin:OnMouseDown()
-    local info = rematch.petCardStats[self:GetID()]
+function RematchReduxPetCardStatMixin:OnMouseDown()
+    local info = rematchRedux.petCardStats[self:GetID()]
     if info then
         self.Highlight:Hide()
         if self.Icon then
-            rematch.textureHighlight:Hide()
+            rematchRedux.textureHighlight:Hide()
         end
     end
 end
 
-function RematchPetCardStatMixin:OnMouseUp()
-    local info = rematch.petCardStats[self:GetID()]
+function RematchReduxPetCardStatMixin:OnMouseUp()
+    local info = rematchRedux.petCardStats[self:GetID()]
     if info then
         self.Highlight:Show()
         if self.Icon then
-            rematch.textureHighlight:Hide(self.Icon)
+            rematchRedux.textureHighlight:Hide(self.Icon)
         end
     end
 end
 
-function RematchPetCardStatMixin:OnClick()
-    local info = rematch.petCardStats[self:GetID()]
+function RematchReduxPetCardStatMixin:OnClick()
+    local info = rematchRedux.petCardStats[self:GetID()]
     if info and info.click then
-        info.click(self,rematch.petInfo:Fetch(rematch.petCard.petID))
+        info.click(self,rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID))
     end
 end

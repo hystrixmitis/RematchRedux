@@ -1,9 +1,9 @@
-local _,rematch = ...
-local settings = rematch.settings
-rematch.roster = {}
+local _, rematchRedux = ...
+local settings = rematchRedux.settings
+rematchRedux.roster = {}
 
 --[[
-    In past versions, rematch.roster was a starting point for any type of changes to the pet list, from adding new pets
+    In past versions, rematchRedux.roster was a starting point for any type of changes to the pet list, from adding new pets
     to a pet changing rarity or gaining a level, to even the pet list changing filters.
 
     This new roster is treated as a data source only. It will watch for pets being added and removed and keep a list
@@ -14,15 +14,15 @@ rematch.roster = {}
     not intended to be altered outside this module.
 
     The lists can be read by one of three iterator functions:
-        for petID in rematch.roster:AllPets() do -- do something -- end -- loop over all petIDs (and unowned speciesIDs)
-        for petID in rematch.roster:AllOwnedPets() do -- do something -- end -- loop over all owned petIDs
-        for petID in rematch.roster:AllSpecies() do -- do something -- end -- loop over all distinct speciesIDs
+        for petID in rematchRedux.roster:AllPets() do -- do something -- end -- loop over all petIDs (and unowned speciesIDs)
+        for petID in rematchRedux.roster:AllOwnedPets() do -- do something -- end -- loop over all owned petIDs
+        for petID in rematchRedux.roster:AllSpecies() do -- do something -- end -- loop over all distinct speciesIDs
 
     The number of pets can be read by one of the following:
-        rematch.roster:GetNumPets() -- returns the total number of pets, both owned (including duplicates) and uncollected
-        rematch.roster:GetNumSpecies() -- returns the number of distinct speciesIDs in the journal, owned or not
-        rematch.roster:GetNumOwned() -- returns the number of pets owned by the player, including duplicates
-        rematch.roster:GetNumUniqueOwned() -- returns the number of distinct pets owned by the player (ignoring duplicates)
+        rematchRedux.roster:GetNumPets() -- returns the total number of pets, both owned (including duplicates) and uncollected
+        rematchRedux.roster:GetNumSpecies() -- returns the number of distinct speciesIDs in the journal, owned or not
+        rematchRedux.roster:GetNumOwned() -- returns the number of pets owned by the player, including duplicates
+        rematchRedux.roster:GetNumUniqueOwned() -- returns the number of distinct pets owned by the player (ignoring duplicates)
 ]]
 
 -- master list of pets, either a petID ("BattlePet-0-etc") for owned pets, or a speciesID (42) for uncollected pets
@@ -37,15 +37,15 @@ local journalBackup = { search="", collected=nil, notCollected=nil, types={}, so
 local isUpdatingRoster -- true while roster is updating (while expanding/collapsing journal and clears a frame after)
 local uniqueOwnedCount = 0 -- number of distinct pets owned by the player
 
-local waitingForFirstUpdate = true -- becomes nil after first update, to fire REMATCH_PETS_LOADED
+local waitingForFirstUpdate = true -- becomes nil after first update, to fire REMATCHREDUX_PETS_LOADED
 
-rematch.events:Register(rematch.roster,"PLAYER_LOGIN",function(self)
-    rematch.events:Register(rematch.roster,"NEW_PET_ADDED",rematch.roster.NEW_PET_ADDED)
-    rematch.events:Register(rematch.roster,"PET_JOURNAL_PET_DELETED",rematch.roster.PET_JOURNAL_PET_DELETED)
-    rematch.events:Register(rematch.roster,"UPDATE_SUMMONPETS_ACTION",rematch.roster.UPDATE_SUMMONPETS_ACTION)
+rematchRedux.events:Register(rematchRedux.roster,"PLAYER_LOGIN",function(self)
+    rematchRedux.events:Register(rematchRedux.roster,"NEW_PET_ADDED",rematchRedux.roster.NEW_PET_ADDED)
+    rematchRedux.events:Register(rematchRedux.roster,"PET_JOURNAL_PET_DELETED",rematchRedux.roster.PET_JOURNAL_PET_DELETED)
+    rematchRedux.events:Register(rematchRedux.roster,"UPDATE_SUMMONPETS_ACTION",rematchRedux.roster.UPDATE_SUMMONPETS_ACTION)
     -- releasing a pet doesn't trigger any event except a PET_JOURNAL_LIST_UPDATE, so firing a fake PET_JOURNAL_PET_DELETD when it happens
     hooksecurefunc(C_PetJournal,"ReleasePetByID",function(petID)
-        rematch.events:Fire("PET_JOURNAL_PET_DELETED",petID)
+        rematchRedux.events:Fire("PET_JOURNAL_PET_DELETED",petID)
     end)
 end)
 
@@ -55,42 +55,42 @@ end)
 -- in 5.1.3 this now does a ClearSearchFilter to clear the potential search and trigger a one-off PET_JOURNAL_LIST_UPDATE
 -- to do the initial update. (in the default journal, searches don't carry across sessions so this is safe to clear but
 -- imho these steps shouldn't be necessary)
-function rematch.roster:UPDATE_SUMMONPETS_ACTION(...)
-    rematch.events:Unregister(rematch.roster,"UPDATE_SUMMONPETS_ACTION") -- it served its purpose, now rely on add/delete
-    rematch.events:Register(rematch.roster,"PET_JOURNAL_LIST_UPDATE",rematch.roster.PET_JOURNAL_LIST_UPDATE) -- ClearSearchFilter will trigger this event
+function rematchRedux.roster:UPDATE_SUMMONPETS_ACTION(...)
+    rematchRedux.events:Unregister(rematchRedux.roster,"UPDATE_SUMMONPETS_ACTION") -- it served its purpose, now rely on add/delete
+    rematchRedux.events:Register(rematchRedux.roster,"PET_JOURNAL_LIST_UPDATE",rematchRedux.roster.PET_JOURNAL_LIST_UPDATE) -- ClearSearchFilter will trigger this event
     C_PetJournal.ClearSearchFilter() -- without this line, then a search-filtered default journal in prior session may remain filtered
 end
 
 -- fires when a new pet is added to the journal
-function rematch.roster:NEW_PET_ADDED(...)
+function rematchRedux.roster:NEW_PET_ADDED(...)
     if settings.StickyNewPets then
-        rematch.sort:AddStickiedPetID(...)
+        rematchRedux.sort:AddStickiedPetID(...)
     end
-    rematch.timer:Start(0,rematch.roster.Update) -- update allPets and allSpecies
+    rematchRedux.timer:Start(0,rematchRedux.roster.Update) -- update allPets and allSpecies
 end
 
 -- fires when a pet is removed from the journal
-function rematch.roster:PET_JOURNAL_PET_DELETED(...)
-    rematch.timer:Start(0,rematch.roster.Update) -- update allPets and allSpecies
+function rematchRedux.roster:PET_JOURNAL_PET_DELETED(...)
+    rematchRedux.timer:Start(0,rematchRedux.roster.Update) -- update allPets and allSpecies
 end
 
 -- this is only called in response to a UPDATE_SUMMONPETS_ACTION on login
-function rematch.roster:PET_JOURNAL_LIST_UPDATE(...)
-    rematch.events:Unregister(rematch.roster,"PET_JOURNAL_LIST_UPDATE") -- this should've been a one-off call for releasing a pet
-    rematch.timer:Start(0,rematch.roster.Update) -- update allPets and allSpecies
+function rematchRedux.roster:PET_JOURNAL_LIST_UPDATE(...)
+    rematchRedux.events:Unregister(rematchRedux.roster,"PET_JOURNAL_LIST_UPDATE") -- this should've been a one-off call for releasing a pet
+    rematchRedux.timer:Start(0,rematchRedux.roster.Update) -- update allPets and allSpecies
 end
 
 -- called one frame after the number of owned pets changes; expands the journal (clears filters) if they're not already,
 -- gathers into allPets/allSpecies, and then restores the journal filters to their previous state (if they changed)
-function rematch.roster:Update()
-    if isUpdatingRoster or not rematch.main:IsPlayerInWorld() then
+function rematchRedux.roster:Update()
+    if isUpdatingRoster or not rematchRedux.main:IsPlayerInWorld() then
         return -- already doing an Update or player is in a loading screen, leave
     end
-    rematch.roster:StartUpdatingRoster()
-    local isAnyFilterUsed = rematch.roster:IsAnyFilterUsed()
+    rematchRedux.roster:StartUpdatingRoster()
+    local isAnyFilterUsed = rematchRedux.roster:IsAnyFilterUsed()
 
     if isAnyFilterUsed then -- before expanding filters, confirm any are being used first (can drop from 122ms to 2ms to skip this)
-        rematch.roster:ExpandJournal()
+        rematchRedux.roster:ExpandJournal()
     end
     uniqueOwnedCount = 0
     wipe(allPets)
@@ -119,54 +119,54 @@ function rematch.roster:Update()
         tinsert(allSpecies,speciesID)
     end
     if isAnyFilterUsed then
-        rematch.roster:RestoreJournal()
+        rematchRedux.roster:RestoreJournal()
     end
 
-    rematch.filters:ForceUpdate() -- set dirty flag on filter so list updates
-    rematch.timer:Start(0,rematch.roster.FinishUpdatingRoster)
+    rematchRedux.filters:ForceUpdate() -- set dirty flag on filter so list updates
+    rematchRedux.timer:Start(0,rematchRedux.roster.FinishUpdatingRoster)
 end
 
 -- external so speciesInfo can also use the Expand/RestoreJournal
-function rematch.roster:StartUpdatingRoster()
+function rematchRedux.roster:StartUpdatingRoster()
     isUpdatingRoster = true
 end
 
 -- delayed a frame in case a NEW_PET_ADDED and UPDATE_SUMMONPETS_ACTION fires in pairs; clears flag that says we're updating
--- and if this is the first update, then fire off a REMATCH_PETS_LOADED for anything waiting for pets to load on login
-function rematch.roster:FinishUpdatingRoster()
+-- and if this is the first update, then fire off a REMATCHREDUX_PETS_LOADED for anything waiting for pets to load on login
+function rematchRedux.roster:FinishUpdatingRoster()
     isUpdatingRoster = nil
-    --rematch.savedTeams:ValidateAllTeams() -- if pets leaving/adding, adjust teams that might be impacted
+    --rematchRedux.savedTeams:ValidateAllTeams() -- if pets leaving/adding, adjust teams that might be impacted
     if waitingForFirstUpdate then
         waitingForFirstUpdate = nil
-        rematch.events:Fire("REMATCH_PETS_LOADED")
+        rematchRedux.events:Fire("REMATCHREDUX_PETS_LOADED")
     end
-    rematch.events:Fire("REMATCH_PETS_CHANGED")
+    rematchRedux.events:Fire("REMATCHREDUX_PETS_CHANGED")
 end
 
 --[[ counts ]]
 
 -- returns the total number of pets, both owned (including duplicates) and uncollected
-function rematch.roster:GetNumPets()
+function rematchRedux.roster:GetNumPets()
     return #allPets
 end
 
 -- returns the number of distinct speciesIDs in the journal, owned or not
-function rematch.roster:GetNumSpecies()
+function rematchRedux.roster:GetNumSpecies()
     return #allSpecies
 end
 
 -- returns the number of pets owned by the player, including duplicates
-function rematch.roster:GetNumOwned()
+function rematchRedux.roster:GetNumOwned()
     return select(2,C_PetJournal.GetNumPets())
 end
 
 -- returns the number of unique pets owned by the player (specifically, the number of different speciesIDs the player owns)
-function rematch.roster:GetNumUniqueOwned()
+function rematchRedux.roster:GetNumUniqueOwned()
     return uniqueOwnedCount
 end
 
 -- returns a small ordered list of petIDs that are owned for the given speciesID (honor system here, nothing should update this return)
-function rematch.roster:GetSpeciesPetIDs(speciesID)
+function rematchRedux.roster:GetSpeciesPetIDs(speciesID)
     return speciesID and speciesPetIDs[speciesID]
 end
 
@@ -185,7 +185,7 @@ hooksecurefunc(C_PetJournal,"ClearSearchFilter",function()
 end)
 
 -- clears all filters in the pet journal so all pets can be captured in roster:Update()
-function rematch.roster:ExpandJournal()
+function rematchRedux.roster:ExpandJournal()
     journalBackup.collected = C_PetJournal.IsFilterChecked(LE_PET_JOURNAL_FILTER_COLLECTED)
     journalBackup.notCollected = C_PetJournal.IsFilterChecked(LE_PET_JOURNAL_FILTER_NOT_COLLECTED)
     for i=1,C_PetJournal.GetNumPetTypes() do
@@ -202,7 +202,7 @@ function rematch.roster:ExpandJournal()
 end
 
 -- restores all filters that were cleared in roster:ExpandJournal()
-function rematch.roster:RestoreJournal()
+function rematchRedux.roster:RestoreJournal()
     C_PetJournal.SetFilterChecked(LE_PET_JOURNAL_FILTER_COLLECTED,journalBackup.collected)
     C_PetJournal.SetFilterChecked(LE_PET_JOURNAL_FILTER_NOT_COLLECTED,journalBackup.notCollected)
     for i=1,C_PetJournal.GetNumPetSources() do
@@ -216,7 +216,7 @@ end
 
 -- returns true if any journal filters are used, since there's no need to expand/restore if it's already expanded
 -- using this to skip the expand/restore drops an expand/capture/restore from 122ms to 2ms (!!!)
-function rematch.roster:IsAnyFilterUsed()
+function rematchRedux.roster:IsAnyFilterUsed()
     if journalBackup.search~="" then
         return true -- search is used
     end
@@ -242,7 +242,7 @@ end
 --[[ iterator functions ]]
 
 -- loops over allPets, which is a list of owned petIDs ("BattlePet-0-etc") and unowned speciesIDs (42)
-function rematch.roster:AllPets()
+function rematchRedux.roster:AllPets()
     local i = 0
     return function()
         i = i + 1
@@ -253,7 +253,7 @@ function rematch.roster:AllPets()
 end
 
 -- loops over all owned petIDs
-function rematch.roster:AllOwnedPets()
+function rematchRedux.roster:AllOwnedPets()
     local i = 0
     return function()
         i = i + 1
@@ -266,7 +266,7 @@ function rematch.roster:AllOwnedPets()
 end
 
 -- loops over allSpecies, or all distinct speciesIDs
-function rematch.roster:AllSpecies()
+function rematchRedux.roster:AllSpecies()
     local i = 0
     return function()
         i = i + 1
@@ -277,7 +277,7 @@ function rematch.roster:AllSpecies()
 end
 
 -- loops over all petIDs owned for the given speciesID
-function rematch.roster:AllSpeciesPetIDs(speciesID)
+function rematchRedux.roster:AllSpeciesPetIDs(speciesID)
     local i = 0
     return function()
         i = i + 1

@@ -1,7 +1,7 @@
 <Ui>
 
     <!-- horizontal line to break up sections of ability tooltip -->
-    <Texture name="RematchAbilityTooltipLineTemplate" file="Interface\Tooltips\UI-Tooltip-Border" virtual="true">
+    <Texture name="RematchReduxAbilityTooltipLineTemplate" file="Interface\Tooltips\UI-Tooltip-Border" virtual="true">
         <Size x="0" y="5"/>
         <Anchors>
             <Anchor point="LEFT" relativePoint="TOPLEFT"/>
@@ -12,7 +12,7 @@
     </Texture>
 
     <!-- the ability tooltip acts like a card with a slight delay before being shown; but it will never be mouse enabled -->
-    <Frame name="RematchAbilityTooltip" frameStrata="FULLSCREEN_DIALOG" parent="UIParent" clampedToScreen="true" hidden="true" inherits="RematchBorderBackdropTemplate">
+    <Frame name="RematchReduxAbilityTooltip" frameStrata="FULLSCREEN_DIALOG" parent="UIParent" clampedToScreen="true" hidden="true" inherits="RematchReduxBorderBackdropTemplate">
         <Size x="260" y="200"/>
         <Anchors>
             <Anchor point="CENTER" x="-200" y="0"/>
@@ -113,7 +113,7 @@
                     </Layer>
                     <Layer level="BORDER">
                         <!-- line above the hints section -->
-                        <Texture inherits="RematchAbilityTooltipLineTemplate"/>
+                        <Texture inherits="RematchReduxAbilityTooltipLineTemplate"/>
                     </Layer>
                     <Layer level="ARTWORK">
 						<!-- "Vs" text between strong badge and strong type -->
@@ -216,7 +216,7 @@
                     </Layer>
                     <Layer level="BORDER">
                         <!-- line above the Details section -->
-                        <Texture inherits="RematchAbilityTooltipLineTemplate"/>
+                        <Texture inherits="RematchReduxAbilityTooltipLineTemplate"/>
                     </Layer>
                     <Layer level="ARTWORK">
                         <FontString parentKey="Duration" inherits="GameFontHighlight" justifyH="LEFT">

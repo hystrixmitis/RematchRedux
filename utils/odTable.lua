@@ -1,7 +1,7 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-rematch.odTable = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+rematchRedux.odTable = {}
 
 --[[
     "On Demand" tables (odTables) are intended to be used as cache tables for more computationally expensive
@@ -11,7 +11,7 @@ rematch.odTable = {}
     defined function will populate the table (fillFunc), and then after 0.25 seconds (or C.ODTABLE_EXPIRE_TIME)
     it will wipe itself automatically.
 
-    To create: local odTable = rematch.odTable:Create(fillFunc,isPersistent,expireTime)
+    To create: local odTable = rematchRedux.odTable:Create(fillFunc,isPersistent,expireTime)
         -- fillFunc (optional) is a function to fill the table when it's started.
         -- isPersistent (optional) is true if the table should never be wiped (very computationally expensive
         --   fillFuncs should set this to true, such as defining a sourceID for all species)
@@ -30,7 +30,7 @@ local lookup, startTable, stopTable
 
 local allTables = {}
 
-function rematch.odTable:Create(fillFunc,isPersistent,expireTime)
+function rematchRedux.odTable:Create(fillFunc,isPersistent,expireTime)
     local odTable = {}
     allTables[odTable] = {
         isActive = false,
@@ -73,7 +73,7 @@ function startTable(self)
     end
     -- if the table is not persistent, start a timer to stop it
     if not thisTable.isPersistent then
-        rematch.timer:Start(thisTable.expireTime,thisTable.stop)
+        rematchRedux.timer:Start(thisTable.expireTime,thisTable.stop)
     end
     return self
 end
@@ -83,6 +83,6 @@ function stopTable(self)
     local thisTable = allTables[self]
     wipe(self)
     thisTable.isActive = false
-    rematch.timer:Stop(thisTable.stop) -- in case a Stop() call happened, don't let it wipe again after expiring
+    rematchRedux.timer:Stop(thisTable.stop) -- in case a Stop() call happened, don't let it wipe again after expiring
     return self
 end

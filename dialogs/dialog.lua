@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.dialog = RematchDialog
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.dialog = RematchReduxDialog
 
 --[[
     dialogInfo properties
@@ -37,7 +37,7 @@ rematch.dialog = RematchDialog
     }
 
     To change the displayed title:
-        rematch.dialog:SetTitle(text)
+        rematchRedux.dialog:SetTitle(text)
 
     On minimizable dialogs, if LayoutTabs are used, make sure the name of the tab is the same as the layout.
     (For instance, "Battles" layout should have a tab with a "Battles" tab identifier). It will attempt to
@@ -52,35 +52,35 @@ local lastLayout -- name of the dialog's previous layout (should be nil when dia
 local refreshHappening -- true of a refresh is happening (to ignore changes)
 local applyLayout -- will be ApplyLayout function, to stop me from using it outside this module (use ChangeLayout instead!)
 
-rematch.events:Register(rematch.dialog,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.dialog,"PLAYER_LOGIN",function(self)
     self.InsetBg:SetPoint("BOTTOMRIGHT",-6,C.BOTTOMBAR_HEIGHT+6)
     self:Reset()
     self.CloseButton:SetScript("OnKeyDown",self.CloseButton.OnKeyDown)
     self.MinimizeButton:SetScript("OnClick",function(self,button)
         if self.nextDialog then
-            local layout = rematch.dialog:GetOpenLayout()
-            local tabsShown = rematch.dialog.Canvas.LayoutTabs:IsVisible()
-            rematch.dialog:ShowDialog(self.nextDialog)
-            if rematch.dialog:GetOpenLayout()~=layout then
+            local layout = rematchRedux.dialog:GetOpenLayout()
+            local tabsShown = rematchRedux.dialog.Canvas.LayoutTabs:IsVisible()
+            rematchRedux.dialog:ShowDialog(self.nextDialog)
+            if rematchRedux.dialog:GetOpenLayout()~=layout then
                 if tabsShown then
-                    rematch.dialog.Canvas.LayoutTabs:GoToTab(layout)
+                    rematchRedux.dialog.Canvas.LayoutTabs:GoToTab(layout)
                 else
-                    rematch.dialog:ChangeLayout(layout)
+                    rematchRedux.dialog:ChangeLayout(layout)
                 end
             end
         end
     end)
 end)
 
-function rematch.dialog:OnMouseDown()
+function rematchRedux.dialog:OnMouseDown()
     self:StartMoving()
 end
 
-function rematch.dialog:OnMouseUp()
+function rematchRedux.dialog:OnMouseUp()
     self:StopMovingOrSizing()
 end
 
-function rematch.dialog:Register(name,info)
+function rematchRedux.dialog:Register(name,info)
     assert(type(name)=="string","Dialog "..(name or "nil").." has an invalid name")
     assert(type(info)=="table","Dialog "..name.." has no info table")
     info.name = name
@@ -103,7 +103,7 @@ function rematch.dialog:Register(name,info)
 end
 
 -- returns definition of named dialog (or open one if no name given)
-function rematch.dialog:GetDialogInfo(dialog)
+function rematchRedux.dialog:GetDialogInfo(dialog)
     if dialog then
         return dialogInfo[dialog]
     elseif self:IsVisible() then
@@ -111,45 +111,45 @@ function rematch.dialog:GetDialogInfo(dialog)
     end
 end
 
-function rematch.dialog:GetOpenDialog()
-    return rematch.dialog:IsVisible() and openDialog
+function rematchRedux.dialog:GetOpenDialog()
+    return rematchRedux.dialog:IsVisible() and openDialog
 end
 
-function rematch.dialog:GetOpenLayout()
-    return rematch.dialog:IsVisible() and openLayout or "Default"
+function rematchRedux.dialog:GetOpenLayout()
+    return rematchRedux.dialog:IsVisible() and openLayout or "Default"
 end
 
 -- returns the subject of the currently-opened dialog
-function rematch.dialog:GetSubject()
-    if openDialog and rematch.dialog:IsVisible() and dialogInfo[openDialog] then
+function rematchRedux.dialog:GetSubject()
+    if openDialog and rematchRedux.dialog:IsVisible() and dialogInfo[openDialog] then
         return dialogInfo[openDialog].subject
     end
 end
 
 -- if any dialog is open, close it by clicking the Cancel button (if on screen; hide directly otherwise)
 -- this allows cancelFuncs to happen when dismissing a dialog
-function rematch.dialog:HideDialog()
-    if openDialog and rematch.dialog:IsVisible() then
-        rematch.dialog.CancelButton:Click()
+function rematchRedux.dialog:HideDialog()
+    if openDialog and rematchRedux.dialog:IsVisible() then
+        rematchRedux.dialog.CancelButton:Click()
     else
-        rematch.dialog:Hide()
+        rematchRedux.dialog:Hide()
     end
 end
 
-function rematch.dialog:ToggleDialog(name,subject,layoutTab)
-    if openDialog==name and dialogInfo[name] and rematch.utils:AreSame(dialogInfo[name].subject,subject) then
-        rematch.dialog:HideDialog()
+function rematchRedux.dialog:ToggleDialog(name,subject,layoutTab)
+    if openDialog==name and dialogInfo[name] and rematchRedux.utils:AreSame(dialogInfo[name].subject,subject) then
+        rematchRedux.dialog:HideDialog()
     else
-        rematch.dialog:ShowDialog(name,subject,layoutTab)
+        rematchRedux.dialog:ShowDialog(name,subject,layoutTab)
     end
 end
 
-function rematch.dialog:ShowDialog(name,subject,layoutTab)
+function rematchRedux.dialog:ShowDialog(name,subject,layoutTab)
     local info = dialogInfo[name]
     assert(info,"Dialog named "..(name or "nil").." doesn't exist.")
     if not info then return end
-    rematch.utils:HideWidgets()
-    rematch.dialog:Hide()
+    rematchRedux.utils:HideWidgets()
+    rematchRedux.dialog:Hide()
     openDialog = name
     lastLayout = nil
     -- add the info to the info space
@@ -194,7 +194,7 @@ function rematch.dialog:ShowDialog(name,subject,layoutTab)
     -- -- set up dialog size
     -- self:Resize()
     -- finally, show the dialog
-    rematch.dialog:Show()
+    rematchRedux.dialog:Show()
     -- if choosing to open in a layoutTab (dialog mixin) other than Default, go to it now
     if layoutTab and layoutTab~="Default" and self.Canvas.LayoutTabs:IsVisible() then
         self.Canvas.LayoutTabs:GoToTab(layoutTab)
@@ -203,7 +203,7 @@ end
 
 -- changes the currently-opened dialog to the given layoutName; firstRun is true if this is the first layout
 -- being applied
-function rematch.dialog:ChangeLayout(layoutName,firstRun)
+function rematchRedux.dialog:ChangeLayout(layoutName,firstRun)
     local info = dialogInfo[openDialog]
     if info.layouts[layoutName] and (openLayout~=layoutName or firstRun) then -- only attempt to change to a layout that exists and we're not already in
         applyLayout(self,layoutName)
@@ -217,12 +217,12 @@ function rematch.dialog:ChangeLayout(layoutName,firstRun)
 end
 
 -- some dialogs may want to change the title displayed at the top
-function rematch.dialog:SetTitle(text)
+function rematchRedux.dialog:SetTitle(text)
     self.Title:SetText(text)
 end
 
 -- clear out everything
-function rematch.dialog:Reset()
+function rematchRedux.dialog:Reset()
     openDialog = nil
     openLayout = nil
     -- hide all children of the canvas
@@ -238,13 +238,13 @@ function rematch.dialog:Reset()
     self.AcceptButton:Enable()
     self.OtherButton:Enable()
     self.CancelButton:Enable()
-    -- clear tooltips on panel buttons (so far just OtherButton has one; add RematchTooltipScripts to Accept or Cancel if needed)
+    -- clear tooltips on panel buttons (so far just OtherButton has one; add RematchReduxTooltipScripts to Accept or Cancel if needed)
     self.OtherButton.tooltipTitle = nil
     self.OtherButton.tooltipBody = nil
 end
 
 -- call when the currently opened dialog needs to be refreshed
-function rematch.dialog:Refresh()
+function rematchRedux.dialog:Refresh()
     local info = dialogInfo[openDialog]
     if not info then return end
     if info.refreshFunc then
@@ -254,14 +254,14 @@ function rematch.dialog:Refresh()
 end
 
 -- when dialog hides, reset the dialog
-function rematch.dialog:OnHide()
+function rematchRedux.dialog:OnHide()
     self:Reset()
-    rematch.utils:SetUIJustChanged()
-    rematch.menus:Hide()
+    rematchRedux.utils:SetUIJustChanged()
+    rematchRedux.menus:Hide()
     PlaySound(C.SOUND_DIALOG_CLOSE)
 end
 
-function rematch.dialog:OnShow()
+function rematchRedux.dialog:OnShow()
     PlaySound(C.SOUND_DIALOG_OPEN)
     -- if settings.DialogX and settings.DialogY then
     --     self:ClearAllPoints()
@@ -270,13 +270,13 @@ function rematch.dialog:OnShow()
 end
 
 -- if ESC is hit, close dialog via the cancel button
-function rematch.dialog.CloseButton:OnKeyDown(key)
+function rematchRedux.dialog.CloseButton:OnKeyDown(key)
     if key==GetBindingKey("TOGGLEGAMEMENU") then
         -- if a teampicker list is expanded and CollapseOnEsc enabled, collapse list
-        if settings.CollapseOnEsc and rematch.dialog.Canvas.TeamPicker.Picker.List:IsVisible() and rematch.dialog.Canvas.TeamPicker.Picker.List:IsAnyExpanded() then
-            rematch.dialog.Canvas.TeamPicker.Picker.List:ToggleAllHeaders()
+        if settings.CollapseOnEsc and rematchRedux.dialog.Canvas.TeamPicker.Picker.List:IsVisible() and rematchRedux.dialog.Canvas.TeamPicker.Picker.List:IsAnyExpanded() then
+            rematchRedux.dialog.Canvas.TeamPicker.Picker.List:ToggleAllHeaders()
         else
-            rematch.dialog.CancelButton:Click()
+            rematchRedux.dialog.CancelButton:Click()
         end
         self:SetPropagateKeyboardInput(false)
     else
@@ -328,16 +328,16 @@ function applyLayout(self,layoutName)
 end
 
 -- changes layout to the previous layout within the same dialog
-function rematch.dialog:ReturnToPreviousLayout()
+function rematchRedux.dialog:ReturnToPreviousLayout()
     local info = dialogInfo[openDialog]
     if not info then return end
     if lastLayout and info.layouts and info.layouts[lastLayout] then
-        rematch.dialog:ChangeLayout(lastLayout)
+        rematchRedux.dialog:ChangeLayout(lastLayout)
     end
 end
 
 -- resizes the dialog (based on layout, defined height or default height of canvas)
-function rematch.dialog:Resize()
+function rematchRedux.dialog:Resize()
     local width,height
     local info = dialogInfo[openDialog]
     if not info then return end
@@ -376,14 +376,14 @@ function rematch.dialog:Resize()
 end
 
 -- any control that can change (editboxes, checkbuttons, etc) should call this to run the dialog's changeFunc
-function rematch.dialog:OnChange(force)
+function rematchRedux.dialog:OnChange(force)
     if refreshHappening then
         return -- ignoring changes happening during a refresh
     end
     local info = dialogInfo[openDialog]
     if not info then return end
     if info.changeFunc then
-        info.changeFunc(rematch.dialog.Canvas,info,info.subject)
+        info.changeFunc(rematchRedux.dialog.Canvas,info,info.subject)
     end
 end
 
@@ -393,7 +393,7 @@ local function finishRefresh()
 end
 
 -- call this before a refresh starts to set the refreshHappening flag to true
-function rematch.dialog:StartRefresh()
+function rematchRedux.dialog:StartRefresh()
     refreshHappening = true
-    rematch.timer:Start(0,finishRefresh) -- wait a frame to set it back to false
+    rematchRedux.timer:Start(0,finishRefresh) -- wait a frame to set it back to false
 end

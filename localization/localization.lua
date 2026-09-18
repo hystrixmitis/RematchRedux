@@ -1,10 +1,10 @@
 -- this sets up localization; and also a place to put constant strings for different purposes
 
-local _,rematch = ...
-rematch.localization = setmetatable({},{__index=function(self,key) return key end})
+local _, rematchRedux = ...
+rematchRedux.localization = setmetatable({},{__index=function(self,key) return key end})
 
--- for localization: local L=rematch.localization, then L["Text"]
-local L = rematch.localization
+-- for localization: local L=rematchRedux.localization, then L["Text"]
+local L = rematchRedux.localization
 
 -- for enUS clients these words are short enough to fit on tabs; but other language may need alternate short names/abbreviations
 L["TAB_PETS"] = "Pets"

@@ -1,6 +1,6 @@
 <Ui>
 
-	<Frame name="RematchNotesCard" frameStrata="FULLSCREEN" parent="UIParent" flattenRenderLayers="true" clampedToScreen="true" enableMouse="true" movable="true" resizable="true" toplevel="true" inherits="RematchDefaultPanelTemplate" hidden="true">
+	<Frame name="RematchReduxNotesCard" frameStrata="FULLSCREEN" parent="UIParent" flattenRenderLayers="true" clampedToScreen="true" enableMouse="true" movable="true" resizable="true" toplevel="true" inherits="RematchReduxDefaultPanelTemplate" hidden="true">
 		<Size x="258" y="258"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
@@ -15,7 +15,7 @@
 		</ResizeBounds>
         <Frames>
             <!-- lock/unlock button in topleft to prevent moving/resizing notes -->
-            <Button parentKey="LockButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="LockButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="1" y="-1"/>
                 </Anchors>
@@ -24,7 +24,7 @@
                 </KeyValues>
             </Button>
             <!-- border around always-visible part of card -->
-			<Frame parentKey="Content" ignoreParentAlpha="true" inherits="RematchBorderBackdropTemplate">
+			<Frame parentKey="Content" ignoreParentAlpha="true" inherits="RematchReduxBorderBackdropTemplate">
 				<Anchors> <!-- 254 width -->
 					<Anchor point="TOPLEFT" x="2" y="-22"/>
 					<Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
@@ -57,19 +57,19 @@
                             </Layer>
                         </Layers>
                         <Frames>
-                            <Button parentKey="DeleteButton" inherits="RematchPanelButtonTemplate">
+                            <Button parentKey="DeleteButton" inherits="RematchReduxPanelButtonTemplate">
                                 <Size x="80" y="23"/>
                                 <Anchors>
                                     <Anchor point="LEFT" x="2" y="0"/>
                                 </Anchors>
                             </Button>
-                            <Button parentKey="UndoButton" inherits="RematchPanelButtonTemplate">
+                            <Button parentKey="UndoButton" inherits="RematchReduxPanelButtonTemplate">
                                 <Size x="80" y="23"/>
                                 <Anchors>
                                     <Anchor point="CENTER"/>
                                 </Anchors>
                             </Button>
-                            <Button parentKey="SaveButton" inherits="RematchPanelButtonTemplate">
+                            <Button parentKey="SaveButton" inherits="RematchReduxPanelButtonTemplate">
                                 <Size x="80" y="23"/>
                                 <Anchors>
                                     <Anchor point="RIGHT" x="-2" y="0"/>

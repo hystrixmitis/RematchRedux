@@ -1,19 +1,19 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.optionsPanel = rematch.frame.OptionsPanel
-rematch.frame:Register("optionsPanel")
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.optionsPanel = rematchRedux.frame.OptionsPanel
+rematchRedux.frame:Register("optionsPanel")
 
--- ordered list of indexes into rematch.optionsList to display
+-- ordered list of indexes into rematchRedux.optionsList to display
 local optionIndexes = {}
 -- indexed by var, sub-tables of ordered list of option indexes that are dependent on this index (for search hits)
-searchDependencies = {}
+local searchDependencies = {}
 
 -- indexed by dropdown setting name (var in optionsList), the listbutton control made for the setting
 local dropDownFrames = {}
 
-rematch.events:Register(rematch.optionsPanel,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.optionsPanel,"PLAYER_LOGIN",function(self)
     self.Top.SearchBox.Instructions:SetText(L["Search Options"])
     -- expanded headers savedvar
     if type(settings.ExpandedOptionsHeaders)~="table" then
@@ -21,39 +21,39 @@ rematch.events:Register(rematch.optionsPanel,"PLAYER_LOGIN",function(self)
     end
 
     -- when no breed addon loaded, then remove breed options (do any list removal before autoscrollbox setup)
-    if not rematch.breedInfo:IsAnyBreedAddOnLoaded() then
-        for index=#rematch.optionsList,1,-1 do
-            local info = rematch.optionsList[index]
+    if not rematchRedux.breedInfo:IsAnyBreedAddOnLoaded() then
+        for index=#rematchRedux.optionsList,1,-1 do
+            local info = rematchRedux.optionsList[index]
             if info.group==18 then -- remove all entries in Breed Options
-                tremove(rematch.optionsList,index)
+                tremove(rematchRedux.optionsList,index)
                 if info.type=="header" then -- and nil its expanded header if it was open
                     settings.ExpandedOptionsHeaders[index] = nil
                 end
             end
             -- remove "Always Hide Possible Breeds" from Pet Card Options or "Prioritize Breed On Import" on Team Options
             if info.var=="PetCardHidePossibleBreeds" or info.var=="PrioritizeBreedOnImport" then
-                tremove(rematch.optionsList,index)
+                tremove(rematchRedux.optionsList,index)
             end
         end
     end
 
     -- if soft target is not fully enabled (SoftTargetInteract is 3) then hide soft target dropdown
     if GetCVar("SoftTargetInteract")~="3" then
-        for index=#rematch.optionsList,1,-1 do
-            local info = rematch.optionsList[index]
+        for index=#rematchRedux.optionsList,1,-1 do
+            local info = rematchRedux.optionsList[index]
             if info.var=="InteractOnSoftInteract" then
-                tremove(rematch.optionsList,index)
+                tremove(rematchRedux.optionsList,index)
             end
         end
         settings.InteractOnSoftInteract = C.INTERACT_NONE
     end
 
     -- for autoScrollBox, using the indexes into optionsList
-    for index in ipairs(rematch.optionsList) do
+    for index in ipairs(rematchRedux.optionsList) do
         tinsert(optionIndexes,index)
     end
     -- for search hits, build dependency references
-    for index,info in ipairs(rematch.optionsList) do
+    for index,info in ipairs(rematchRedux.optionsList) do
         if info.dependency then
             if not searchDependencies[info.dependency] then
                 searchDependencies[info.dependency] = {}
@@ -64,10 +64,10 @@ rematch.events:Register(rematch.optionsPanel,"PLAYER_LOGIN",function(self)
     -- setup autoScrollBox
     self.List:Setup({
         allData = optionIndexes,
-        normalTemplate = "RematchOptionsNormalTemplate",
+        normalTemplate = "RematchReduxOptionsNormalTemplate",
         normalFill = self.FillNormal,
         normalHeight = 26,
-        headerTemplate = "RematchOptionsHeaderTemplate",
+        headerTemplate = "RematchReduxOptionsHeaderTemplate",
         headerFill = self.FillHeader,
         headerCriteria = self.HeaderCriteria,
         headerHeight = 26,
@@ -80,15 +80,15 @@ rematch.events:Register(rematch.optionsPanel,"PLAYER_LOGIN",function(self)
     for widget,setup in pairs(self.widgetSetup) do
         setup(self[widget])
     end
-    -- go through all options and if any have runOnLogin set, then run their functions (named func is a member of rematch.optionPanel.funcs)
-    for _,info in ipairs(rematch.optionsList) do
-        if info.runOnLogin and rematch.optionsPanel.funcs[info.runOnLogin] then
-            rematch.optionsPanel.funcs[info.runOnLogin](self,info)
+    -- go through all options and if any have runOnLogin set, then run their functions (named func is a member of rematchRedux.optionsPanel.funcs)
+    for _,info in ipairs(rematchRedux.optionsList) do
+        if info.runOnLogin and rematchRedux.optionsPanel.funcs[info.runOnLogin] then
+            rematchRedux.optionsPanel.funcs[info.runOnLogin](self,info)
         end
     end
 
     -- register CustomScaleDialog
-    rematch.dialog:Register("CustomScaleDialog",{
+    rematchRedux.dialog:Register("CustomScaleDialog",{
         title = L["Use Custom Scale"],
         accept = SAVE,
         cancel = CANCEL,
@@ -99,25 +99,25 @@ rematch.events:Register(rematch.optionsPanel,"PLAYER_LOGIN",function(self)
                 self.Text:SetText(L["The standalone window can be scaled from 50% to 200% of its normal size:"])
                 self.Slider:Setup(settings.CustomScaleValue or 100,50,200,30,"%d%%",function(self,value)
                     settings.CustomScaleValue=value
-                    rematch.frame:UpdateScale()
-                    rematch.optionsPanel:Update()
+                    rematchRedux.frame:UpdateScale()
+                    rematchRedux.optionsPanel:Update()
                 end)
                 self.originalValue = settings.CustomScaleValue
             end
         end,
         otherFunc = function(self,info,subject)
             settings.CustomScaleValue = 100
-            rematch.frame:UpdateScale()
-            rematch.optionsPanel:Update()
+            rematchRedux.frame:UpdateScale()
+            rematchRedux.optionsPanel:Update()
         end,
         cancelFunc = function(self,info,subject)
             settings.CustomScaleValue = self.originalValue
-            rematch.frame:UpdateScale()
-            rematch.optionsPanel:Update()
+            rematchRedux.frame:UpdateScale()
+            rematchRedux.optionsPanel:Update()
         end
     })
 
-    rematch.dialog:Register("ExportOptions",{
+    rematchRedux.dialog:Register("ExportOptions",{
         title = L["Export Options"],
         accept = OKAY,
         layout = {"Text","MultiLineEditBox","Help"},
@@ -133,37 +133,37 @@ rematch.events:Register(rematch.optionsPanel,"PLAYER_LOGIN",function(self)
         end
     })
 
-    rematch.dialog:Register("ImportOptions",{
+    rematchRedux.dialog:Register("ImportOptions",{
         title = L["Import Options"],
         accept = L["Import"],
         cancel = CANCEL,
         layout = {"Text","SmallText","MultiLineEditBox","Feedback"},
         refreshFunc = function(self,info,subject,firstRun)
             self.Text:SetText(L["Press Ctrl+V to paste from clipboard"])
-            self.SmallText:SetText(format(L["This will reset most options, set them to values pasted here, then reload the UI. %sUse this at your own risk!\124r Tinkering with these values can cause Rematch to become unstable and require a full reset."],C.HEX_RED))
+            self.SmallText:SetText(format(L["This will reset most options, set them to values pasted here, then reload the UI. %sUse this at your own risk!\124r Tinkering with these values can cause RematchRedux to become unstable and require a full reset."],C.HEX_RED))
             self.Feedback:Set("warning",L["This will reset most options!\nThis cannot be undone!"])
-            rematch.dialog.AcceptButton:Disable()
+            rematchRedux.dialog.AcceptButton:Disable()
             self.MultiLineEditBox:SetText("")
         end,
         changeFunc = function(self,info,subject)
             local import = (self.MultiLineEditBox:GetText() or ""):trim()
             if import:len()>0 and not import:match("[A-Za-z0-9_]+=[A-Za-z0-9_%s]+") then
                 self.Feedback:Set("warning","Invalid options")
-                rematch.dialog.AcceptButton:Disable()
+                rematchRedux.dialog.AcceptButton:Disable()
             else
                 self.Feedback:Set("warning",L["This will reset most options!\nThis cannot be undone!"])
-                rematch.dialog.AcceptButton:SetEnabled(import:len()>0)
+                rematchRedux.dialog.AcceptButton:SetEnabled(import:len()>0)
             end
         end,
         acceptFunc = function(self,info,subject)
             local import = (self.MultiLineEditBox:GetText() or ""):trim()
             if import:len()>0 then
-                rematch.optionsPanel:ImportOptions(import)
+                rematchRedux.optionsPanel:ImportOptions(import)
             end
         end
     })
 
-    rematch.dialog:Register("ResetOptions",{
+    rematchRedux.dialog:Register("ResetOptions",{
         title = L["Reset Options"],
         accept = YES,
         cancel = NO,
@@ -172,7 +172,7 @@ rematch.events:Register(rematch.optionsPanel,"PLAYER_LOGIN",function(self)
         refreshFunc = function(self,info,subject,firstRun)
             self.Icon:SetTexture("Interface\\ICONS\\Ability_Creature_Cursed_02")
             self.Icon:SetTexCoord(0.075,0.925,0.075,0.925)
-            self.Text:SetText(L["This will restore all options in Rematch to default values and reload the UI.\n\nThis includes all settings in the Options panel but does not include teams, leveling queue or notes."])
+            self.Text:SetText(L["This will restore all options in RematchRedux to default values and reload the UI.\n\nThis includes all settings in the Options panel but does not include teams, leveling queue or notes."])
             self.Feedback:Set("warning",L["Warning: This cannot be undone!"])
         end,
         acceptFunc = function(self,info,subject)
@@ -190,14 +190,14 @@ end)
 local function clearWidget(self)
     if self.widget and self.widget:GetParent()==self then
         self.widget:ClearAllPoints()
-        self.widget:SetParent(rematch.optionsPanel)
+        self.widget:SetParent(rematchRedux.optionsPanel)
         self.widget:Hide()
         self.widget = nil
     end
 end
 
 -- updates the options panel
-function rematch.optionsPanel:Update()
+function rematchRedux.optionsPanel:Update()
     self.List:Update()
     for widget,update in pairs(self.widgetUpdate) do
         update(self[widget])
@@ -205,14 +205,14 @@ function rematch.optionsPanel:Update()
 end
 
 -- returns the dropdown listbutton frame for the given variable, creating and initializing it if needed
-function rematch.optionsPanel:GetDropDownFrame(var)
+function rematchRedux.optionsPanel:GetDropDownFrame(var)
     local frame = var and dropDownFrames[var]
     if frame then
         return frame
     elseif var then -- frame for this dropdown doesn't exist, go get its details and build it
-        for _,info in ipairs(rematch.optionsList) do
+        for _,info in ipairs(rematchRedux.optionsList) do
             if info.var==var then
-                frame = CreateFrame("Button",nil,self,"RematchOptionsDropDownTemplate")
+                frame = CreateFrame("Button",nil,self,"RematchReduxOptionsDropDownTemplate")
                 if info.tooltip then
                     frame.tooltipTitle = info.text
                     frame.tooltipBody = info.tooltip
@@ -224,7 +224,7 @@ function rematch.optionsPanel:GetDropDownFrame(var)
                         self.funcs[info.func](frame,value)
                     end
                     if info.update then
-                        rematch.frame:Update()
+                        rematchRedux.frame:Update()
                     end
                 end)
                 frame.DropDown:SetSelection(settings[var])
@@ -236,7 +236,7 @@ function rematch.optionsPanel:GetDropDownFrame(var)
 end
 
 -- when a dropdown affects other dropdowns, this should be called on those others to change their value
-function rematch.optionsPanel:UpdateDropDown(var)
+function rematchRedux.optionsPanel:UpdateDropDown(var)
     local frame = var and dropDownFrames[var]
     if frame then
         frame.DropDown:SetSelection(settings[var])
@@ -244,25 +244,25 @@ function rematch.optionsPanel:UpdateDropDown(var)
 end
 
 -- returns true if the index is a header
-function rematch.optionsPanel:HeaderCriteria(index)
-    local info = rematch.optionsList[index]
+function rematchRedux.optionsPanel:HeaderCriteria(index)
+    local info = rematchRedux.optionsList[index]
     return info and info.type=="header" or false
 end
 
 -- fills a header button with details at index
-function rematch.optionsPanel:FillHeader(index)
+function rematchRedux.optionsPanel:FillHeader(index)
     self.index = index
-    self.info = rematch.optionsList[index]
+    self.info = rematchRedux.optionsList[index]
     if not self.info then return end
     self.Text:SetText(self.info.text)
     self:SetBack()
-    self:SetExpanded(rematch.optionsPanel.List:IsHeaderExpanded(index),rematch.optionsPanel.List:IsSearching())
+    self:SetExpanded(rematchRedux.optionsPanel.List:IsHeaderExpanded(index),rematchRedux.optionsPanel.List:IsSearching())
 end
 
 -- fills a normal (non-header) button with details at the index
-function rematch.optionsPanel:FillNormal(index)
+function rematchRedux.optionsPanel:FillNormal(index)
     self.index = index
-    self.info = rematch.optionsList[index]
+    self.info = rematchRedux.optionsList[index]
     if not self.info then return end
     if self.info.type=="check" then
         self.Check:Show()
@@ -294,7 +294,7 @@ function rematch.optionsPanel:FillNormal(index)
         self.Check:Hide()
         self.Text:Hide()
         clearWidget(self)
-        local dropdown = rematch.optionsPanel:GetDropDownFrame(self.info.var)
+        local dropdown = rematchRedux.optionsPanel:GetDropDownFrame(self.info.var)
         dropdown:ClearAllPoints()
         dropdown:SetParent(self)
         dropdown:SetAllPoints(true)
@@ -304,7 +304,7 @@ function rematch.optionsPanel:FillNormal(index)
         self.Check:Hide()
         self.Text:Hide()
         clearWidget(self)
-        local widget = rematch.optionsPanel[self.info.parentKey]
+        local widget = rematchRedux.optionsPanel[self.info.parentKey]
         widget:ClearAllPoints()
         widget:SetParent(self)
         widget:SetAllPoints(true)
@@ -313,15 +313,15 @@ function rematch.optionsPanel:FillNormal(index)
     end
 end
 
-function rematch.optionsPanel:SearchHit(mask,index)
-    local info = rematch.optionsList[index]
-    if info.text and rematch.utils:match(mask,info.text,info.tooltip) then
+function rematchRedux.optionsPanel:SearchHit(mask,index)
+    local info = rematchRedux.optionsList[index]
+    if info.text and rematchRedux.utils:match(mask,info.text,info.tooltip) then
         return true -- this option was a search hit
     end
     -- while this option didn't match, see if it has dependants that do
     if info.var and searchDependencies[info.var] then
         for _,dependant in ipairs(searchDependencies[info.var]) do
-            if rematch.optionsPanel.SearchHit(self,mask,dependant) then
+            if rematchRedux.optionsPanel.SearchHit(self,mask,dependant) then
                 return true -- if at least one dependant was a hit, list this dependency
             end
         end
@@ -329,45 +329,45 @@ function rematch.optionsPanel:SearchHit(mask,index)
     return false
 end
 
-RematchOptionsListButtonMixin = {}
+RematchReduxOptionsListButtonMixin = {}
 
-function RematchOptionsListButtonMixin:OnEnter()
-    if self.info and not self.dependencyUnchecked and (not rematch.optionsPanel.List:IsSearching() or self.info.type~="header") then
+function RematchReduxOptionsListButtonMixin:OnEnter()
+    if self.info and not self.dependencyUnchecked and (not rematchRedux.optionsPanel.List:IsSearching() or self.info.type~="header") then
         if self.info.type=="header" then
-            rematch.textureHighlight:Show(self.Back,self.ExpandIcon)
+            rematchRedux.textureHighlight:Show(self.Back,self.ExpandIcon)
         elseif self.info.type=="check" then
-            rematch.textureHighlight:Show(self.Check)
+            rematchRedux.textureHighlight:Show(self.Check)
         end
     end
     if self.info and self.info.tooltip then
         if self.info.type=="check" then
-            rematch.tooltip:ShowSimpleTooltip(self,self.info.text,self.info.tooltip)
+            rematchRedux.tooltip:ShowSimpleTooltip(self,self.info.text,self.info.tooltip)
         end
     end
 end
 
-function RematchOptionsListButtonMixin:OnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.tooltip:Hide()
+function RematchReduxOptionsListButtonMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
-function RematchOptionsListButtonMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxOptionsListButtonMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchOptionsListButtonMixin:OnMouseUp()
+function RematchReduxOptionsListButtonMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
         self:OnEnter()
     end
 end
 
 -- onclick shared by header and non-header
-function RematchOptionsListButtonMixin:OnClick()
+function RematchReduxOptionsListButtonMixin:OnClick()
     if not self.info or self.dependencyUnchecked then
         return -- don't click anything unknown or if dependency unchecked
     end
     if self.info.type=="header" then
-        rematch.optionsPanel.List:ToggleHeader(self.index)
+        rematchRedux.optionsPanel.List:ToggleHeader(self.index)
         PlaySound(C.SOUND_HEADER_CLICK)
     elseif self.info.type=="check" then
         if settings[self.info.var]==nil then
@@ -375,12 +375,12 @@ function RematchOptionsListButtonMixin:OnClick()
         end
         settings[self.info.var] = not settings[self.info.var]
         if self.info.func then -- if there's a function to run, run that
-            rematch.optionsPanel.funcs[self.info.func](self)
+            rematchRedux.optionsPanel.funcs[self.info.func](self)
         end
         if self.info.update then -- if not and whole UI should be updated
-            rematch.frame:Update()
+            rematchRedux.frame:Update()
         else -- otherwise just update options panel
-            rematch.optionsPanel:Update()
+            rematchRedux.optionsPanel:Update()
         end
         PlaySound(C.SOUND_CHECKBUTTON)
     end
@@ -388,248 +388,248 @@ end
 
 --[[ option funcs (to run when an option changes) ]]
 
-rematch.optionsPanel.funcs = {}
+rematchRedux.optionsPanel.funcs = {}
 
-function rematch.optionsPanel.funcs:InteractOnTarget(value)
+function rematchRedux.optionsPanel.funcs:InteractOnTarget(value)
     if value~=C.INTERACT_NONE then
         settings.InteractOnSoftInteract = C.INTERACT_NONE
         settings.InteractOnMouseover = C.INTERACT_NONE
-        rematch.optionsPanel:UpdateDropDown("InteractOnSoftInteract")
-        rematch.optionsPanel:UpdateDropDown("InteractOnMouseover")
+        rematchRedux.optionsPanel:UpdateDropDown("InteractOnSoftInteract")
+        rematchRedux.optionsPanel:UpdateDropDown("InteractOnMouseover")
     end
-    rematch.interact:Update()
+    rematchRedux.interact:Update()
 end
 
-function rematch.optionsPanel.funcs:InteractOnSoftInteract(value)
+function rematchRedux.optionsPanel.funcs:InteractOnSoftInteract(value)
     if value~=C.INTERACT_NONE then
         settings.InteractOnTarget = C.INTERACT_NONE
         settings.InteractOnMouseover = C.INTERACT_NONE
-        rematch.optionsPanel:UpdateDropDown("InteractOnTarget")
-        rematch.optionsPanel:UpdateDropDown("InteractOnMouseover")
+        rematchRedux.optionsPanel:UpdateDropDown("InteractOnTarget")
+        rematchRedux.optionsPanel:UpdateDropDown("InteractOnMouseover")
     end
-    rematch.interact:Update()
+    rematchRedux.interact:Update()
 end
 
-function rematch.optionsPanel.funcs:InteractOnMouseover(value)
+function rematchRedux.optionsPanel.funcs:InteractOnMouseover(value)
     if value~=C.INTERACT_NONE then
         settings.InteractOnTarget = C.INTERACT_NONE
         settings.InteractOnSoftInteract = C.INTERACT_NONE
-        rematch.optionsPanel:UpdateDropDown("InteractOnTarget")
-        rematch.optionsPanel:UpdateDropDown("InteractOnSoftInteract")
+        rematchRedux.optionsPanel:UpdateDropDown("InteractOnTarget")
+        rematchRedux.optionsPanel:UpdateDropDown("InteractOnSoftInteract")
     end
-    rematch.interact:Update()
+    rematchRedux.interact:Update()
 end
 
-function rematch.optionsPanel.funcs:Anchor(anchor)
+function rematchRedux.optionsPanel.funcs:Anchor(anchor)
     -- changing anchor while in journal mode (or while window is not on screen) messes up anchoring
-    if rematch.journal:IsActive() then
-        rematch.frame:Toggle() -- hide journal
-        rematch.frame:Toggle() -- show standalone window
-        if rematch.layout:GetMode()==0 then
-            rematch.frame:ToggleMinimized()
+    if rematchRedux.journal:IsActive() then
+        rematchRedux.frame:Toggle() -- hide journal
+        rematchRedux.frame:Toggle() -- show standalone window
+        if rematchRedux.layout:GetMode()==0 then
+            rematchRedux.frame:ToggleMinimized()
         end
     end
-    rematch.frame:ChangeAnchor(anchor)
-    rematch.optionsPanel:UpdateDropDown("PanelTabAnchor")
+    rematchRedux.frame:ChangeAnchor(anchor)
+    rematchRedux.optionsPanel:UpdateDropDown("PanelTabAnchor")
 end
 
-function rematch.optionsPanel.funcs:PanelTabAnchor(anchor)
-    if rematch.frame:IsVisible() and not rematch.journal:IsActive() then
-        rematch.frame:Configure(C.CURRENT)
+function rematchRedux.optionsPanel.funcs:PanelTabAnchor(anchor)
+    if rematchRedux.frame:IsVisible() and not rematchRedux.journal:IsActive() then
+        rematchRedux.frame:Configure(C.CURRENT)
     end
 end
 
--- when checking UseDefaultJournal while in the journal, turn off the journal (like bottombar's rematch checkbutton)
-function rematch.optionsPanel.funcs:UseDefaultJournal()
-    if settings.UseDefaultJournal and rematch.journal:IsActive() then
-        rematch.frame:Hide()
-        rematch.frame:SetParent(UIParent)
+-- when checking UseDefaultJournal while in the journal, turn off the journal (like bottombar's RematchRedux checkbutton)
+function rematchRedux.optionsPanel.funcs:UseDefaultJournal()
+    if settings.UseDefaultJournal and rematchRedux.journal:IsActive() then
+        rematchRedux.frame:Hide()
+        rematchRedux.frame:SetParent(UIParent)
         PetJournal:Show()
-        PetJournal_UpdatePetLoadOut() -- in case journal wasn't keeping up while rematch was doing stuff
+        PetJournal_UpdatePetLoadOut() -- in case journal wasn't keeping up while RematchRedux was doing stuff
     end
 end
 
 -- Standalone Window Options: Lower Window Behind UI; toggles the framestrata between LOW and MEDIUM
-function rematch.optionsPanel.funcs:LowerStrata()
-    if not rematch.journal:IsActive() then
-        rematch.frame:SetFrameStrata(settings.LowerStrata and "LOW" or "MEDIUM")
+function rematchRedux.optionsPanel.funcs:LowerStrata()
+    if not rematchRedux.journal:IsActive() then
+        rematchRedux.frame:SetFrameStrata(settings.LowerStrata and "LOW" or "MEDIUM")
     end
 end
 
-function rematch.optionsPanel.funcs:ConfigureToolbar()
-    rematch.toolbar:Configure()
+function rematchRedux.optionsPanel.funcs:ConfigureToolbar()
+    rematchRedux.toolbar:Configure()
 end
 
-function rematch.optionsPanel.funcs:CompactPetList()
-    rematch.petsPanel.List:SetCompactMode(settings.CompactPetList)
-    rematch.petsPanel.List:Update()
+function rematchRedux.optionsPanel.funcs:CompactPetList()
+    rematchRedux.petsPanel.List:SetCompactMode(settings.CompactPetList)
+    rematchRedux.petsPanel.List:Update()
 end
 
-function rematch.optionsPanel.funcs:CompactTeamList()
-    rematch.teamsPanel.List:SetCompactMode(settings.CompactTeamList)
-    rematch.teamsPanel.List:Update()
+function rematchRedux.optionsPanel.funcs:CompactTeamList()
+    rematchRedux.teamsPanel.List:SetCompactMode(settings.CompactTeamList)
+    rematchRedux.teamsPanel.List:Update()
 end
 
-function rematch.optionsPanel.funcs:CompactTargetList()
-    rematch.targetsPanel.List:SetCompactMode(settings.CompactTargetList)
-    rematch.targetsPanel.List:Update()
+function rematchRedux.optionsPanel.funcs:CompactTargetList()
+    rematchRedux.targetsPanel.List:SetCompactMode(settings.CompactTargetList)
+    rematchRedux.targetsPanel.List:Update()
 end
 
-function rematch.optionsPanel.funcs:CompactQueueList()
-    rematch.queuePanel.List:SetCompactMode(settings.CompactQueueList)
-    rematch.queuePanel.List:Update()
+function rematchRedux.optionsPanel.funcs:CompactQueueList()
+    rematchRedux.queuePanel.List:SetCompactMode(settings.CompactQueueList)
+    rematchRedux.queuePanel.List:Update()
 end
 
 -- any option that can change the results of the filtered list (including sort) should run this if the option changes
-function rematch.optionsPanel.funcs:UpdateFilters()
-    rematch.filters:ForceUpdate() -- sets the dirty flag so the filtered list is rerun in the update
-    rematch.petsPanel:Update()
+function rematchRedux.optionsPanel.funcs:UpdateFilters()
+    rematchRedux.filters:ForceUpdate() -- sets the dirty flag so the filtered list is rerun in the update
+    rematchRedux.petsPanel:Update()
 end
 
 -- Pet Filter Options: Allow Hidden Pets; turn off filter it was enabled
-function rematch.optionsPanel.funcs:UpdateHiddenPetFilter()
-    rematch.filters:Set("Other","Hidden",nil)
-    rematch.menus:Hide() -- in case Other filter menu is up (hide the Hidden Pets filter)
-    rematch.filters:ForceUpdate()
-    rematch.petsPanel:Update()
+function rematchRedux.optionsPanel.funcs:UpdateHiddenPetFilter()
+    rematchRedux.filters:Set("Other","Hidden",nil)
+    rematchRedux.menus:Hide() -- in case Other filter menu is up (hide the Hidden Pets filter)
+    rematchRedux.filters:ForceUpdate()
+    rematchRedux.petsPanel:Update()
 end
 
 -- any option that can change the pet card
-function rematch.optionsPanel.funcs:UpdatePetCard()
-    if rematch.petCard:IsVisible() then
-        rematch.petCard:Update()
+function rematchRedux.optionsPanel.funcs:UpdatePetCard()
+    if rematchRedux.petCard:IsVisible() then
+        rematchRedux.petCard:Update()
     end
 end
 
 -- Pet Card Options: Allow Pet Cards To Be Pinned; unpin it if option unchecked and snap card back to its relativeTo
-function rematch.optionsPanel.funcs:UpdatePetCardPin()
-    if rematch.petCard:IsVisible() and not rematch.cardManager:IsCardPinned(rematch.petCard) then
-        rematch.cardManager:Unpin(rematch.petCard)
+function rematchRedux.optionsPanel.funcs:UpdatePetCardPin()
+    if rematchRedux.petCard:IsVisible() and not rematchRedux.cardManager:IsCardPinned(rematchRedux.petCard) then
+        rematchRedux.cardManager:Unpin(rematchRedux.petCard)
     end
 end
 
 -- Team Win Record Options: Display Total Wins Instead
-function rematch.optionsPanel.funcs:AlternateWinRecord()
-    for groupID,group in rematch.savedGroups:AllGroups() do
+function rematchRedux.optionsPanel.funcs:AlternateWinRecord()
+    for groupID,group in rematchRedux.savedGroups:AllGroups() do
         if group.sortMode==C.GROUP_SORT_WINS then
-            rematch.savedGroups:Sort(groupID)
+            rematchRedux.savedGroups:Sort(groupID)
         end
     end
 end
 
 -- Team Options: Always Show Team Tabs
-function rematch.optionsPanel.funcs:AlwaysTeamTabs()
+function rematchRedux.optionsPanel.funcs:AlwaysTeamTabs()
     settings.NeverTeamTabs = false
-    rematch.teamTabs:Configure()
+    rematchRedux.teamTabs:Configure()
 end
 
 -- Team Options: Never Show Team Tabs
-function rematch.optionsPanel.funcs:NeverTeamTabs()
+function rematchRedux.optionsPanel.funcs:NeverTeamTabs()
     settings.AlwaysTeamTabs = false
-    rematch.teamTabs:Configure()
+    rematchRedux.teamTabs:Configure()
 end
 
-function rematch.optionsPanel.funcs:ShowNewGroupTab()
-    rematch.teamTabs:Update()
+function rematchRedux.optionsPanel.funcs:ShowNewGroupTab()
+    rematchRedux.teamTabs:Update()
 end
 
 -- for any options that may change queue/behavior
-function rematch.optionsPanel.funcs:ProcessQueue()
-    rematch.queue:Process()
+function rematchRedux.optionsPanel.funcs:ProcessQueue()
+    rematchRedux.queue:Process()
 end
 
 -- for changes to win record options to register/unregister monitoring battles
-function rematch.optionsPanel.funcs:AutoWinRecord()
-    rematch.winrecord:Update()
+function rematchRedux.optionsPanel.funcs:AutoWinRecord()
+    rematchRedux.winrecord:Update()
 end
 
-function rematch.optionsPanel.funcs:UseMinimapButton()
-    rematch.minimap:Configure()
+function rematchRedux.optionsPanel.funcs:UseMinimapButton()
+    rematchRedux.minimap:Configure()
 end
 
 -- if ExportPetsDialog is open when changing ExportSimplePetList option, then switch to new list
-function rematch.optionsPanel.funcs:ExportSimplePetList()
-    if rematch.dialog:GetOpenDialog()=="ExportPetsDialog" then
-        rematch.dialog.Canvas.CheckButton:SetChecked(settings.ExportSimplePetList)
-        rematch.dialog.Canvas.MultiLineEditBox:SetText(rematch.petFilterMenu:GetPetExportData(),true)
+function rematchRedux.optionsPanel.funcs:ExportSimplePetList()
+    if rematchRedux.dialog:GetOpenDialog()=="ExportPetsDialog" then
+        rematchRedux.dialog.Canvas.CheckButton:SetChecked(settings.ExportSimplePetList)
+        rematchRedux.dialog.Canvas.MultiLineEditBox:SetText(rematchRedux.petFilterMenu:GetPetExportData(),true)
     end
 end
 
-function rematch.optionsPanel.funcs:HideNotesButtonInBattle()
-    rematch.battle.NotesButton:SetShown(not settings.HideNotesButtonInBattle)
+function rematchRedux.optionsPanel.funcs:HideNotesButtonInBattle()
+    rematchRedux.battle.NotesButton:SetShown(not settings.HideNotesButtonInBattle)
 end
 
-function rematch.optionsPanel.funcs:NotesFont()
-    rematch.notes:UpdateFont()
+function rematchRedux.optionsPanel.funcs:NotesFont()
+    rematchRedux.notes:UpdateFont()
 end
 
-function rematch.optionsPanel.funcs:BreedSource(value)
+function rematchRedux.optionsPanel.funcs:BreedSource(value)
     if value=="BattlePetBreedID" and settings.BreedFormat==C.BREED_FORMAT_ICONS then
         settings.BreedFormat = C.BREED_FORMAT_LETTERS -- if changing to BattlePetBreedID and format is icons, change format to letters
     end
-    rematch.breedInfo:ResetBreedSource()
-    rematch.optionsPanel:UpdateDropDown("BreedSource") -- in case ResetBreedSource asserts a different one
-    rematch.optionsPanel:UpdateDropDown("BreedFormat")
-    rematch.frame:Update()
+    rematchRedux.breedInfo:ResetBreedSource()
+    rematchRedux.optionsPanel:UpdateDropDown("BreedSource") -- in case ResetBreedSource asserts a different one
+    rematchRedux.optionsPanel:UpdateDropDown("BreedFormat")
+    rematchRedux.frame:Update()
 end
 
-function rematch.optionsPanel.funcs:BreedFormat(value)
+function rematchRedux.optionsPanel.funcs:BreedFormat(value)
     if value==C.BREED_FORMAT_ICONS and settings.BreedSource=="BattlePetBreedID" then
         settings.BreedSource = "PetTracker" -- if changing to Icons and source isn't PetTracker, change source to PetTracker
-        rematch.breedInfo:ResetBreedSource()
+        rematchRedux.breedInfo:ResetBreedSource()
     end
-    rematch.optionsPanel:UpdateDropDown("BreedSource")
-    rematch.optionsPanel:UpdateDropDown("BreedFormat")
-    rematch.frame:Update()
+    rematchRedux.optionsPanel:UpdateDropDown("BreedSource")
+    rematchRedux.optionsPanel:UpdateDropDown("BreedFormat")
+    rematchRedux.frame:Update()
 end
 
-function rematch.optionsPanel.funcs:MousewheelSpeed(speed)
-    rematch.optionsPanel.List:SetSpeed(speed)
+function rematchRedux.optionsPanel.funcs:MousewheelSpeed(speed)
+    rematchRedux.optionsPanel.List:SetSpeed(speed)
 end
 
 --[[ widget setups ]]
 
-rematch.optionsPanel.widgetSetup = {}
+rematchRedux.optionsPanel.widgetSetup = {}
 
-function rematch.optionsPanel.widgetSetup:UseCustomScaleWidget()
+function rematchRedux.optionsPanel.widgetSetup:UseCustomScaleWidget()
     self.tooltipTitle = L["Use Custom Scale"]
-    self.tooltipBody = L["Adjust the relative size of the standalone Rematch window by changing its scale."]
+    self.tooltipBody = L["Adjust the relative size of the standalone RematchRedux window by changing its scale."]
     self.Text:SetText(L["Use Custom Scale"])
     self.ScaleButton.Text:SetFontObject(GameFontHighlight)
 end
 
-function rematch.optionsPanel.UseCustomScaleWidget:OnEnter()
-    rematch.textureHighlight:Show(self.Check)
-    rematch.tooltip:ShowSimpleTooltip(self,self.tooltipTitle,self.tooltipBody)
+function rematchRedux.optionsPanel.UseCustomScaleWidget:OnEnter()
+    rematchRedux.textureHighlight:Show(self.Check)
+    rematchRedux.tooltip:ShowSimpleTooltip(self,self.tooltipTitle,self.tooltipBody)
 end
 
-function rematch.optionsPanel.UseCustomScaleWidget:OnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.tooltip:Hide()
+function rematchRedux.optionsPanel.UseCustomScaleWidget:OnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
-function rematch.optionsPanel.UseCustomScaleWidget:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function rematchRedux.optionsPanel.UseCustomScaleWidget:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function rematch.optionsPanel.UseCustomScaleWidget:OnMouseUp()
+function rematchRedux.optionsPanel.UseCustomScaleWidget:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self.Check)
+        rematchRedux.textureHighlight:Show(self.Check)
     end
 end
 
-function rematch.optionsPanel.UseCustomScaleWidget:OnClick()
+function rematchRedux.optionsPanel.UseCustomScaleWidget:OnClick()
     settings.CustomScale = not settings.CustomScale
-    rematch.frame:UpdateScale()
-    rematch.optionsPanel:Update()
+    rematchRedux.frame:UpdateScale()
+    rematchRedux.optionsPanel:Update()
     PlaySound(C.SOUND_CHECKBUTTON)
 end
 
-function rematch.optionsPanel.UseCustomScaleWidget.ScaleButton:OnClick()
-    rematch.dialog:ShowDialog("CustomScaleDialog")
+function rematchRedux.optionsPanel.UseCustomScaleWidget.ScaleButton:OnClick()
+    rematchRedux.dialog:ShowDialog("CustomScaleDialog")
 end
 
-function rematch.optionsPanel.widgetSetup:OptionsManagementWidget()
+function rematchRedux.optionsPanel.widgetSetup:OptionsManagementWidget()
     self.Label:SetText(L["All Options:"])
     self.ResetButton:SetText(L["Reset"])
     self.ExportButton:SetText(L["Export"])
@@ -637,34 +637,34 @@ end
 
 -- exports all non-default options in this format: var=value:var=value:etc=value:
 -- settings that are tables are just the count of elements within the table
-function rematch.optionsPanel.OptionsManagementWidget.ExportButton:OnClick()
+function rematchRedux.optionsPanel.OptionsManagementWidget.ExportButton:OnClick()
     -- building a table so it can be sorted
     local results = {}
     for k,v in pairs(settings:GetDefaults()) do
         if type(v)=="table" then -- table contents aren't saved, just a count of its contents
-            tinsert(results,k.."="..rematch.utils:GetSize(settings[k]))
+            tinsert(results,k.."="..rematchRedux.utils:GetSize(settings[k]))
         elseif v~=settings[k] then
             tinsert(results,k.."="..tostring(settings[k]))
         end
     end
-    tinsert(results,"AllTeams="..rematch.utils:GetSize(rematch.savedTeams.AllTeams))
+    tinsert(results,"AllTeams="..rematchRedux.utils:GetSize(rematchRedux.savedTeams.AllTeams))
     tinsert(results,"Version="..(C_AddOns.GetAddOnMetadata("RematchRedux","Version") or ""))
-    tinsert(results,"NumPets="..(rematch.roster:GetNumOwned() or ""))
-    tinsert(results,"NumTeams="..(rematch.savedTeams:GetNumTeams() or ""))
+    tinsert(results,"NumPets="..(rematchRedux.roster:GetNumOwned() or ""))
+    tinsert(results,"NumTeams="..(rematchRedux.savedTeams:GetNumTeams() or ""))
     table.sort(results)
 
-    rematch.dialog:ShowDialog("ExportOptions",table.concat(results,"\n"))
+    rematchRedux.dialog:ShowDialog("ExportOptions",table.concat(results,"\n"))
 end
 
-function rematch.optionsPanel.OptionsManagementWidget.ResetButton:OnClick()
-    rematch.dialog:ShowDialog("ResetOptions")
+function rematchRedux.optionsPanel.OptionsManagementWidget.ResetButton:OnClick()
+    rematchRedux.dialog:ShowDialog("ResetOptions")
 end
 
 --[[ widget updates ]]
 
-rematch.optionsPanel.widgetUpdate = {}
+rematchRedux.optionsPanel.widgetUpdate = {}
 
-function rematch.optionsPanel.widgetUpdate:UseCustomScaleWidget()
+function rematchRedux.optionsPanel.widgetUpdate:UseCustomScaleWidget()
     local xoff = settings.CustomScale and 0.25 or 0
     self.Check:SetTexCoord(0+xoff,0.25+xoff,0.5,0.75)
     self.ScaleButton:SetShown(settings.CustomScale)
@@ -673,7 +673,7 @@ end
 
 -- resets all non-table options to default, sets non-table options in import to given values, then reloads the UI
 -- this is used for troubleshooting to mimic another user's options that was exported from the Export button in options
-function rematch.optionsPanel:ImportOptions(import)
+function rematchRedux.optionsPanel:ImportOptions(import)
     local defaults = settings:GetDefaults()
     -- wipe all number, boolean or string settings
     for var,value in pairs(defaults) do

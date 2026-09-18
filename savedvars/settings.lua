@@ -1,16 +1,16 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-rematch.settings = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+rematchRedux.settings = {}
 
 --[[
     Any local variables pointing to Rematch5Settings before PLAYER_LOGIN will not follow to the
     new Rematch5Settings when savedvariables are loaded, necessitating the need to either listen
     for PLAYER_LOGIN to assign a local variable, or directly use Rematch5Settings. To get around
-    this, rematch will now use an empty metatable that will serve as a getter/setter.
+    this,RematchRedux will now use an empty metatable that will serve as a getter/setter.
 
-    local _,rematch = ...
-    local settings = rematch.settings
+    local _, rematchRedux = ...
+    local settings = rematchRedux.settings
 
     Now use settings.variable as usual:
         settings.LockWindow = not settings.LockWindow
@@ -26,7 +26,7 @@ local defaults = {
     MaximizedLayout = C.DEFAULT_STANDALONE_LAYOUT, -- the last non-minimized standalone layout used
     JournalLayout = C.DEFAULT_JOURNAL_LAYOUT, -- default layout for journal window
     LastOpenLayout = C.DEFAULT_STANDALONE_LAYOUT, -- the last non-minimized layout used
-    LastOpenJournal = false, -- whether the journal was open when rematch last on screen
+    LastOpenJournal = false, -- whether the journal was open when RematchRedux last on screen
     PetSatchelIndex = 1, -- which set of toolbar buttons are shown from pet satchel
     UseTypeBar = false, -- whether the typebar in the petspanel is open
     TypeBarTab = C.TYPEBAR_TAB_TYPE, -- which typebar tab user is on
@@ -64,7 +64,7 @@ local defaults = {
     BarChartCategory = C.BARCHART_IN_JOURNAL, -- which barchart category to show for pet collection
     ConvertedTeams = {}, -- indexed by Rematch 4 team key, the Rematch 5 teamID that the key was converted into
     BackupCount = 0, -- number of teams created since a backup was last offered
-    WasShownOnLogout = false, -- true if the rematch window was on screen during logout
+    WasShownOnLogout = false, -- true if the RematchRedux window was on screen during logout
     RankWinsByPercent = false, -- in PetSummary dialog, whether to rank teams by percent instead of wins
     MinimizePetSummary = true, -- whether to use PetSummaryMinimized dialog rather than PetSummary (maximized)
     DontDeleteOnCombine = false, -- Don't Delete Empty Group in CombineGroups dialog
@@ -263,21 +263,21 @@ end
 
 -- returns a copy of the defaults at the top of this file (only creates one copy for session to reduce garbage)
 local copyOfDefaults
-function rematch.settings:GetDefaults()
+function rematchRedux.settings:GetDefaults()
     if not copyOfDefaults then
         copyOfDefaults = CopyTable(defaults)
     end
     return copyOfDefaults
 end
 
-setmetatable(rematch.settings,{__index = getter, __newindex = setter})
+setmetatable(rematchRedux.settings,{__index = getter, __newindex = setter})
 
 -- on login do savedvar maintenance
-rematch.events:Register(rematch.settings,"PLAYER_LOGIN",function(self)
-    if rematch.settings.ResetFilters then -- if Reset Filters On Login checked, clear filters on login
-        rematch.filters:ClearAll()
-        if rematch.settings.ResetExceptSearch then -- if Don't Reset Search With Filters, still reset search
-            rematch.filters:SetSearch("")
+rematchRedux.events:Register(rematchRedux.settings,"PLAYER_LOGIN",function(self)
+    if rematchRedux.settings.ResetFilters then -- if Reset Filters On Login checked, clear filters on login
+        rematchRedux.filters:ClearAll()
+        if rematchRedux.settings.ResetExceptSearch then -- if Don't Reset Search With Filters, still reset search
+            rematchRedux.filters:SetSearch("")
         end
     end
 end)

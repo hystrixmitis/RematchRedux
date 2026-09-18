@@ -1,62 +1,62 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
 --[[
     Teams and Target list buttons are so similar, they're both going to use the same template.
 ]]
 
---[[ RematchHeaderTeamListButtonMixin for both group:id and header:id ]]
+--[[ RematchReduxHeaderTeamListButtonMixin for both group:id and header:id ]]
 
-RematchHeaderTeamListButtonMixin = {}
+RematchReduxHeaderTeamListButtonMixin = {}
 
 --[[ these script handlers will also call autoscrollbox:HeaderOnEnter/OnLeave/etc if one is defined ]]
 
-function RematchHeaderTeamListButtonMixin:OnEnter()
+function RematchReduxHeaderTeamListButtonMixin:OnEnter()
     local list = self:GetParent():GetParent():GetParent()
     if not list:IsHeadersLocked() then
-        rematch.textureHighlight:Show(self.Back,self.ExpandIcon)
+        rematchRedux.textureHighlight:Show(self.Back,self.ExpandIcon)
     end
     if list.HeaderOnEnter then
         list.HeaderOnEnter(self)
     end
 end
 
-function RematchHeaderTeamListButtonMixin:OnLeave()
+function RematchReduxHeaderTeamListButtonMixin:OnLeave()
     local list = self:GetParent():GetParent():GetParent()
-    rematch.textureHighlight:Hide()
+    rematchRedux.textureHighlight:Hide()
     if list.HeaderOnLeave then
         list.HeaderOnLeave(self)
     end
 end
 
-function RematchHeaderTeamListButtonMixin:OnMouseDown()
+function RematchReduxHeaderTeamListButtonMixin:OnMouseDown()
     local list = self:GetParent():GetParent():GetParent()
-    rematch.textureHighlight:Hide()
+    rematchRedux.textureHighlight:Hide()
     if list.HeaderOnMouseDown then
         list.HeaderOnMouseDown(self)
     end
 end
 
-function RematchHeaderTeamListButtonMixin:OnMouseUp()
+function RematchReduxHeaderTeamListButtonMixin:OnMouseUp()
     local list = self:GetParent():GetParent():GetParent()
     if self:IsMouseMotionFocus() and not list:IsHeadersLocked() then
-        rematch.textureHighlight:Show(self.Back,self.ExpandIcon)
+        rematchRedux.textureHighlight:Show(self.Back,self.ExpandIcon)
     end
     if list.HeaderOnMouseUp then
         list.HeaderOnMouseUp(self)
     end
 end
 
-function RematchHeaderTeamListButtonMixin:OnClick(button)
+function RematchReduxHeaderTeamListButtonMixin:OnClick(button)
     local list = self:GetParent():GetParent():GetParent()
     if list.HeaderOnClick then
         list.HeaderOnClick(self,button)
     end
 end
 
-function RematchHeaderTeamListButtonMixin:OnDragStart()
+function RematchReduxHeaderTeamListButtonMixin:OnDragStart()
     local list = self:GetParent():GetParent():GetParent()
     if list.HeaderOnDragStart then
         list.HeaderOnDragStart(self)
@@ -64,8 +64,8 @@ function RematchHeaderTeamListButtonMixin:OnDragStart()
 end
 
 -- fill for both group and target headers
-function RematchHeaderTeamListButtonMixin:Fill(id)
-    local idType = rematch.utils:GetIDType(id)
+function RematchReduxHeaderTeamListButtonMixin:Fill(id)
+    local idType = rematchRedux.utils:GetIDType(id)
     if idType=="group" then -- group:id is for group headers
         self:FillGroup(id)
     elseif idType=="header" then -- header:id is for target headers
@@ -74,12 +74,12 @@ function RematchHeaderTeamListButtonMixin:Fill(id)
 end
 
 -- fills a team group header
-function RematchHeaderTeamListButtonMixin:FillGroup(groupID)
+function RematchReduxHeaderTeamListButtonMixin:FillGroup(groupID)
     self.groupID = groupID
     self.headerID = nil
-    self:SetBack() -- from RematchHeaderListButtonMixin (normal or wide back depending on mode)
+    self:SetBack() -- from RematchReduxHeaderListButtonMixin (normal or wide back depending on mode)
 
-    local group = groupID and rematch.savedGroups[groupID]
+    local group = groupID and rematchRedux.savedGroups[groupID]
     if not group then
         return
     end
@@ -87,7 +87,7 @@ function RematchHeaderTeamListButtonMixin:FillGroup(groupID)
         local list = self:GetParent():GetParent():GetParent() -- the autoscrollframe this belongs to
         self:SetExpanded(list:IsHeaderExpanded(self.groupID),list:IsSearching() or list:IsHeadersLocked())
     end
-    self.Text:SetText(rematch.utils:GetFormattedGroupName(groupID))
+    self.Text:SetText(rematchRedux.utils:GetFormattedGroupName(groupID))
 
     local xoff = -4
 
@@ -102,76 +102,76 @@ function RematchHeaderTeamListButtonMixin:FillGroup(groupID)
     end
 
     -- place badges (just preferences for now)
-    local badgesWidth = rematch.badges:AddBadges(self.Badges,"groups",groupID,"RIGHT",self.Icon,"LEFT",-2,0,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(self.Badges,"groups",groupID,"RIGHT",self.Icon,"LEFT",-2,0,-1)
     xoff = xoff - badgesWidth
 
     self.Text:SetPoint("BOTTOMRIGHT",xoff,2)
 end
 
 -- fills a target header
-function RematchHeaderTeamListButtonMixin:FillHeader(headerID)
+function RematchReduxHeaderTeamListButtonMixin:FillHeader(headerID)
     self.headerID = headerID
     self.groupID = nil
     self:SetBack()
     local list = self:GetParent():GetParent():GetParent() -- the autoscrollframe this belongs to
     self:SetExpanded(list:IsHeaderExpanded(self.headerID),list:IsSearching() or list:IsHeadersLocked())
-    self.Text:SetText(rematch.utils:GetFormattedHeaderName(headerID))
-    rematch.badges:ClearBadges(self.Badges) -- target headers don't have badges for now
+    self.Text:SetText(rematchRedux.utils:GetFormattedHeaderName(headerID))
+    rematchRedux.badges:ClearBadges(self.Badges) -- target headers don't have badges for now
     self.Icon:Hide()
     self.Border:Hide()
 end
 
---[[ RematchCommonTeamListButtonMixin for both Normal and Compact team:id and target:id ]]
+--[[ RematchReduxCommonTeamListButtonMixin for both Normal and Compact team:id and target:id ]]
 
-RematchCommonTeamListButtonMixin = {}
+RematchReduxCommonTeamListButtonMixin = {}
 
-function RematchCommonTeamListButtonMixin:OnEnter()
+function RematchReduxCommonTeamListButtonMixin:OnEnter()
     local list = self:GetParent():GetParent():GetParent()
-    rematch.textureHighlight:Show(self.Back)
+    rematchRedux.textureHighlight:Show(self.Back)
     if list.TeamOnEnter then
         list.TeamOnEnter(self)
     end
     -- if team herder is up, then we're targeting a team to move
-    if rematch.dialog:GetOpenLayout()=="Herding" then
+    if rematchRedux.dialog:GetOpenLayout()=="Herding" then
         SetCursor("Interface\\Cursor\\Crosshairs")
     end
     if not settings.HideTruncatedTooltips and self.Name:IsTruncated() then
-        rematch.tooltip:ShowSimpleTooltip(self,nil,self.Name:GetText() or "","BOTTOM",self.Name,"TOP",0,5,true)
+        rematchRedux.tooltip:ShowSimpleTooltip(self,nil,self.Name:GetText() or "","BOTTOM",self.Name,"TOP",0,5,true)
     end
 end
 
-function RematchCommonTeamListButtonMixin:OnLeave()
+function RematchReduxCommonTeamListButtonMixin:OnLeave()
     local list = self:GetParent():GetParent():GetParent()
-    rematch.textureHighlight:Hide()
+    rematchRedux.textureHighlight:Hide()
     if list.TeamOnLeave then
         list.TeamOnLeave(self)
     end
     SetCursor(nil)
-    rematch.tooltip:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
-function RematchCommonTeamListButtonMixin:OnMouseDown()
+function RematchReduxCommonTeamListButtonMixin:OnMouseDown()
     local list = self:GetParent():GetParent():GetParent()
-    rematch.textureHighlight:Hide()
+    rematchRedux.textureHighlight:Hide()
     if list.TeamOnMouseDown then
         list.TeamOnMouseDown(self)
     end
 end
 
-function RematchCommonTeamListButtonMixin:OnMouseUp()
+function RematchReduxCommonTeamListButtonMixin:OnMouseUp()
     local list = self:GetParent():GetParent():GetParent()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self.Back)
+        rematchRedux.textureHighlight:Show(self.Back)
     end
     if list.TeamOnMouseUp then
         list.TeamOnMouseUp(self)
     end
 end
 
-function RematchCommonTeamListButtonMixin:OnClick(button)
+function RematchReduxCommonTeamListButtonMixin:OnClick(button)
     -- if team herder is up, then clicking a team will move it
-    if rematch.dialog:GetOpenLayout()=="Herding" then
-        rematch.dragFrame:ReceiveTeamToGroup(self.teamID,settings.LastSelectedGroup,true)
+    if rematchRedux.dialog:GetOpenLayout()=="Herding" then
+        rematchRedux.dragFrame:ReceiveTeamToGroup(self.teamID,settings.LastSelectedGroup,true)
         return
     end
     local list = self:GetParent():GetParent():GetParent()
@@ -180,7 +180,7 @@ function RematchCommonTeamListButtonMixin:OnClick(button)
     end
 end
 
-function RematchCommonTeamListButtonMixin:OnDragStart()
+function RematchReduxCommonTeamListButtonMixin:OnDragStart()
     local list = self:GetParent():GetParent():GetParent()
     if list.TeamOnDragStart then
         list.TeamOnDragStart(self)
@@ -189,11 +189,11 @@ end
 
 --[[ Normal team list button mixin ]]
 
-RematchNormalTeamListButtonMixin = {}
+RematchReduxNormalTeamListButtonMixin = {}
 
-function RematchNormalTeamListButtonMixin:Fill(id)
-    local idType = rematch.utils:GetIDType(id)
-    if idType=="team" and rematch.savedTeams[id] then -- team:id is for teams
+function RematchReduxNormalTeamListButtonMixin:Fill(id)
+    local idType = rematchRedux.utils:GetIDType(id)
+    if idType=="team" and rematchRedux.savedTeams[id] then -- team:id is for teams
         self:FillTeam(id)
     elseif idType=="target" then -- target:id is for targets
         self:FillTarget(id)
@@ -201,14 +201,14 @@ function RematchNormalTeamListButtonMixin:Fill(id)
 end
 
 -- fills a team list button with the teamID
-function RematchNormalTeamListButtonMixin:FillTeam(teamID)
+function RematchReduxNormalTeamListButtonMixin:FillTeam(teamID)
     local left = 0
     local right = -C.TEAM_LIST_RIGHT_PADDING
     local row1Right = right -- will be extent of notes/badges
     local row2Right = right -- will be extent of wins
     -- assigning teamID to the button
     self.targetID = nil
-    local team = rematch.savedTeams[teamID]
+    local team = rematchRedux.savedTeams[teamID]
     if not team then
         self.teamID = nil
         return -- not a valid team to fill, leave
@@ -216,7 +216,7 @@ function RematchNormalTeamListButtonMixin:FillTeam(teamID)
         self.teamID = teamID
     end
     -- if any pets need fixed, this will rebuild the team and delayed update
-    rematch.rebuild:ValidateTeamID(teamID)
+    rematchRedux.rebuild:ValidateTeamID(teamID)
     -- teams always have three pets shown on the left
     self.Border:ClearAllPoints()
     self.Border:SetPoint("LEFT")
@@ -225,7 +225,7 @@ function RematchNormalTeamListButtonMixin:FillTeam(teamID)
     self.Border:SetWidth(coords[5])
     self.Border:Show()
     for i=1,3 do
-        local petInfo = rematch.petInfo:Fetch(team.pets[i])
+        local petInfo = rematchRedux.petInfo:Fetch(team.pets[i])
         self.Pets[i]:ClearAllPoints()
         self.Pets[i]:SetPoint("TOPLEFT",(i-1)*29+2,-2)
         self.Pets[i].petID = team.pets[i]
@@ -247,7 +247,7 @@ function RematchNormalTeamListButtonMixin:FillTeam(teamID)
         self.NotesButton:Hide()
     end
     -- badges
-    local badgesWidth = rematch.badges:AddBadges(self.Badges,"teams",teamID,"TOPRIGHT",self,"TOPRIGHT",row1Right,-8,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(self.Badges,"teams",teamID,"TOPRIGHT",self,"TOPRIGHT",row1Right,-8,-1)
     row1Right = row1Right - badgesWidth
     -- win record never moves but if does it may affect position on right
     if settings.HideWinRecord or not team.winrecord or (team.winrecord.battles or 0)==0 then
@@ -268,8 +268,8 @@ function RematchNormalTeamListButtonMixin:FillTeam(teamID)
     -- at this point, all rightmost matter placed, right is now the min of the two (they're both negative)
     right = min(row1Right,row2Right) - 1 -- minus 1 for text padding on right
     left = left + 4 -- plus 4 for text padding on left
-    local name = rematch.utils:GetFormattedTeamName(teamID)
-    local subName = team.targets and team.targets[1] and rematch.targetInfo:GetNpcName(team.targets[1])
+    local name = rematchRedux.utils:GetFormattedTeamName(teamID)
+    local subName = team.targets and team.targets[1] and rematchRedux.targetInfo:GetNpcName(team.targets[1])
     if subName and (subName==team.name or subName==C.CACHE_RETRIEVING)then
         subName = nil -- target name is same as team name (or Retrieving data..), can drop target name
     end
@@ -278,12 +278,12 @@ function RematchNormalTeamListButtonMixin:FillTeam(teamID)
 end
 
 -- fills a team list button with the targetID
-function RematchNormalTeamListButtonMixin:FillTarget(targetID)
+function RematchReduxNormalTeamListButtonMixin:FillTarget(targetID)
     local left = C.TEAM_LIST_LEFT_PADDING
     local right = 0
-    local npcID = rematch.targetInfo:GetNpcID(targetID) -- convert targetID to a numeric npcID
-    local pets = rematch.targetInfo:GetNpcPets(npcID)
-    local numPets = max(1,rematch.targetInfo:GetNumPets(npcID)) -- GetNpcPets will always be 1 for unnotable, here we don't care about actual count
+    local npcID = rematchRedux.targetInfo:GetNpcID(targetID) -- convert targetID to a numeric npcID
+    local pets = rematchRedux.targetInfo:GetNpcPets(npcID)
+    local numPets = max(1,rematchRedux.targetInfo:GetNumPets(npcID)) -- GetNpcPets will always be 1 for unnotable, here we don't care about actual count
     -- assigning targetID to the button
     self.targetID = targetID
     self.teamID = nil
@@ -296,13 +296,13 @@ function RematchNormalTeamListButtonMixin:FillTarget(targetID)
         self.Border:SetWidth(coords[5])
         self.Border:Show()
         for i=1,numPets do
-            local petInfo = rematch.petInfo:Fetch(pets[i])
+            local petInfo = rematchRedux.petInfo:Fetch(pets[i])
             self.Pets[i]:ClearAllPoints()
             self.Pets[i]:SetPoint("TOPRIGHT",-(numPets-i)*29-2,-2) -- numPets-i to place them in 123 order while right-justified
             self.Pets[i].petID = pets[i]
             self.Pets[i]:SetTexture(petInfo.icon)
             if petInfo.idType=="unnotable" then -- use portrait instead of icon for unnotable npcs
-                local displayID = rematch.targetInfo:GetNpcDisplayID(npcID)
+                local displayID = rematchRedux.targetInfo:GetNpcDisplayID(npcID)
                 if displayID then
                     SetPortraitTextureFromCreatureDisplayID(self.Pets[i],displayID)
                 end
@@ -321,11 +321,11 @@ function RematchNormalTeamListButtonMixin:FillTarget(targetID)
     end
     self.Back:SetPoint("TOPLEFT",0,-1)
     self.Back:SetPoint("BOTTOMRIGHT",right,0)
-    local badgesWidth = rematch.badges:AddBadges(self.Badges,"targets",npcID,"TOPRIGHT",self,"TOPRIGHT",right,-8,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(self.Badges,"targets",npcID,"TOPRIGHT",self,"TOPRIGHT",right,-8,-1)
     right = right - badgesWidth
-    local name = rematch.utils:GetFormattedTargetName(targetID)
-    local subName = rematch.targetInfo:GetQuestName(npcID)
-    if subName and (subName==rematch.targetInfo:GetNpcName(npcID) or subName==C.CACHE_RETRIEVING) then
+    local name = rematchRedux.utils:GetFormattedTargetName(targetID)
+    local subName = rematchRedux.targetInfo:GetQuestName(npcID)
+    if subName and (subName==rematchRedux.targetInfo:GetNpcName(npcID) or subName==C.CACHE_RETRIEVING) then
         subName = nil
     end
     self:FillNames(name,subName,left,right)
@@ -337,7 +337,7 @@ function RematchNormalTeamListButtonMixin:FillTarget(targetID)
 end
 
 -- sets and positions names for both teams and targets
-function RematchNormalTeamListButtonMixin:FillNames(name,subName,left,right)
+function RematchReduxNormalTeamListButtonMixin:FillNames(name,subName,left,right)
     self.Name:SetHeight(0) -- unbounded height initially
     self.Name:SetPoint("TOPLEFT",left,0) -- need to anchor left/right for wrap height without knowing veritical position yet
     self.Name:SetPoint("TOPRIGHT",right,0)
@@ -371,23 +371,23 @@ function RematchNormalTeamListButtonMixin:FillNames(name,subName,left,right)
     end
 end
 
-RematchCompactTeamListButtonMixin = {}
+RematchReduxCompactTeamListButtonMixin = {}
 
-function RematchCompactTeamListButtonMixin:Fill(id)
-    local idType = rematch.utils:GetIDType(id)
-    if idType=="team" and rematch.savedTeams[id] then -- team:id is for teams
+function RematchReduxCompactTeamListButtonMixin:Fill(id)
+    local idType = rematchRedux.utils:GetIDType(id)
+    if idType=="team" and rematchRedux.savedTeams[id] then -- team:id is for teams
         self:FillTeam(id)
     elseif idType=="target" then -- target:id is for targets
         self:FillTarget(id)
     end
 end
 
-function RematchCompactTeamListButtonMixin:FillTeam(teamID)
+function RematchReduxCompactTeamListButtonMixin:FillTeam(teamID)
     local left = 0
     local right = -C.TEAM_LIST_RIGHT_PADDING
     -- assigning teamID to the button
     self.targetID = nil
-    local team = rematch.savedTeams[teamID]
+    local team = rematchRedux.savedTeams[teamID]
     if not team then
         self.teamID = nil
         return -- not a valid team to fill, leave
@@ -395,7 +395,7 @@ function RematchCompactTeamListButtonMixin:FillTeam(teamID)
         self.teamID = teamID
     end
     -- if any pets need fixed, this will rebuild the team and delayed update
-    rematch.rebuild:ValidateTeamID(teamID)
+    rematchRedux.rebuild:ValidateTeamID(teamID)
     -- teams always have three pets shown on the left
     self.Border:ClearAllPoints()
     self.Border:SetPoint("LEFT")
@@ -404,7 +404,7 @@ function RematchCompactTeamListButtonMixin:FillTeam(teamID)
     self.Border:SetWidth(coords[5])
     self.Border:Show()
     for i=1,3 do
-        local petInfo = rematch.petInfo:Fetch(team.pets[i])
+        local petInfo = rematchRedux.petInfo:Fetch(team.pets[i])
         self.Pets[i]:ClearAllPoints()
         self.Pets[i]:SetPoint("LEFT",(i-1)*23+2,0)
         self.Pets[i].petID = team.pets[i]
@@ -442,22 +442,22 @@ function RematchCompactTeamListButtonMixin:FillTeam(teamID)
         self.NotesButton:Hide()
     end
     -- badges
-    local badgesWidth = rematch.badges:AddBadges(self.Badges,"teams",teamID,"RIGHT",self,"RIGHT",right,0,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(self.Badges,"teams",teamID,"RIGHT",self,"RIGHT",right,0,-1)
     right = right - badgesWidth
     -- at this point, all rightmost matter placed, right is now the min of the two (they're both negative)
     left = left + 4 -- plus 4 for text padding on left
     -- name
     self.Name:SetPoint("LEFT",left,0)
     self.Name:SetPoint("RIGHT",right,0)
-    self.Name:SetText(rematch.utils:GetFormattedTeamName(teamID))
+    self.Name:SetText(rematchRedux.utils:GetFormattedTeamName(teamID))
 end
 
-function RematchCompactTeamListButtonMixin:FillTarget(targetID)
+function RematchReduxCompactTeamListButtonMixin:FillTarget(targetID)
     local left = C.TEAM_LIST_LEFT_PADDING
     local right = 0
-    local npcID = rematch.targetInfo:GetNpcID(targetID) -- convert targetID to a numeric npcID
-    local pets = rematch.targetInfo:GetNpcPets(npcID)
-    local numPets = max(1,rematch.targetInfo:GetNumPets(npcID)) -- GetNpcPets will always be 1 for unnotable, here we don't care about actual count
+    local npcID = rematchRedux.targetInfo:GetNpcID(targetID) -- convert targetID to a numeric npcID
+    local pets = rematchRedux.targetInfo:GetNpcPets(npcID)
+    local numPets = max(1,rematchRedux.targetInfo:GetNumPets(npcID)) -- GetNpcPets will always be 1 for unnotable, here we don't care about actual count
     -- assigning targetID to the button
     self.targetID = targetID
     self.teamID = nil
@@ -470,13 +470,13 @@ function RematchCompactTeamListButtonMixin:FillTarget(targetID)
         self.Border:SetWidth(coords[5])
         self.Border:Show()
         for i=1,numPets do
-            local petInfo = rematch.petInfo:Fetch(pets[i])
+            local petInfo = rematchRedux.petInfo:Fetch(pets[i])
             self.Pets[i]:ClearAllPoints()
             self.Pets[i]:SetPoint("RIGHT",-(numPets-i)*23-2,0) -- numPets-i to place them in 123 order while right-justified
             self.Pets[i].petID = pets[i]
             self.Pets[i]:SetTexture(petInfo.icon)
             if petInfo.idType=="unnotable" then -- use portrait instead of icon for unnotable npcs
-                local displayID = rematch.targetInfo:GetNpcDisplayID(npcID)
+                local displayID = rematchRedux.targetInfo:GetNpcDisplayID(npcID)
                 if displayID then
                     SetPortraitTextureFromCreatureDisplayID(self.Pets[i],displayID)
                 end
@@ -495,39 +495,39 @@ function RematchCompactTeamListButtonMixin:FillTarget(targetID)
     end
     self.Back:SetPoint("TOPLEFT",0,-1)
     self.Back:SetPoint("BOTTOMRIGHT",right,0)
-    local badgesWidth = rematch.badges:AddBadges(self.Badges,"targets",npcID,"RIGHT",self,"RIGHT",right,0,-1)
+    local badgesWidth = rematchRedux.badges:AddBadges(self.Badges,"targets",npcID,"RIGHT",self,"RIGHT",right,0,-1)
     right = right - badgesWidth
     -- name
     self.Name:SetPoint("LEFT",left,0)
     self.Name:SetPoint("RIGHT",right,0)
-    self.Name:SetText(rematch.utils:GetFormattedTargetName(targetID))
+    self.Name:SetText(rematchRedux.utils:GetFormattedTargetName(targetID))
     -- this stuff never shown on targets (but may have been shown previously if button was used for a team)
     self.Favorite:Hide()
     self.NotesButton:Hide()
     self.Wins:Hide()
 end
 
---[[ RematchTeamListPetButtonMixin ]]
+--[[ RematchReduxTeamListPetButtonMixin ]]
 
-RematchTeamListPetButtonMixin = {}
+RematchReduxTeamListPetButtonMixin = {}
 
-function RematchTeamListPetButtonMixin:OnEnter()
-    rematch.textureHighlight:Show(self,self:GetParent().Back)
-    rematch.cardManager:OnEnter(rematch.petCard,self:GetParent(),self.petID) -- anchor to parent
+function RematchReduxTeamListPetButtonMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self,self:GetParent().Back)
+    rematchRedux.cardManager:OnEnter(rematchRedux.petCard,self:GetParent(),self.petID) -- anchor to parent
 end
 
-function RematchTeamListPetButtonMixin:OnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.cardManager:OnLeave(rematch.petCard,self:GetParent(),self.petID)
+function RematchReduxTeamListPetButtonMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self:GetParent(),self.petID)
 end
 
-function RematchTeamListPetButtonMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxTeamListPetButtonMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchTeamListPetButtonMixin:OnMouseUp()
+function RematchReduxTeamListPetButtonMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self,self:GetParent().Back)
-        rematch.cardManager:OnClick(rematch.petCard,self:GetParent(),self.petID)
+        rematchRedux.textureHighlight:Show(self,self:GetParent().Back)
+        rematchRedux.cardManager:OnClick(rematchRedux.petCard,self:GetParent(),self.petID)
     end
 end

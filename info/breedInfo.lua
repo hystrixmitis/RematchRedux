@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.breedInfo = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.breedInfo = {}
 
 --[[
     Helper function for breed data sources. In order of priority, breed data is pulled from:
@@ -23,7 +23,7 @@ local breedNames = {nil,nil,"B/B","P/P","S/S","H/H","H/P","P/S","H/S","P/B","S/B
 -- the first time this runs it looks for a breed addon enabled and returns it
 -- future runs will just return the saved source (so this only looks for a breed addon once)
 -- addons are used in this priority: BattlePetBreedID, PetTracker_Breeds then LibPetBreedInfo-1.0
-function rematch.breedInfo:GetBreedSource()
+function rematchRedux.breedInfo:GetBreedSource()
     if breedSource==nil then -- can be false if a prior search for a source didn't find any
         if settings.BreedSource=="BattlePetBreedID" and C_AddOns.IsAddOnLoaded("BattlePetBreedID") then
             breedSource = "BattlePetBreedID"
@@ -51,16 +51,16 @@ function rematch.breedInfo:GetBreedSource()
 end
 
 -- returns true if any breed addon is loaded
-function rematch.breedInfo:IsAnyBreedAddOnLoaded(addon)
+function rematchRedux.breedInfo:IsAnyBreedAddOnLoaded(addon)
     return C_AddOns.IsAddOnLoaded("BattlePetBreedID") or C_AddOns.IsAddOnLoaded("PetTracker")
 end
 
-function rematch.breedInfo:ResetBreedSource()
+function rematchRedux.breedInfo:ResetBreedSource()
     breedSource = nil
 end
 
 -- returns either "text" or "icon", the format of breed to display
-function rematch.breedInfo:GetBreedFormat()
+function rematchRedux.breedInfo:GetBreedFormat()
     if breedSource~="PetTracker" and settings.BreedFormat==C.BREED_FORMAT_ICONS then
         settings.BreedFormat = C.BREED_FORMAT_LETTERS
     end
@@ -68,7 +68,7 @@ function rematch.breedInfo:GetBreedFormat()
 end
 
 -- returns the name of a breed by its ID; full is true if the icon+name should be used if PetTracker enabled
-function rematch.breedInfo:GetBreedNameByID(breedID,full)
+function rematchRedux.breedInfo:GetBreedNameByID(breedID,full)
     if breedSource~="PetTracker" and settings.BreedFormat==C.BREED_FORMAT_ICONS then
         settings.BreedFormat = C.BREED_FORMAT_LETTERS
     end
@@ -87,9 +87,9 @@ end
 
 -- returns an ordered table of all possible breeds as {breedID,health,power,speed} as a 25 rare
 local breedTable = {}
-function rematch.breedInfo:GetBreedTable(speciesID)
+function rematchRedux.breedInfo:GetBreedTable(speciesID)
     wipe(breedTable)
-    local petInfo = rematch.altInfo:Fetch(speciesID) -- to get possible breeds
+    local petInfo = rematchRedux.altInfo:Fetch(speciesID) -- to get possible breeds
     if petInfo.numPossibleBreeds then
         if breedSource=="BattlePetBreedID" then
             local data = BPBID_Arrays

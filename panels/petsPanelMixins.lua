@@ -1,18 +1,18 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
-RematchTypeBarTabMixin = {}
+RematchReduxTypeBarTabMixin = {}
 
-function RematchTypeBarTabMixin:OnEnter()
+function RematchReduxTypeBarTabMixin:OnEnter()
     if not self.isSelected then
         self.Text:SetTextColor(1,1,1)
         self.Highlight:Show()
     end
 end
 
-function RematchTypeBarTabMixin:OnLeave()
+function RematchReduxTypeBarTabMixin:OnLeave()
     if self.isSelected then
         self.Text:SetTextColor(1,1,1)
     else
@@ -21,17 +21,17 @@ function RematchTypeBarTabMixin:OnLeave()
     self.Highlight:Hide()
 end
 
-function RematchTypeBarTabMixin:OnMouseDown()
+function RematchReduxTypeBarTabMixin:OnMouseDown()
     if not self.isSelected then -- only do a push effect on unselected tabs
         self.Text:SetPoint("CENTER",-1,-2)
     end
 end
 
-function RematchTypeBarTabMixin:OnMouseUp()
+function RematchReduxTypeBarTabMixin:OnMouseUp()
     self.Text:SetPoint("CENTER",0,-1)
 end
 
-function RematchTypeBarTabMixin:OnClick()
+function RematchReduxTypeBarTabMixin:OnClick()
     settings.TypeBarTab = self.id
     self:GetParent():Update()
 end

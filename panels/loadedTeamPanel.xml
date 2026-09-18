@@ -1,15 +1,15 @@
 <Ui>
-    <Frame parentKey="LoadedTeamPanel" parent="RematchFrame">
+    <Frame parentKey="LoadedTeamPanel" parent="RematchReduxFrame">
 
         <Frames>
             <!-- PreferencesFrame is an inset frame in topleft with a preferences button within -->
-            <Frame parentKey="PreferencesFrame" inherits="RematchGoldInsetFrameTemplate">
+            <Frame parentKey="PreferencesFrame" inherits="RematchReduxGoldInsetFrameTemplate">
                 <Size x="28" y="26"/>
                 <Anchors>
                     <Anchor point="TOPLEFT"/>
                 </Anchors>
                 <Frames>
-                    <Button parentKey="PreferencesButton" registerForClicks="AnyUp" motionScriptsWhileDisabled="true" inherits="RematchSmallGreyButtonTemplate">
+                    <Button parentKey="PreferencesButton" registerForClicks="AnyUp" motionScriptsWhileDisabled="true" inherits="RematchReduxSmallGreyButtonTemplate">
                         <Anchors>
                             <Anchor point="LEFT" x="2" y="0"/>
                         </Anchors>
@@ -30,13 +30,13 @@
                     </Button>
                 </Frames>
             </Frame>
-            <Frame parentKey="NotesFrame" inherits="RematchGoldInsetFrameTemplate">
+            <Frame parentKey="NotesFrame" inherits="RematchReduxGoldInsetFrameTemplate">
                 <Size x="28" y="26"/>
                 <Anchors>
                     <Anchor point="TOPRIGHT"/>
                 </Anchors>
                 <Frames>
-                    <Button parentKey="NotesButton" inherits="RematchSmallGreyButtonTemplate">
+                    <Button parentKey="NotesButton" inherits="RematchReduxSmallGreyButtonTemplate">
                         <Anchors>
                             <Anchor point="LEFT" x="2" y="0"/>
                         </Anchors>
@@ -55,7 +55,7 @@
                 </Frames>
             </Frame>
             <!-- TeamButton is the brown/gold area with the name of the loaded team -->
-            <Button parentKey="TeamButton" registerForClicks="AnyUp" inherits="RematchGoldInsetFrameTemplate">
+            <Button parentKey="TeamButton" registerForClicks="AnyUp" inherits="RematchReduxGoldInsetFrameTemplate">
                 <Size x="0" y="26"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.PreferencesButton" relativePoint="TOPRIGHT" x="2" y="0"/>
@@ -103,7 +103,7 @@
                 </Layers>
                 <Frames>
                     <!-- flash for when team loads -->
-                    <Frame parentKey="Bling" inherits="RematchBlingAreaTemplate">
+                    <Frame parentKey="Bling" inherits="RematchReduxBlingAreaTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" x="2" y="-2"/>
                             <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>

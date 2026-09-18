@@ -3,41 +3,41 @@
     <Script file="templates.lua"/>
 
     <!-- when creating frames with lua that should useParentLevel -->
-    <Frame name="RematchUseParentLevelTemplate" useParentLevel="true" virtual="true"/>
+    <Frame name="RematchReduxUseParentLevelTemplate" useParentLevel="true" virtual="true"/>
 
     <!--==================-->
     <!-- Backdrop/Borders -->
     <!--==================-->
 
     <!-- backdrop with just a border -->
-    <Frame name="RematchBorderBackdropTemplate" inherits="TooltipBorderBackdropTemplate" virtual="true">
+    <Frame name="RematchReduxBorderBackdropTemplate" inherits="TooltipBorderBackdropTemplate" virtual="true">
         <KeyValues>
-            <KeyValue key="backdropBorderColor" value="REMATCH_BORDER_BACKGROUND_COLOR" type="global"/>
+            <KeyValue key="backdropBorderColor" value="REMATCHREDUX_BORDER_BACKGROUND_COLOR" type="global"/>
         </KeyValues>
     </Frame>
 
     <!-- backdrop with just a red border -->
-    <Frame name="RematchBorderRedBackdropTemplate" inherits="TooltipBorderBackdropTemplate" virtual="true">
+    <Frame name="RematchReduxBorderRedBackdropTemplate" inherits="TooltipBorderBackdropTemplate" virtual="true">
         <KeyValues>
-            <KeyValue key="backdropBorderColor" value="REMATCH_BORDER_RED_COLOR" type="global"/>
+            <KeyValue key="backdropBorderColor" value="REMATCHREDUX_BORDER_RED_COLOR" type="global"/>
         </KeyValues>
     </Frame>
 
     <!-- backdrop with a border and a solid dark grey background -->
-    <Frame name="RematchSolidBackdropTemplate" inherits="BackdropTemplate" virtual="true">
+    <Frame name="RematchReduxSolidBackdropTemplate" inherits="BackdropTemplate" virtual="true">
         <KeyValues>
-            <KeyValue key="backdropInfo" value="REMATCH_SOLID_BACKDROP_STYLE" type="global"/>
-            <KeyValue key="backdropColor" value="REMATCH_SOLID_DARK_BACKDROP_COLOR" type="global"/>
-            <KeyValue key="backdropBorderColor" value="REMATCH_BORDER_BACKGROUND_COLOR" type="global"/>
+            <KeyValue key="backdropInfo" value="REMATCHREDUX_SOLID_BACKDROP_STYLE" type="global"/>
+            <KeyValue key="backdropColor" value="REMATCHREDUX_SOLID_DARK_BACKDROP_COLOR" type="global"/>
+            <KeyValue key="backdropBorderColor" value="REMATCHREDUX_BORDER_BACKGROUND_COLOR" type="global"/>
         </KeyValues>
     </Frame>
 
     <!-- backdrop with a border and a solid light grey background and a dark shadow over most (tooltips, menus) -->
-    <Frame name="RematchShadowBackdropTemplate" inherits="BackdropTemplate" virtual="true">
+    <Frame name="RematchReduxShadowBackdropTemplate" inherits="BackdropTemplate" virtual="true">
         <KeyValues>
-            <KeyValue key="backdropInfo" value="REMATCH_SOLID_BACKDROP_STYLE" type="global"/>
-            <KeyValue key="backdropColor" value="REMATCH_SOLID_LIGHT_BACKDROP_COLOR" type="global"/>
-            <KeyValue key="backdropBorderColor" value="REMATCH_BORDER_BACKGROUND_COLOR" type="global"/>
+            <KeyValue key="backdropInfo" value="REMATCHREDUX_SOLID_BACKDROP_STYLE" type="global"/>
+            <KeyValue key="backdropColor" value="REMATCHREDUX_SOLID_LIGHT_BACKDROP_COLOR" type="global"/>
+            <KeyValue key="backdropBorderColor" value="REMATCHREDUX_BORDER_BACKGROUND_COLOR" type="global"/>
         </KeyValues>
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="1">
@@ -57,7 +57,7 @@
     <!--********-->
 
     <!-- little red titlebar buttons across top of window (pin, minimize/maximize, close, etc.) -->
-    <Button name="RematchTitlebarButtonTemplate" mixin="RematchTitlebarButtonMixin" virtual="true">
+    <Button name="RematchReduxTitlebarButtonTemplate" mixin="RematchReduxTitlebarButtonMixin" virtual="true">
         <Size x="22" y="22"/>
 		<HitRectInsets left="-2" right="-2" top="-2" bottom="-2"/>
 		<NormalTexture file="Interface\AddOns\RematchRedux\Textures\titlebarbuttons"/>
@@ -74,14 +74,14 @@
         </Scripts>
     </Button>
 
-    <!-- RematchDefaultPanelTemplate and RematchDefaultPanelTemplateWithInset are intended to replace
+    <!-- RematchReduxDefaultPanelTemplate and RematchReduxDefaultPanelTemplateWithInset are intended to replace
          BasicFrameTemplate and BasicFrameTemplateWithInset to be styled like DefaultPanelTemplate;
          but without everything shifted 4 pixels to the right or the 500 framelevel craziness -->
 
-    <Frame name="RematchDefaultPanelTemplate" virtual="true">
+    <Frame name="RematchReduxDefaultPanelTemplate" virtual="true">
         <Frames>
             <!-- red X in topright; not inheriting UIPanelCloseButton so it's not at 510 framelevel -->
-            <Button parentKey="CloseButton" inherits="RematchTitlebarButtonTemplate">
+            <Button parentKey="CloseButton" inherits="RematchReduxTitlebarButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPRIGHT" x="-1" y="-1"/>
                 </Anchors>
@@ -171,7 +171,7 @@
         </Layers>
     </Frame>
 
-    <Frame name="RematchDefaultPanelTemplateWithInset" inherits="RematchDefaultPanelTemplate" virtual="true">
+    <Frame name="RematchReduxDefaultPanelTemplateWithInset" inherits="RematchReduxDefaultPanelTemplate" virtual="true">
 		<Layers>
 			<Layer level="BACKGROUND" textureSubLevel="-1">
 				<Texture parentKey="InsetBg" file="Interface\FrameGeneral\UI-Background-Marble" horizTile="true" vertTile="true">
@@ -231,7 +231,7 @@
     </Frame>
 
     <!-- recreating InsetFrameTemplate without the NineSlice stuff or Bg -->
-    <Frame name="RematchInsetFrameTemplate" virtual="true">
+    <Frame name="RematchReduxInsetFrameTemplate" virtual="true">
         <Layers>
             <Layer level="BORDER" textureSubLevel="-1">
                 <Texture parentKey="TopLeft" atlas="UI-Frame-InnerTopLeft" useAtlasSize="true">
@@ -283,7 +283,7 @@
     </Frame>
 
     <!-- inset frame template with a dark marble background -->
-    <Frame name="RematchPanelInsetFrameTemplate" inherits="RematchInsetFrameTemplate" virtual="true">
+    <Frame name="RematchReduxPanelInsetFrameTemplate" inherits="RematchReduxInsetFrameTemplate" virtual="true">
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="-1">
                 <Texture parentKey="Back" file="Interface\FrameGeneral\UI-Background-Marble" horizTile="true" vertTile="true" setAllPoints="true"/>
@@ -292,7 +292,7 @@
     </Frame>
 
     <!-- inset frame template with a brown/gold background -->
-    <Frame name="RematchGoldInsetFrameTemplate" inherits="RematchInsetFrameTemplate" virtual="true">
+    <Frame name="RematchReduxGoldInsetFrameTemplate" inherits="RematchReduxInsetFrameTemplate" virtual="true">
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="-1">
                 <Texture parentKey="Back" file="Interface\PetBattles\_PetJournalHorizTile" horizTile="true" setAllPoints="true">
@@ -304,8 +304,8 @@
 
     <!-- inherit to show/hide simple tooltips when/if .tooltipTitle and .tooltipBody are defined -->
     <!-- inherit="append" makes it safe to inherit this to frames with their own OnEnter/OnLeave -->
-    <!-- if this is inherited last (eg. inherits="MyTemplate,RematchTooltipScripts") -->
-    <Frame name="RematchTooltipScripts" mixin="RematchTooltipScriptsMixin" virtual="true">
+    <!-- if this is inherited last (eg. inherits="MyTemplate,RematchReduxTooltipScripts") -->
+    <Frame name="RematchReduxTooltipScripts" mixin="RematchReduxTooltipScriptsMixin" virtual="true">
         <Scripts>
             <OnEnter method="TooltipOnEnter" inherit="append"/>
             <OnLeave method="TooltipOnLeave" inherit="append"/>
@@ -313,9 +313,9 @@
     </Frame>
 
     <!-- panel buttons mimic the red UIPanelButtonTemplate, but 23 height instead of 22, text pushes down-left,
-         and highlight is more consistently styled with whole-texture highlight like rematch's composite buttons.
+         and highlight is more consistently styled with whole-texture highlight like RematchRedux's composite buttons.
          because some buttons can change width, they use multiple textures broken apart -->
-    <Button name="RematchPanelButtonTemplate" mixin="RematchPanelButtonMixin" virtual="true">
+    <Button name="RematchReduxPanelButtonTemplate" mixin="RematchReduxPanelButtonMixin" virtual="true">
         <Size x="0" y="23"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -395,7 +395,7 @@
     </Button>
 
     <!-- a checkbutton template with auto-adjusting hitrectinsets and highlighting text to mimic panel buttons -->
-    <CheckButton name="RematchCheckButtonTemplate" mixin="RematchCheckButtonMixin" motionScriptsWhileDisabled="true" virtual="true">
+    <CheckButton name="RematchReduxCheckButtonTemplate" mixin="RematchReduxCheckButtonMixin" motionScriptsWhileDisabled="true" virtual="true">
         <Size x="26" y="26"/>
         <Layers>
             <Layer level="ARTWORK">
@@ -421,7 +421,7 @@
     </CheckButton>
 
     <!-- radio button is a checkbutton styled with radio textures; it uses GetChecked etc like a checkbutton -->
-    <CheckButton name="RematchRadioButtonTemplate" inherits="RematchCheckButtonTemplate" virtual="true">
+    <CheckButton name="RematchReduxRadioButtonTemplate" inherits="RematchReduxCheckButtonTemplate" virtual="true">
         <NormalTexture file="Interface\AddOns\RematchRedux\textures\checkbuttons">
             <TexCoords left="0" right="0.25" top="0.25" bottom="0.5"/>
         </NormalTexture>
@@ -441,7 +441,7 @@
 
 
     <!-- the +/- All button at top of expandable/collapsable lists -->
-    <Button name="RematchAllButtonTemplate" mixin="RematchAllButtonMixin" virtual="true">
+    <Button name="RematchReduxAllButtonTemplate" mixin="RematchReduxAllButtonMixin" virtual="true">
         <Size x="64" y="24"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -470,7 +470,7 @@
     </Button>
 
     <!-- little white circle with an X in it to clear editboxes, typebar tabs, etc. -->
-    <Button name="RematchClearButtonTemplate" mixin="RematchClearButtonMixin" ignoreParentAlpha="true" virtual="true">
+    <Button name="RematchReduxClearButtonTemplate" mixin="RematchReduxClearButtonMixin" ignoreParentAlpha="true" virtual="true">
         <Size x="18" y="18"/>
         <HitRectInsets>
             <AbsInset left="-2" right="-2" top="-2" bottom="-2"/>
@@ -495,7 +495,7 @@
     </Button>
 
     <!-- basic editbox with a clear button and no instructions -->
-    <EditBox name="RematchEditBoxTemplate" mixin="RematchEditBoxMixin" enableMouse="true" autoFocus="false" virtual="true">
+    <EditBox name="RematchReduxEditBoxTemplate" mixin="RematchReduxEditBoxMixin" enableMouse="true" autoFocus="false" virtual="true">
         <Size x="80" y="24"/>
         <TextInsets>
             <AbsInset left="6" right="19" top="1" bottom="-1"/>
@@ -527,7 +527,7 @@
             </Layer>
         </Layers>
         <Frames>
-            <Button parentKey="Clear" inherits="RematchClearButtonTemplate" hidden="true">
+            <Button parentKey="Clear" inherits="RematchReduxClearButtonTemplate" hidden="true">
                 <Anchors>
                     <Anchor point="RIGHT" x="-3" y="0"/>
                 </Anchors>
@@ -543,7 +543,7 @@
     </EditBox>
 
     <!-- editbox with a search icon and "Search" instructions -->
-    <EditBox name="RematchSearchBoxTemplate" inherits="RematchEditBoxTemplate" virtual="true">
+    <EditBox name="RematchReduxSearchBoxTemplate" inherits="RematchReduxEditBoxTemplate" virtual="true">
         <TextInsets>
             <AbsInset left="24" right="19" top="1" bottom="-1"/>
         </TextInsets>
@@ -567,7 +567,7 @@
     </EditBox>
 
     <!-- 24x24 grey button with an icon overlay -->
-    <Button name="RematchSmallGreyButtonTemplate" mixin="RematchSmallGreyButtonMixin" virtual="true">
+    <Button name="RematchReduxSmallGreyButtonTemplate" mixin="RematchReduxSmallGreyButtonMixin" virtual="true">
         <Size x="24" y="24"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -595,7 +595,7 @@
     </Button>
 
     <!-- base grey panel buttons are 80x24 default; use keyvalue coord = widthxheight dimension for other sizes -->
-    <Button name="RematchGreyPanelButtonTemplate" mixin="RematchGreyPanelButtonMixin" virtual="true">
+    <Button name="RematchReduxGreyPanelButtonTemplate" mixin="RematchReduxGreyPanelButtonMixin" virtual="true">
         <Size x="80" y="24"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -626,7 +626,7 @@
     </Button>
 
     <!-- grey panel button with an arrow for pet, team and queue buttons at the topright of their panel -->
-    <Button name="RematchFilterButtonTemplate" inherits="RematchGreyPanelButtonTemplate" virtual="true">
+    <Button name="RematchReduxFilterButtonTemplate" inherits="RematchReduxGreyPanelButtonTemplate" virtual="true">
         <Layers>
             <Layer level="ARTWORK">
                 <Texture parentKey="Arrow" file="Interface\ChatFrame\ChatFrameExpandArrow">
@@ -639,7 +639,7 @@
         </Layers>
     </Button>
 
-    <Button name="RematchColorSwatchTemplate" mixin="RematchColorSwatchMixin" virtual="true">
+    <Button name="RematchReduxColorSwatchTemplate" mixin="RematchReduxColorSwatchMixin" virtual="true">
         <Size x="20" y="20"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -679,7 +679,7 @@
     </Button>
 
     <!-- round buttons with a thin gold border -->
-    <Button name="RematchRoundButtonTemplate" mixin="RematchRoundButtonMixin" virtual="true">
+    <Button name="RematchReduxRoundButtonTemplate" mixin="RematchReduxRoundButtonMixin" virtual="true">
         <Size x="40" y="40"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -734,7 +734,7 @@
     </Button>
 
     <!-- 20x20 notes button used in badge area of lists -->
-    <Texture name="RematchNotesButtonTemplate" mixin="RematchNotesButtonMixin" file="Interface\AddOns\RematchRedux\textures\badges-borders" virtual="true">
+    <Texture name="RematchReduxNotesButtonTemplate" mixin="RematchReduxNotesButtonMixin" file="Interface\AddOns\RematchRedux\textures\badges-borders" virtual="true">
         <Size x="20" y="20"/>
         <TexCoords left="0.625" right="0.75" top="0.125" bottom="0.25"/>
         <!-- Blizzard bug: texture script handlers can't be inherited unless at least one is defined; just defining all -->
@@ -748,7 +748,7 @@
     </Texture>
 
     <!-- header for lists; this doesn't include any script handlers; just a SetBack and SetExpanded -->
-    <Button name="RematchHeaderListButtonTemplate" mixin="RematchHeaderListButtonMixin" virtual="true">
+    <Button name="RematchReduxHeaderListButtonTemplate" mixin="RematchReduxHeaderListButtonMixin" virtual="true">
         <Size x="0" y="26"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -775,7 +775,7 @@
     </Button>
 
     <!-- placeholder for empty list headers; non-interactive -->
-    <Button name="RematchPlaceholderListButtonTemplate" virtual="true">
+    <Button name="RematchReduxPlaceholderListButtonTemplate" virtual="true">
         <Size x="0" y="26"/>
         <Layers>
             <Layer level="ARTWORK">
@@ -791,7 +791,7 @@
     </Button>
 
     <!-- tabs meant to be stretchable over variable-width text; always 24px tall -->
-    <Button name="RematchStretchTabTemplate" mixin="RematchStretchTabMixin" virtual="true">
+    <Button name="RematchReduxStretchTabTemplate" mixin="RematchReduxStretchTabMixin" virtual="true">
         <Size x="70" y="24"/>
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="1">
@@ -869,7 +869,7 @@
     </Button>
 
     <!-- animates a flash at the top of the background layer -->
-    <Frame name="RematchBlingAreaTemplate" useParentLevel="true" hidden="true" virtual="true">
+    <Frame name="RematchReduxBlingAreaTemplate" useParentLevel="true" hidden="true" virtual="true">
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="7">
                 <Texture file="Interface\Archeology\arch-flareeffect" setAllPoints="true" alphaMode="ADD" alpha="0.5">

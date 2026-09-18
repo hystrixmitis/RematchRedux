@@ -1,5 +1,5 @@
-local _,rematch = ...
-local L = rematch.localization
+local _, rematchRedux = ...
+local L = rematchRedux.localization
 
 if GetLocale()=="zhTW" then
 L["Undo"] = "復原"

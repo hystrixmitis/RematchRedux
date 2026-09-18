@@ -8,21 +8,21 @@ __ Events __
 Rematch uses an event dispatch system that outside addons can use:
 
     Event                   Argument         When
-    REMATCH_UI_CONFIGURE      (none)           After the main Rematch window has changed configuration (minimized, panel changes, etc) or shows
-    REMATCH_UI_RESIZE         (none)           After the main Rematch window has resized
-    REMATCH_UI_UPDATE         (none)           After the main Rematch window has finished a global update of all shown panels
-    REMATCH_TEAM_LOADED       teamID           A team is loaded or unloaded (can be nil for a team unloaded)
-    REMATCH_TEAM_CREATED      teamID           After a new teamID is created
-    REMATCH_TEAM_DELETED      teamID           After a teamID is deleted
-    REMATCH_TEAM_UPDATED      teamID           After a teamID is changed (can be due to being overwritten by another team)
-    REMATCH_TEAM_OVERWRITTEN  teamID,oldTeamID Just before teamID is overwritten by oldTeamID (can be nil for import/received teams)
-    REMATCH_TEAMS_CHANGED     (none)           After any teams changed (happens after other REMATCH_TEAM events and before UI is updated)
-    REMATCH_TEAMS_CONVERTED   table            After Rematch 4 teams converted to Rematch 5 (see savedvars/convert.lua)
-    REMATCH_TEAMS_READY       (none)           After login when teams are settled
-    REMATCH_TEAMS_WIPED       (none)           After all teams are wiped by /rematch delete all teams
-    REMATCH_PETS_LOADED       (none)           After login and pets are believed to be loaded
-    REMATCH_PETS_CHANGED      (none)           After the pet roster has changed
-    REMATCH_NOTES_CHANGED     teamID/speciesID After notes for a team or pet changed or was deleted
+    REMATCHREDUX_UI_CONFIGURE      (none)           After the main Rematch window has changed configuration (minimized, panel changes, etc) or shows
+    REMATCHREDUX_UI_RESIZE         (none)           After the main Rematch window has resized
+    REMATCHREDUX_UI_UPDATE         (none)           After the main Rematch window has finished a global update of all shown panels
+    REMATCHREDUX_TEAM_LOADED       teamID           A team is loaded or unloaded (can be nil for a team unloaded)
+    REMATCHREDUX_TEAM_CREATED      teamID           After a new teamID is created
+    REMATCHREDUX_TEAM_DELETED      teamID           After a teamID is deleted
+    REMATCHREDUX_TEAM_UPDATED      teamID           After a teamID is changed (can be due to being overwritten by another team)
+    REMATCHREDUX_TEAM_OVERWRITTEN  teamID,oldTeamID Just before teamID is overwritten by oldTeamID (can be nil for import/received teams)
+    REMATCHREDUX_TEAMS_CHANGED     (none)           After any teams changed (happens after oREMATCHREDUX_ATCH_TEAM events and before UI is updated)
+    REMATCHREDUX_TEAMS_CONVERTED   table            After Rematch 4 teams converted to Rematch 5 (see savedvars/convert.lua)
+    REMATCHREDUX_TEAMS_READY       (none)           After login when teams are settled
+    REMATCHREDUX_TEAMS_WIPED       (none)           After all teams are wiped by /rematch delete all teams
+    REMATCHREDUX_PETS_LOADED       (none)           After login and pets are believed to be loaded
+    REMATCHREDUX_PETS_CHANGED      (none)           After the pet roster has changed
+    REMATCHREDUX_NOTES_CHANGED     teamID/speciesID After notes for a team or pet changed or was deleted
 
 To register for these events:
 
@@ -31,7 +31,7 @@ To register for these events:
 Example:
 
     local frame = CreateFrame("Frame") -- your frame, anything really
-    Rematch.events:Register(frame,"REMATCH_TEAM_LOADED",function(self,teamID)
+    Rematch.events:Register(frame,"REMATCHREDUX_TEAM_LOADED",function(self,teamID)
         local team = Rematch.savedTeams[teamID]
         if team then
             print("Team",team.name,"just loaded")
@@ -39,11 +39,11 @@ Example:
     end)
 
 Notes:
-    - A REMATCH_UI_CONFIGURE will usually be followed by a REMATCH_UI_RESIZE and then REMATCH_UI_UPDATE
-    - A REMATCH_UI_RESIZE will usually be followed by a REMATCH_UI_UPDATE
-    - If you want to capture all configure/resize, you can just register for REMATCH_UI_UPDATE
-    - If you call Rematch.frame:Update() it will trigger a REMATCH_UI_UPDATE (careful to not get in a circular loop)
-    - On REMATCH_TEAM_OVERWRITTEN, when teams are imported and user choses to overwrite existing teams, the oldTeamID
+    - A REMATCHREDUX_UI_CONFIGURE will usually be followed by a REMATCHREDUX_UI_RESIZE and then REMATCHREDUX_UI_UPDATE
+    - A REMATCHREDUX_UI_RESIZE will usually be followed by a REMATCHREDUX_UI_UPDATE
+    - If you want to capture all configure/resize, you can just register for REMATCHREDUX_UI_UPDATE
+    - If you call Rematch.frame:Update() it will trigger a REMATCHREDUX_UI_UPDATE (careful to not get in a circular loop)
+    - On REMATCHREDUX_TEAM_OVERWRITTEN, when teams are imported and user choses to overwrite existing teams, the oldTeamID
       will be nil. Generally the oldTeamID is not nil when a single team is edited or Save As over an existing one
 
 __ Teams __
@@ -58,7 +58,7 @@ broken, I would get blamed (disabling all other addons won't fix it) and have no
 fix is a total wipe of all teams.
 
 As an alternative to storing data in these teams, I recommend making your own savedvar indexed by teamID and watching
-for changes from the REMATCH_TEAM_CREATED/DELETED/UPDATED events above. Let me know if other events or methods are needed.
+for changes from the REMATCHREDUX_TEAM_CREATED/DELETED/UPDATED events above. Let me know if other events or methods are needed.
 
 For getting information about a teamID, a saved team has this format:
 
@@ -85,7 +85,7 @@ To iterate over all teamIDs:
 
 __ Loaded Team __
 
-The currently-loaded teamID is Rematch.settings.currentTeamID. Just after this value changes, a REMATCH_TEAM_LOADED
+The currently-loaded teamID is Rematch.settings.currentTeamID. Just after this value changes, a REMATCHREDUX_TEAM_LOADED
 event will fire. If the currentTeamID or the teamID passed in the event is nil, it means a team was unloaded.
 
 Sometimes a team can be loaded that's not a saved team. These teamIDs include (but are not limited to):
@@ -298,7 +298,7 @@ space for more tabs in the minimized and single-panel views. New tabs get added 
 More details is in layout/definitions.lua, but here is a basic example:
 
     -- create a frame with Rematch.frame as its parent
-    local f = CreateFrame("Frame",nil,Rematch.frame,"RematchPanelInsetFrameTemplate")
+    local f = CreateFrame("Frame",nil,Rematch.frame,"RematchReduxPanelInsetFrameTemplate")
     f.hello = f:CreateFontString(nil,"ARTWORK","GameFontNormalHuge")
     f.hello:SetAllPoints(true)
     f.hello:SetText("Hello, TestPanel")

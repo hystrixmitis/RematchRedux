@@ -1,7 +1,7 @@
 <Ui>
 
     <!-- most of the work is done by regular PetListButtonTemplates, but some overrides for queue -->
-    <Button name="RematchNormalQueueListButtonTemplate" mixin="RematchQueueListButtonMixin" inherits="RematchNormalPetListButtonTemplate" virtual="true">
+    <Button name="RematchReduxNormalQueueListButtonTemplate" mixin="RematchReduxQueueListButtonMixin" inherits="RematchReduxNormalPetListButtonTemplate" virtual="true">
         <KeyValues>
             <KeyValue key="forQueue" value="true" type="boolean"/>
         </KeyValues>
@@ -11,7 +11,7 @@
         </Scripts>
     </Button>
 
-    <Button name="RematchCompactQueueListButtonTemplate" mixin="RematchQueueListButtonMixin" inherits="RematchCompactPetListButtonTemplate" virtual="true">
+    <Button name="RematchReduxCompactQueueListButtonTemplate" mixin="RematchReduxQueueListButtonMixin" inherits="RematchReduxCompactPetListButtonTemplate" virtual="true">
         <KeyValues>
             <KeyValue key="forQueue" value="true" type="boolean"/>
         </KeyValues>
@@ -21,16 +21,16 @@
         </Scripts>
     </Button>
 
-    <Frame parentKey="QueuePanel" parent="RematchFrame">
+    <Frame parentKey="QueuePanel" parent="RematchReduxFrame">
         <Frames>
             <!-- PreferencesFrame is an inset frame in topleft with a preferences button within -->
-            <Frame parentKey="PreferencesFrame" inherits="RematchPanelInsetFrameTemplate">
+            <Frame parentKey="PreferencesFrame" inherits="RematchReduxPanelInsetFrameTemplate">
                 <Size x="29" y="29"/>
                 <Anchors>
                     <Anchor point="TOPLEFT"/>
                 </Anchors>
                 <Frames>
-                    <Button parentKey="PreferencesButton" registerForClicks="AnyUp" motionScriptsWhileDisabled="true" inherits="RematchSmallGreyButtonTemplate">
+                    <Button parentKey="PreferencesButton" registerForClicks="AnyUp" motionScriptsWhileDisabled="true" inherits="RematchReduxSmallGreyButtonTemplate">
                         <Anchors>
                             <Anchor point="LEFT" x="3" y="0"/>
                         </Anchors>
@@ -55,7 +55,7 @@
                 </Frames>
             </Frame>
             <!-- Top contains the number of pets in queue and Queue button -->
-            <Frame parentKey="Top" inherits="RematchPanelInsetFrameTemplate">
+            <Frame parentKey="Top" inherits="RematchReduxPanelInsetFrameTemplate">
                 <Size x="0" y="29"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.PreferencesFrame" relativePoint="TOPRIGHT" x="2" y="0"/>
@@ -63,7 +63,7 @@
                 </Anchors>
                 <Frames>
                     <!-- Queue button in topright to open menu to change sort and other queue settings -->
-                    <Button parentKey="QueueButton" inherits="RematchFilterButtonTemplate">
+                    <Button parentKey="QueueButton" inherits="RematchReduxFilterButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPRIGHT" x="-3" y="-3"/>
                         </Anchors>
@@ -86,7 +86,7 @@
                 </Layers>
             </Frame>
             <!-- StatusBar shows when queue has auto sort enabled or preferences paused -->
-            <Frame parentKey="StatusBar" inherits="RematchPanelInsetFrameTemplate">
+            <Frame parentKey="StatusBar" inherits="RematchReduxPanelInsetFrameTemplate">
                 <Size x="0" y="26"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.PreferencesFrame" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
@@ -94,7 +94,7 @@
                 </Anchors>
                 <Frames>
                     <!-- clear button to right of status bar -->
-                    <Button parentKey="Clear" inherits="RematchClearButtonTemplate">
+                    <Button parentKey="Clear" inherits="RematchReduxClearButtonTemplate">
                         <Anchors>
                             <Anchor point="RIGHT" x="-4" y="0"/>
                         </Anchors>
@@ -117,7 +117,7 @@
                 </Layers>
             </Frame>
             <!-- List is the main list of pets in the queue -->
-            <Frame parentKey="List" inherits="RematchAutoScrollBoxTemplate">
+            <Frame parentKey="List" inherits="RematchReduxAutoScrollBoxTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.StatusBar" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
                     <Anchor point="BOTTOMRIGHT"/>

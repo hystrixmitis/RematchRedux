@@ -1,31 +1,31 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
 
---[[ RematchTooltipScripts ]]
+--[[ RematchReduxTooltipScripts ]]
 
-RematchTooltipScriptsMixin = {}
+RematchReduxTooltipScriptsMixin = {}
 
 -- the OnEnter/OnLeave are "append" script handlers so safe to inherit to frames that already have an OnEnter/OnLeave,
--- but the RematchTooltipScripts should be inherited last: <Frame inherits="MyTemplate,RematchTooltipScripts"/>
+-- but the RematchReduxTooltipScripts should be inherited last: <Frame inherits="MyTemplate,RematchReduxTooltipScripts"/>
 -- note to self: don't refactor and use OnEnter/OnLeave because whatever inherits this may have them already
-function RematchTooltipScriptsMixin:TooltipOnEnter()
-    rematch.tooltip:ShowSimpleTooltip(self)
+function RematchReduxTooltipScriptsMixin:TooltipOnEnter()
+    rematchRedux.tooltip:ShowSimpleTooltip(self)
 end
 
-function RematchTooltipScriptsMixin:TooltipOnLeave()
-    rematch.tooltip:Hide()
+function RematchReduxTooltipScriptsMixin:TooltipOnLeave()
+    rematchRedux.tooltip:Hide()
 end
 
---[[ RematchPanelButtonTemplate ]]
+--[[ RematchReduxPanelButtonTemplate ]]
 
-RematchPanelButtonMixin = {}
+RematchReduxPanelButtonMixin = {}
 
-function RematchPanelButtonMixin:SetText(text)
+function RematchReduxPanelButtonMixin:SetText(text)
     self.Text:SetText(text)
 end
 
-function RematchPanelButtonMixin:OnEnter()
+function RematchReduxPanelButtonMixin:OnEnter()
     if self:IsEnabled() then
         for i=1,3 do
             self.Highlight[i]:Show()
@@ -34,7 +34,7 @@ function RematchPanelButtonMixin:OnEnter()
     end
 end
 
-function RematchPanelButtonMixin:OnLeave()
+function RematchReduxPanelButtonMixin:OnLeave()
     if self:IsEnabled() then
         for i=1,3 do
             self.Highlight[i]:Hide()
@@ -43,7 +43,7 @@ function RematchPanelButtonMixin:OnLeave()
     end
 end
 
-function RematchPanelButtonMixin:OnMouseDown()
+function RematchReduxPanelButtonMixin:OnMouseDown()
     if self:IsEnabled() then
         for i=1,3 do
             self.Back[i]:SetTexture("Interface\\Buttons\\UI-Panel-Button-Down")
@@ -52,20 +52,20 @@ function RematchPanelButtonMixin:OnMouseDown()
     end
 end
 
-function RematchPanelButtonMixin:OnMouseUp()
+function RematchReduxPanelButtonMixin:OnMouseUp()
     if self:IsEnabled() then
         for i=1,3 do self.Back[i]:SetTexture("Interface\\Buttons\\UI-Panel-Button-Up") end
         self.Text:SetPoint("CENTER")
     end
 end
 
-function RematchPanelButtonMixin:DeferredOnClick(button)
+function RematchReduxPanelButtonMixin:DeferredOnClick(button)
     if self:IsEnabled() and self.OnClick then
         self.OnClick(self,button)
     end
 end
 
-function RematchPanelButtonMixin:OnDisable()
+function RematchReduxPanelButtonMixin:OnDisable()
     for i=1,3 do
         self.Back[i]:SetTexture("Interface\\Buttons\\UI-Panel-Button-Disabled")
     end
@@ -73,54 +73,54 @@ function RematchPanelButtonMixin:OnDisable()
     self.Text:SetTextColor(0.5,0.5,0.5)
 end
 
-function RematchPanelButtonMixin:OnEnable()
+function RematchReduxPanelButtonMixin:OnEnable()
     for i=1,3 do
         self.Back[i]:SetTexture("Interface\\Buttons\\UI-Panel-Button-Up")
     end
     self.Text:SetTextColor(1,0.82,0)
 end
 
---[[ RematchCheckButtonTemplate ]]
+--[[ RematchReduxCheckButtonTemplate ]]
 
-RematchCheckButtonMixin = {}
+RematchReduxCheckButtonMixin = {}
 
-function RematchCheckButtonMixin:SetText(text)
+function RematchReduxCheckButtonMixin:SetText(text)
     self.Text:SetText(text)
     self:SetHitRectInsets(0,-2-(self.Text:GetStringWidth()),0,0)
 end
 
-function RematchCheckButtonMixin:OnEnter()
+function RematchReduxCheckButtonMixin:OnEnter()
     if self:IsEnabled() then
         self.Text:SetTextColor(1,1,1)
     end
-    rematch.tooltip:ShowSimpleTooltip(self)
+    rematchRedux.tooltip:ShowSimpleTooltip(self)
 end
 
-function RematchCheckButtonMixin:OnLeave()
+function RematchReduxCheckButtonMixin:OnLeave()
     if self:IsEnabled() then
         self.Text:SetTextColor(1,0.82,0)
     end
-    rematch.tooltip:Hide()
+    rematchRedux.tooltip:Hide()
 end
 
-function RematchCheckButtonMixin:OnDisable()
+function RematchReduxCheckButtonMixin:OnDisable()
     self.Text:SetTextColor(0.5,0.5,0.5)
 end
 
-function RematchCheckButtonMixin:OnEnable()
+function RematchReduxCheckButtonMixin:OnEnable()
     self.Text:SetTextColor(1,0.82,0)
 end
 
-function RematchCheckButtonMixin:DeferredOnClick()
+function RematchReduxCheckButtonMixin:DeferredOnClick()
     if self.OnClick then
         self.OnClick(self)
     end
     PlaySound(C.SOUND_CHECKBUTTON)
 end
 
---[[ RematchTitlebarButtonTemplate ]]
+--[[ RematchReduxTitlebarButtonTemplate ]]
 
-RematchTitlebarButtonMixin = {}
+RematchReduxTitlebarButtonMixin = {}
 
 -- texcoords into Interface\AddOns\RematchRedux\textures\titlebarButtons.blp
 local texCoords = {
@@ -135,25 +135,25 @@ local texCoords = {
     flip = {0.59765625,0.73828125,0.4921875,0.6328125}
 }
 
-function RematchTitlebarButtonMixin:OnLoad()
+function RematchReduxTitlebarButtonMixin:OnLoad()
     self:SetIcon(self.icon)
 end
 
-function RematchTitlebarButtonMixin:DeferredOnClick()
+function RematchReduxTitlebarButtonMixin:DeferredOnClick()
     if self.OnClick then
         self:OnClick()
     end
 end
 
 -- sets the button's texture to one of the texcoords at the top
-function RematchTitlebarButtonMixin:SetIcon(icon)
+function RematchReduxTitlebarButtonMixin:SetIcon(icon)
     if icon and texCoords[icon] then
         self.icon = icon
     end
     self:Update()
 end
 
-function RematchTitlebarButtonMixin:Update()
+function RematchReduxTitlebarButtonMixin:Update()
     local coords = texCoords[self.icon]
     if coords then
         local disableOff = 41/256
@@ -164,9 +164,9 @@ function RematchTitlebarButtonMixin:Update()
     end
 end
 
---[[ RematchAllButtonTemplate mixin ]]
+--[[ RematchReduxAllButtonTemplate mixin ]]
 
-RematchAllButtonMixin = {}
+RematchReduxAllButtonMixin = {}
 
 -- the OnClick for this is undefined since it's overwritten in autoScrollBox.lua
 
@@ -183,12 +183,12 @@ local allButtonTexCoords = {
     disabled = {0,1,0.75,0.9375}
 }
 
-function RematchAllButtonMixin:SetExpanded(isExpanded)
+function RematchReduxAllButtonMixin:SetExpanded(isExpanded)
     self.isExpanded = isExpanded
     self:Update()
 end
 
-function RematchAllButtonMixin:Update()
+function RematchReduxAllButtonMixin:Update()
     if self:IsEnabled() then
         local coords = allButtonTexCoords[self.isExpanded and "minus" or "plus"][self.isDown and "down" or "up"]
         self.Back:SetTexCoord(coords[1],coords[2],coords[3],coords[4])
@@ -201,64 +201,64 @@ function RematchAllButtonMixin:Update()
     end
 end
 
-function RematchAllButtonMixin:OnEnter()
+function RematchReduxAllButtonMixin:OnEnter()
     self.Highlight:Show()
 end
 
-function RematchAllButtonMixin:OnLeave()
+function RematchReduxAllButtonMixin:OnLeave()
     self.Highlight:Hide()
 end
 
-function RematchAllButtonMixin:OnMouseDown()
+function RematchReduxAllButtonMixin:OnMouseDown()
     if self:IsEnabled() then
         self.isDown = true
         self:Update()
     end
 end
 
-function RematchAllButtonMixin:OnMouseUp()
+function RematchReduxAllButtonMixin:OnMouseUp()
     self.isDown = false
     self:Update()
 end
 
-function RematchAllButtonMixin:OnDisable()
+function RematchReduxAllButtonMixin:OnDisable()
     self.Back:SetDesaturated(true)
     self.Text:SetTextColor(0.5,0.5,0.5)
     self.isDown = false
     self:Update()
 end
 
-function RematchAllButtonMixin:OnEnable()
+function RematchReduxAllButtonMixin:OnEnable()
     self.Back:SetDesaturated(false)
     self.Text:SetTextColor(1,1,1)
     self:Update()
 end
 
---[[ RematchClearButtonTemplate ]]
+--[[ RematchReduxClearButtonTemplate ]]
 
-RematchClearButtonMixin = {}
+RematchReduxClearButtonMixin = {}
 
-function RematchClearButtonMixin:OnEnter()
+function RematchReduxClearButtonMixin:OnEnter()
     self.Texture:SetAlpha(1.0)
 end
 
-function RematchClearButtonMixin:OnLeave()
+function RematchReduxClearButtonMixin:OnLeave()
     self.Texture:SetAlpha(0.5)
 end
 
-function RematchClearButtonMixin:OnMouseDown()
+function RematchReduxClearButtonMixin:OnMouseDown()
     self.Texture:SetPoint("TOPLEFT",-1,-2)
 end
 
-function RematchClearButtonMixin:OnMouseUp()
+function RematchReduxClearButtonMixin:OnMouseUp()
     self.Texture:SetPoint("TOPLEFT",0,0)
 end
 
---[[ RematchEditBoxTemplate mixin ]]
+--[[ RematchReduxEditBoxTemplate mixin ]]
 
-RematchEditBoxMixin = {}
+RematchReduxEditBoxMixin = {}
 
-function RematchEditBoxMixin:OnLoad()
+function RematchReduxEditBoxMixin:OnLoad()
     self.Clear:SetScript("OnClick",function(self)
         self:GetParent():SetText("")
         self:GetParent():ClearFocus()
@@ -269,11 +269,11 @@ function RematchEditBoxMixin:OnLoad()
     end)
 end
 
-function RematchEditBoxMixin:OnEscapePressed()
+function RematchReduxEditBoxMixin:OnEscapePressed()
     self:ClearFocus()
 end
 
-function RematchEditBoxMixin:OnEditFocusLost()
+function RematchReduxEditBoxMixin:OnEditFocusLost()
     self.Clear:SetShown(self:GetText():len()>0)
     if self.SearchIcon then
         self.SearchIcon:SetVertexColor(0.6,0.6,0.6)
@@ -283,7 +283,7 @@ function RematchEditBoxMixin:OnEditFocusLost()
     end
 end
 
-function RematchEditBoxMixin:OnEditFocusGained()
+function RematchReduxEditBoxMixin:OnEditFocusGained()
     self.Clear:Show()
     if self.SearchIcon then
         self.SearchIcon:SetVertexColor(1.0,1.0,1.0)
@@ -293,11 +293,11 @@ function RematchEditBoxMixin:OnEditFocusGained()
     end
 end
 
---[[ RematchSmallGreyButtonTemplate ]]
+--[[ RematchReduxSmallGreyButtonTemplate ]]
 
-RematchSmallGreyButtonMixin = {}
+RematchReduxSmallGreyButtonMixin = {}
 
-function RematchSmallGreyButtonMixin:OnLoad()
+function RematchReduxSmallGreyButtonMixin:OnLoad()
     if self.icon then
         if self.coords then
             local left,right,top,bottom = self.coords:match("^(.+),(.+),(.+),(.+)$")
@@ -311,7 +311,7 @@ function RematchSmallGreyButtonMixin:OnLoad()
 end
 
 -- sets the icon texture to the given icon and optional texcoords
-function RematchSmallGreyButtonMixin:SetIcon(icon,left,right,top,bottom)
+function RematchReduxSmallGreyButtonMixin:SetIcon(icon,left,right,top,bottom)
     if icon then
         self.Icon:SetTexture(icon)
     end
@@ -323,7 +323,7 @@ function RematchSmallGreyButtonMixin:SetIcon(icon,left,right,top,bottom)
 end
 
 -- set button's icon to an arrow pointing "up", "down", "left" or "right"
-function RematchSmallGreyButtonMixin:SetDirection(direction)
+function RematchReduxSmallGreyButtonMixin:SetDirection(direction)
     self.direction = direction
     if direction=="up" then
         self:SetIcon("Interface\\AddOns\\RematchRedux\\textures\\texticons",0.5,0.625,0.25,0.375)
@@ -336,76 +336,76 @@ function RematchSmallGreyButtonMixin:SetDirection(direction)
     end
 end
 
-function RematchSmallGreyButtonMixin:OnEnter()
+function RematchReduxSmallGreyButtonMixin:OnEnter()
     if self:IsEnabled() then
-        rematch.textureHighlight:Show(self.Back,self.Icon)
+        rematchRedux.textureHighlight:Show(self.Back,self.Icon)
     end
 end
 
-function RematchSmallGreyButtonMixin:OnLeave()
-    rematch.textureHighlight:Hide()
+function RematchReduxSmallGreyButtonMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchSmallGreyButtonMixin:OnMouseDown()
+function RematchReduxSmallGreyButtonMixin:OnMouseDown()
     if self:IsEnabled() then
         self.Icon:SetPoint("CENTER",-1,-2)
         self.Back:SetTexCoord(0.375,0.46875,0.359375,0.453125)
         self.Icon:SetVertexColor(0.7,0.7,0.7)
-        rematch.textureHighlight:Hide()
+        rematchRedux.textureHighlight:Hide()
     end
 end
 
 -- called 0 frames after OnMouseUp
 local function delayedSmallGreyButtonHighlight(self)
     if self:IsEnabled() then
-        rematch.textureHighlight:Show(self.Back,self.Icon)
+        rematchRedux.textureHighlight:Show(self.Back,self.Icon)
     end
 end
 
-function RematchSmallGreyButtonMixin:OnMouseUp()
+function RematchReduxSmallGreyButtonMixin:OnMouseUp()
     if self:IsEnabled() then
         self.Icon:SetPoint("CENTER")
         self.Back:SetTexCoord(0.375,0.46875,0.25,0.34375)
         self.Icon:SetVertexColor(1,1,1)
         if self:IsMouseMotionFocus() then
             -- delay because if click is changing the icon we want highlight to change too
-            rematch.timer:Start(0,delayedSmallGreyButtonHighlight,self)
+            rematchRedux.timer:Start(0,delayedSmallGreyButtonHighlight,self)
         end
     end
 end
 
-function RematchSmallGreyButtonMixin:OnDisable()
+function RematchReduxSmallGreyButtonMixin:OnDisable()
     self.Icon:SetPoint("CENTER")
     self.Back:SetTexCoord(0.375,0.46875,0.25,0.34375)
     self.Icon:SetDesaturated(true)
     self.Icon:SetVertexColor(0.5,0.5,0.5)
 end
 
-function RematchSmallGreyButtonMixin:OnEnable()
+function RematchReduxSmallGreyButtonMixin:OnEnable()
     self.Icon:SetDesaturated(false)
     self.Icon:SetVertexColor(1,1,1)
 end
 
---[[ RematchGreyPanelButtonTemplate and RematchWideGreyPanelButtonTemplate mixin ]]
+--[[ RematchReduxGreyPanelButtonTemplate and RematchReduxWideGreyPanelButtonTemplate mixin ]]
 
-RematchGreyPanelButtonMixin = {}
+RematchReduxGreyPanelButtonMixin = {}
 
-function RematchGreyPanelButtonMixin:SetText(text)
+function RematchReduxGreyPanelButtonMixin:SetText(text)
     self.Text:SetText(text)
 end
 
-function RematchGreyPanelButtonMixin:OnEnter()
+function RematchReduxGreyPanelButtonMixin:OnEnter()
     if self:IsEnabled() then
         self.Highlight:Show()
     end
 end
 
-function RematchGreyPanelButtonMixin:OnLeave()
+function RematchReduxGreyPanelButtonMixin:OnLeave()
     self.Highlight:Hide()
 end
 
 -- for dimensions other than 80x24, grey buttons should have a coord keyvalue from C.GREY_BUTTON_COORDS
-function RematchGreyPanelButtonMixin:OnMouseDown()
+function RematchReduxGreyPanelButtonMixin:OnMouseDown()
     if self:IsEnabled() then
         local coord = self.coord and C.GREY_BUTTON_COORDS[self.coord] or C.GREY_BUTTON_COORDS["80x24"]
         self.Back:SetTexCoord(coord.Down[1],coord.Down[2],coord.Down[3],coord.Down[4])
@@ -418,7 +418,7 @@ function RematchGreyPanelButtonMixin:OnMouseDown()
 end
 
 -- for dimensions other than 80x24, grey buttons should have a coord keyvalue from C.GREY_BUTTON_COORDS
-function RematchGreyPanelButtonMixin:OnMouseUp()
+function RematchReduxGreyPanelButtonMixin:OnMouseUp()
     local coord = self.coord and C.GREY_BUTTON_COORDS[self.coord] or C.GREY_BUTTON_COORDS["80x24"]
     self.Back:SetTexCoord(coord.Up[1],coord.Up[2],coord.Up[3],coord.Up[4])
     self.Highlight:SetTexCoord(coord.Up[1],coord.Up[2],coord.Up[3],coord.Up[4])
@@ -429,75 +429,75 @@ function RematchGreyPanelButtonMixin:OnMouseUp()
     end
 end
 
-function RematchGreyPanelButtonMixin:OnDisable()
+function RematchReduxGreyPanelButtonMixin:OnDisable()
     self.Text:SetVertexColor(0.5,0.5,0.5)
 end
 
-function RematchGreyPanelButtonMixin:OnEnable()
+function RematchReduxGreyPanelButtonMixin:OnEnable()
     self.Text:SetTextColor(1,1,1)
 end
 
---[[ RematchTextureMouseMixin is used by various textures-as-buttons for a highlight effect ]]
+--[[ RematchReduxTextureMouseMixin is used by various textures-as-buttons for a highlight effect ]]
 
-RematchTextureMouseMixin = {}
+RematchReduxTextureMouseMixin = {}
 
-function RematchTextureMouseMixin:OnEnter()
-    rematch.textureHighlight:Show(self)
+function RematchReduxTextureMouseMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self)
     if self.tooltipTitle or self.tooltipBody then
-        rematch.tooltip:ShowSimpleTooltip(self,self.tooltipTitle,self.tooltipBody)
+        rematchRedux.tooltip:ShowSimpleTooltip(self,self.tooltipTitle,self.tooltipBody)
     end
 end
 
-function RematchTextureMouseMixin:OnLeave()
-    rematch.textureHighlight:Hide()
+function RematchReduxTextureMouseMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
     if self.tooltipTitle or self.tooltipBody then
-        rematch.tooltip:Hide()
+        rematchRedux.tooltip:Hide()
     end
 end
 
-function RematchTextureMouseMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxTextureMouseMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchTextureMouseMixin:OnMouseUp()
+function RematchReduxTextureMouseMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self)
+        rematchRedux.textureHighlight:Show(self)
         if self.OnClick then
             self.OnClick(self,GetMouseButtonClicked())
         end
     end
 end
 
---[[ RematchColorSwatchTemplate mixin ]]
+--[[ RematchReduxColorSwatchTemplate mixin ]]
 
-RematchColorSwatchMixin = {}
+RematchReduxColorSwatchMixin = {}
 
-function RematchColorSwatchMixin:OnLoad()
+function RematchReduxColorSwatchMixin:OnLoad()
     self:SetColor(self.color)
 end
 
-function RematchColorSwatchMixin:OnEnter()
-    rematch.textureHighlight:Show(self.Border)
+function RematchReduxColorSwatchMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self.Border)
 end
 
-function RematchColorSwatchMixin:OnLeave()
-    rematch.textureHighlight:Hide()
+function RematchReduxColorSwatchMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchColorSwatchMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxColorSwatchMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchColorSwatchMixin:OnMouseUp()
+function RematchReduxColorSwatchMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self.Border)
+        rematchRedux.textureHighlight:Show(self.Border)
     end
 end
 
-function RematchColorSwatchMixin:SetColor(color)
+function RematchReduxColorSwatchMixin:SetColor(color)
     self.color = color
     if color then
-        local r,g,b = rematch.utils:HexToRGB(color)
+        local r,g,b = rematchRedux.utils:HexToRGB(color)
         if r and g and b then
             self.Color:SetTexture("Interface\\ChatFrame\\ChatFrameBackground")
             self.Color:SetVertexColor(r,g,b)
@@ -510,11 +510,11 @@ function RematchColorSwatchMixin:SetColor(color)
     end
 end
 
---[[ RematchRoundButtonTemplate mixin ]]
+--[[ RematchReduxRoundButtonTemplate mixin ]]
 
-RematchRoundButtonMixin = {}
+RematchReduxRoundButtonMixin = {}
 
-function RematchRoundButtonMixin:OnLoad()
+function RematchReduxRoundButtonMixin:OnLoad()
     self.SetTexture = function(self,texture)
         self.Texture:SetTexture(texture)
         if self.Highlight then
@@ -526,45 +526,45 @@ function RematchRoundButtonMixin:OnLoad()
     end
 end
 
---[[ RematchNotesButtonTemplate mixin ]]
+--[[ RematchReduxNotesButtonTemplate mixin ]]
 
-RematchNotesButtonMixin = {}
+RematchReduxNotesButtonMixin = {}
 
-function RematchNotesButtonMixin:OnEnter()
+function RematchReduxNotesButtonMixin:OnEnter()
     local parent = self:GetParent()
-    rematch.textureHighlight:Show(self,parent.Back)
-    rematch.cardManager:OnEnter(rematch.notes,parent,parent.petID or parent.teamID)
+    rematchRedux.textureHighlight:Show(self,parent.Back)
+    rematchRedux.cardManager:OnEnter(rematchRedux.notes,parent,parent.petID or parent.teamID)
 end
 
-function RematchNotesButtonMixin:OnLeave()
+function RematchReduxNotesButtonMixin:OnLeave()
     local parent = self:GetParent()
-    rematch.textureHighlight:Hide()
-    rematch.cardManager:OnLeave(rematch.notes,parent,parent.petID or parent.teamID)
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.cardManager:OnLeave(rematchRedux.notes,parent,parent.petID or parent.teamID)
 end
 
-function RematchNotesButtonMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxNotesButtonMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchNotesButtonMixin:OnMouseUp()
+function RematchReduxNotesButtonMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
         local parent = self:GetParent()
-        rematch.textureHighlight:Show(self,parent.Back)
-        rematch.cardManager:OnClick(rematch.notes,self,parent.petID or parent.teamID)
+        rematchRedux.textureHighlight:Show(self,parent.Back)
+        rematchRedux.cardManager:OnClick(rematchRedux.notes,self,parent.petID or parent.teamID)
     end
 end
 
-function RematchNotesButtonMixin:OnClick()
+function RematchReduxNotesButtonMixin:OnClick()
     -- card manager onclick for notes
 end
 
---[[ RematchHeaderListButtonTemplate mixin ]]
+--[[ RematchReduxHeaderListButtonTemplate mixin ]]
 
-RematchHeaderListButtonMixin = {}
+RematchReduxHeaderListButtonMixin = {}
 
 -- sets the background depending on whether in single-panel mode (wide header) and all other modes
-function RematchHeaderListButtonMixin:SetBack()
-    if rematch.layout:GetMode(C.CURRENT)==1 then -- if in single-panel mode, use wide header
+function RematchReduxHeaderListButtonMixin:SetBack()
+    if rematchRedux.layout:GetMode(C.CURRENT)==1 then -- if in single-panel mode, use wide header
         self.Back:SetTexCoord(0,0.611328125,0.5,0.90625)
     else -- otherwise use normal-width header
         self.Back:SetTexCoord(0,0.494140625,0,0.40625)
@@ -574,7 +574,7 @@ end
 -- if isSearching is true, update ExpandIcon to an empty square and desaturate it
 -- if isExpanded is true, update ExpandIcon to a "-"
 -- if isExpanded is false, update ExpandIcon to a "+"
-function RematchHeaderListButtonMixin:SetExpanded(isExpanded,isSearching)
+function RematchReduxHeaderListButtonMixin:SetExpanded(isExpanded,isSearching)
     -- update the +/- to show if header collapsed
     local desaturate,left,right,top,bottom = false
     if isSearching then
@@ -589,11 +589,11 @@ function RematchHeaderListButtonMixin:SetExpanded(isExpanded,isSearching)
     self.ExpandIcon:SetDesaturated(desaturate)
 end
 
---[[ RematchStretchTabTemplate mixin ]]
+--[[ RematchReduxStretchTabTemplate mixin ]]
 
-RematchStretchTabMixin = {}
+RematchReduxStretchTabMixin = {}
 
-function RematchStretchTabMixin:SetSelected(isSelected)
+function RematchReduxStretchTabMixin:SetSelected(isSelected)
     self.isSelected = isSelected
     if isSelected then
         self.Left:SetTexCoord(0.375,0.40625,0.75,0.84375)
@@ -611,16 +611,16 @@ function RematchStretchTabMixin:SetSelected(isSelected)
     end
 end
 
-function RematchStretchTabMixin:IsSelected()
+function RematchReduxStretchTabMixin:IsSelected()
     return self.isSelected
 end
 
-function RematchStretchTabMixin:SetText(text)
+function RematchReduxStretchTabMixin:SetText(text)
     self.Text:SetText(text)
     self:SetWidth(max(40,self.Text:GetStringWidth()+16))
 end
 
-function RematchStretchTabMixin:OnEnter()
+function RematchReduxStretchTabMixin:OnEnter()
     if not self.isSelected then
         self.Text:SetTextColor(1,1,1)
         for i=1,3 do
@@ -629,7 +629,7 @@ function RematchStretchTabMixin:OnEnter()
     end
 end
 
-function RematchStretchTabMixin:OnLeave()
+function RematchReduxStretchTabMixin:OnLeave()
     if not self.isSelected then
         self.Text:SetTextColor(1,0.82,0)
         for i=1,3 do
@@ -638,41 +638,41 @@ function RematchStretchTabMixin:OnLeave()
     end
 end
 
-function RematchStretchTabMixin:OnMouseDown()
+function RematchReduxStretchTabMixin:OnMouseDown()
     if not self.isSelected then
         self.Text:SetPoint("CENTER",-1,-2)
     end
 end
 
-function RematchStretchTabMixin:OnMouseUp()
+function RematchReduxStretchTabMixin:OnMouseUp()
     self.Text:SetPoint("CENTER")
 end
 
---[[ RematchPetTextureMixin has no XML template, this is a mixin to make pet cards viewable from ]]
+--[[ RematchReduxPetTextureMixin has no XML template, this is a mixin to make pet cards viewable from ]]
 
-RematchPetTextureMixin = {}
+RematchReduxPetTextureMixin = {}
 
-function RematchPetTextureMixin:OnEnter()
-    rematch.textureHighlight:Show(self)
-    rematch.cardManager:OnEnter(rematch.petCard,self,self.petID) -- anchor to parent
+function RematchReduxPetTextureMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self)
+    rematchRedux.cardManager:OnEnter(rematchRedux.petCard,self,self.petID) -- anchor to parent
 end
 
-function RematchPetTextureMixin:OnLeave()
-    rematch.textureHighlight:Hide()
-    rematch.cardManager:OnLeave(rematch.petCard,self,self.petID)
+function RematchReduxPetTextureMixin:OnLeave()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,self.petID)
 end
 
-function RematchPetTextureMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxPetTextureMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchPetTextureMixin:OnMouseUp(button)
+function RematchReduxPetTextureMixin:OnMouseUp(button)
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self)
+        rematchRedux.textureHighlight:Show(self)
         if button~="RightButton" then -- textures don't have an OnClick
-            local petInfo = rematch.petInfo:Fetch(self.petID)
+            local petInfo = rematchRedux.petInfo:Fetch(self.petID)
             if petInfo.isValid then
-                rematch.cardManager:OnClick(rematch.petCard,self,self.petID)
+                rematchRedux.cardManager:OnClick(rematchRedux.petCard,self,self.petID)
             end
         end
     end

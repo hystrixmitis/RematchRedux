@@ -1,6 +1,6 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
 
 --[[ Option format:
 
@@ -25,7 +25,7 @@ local C = rematch.constants
 	[3] = header index (number, see below)
 
 	"widget"
-	[2] = name of widget (parentKey of childframe to RematchOptionPanel)
+	[2] = name of widget (parentKey of childframe to RematchReduxOptionPanel)
 
 	Header indexes: These numbers are "keys" to the header (expanded in settings.ExpandedOptHeaders).
 	If changing headers, make sure not to reuse an index. It's ok if they're missing or if
@@ -56,7 +56,7 @@ local C = rematch.constants
 		23 = Badge Options
 ]]
 
-rematch.optionsList = {
+rematchRedux.optionsList = {
 	-- All Options
 	--{type="header", group=0, text=L["All Options"]},
 	-- Targeting Options
@@ -64,26 +64,26 @@ rematch.optionsList = {
 	{type="dropdown", group=1, text=L["On Target"], var="InteractOnTarget", func="InteractOnTarget", tooltip=L["Choose the action to take when you target an NPC with a saved team that's not already loaded."],
 		menu = {{text=L["Do Nothing"], value=C.INTERACT_NONE, tooltipTitle=L["Do Nothing"], tooltipBody=L["When targeting an NPC with a saved team not already loaded, do nothing."]},
 				{text=L["Prompt To Load"], value=C.INTERACT_PROMPT, tooltipTitle=L["Prompt To Load"], tooltipBody=L["When targeting an NPC with a saved team not already loaded, show a prompt to load the save team."]},
-				{text=L["Show Window"], value=C.INTERACT_WINDOW, tooltipTitle=L["Show Window"], tooltipBody=L["When targeting an NPC with a saved team not already loaded, show the standalone Rematch window."]},
+				{text=L["Show Window"], value=C.INTERACT_WINDOW, tooltipTitle=L["Show Window"], tooltipBody=L["When targeting an NPC with a saved team not already loaded, show the standalone RematchRedux window."]},
 				{text=L["Auto Load"], value=C.INTERACT_AUTOLOAD, tooltipTitle=L["Auto Load"], tooltipBody=format(L["When targeting an NPC with a saved team not already loaded, automatically load the saved team.\n\n%sWarning\124r: If you target with right click and immediately enter battle, it may be too late to load a team. %sAuto Load is not recommended for On Target.\124r Use On Mouseover for Auto Load instead."],C.HEX_RED,C.HEX_WHITE)}}
 	},
 	{type="dropdown", group=1, text=L["On Mouseover"], var="InteractOnMouseover", func="InteractOnMouseover", tooltip=L["Choose the action to take when the mouse moves over an NPC with a saved team that's not already loaded."],
 		menu = {{text=L["Do Nothing"], value=C.INTERACT_NONE, tooltipTitle=L["Do Nothing"], tooltipBody=L["When the mouse moves over an NPC with a saved team not already loaded, do nothing."]},
 				{text=L["Prompt To Load"], value=C.INTERACT_PROMPT, tooltipTitle=L["Prompt To Load"], tooltipBody=L["When the mouse moves over an NPC with a saved team not already loaded, show a prompt to load the save team."]},
-				{text=L["Show Window"], value=C.INTERACT_WINDOW, tooltipTitle=L["Show Window"], tooltipBody=L["When the mouse moves over an NPC with a saved team not already loaded, show the standalone Rematch window."]},
+				{text=L["Show Window"], value=C.INTERACT_WINDOW, tooltipTitle=L["Show Window"], tooltipBody=L["When the mouse moves over an NPC with a saved team not already loaded, show the standalone RematchRedux window."]},
 				{text=L["Auto Load"], value=C.INTERACT_AUTOLOAD, tooltipTitle=L["Auto Load"], tooltipBody=L["When the mouse moves over an NPC with a saved team not already loaded, automatically load the saved team."]}}
 	},
 	{type="dropdown", group=1, text=L["On Soft Interact"], var="InteractOnSoftInteract", func="InteractOnSoftInteract", tooltip=format(L["Choose the action to take when you soft interact with an NPC with a saved team that's not already loaded.\n\n%sNote\124r: This option is only available if SoftTargetInteract cvar is fully enabled (3). It will be hidden otherwise."],C.HEX_WHITE),
 		menu = {{text=L["Do Nothing"], value=C.INTERACT_NONE, tooltipTitle=L["Do Nothing"], tooltipBody=L["When soft interactiong with an NPC with a saved team not already loaded, do nothing."]},
 				{text=L["Prompt To Load"], value=C.INTERACT_PROMPT, tooltipTitle=L["Prompt To Load"], tooltipBody=L["When soft interacting with an NPC with a saved team not already loaded, show a prompt to load the save team."]},
-				{text=L["Show Window"], value=C.INTERACT_WINDOW, tooltipTitle=L["Show Window"], tooltipBody=L["When soft interacting with an NPC with a saved team not already loaded, show the standalone Rematch window."]},
+				{text=L["Show Window"], value=C.INTERACT_WINDOW, tooltipTitle=L["Show Window"], tooltipBody=L["When soft interacting with an NPC with a saved team not already loaded, show the standalone RematchRedux window."]},
 				{text=L["Auto Load"], value=C.INTERACT_AUTOLOAD, tooltipTitle=L["Auto Load"], tooltipBody=format(L["When soft interacting with an NPC with a saved team not already loaded, automatically load the saved team."],C.HEX_RED,C.HEX_WHITE)}}
 	},
 	{type="check", group=1, text=L["Always Interact"], var="InteractAlways", tooltip=L["The default behavior is to perform the target or mouseover interaction once until you interact with another NPC with a saved team. Check this to always interact with NPCs that have a saved team not already loaded."]},
 	{type="check", group=1, text=L["Even If Team Already Loaded"], var="InteractAlwaysEvenLoaded", dependency="InteractAlways", tooltip=L["Always interact with a saved target even if a team is already loaded for that target."]},
 	{type="check", group=1, text=L["Prefer Uninjured Teams"], var="InteractPreferUninjured", tooltip=L["When you interact with an NPC that has more than one team saved to it, choose the team with no injured pets instead of the topmost team for the target. On Prompt To Load and Show Window options where you can choose which team to load before loading, start with the healthiest team."]},
-	{type="check", group=1, text=L["Show Window After Loading"], var="InteractShowAfterLoad", tooltip=L["When a team is loaded from an interaction (target or mouseover) and the Rematch window is not on screen, summon the standalone Rematch window."]},
-	{type="check", group=1, text=L["Only When Any Pets Injured"], var="InteractOnlyWhenInjured", dependency="InteractShowAfterLoad", tooltip=L["If a team is loaded but no pets are injured, don't summon the Rematch window."]},
+	{type="check", group=1, text=L["Show Window After Loading"], var="InteractShowAfterLoad", tooltip=L["When a team is loaded from an interaction (target or mouseover) and the RematchRedux window is not on screen, summon the standalone RematchRedux window."]},
+	{type="check", group=1, text=L["Only When Any Pets Injured"], var="InteractOnlyWhenInjured", dependency="InteractShowAfterLoad", tooltip=L["If a team is loaded but no pets are injured, don't summon the RematchRedux window."]},
 
 	-- Standalone Window Options
 	{type="header", group=2, text=L["Standalone Window Options"]},
@@ -95,7 +95,7 @@ rematch.optionsList = {
 				{text="Top Center", value="TOP", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.25,0.5,0,0.25}},
 				{text="Top Left", value="TOPLEFT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0,0.25,0,0.25}}}
 	},
-	{type="dropdown", group=2, text=L["Panel Tabs"], var="PanelTabAnchor", func="PanelTabAnchor", tooltip=L["Choose which corner of the standalone Rematch window to anchor panel tabs such as Pets, Teams, Targets, etc.\n\nNote: Choosing a new anchor for the whole window will change the tabs anchor to match. You can change this tabs anchor again anytime."],
+	{type="dropdown", group=2, text=L["Panel Tabs"], var="PanelTabAnchor", func="PanelTabAnchor", tooltip=L["Choose which corner of the standalone RematchRedux window to anchor panel tabs such as Pets, Teams, Targets, etc.\n\nNote: Choosing a new anchor for the whole window will change the tabs anchor to match. You can change this tabs anchor again anytime."],
 		menu = {{text="Bottom Left", value="BOTTOMLEFT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0,0.25,0.5,0.75}},
 				{text="Bottom Center", value="BOTTOM", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.25,0.5,0.5,0.75}},
 				{text="Bottom Right", value="BOTTOMRIGHT", icon="Interface\\AddOns\\RematchRedux\\textures\\arrows", iconCoords={0.5,0.75,0.5,0.75}},
@@ -105,15 +105,15 @@ rematch.optionsList = {
 	},
 	{type="check", group=2, text=L["Prefer Minimized Window"], var="PreferMinimized", tooltip=L["When the window is automatically summoned such as from an Interact Option or Safari Hat Reminder, summon the window in minimized mode."]},
 	{type="widget", group=2, text=L["Use Custom Scale"], parentKey="UseCustomScaleWidget"},
-	{type="check", group=2, text=L["Keep Window On Screen"], var="LockWindow", tooltip=L["Don't hide the standalone window when the ESCape key is pressed or most other times it would hide, such as going to the game menu."]},
+	{type="check", group=2, text=L["Keep Window On Screen"], var="LockWindow", tooltip=L["Don't hide the standalone RematchRedux window when the ESCape key is pressed or most other times it would hide, such as going to the game menu."]},
 	{type="check", group=2, text=L["Even For Pet Battles"], var="StayForBattle", dependency="LockWindow", tooltip=L["Keep the standalone window on the screen even when you enter pet battles."]},
 	{type="check", group=2, text=L["Even Across Sessions"], var="StayOnLogout", dependency="LockWindow", tooltip=L["If the standalone window was on screen when logging out, automatically summon it on next login."]},
-	{type="check", group=2, text=L["Don't Minimize With ESC Key"], var="LockDrawer", tooltip=L["Don't minimize the standalone window when the ESCape key (or game menu key) is pressed."]},
-	{type="check", group=2, text=L["Don't Minimize With Panel Tabs"], var="DontMinTabToggle", tooltip=L["Don't let the Pets, Teams, Queue or Options tabs minimize the standalone window."]},
-	{type="check", group=2, text=L["Lower Window Behind UI"], var="LowerStrata", func="LowerStrata", tooltip=L["Push the standalone window back behind other parts of the UI so other parts of the UI can appear ontop."]},
+	{type="check", group=2, text=L["Don't Minimize With ESC Key"], var="LockDrawer", tooltip=L["Don't minimize the standalone RematchRedux window when the ESCape key (or game menu key) is pressed."]},
+	{type="check", group=2, text=L["Don't Minimize With Panel Tabs"], var="DontMinTabToggle", tooltip=L["Don't let the Pets, Teams, Queue or Options tabs minimize the standalone RematchRedux window."]},
+	{type="check", group=2, text=L["Lower Window Behind UI"], var="LowerStrata", func="LowerStrata", tooltip=L["Push the standalone RematchRedux window back behind other parts of the UI so other parts of the UI can appear ontop."]},
 	{type="check", group=2, text=L["Show Pets Tab While Minimized"], var="PreferPetsTab", tooltip=L["When the window has a Pets tab and is minimized, drop the Targets tab and keep the Pets tab visible."] },
-	{type="check", group=2, text=L["Show Window After Battle"], var="ShowAfterBattle", tooltip=L["Show the standalone Rematch window after leaving a pet battle."]},
-	{type="check", group=2, text=L["But Not After PVP Battle"], var="ShowAfterPVEOnly", dependency="ShowAfterBattle", tooltip=L["Since pets don't remain injured in PVP battles, don't show the window when leaving a PVP battle."]},
+	{type="check", group=2, text=L["Show Window After Battle"], var="ShowAfterBattle", tooltip=L["Show the standalone RematchRedux window after leaving a pet battle."]},
+	{type="check", group=2, text=L["But Not After PVP Battle"], var="ShowAfterPVEOnly", dependency="ShowAfterBattle", tooltip=L["Since pets don't remain injured in PVP battles, don't show the standalone RematchRedux window when leaving a PVP battle."]},
 
 	-- Appearance Options
 	{type="header", group=3, text=L["Appearance Options"]},
@@ -132,13 +132,13 @@ rematch.optionsList = {
 	-- Badge Options
 	{type="header", group=23, text=L["Badge Options"]},
 	--{type="check", group=23, text=L["Only Show Badges On Mouseover"], var="ShowBadgesOnMouseover", update=true, tooltip=L["Hide all badges unless the mouse is over the pet, team or target.\n\nA badge is a non-interactive icon to the right of a list item to indicate some property such as whether it's leveling.\n\nWith this option enabled, the notes button, breed and win record are also hidden unless the mouse is over the list item."]},
-	{type="check", group=23, text=format(L["Hide Team Badges %s"],rematch.utils:GetBadgeAsText(12,14,true)), var="HideTeamBadges", update=true, tooltip=format(L["Hide the %s badge on pets and targets that indicate the pet or target is saved in a team."],rematch.utils:GetBadgeAsText(12,14,true))},
-	{type="check", group=23, text=format(L["Hide Leveling Badges %s"],rematch.utils:GetBadgeAsText(11,14,true)), var="HideLevelingBadges", update=true, tooltip=format(L["Hide the %s badge on pets that indicate the pet is in the leveling queue."],rematch.utils:GetBadgeAsText(11,14,true))},
-	{type="check", group=23, text=format(L["Hide Pet Tag Badges %s"],rematch.utils:GetBadgeAsText(16,14,true)), var="HideMarkerBadges", update=true, tooltip=format(L["Hide the pet tag badges (such as %s %s %s etc) on pets to indicate what pet tag has been given to the pet."],rematch.utils:GetBadgeAsText(16,14,true),rematch.utils:GetBadgeAsText(17,14,true),rematch.utils:GetBadgeAsText(18,14,true))},
-	{type="check", group=23, text=format(L["Hide Target Badges %s"],rematch.utils:GetBadgeAsText(27,14,true)), var="HideTargetBadges", update=true, tooltip=format(L["Hide the %s badge on teams that indicate the team contains a target."],rematch.utils:GetBadgeAsText(27,14,true))},
-	{type="check", group=23, text=format(L["Hide Preference Badges %s"],rematch.utils:GetBadgeAsText(14,14,true)), var="HidePreferenceBadges", update=true, tooltip=format(L["Hide the %s badge on teams that indicate the team contains leveling preferences."],rematch.utils:GetBadgeAsText(14,14,true))},
-	{type="check", group=23, text=format(L["Hide Notes Badges %s"],rematch.utils:GetBadgeAsText(13,16,false)), var="HideNotesBadges", update=true, tooltip=format(L["Hide the %s badge/button on pets and teams that indicate the pet or team has saved notes."],rematch.utils:GetBadgeAsText(13,16,false))},
-	-- {type="check", group=23, text=format(L["Hide External Badges %s"],rematch.utils:GetBadgeAsText(33,16,true)), var="HideExternalBadges", update=true, tooltip=L["Try to hide any badges added to lists from an external source like a third-party addon. (Rematch has no control over what outside addons do, so some addon's badges may not hide with this option.)"]},
+	{type="check", group=23, text=format(L["Hide Team Badges %s"],rematchRedux.utils:GetBadgeAsText(12,14,true)), var="HideTeamBadges", update=true, tooltip=format(L["Hide the %s badge on pets and targets that indicate the pet or target is saved in a team."],rematchRedux.utils:GetBadgeAsText(12,14,true))},
+	{type="check", group=23, text=format(L["Hide Leveling Badges %s"],rematchRedux.utils:GetBadgeAsText(11,14,true)), var="HideLevelingBadges", update=true, tooltip=format(L["Hide the %s badge on pets that indicate the pet is in the leveling queue."],rematchRedux.utils:GetBadgeAsText(11,14,true))},
+	{type="check", group=23, text=format(L["Hide Pet Tag Badges %s"],rematchRedux.utils:GetBadgeAsText(16,14,true)), var="HideMarkerBadges", update=true, tooltip=format(L["Hide the pet tag badges (such as %s %s %s etc) on pets to indicate what pet tag has been given to the pet."],rematchRedux.utils:GetBadgeAsText(16,14,true),rematchRedux.utils:GetBadgeAsText(17,14,true),rematchRedux.utils:GetBadgeAsText(18,14,true))},
+	{type="check", group=23, text=format(L["Hide Target Badges %s"],rematchRedux.utils:GetBadgeAsText(27,14,true)), var="HideTargetBadges", update=true, tooltip=format(L["Hide the %s badge on teams that indicate the team contains a target."],rematchRedux.utils:GetBadgeAsText(27,14,true))},
+	{type="check", group=23, text=format(L["Hide Preference Badges %s"],rematchRedux.utils:GetBadgeAsText(14,14,true)), var="HidePreferenceBadges", update=true, tooltip=format(L["Hide the %s badge on teams that indicate the team contains leveling preferences."],rematchRedux.utils:GetBadgeAsText(14,14,true))},
+	{type="check", group=23, text=format(L["Hide Notes Badges %s"],rematchRedux.utils:GetBadgeAsText(13,16,false)), var="HideNotesBadges", update=true, tooltip=format(L["Hide the %s badge/button on pets and teams that indicate the pet or team has saved notes."],rematchRedux.utils:GetBadgeAsText(13,16,false))},
+	-- {type="check", group=23, text=format(L["Hide External Badges %s"],rematchRedux.utils:GetBadgeAsText(33,16,true)), var="HideExternalBadges", update=true, tooltip=L["Try to hide any badges added to lists from an external source like a third-party addon. (RematchRedux has no control over what outside addons do, so some addon's badges may not hide with this option.)"]},
 
 	-- Behavior Options
 	{type="header", group=14, text=L["Behavior Options"]},
@@ -164,7 +164,7 @@ rematch.optionsList = {
 	-- Toolbar Options
 	{type="header", group=9, text=L["Toolbar Options"]},
 	{type="check", group=9, text=L["Reverse Toolbar Buttons"], var="ReverseToolbar", func="ConfigureToolbar", tooltip=L["Reverse the order of the toolbar buttons (Revive Battle Pets, Battle Pet Bandages, Safari Hat, etc)."]},
-	{type="check", group=9, text=L["Hide On Toolbar Right Click"], var="ToolbarDismiss", tooltip=L["When a toolbar button is used with a right click, dismiss the Rematch window after performing its action."]},
+	{type="check", group=9, text=L["Hide On Toolbar Right Click"], var="ToolbarDismiss", tooltip=L["When a toolbar button is used with a right click, dismiss the RematchRedux window after performing its action."]},
 	{type="check", group=9, text=L["Safari Hat Reminder"], var="SafariHatShine", update=true, tooltip=L["When a pet is laoded below max level, draw attention to the Safari Hat button, including summoning the window if it's not on screen."]},
 	{type="check", group=9, text=L["Display Unique Pets Total"], var="DisplayUniqueTotal", update=true, tooltip=L["Instead of Total Pets in the collections button at the topleft, display a total of Unique Pets."]},
 	{type="check", group=9, text=L["Always Use Pet Satchel"], var="AlwaysUsePetSatchel", func="ConfigureToolbar", tooltip=L["Rather than displaying all toolbar buttons in larger views of the addon, always use the Pet Satchel button to cycle through infrequently used toolbar buttons."]},
@@ -176,7 +176,7 @@ rematch.optionsList = {
 	{type="check", group=8, text=L["Reset Sort With Filters"], var="ResetSortWithFilters", update=true, tooltip=L["When clearing filters, also reset the sort back to the default: Sort by Name, Favorites First."]},
 	{type="check", group=8, text=L["Don't Reset Search With Filters"], var="ResetExceptSearch", update=true, tooltip=L["When manually clearing filters, don't clear the search box too.\n\nSome actions, such as logging in or Find Similar, will always clear search regardless of this setting."]},
 	{type="check", group=8, text=L["Sort By Chosen Name"], var="SortByNickname", func="UpdateFilters", tooltip=L["When pets are sorted by name, sort them by the name given with the Rename option instead of their original name."]},
-	{type="check", group=8, text=L["Sort New Pets To Top"], var="StickyNewPets", func="UpdateFilters", tooltip=L["When you learn new pets, temporarily sort them to the top of the pet list until you next close Rematch or choose Reset All from the filter menu."]},
+	{type="check", group=8, text=L["Sort New Pets To Top"], var="StickyNewPets", func="UpdateFilters", tooltip=L["When you learn new pets, temporarily sort them to the top of the pet list until you next close RematchRedux or choose Reset All from the filter menu."]},
 	{type="check", group=8, text=L["Hide Non-Battle Pets"], var="HideNonBattlePets", func="UpdateFilters", tooltip=L["Only list pets that can battle. Do not list pets like balloons, squires and other companion pets that cannot battle."]},
 	{type="check", group=8, text=L["Allow Hidden Pets"], var="AllowHiddenPets", func="UpdateHiddenPetFilter", tooltip=L["Allow the ability to hide specific pet species in the pet list with a 'Hide Pet' in the list's right-click menu.\n\nYou can view pets you've hidden from the Other -> Hidden Pets filter."]},
 	{type="check", group=8, text=L["Export Simple Pet List"], var="ExportSimplePetList", func="ExportSimplePetList", tooltip=L["When exporting pets from the Export Pets filter menu item, only export a list of pets without details."]},
@@ -185,7 +185,7 @@ rematch.optionsList = {
 	-- Breed Options
 	{type="header", group=18, text=L["Breed Options"]},
 	{type="dropdown", group=18, text=L["Breed Source"], var="BreedSource", func="BreedSource", tooltip=L["Which enabled addon you want to use to supply breed data."],
-		menu = {{text=L["None"], value="None", tooltipTitle=L["None"], tooltipBody=L["No breed information will be shown if this is selected. Rematch does not maintain its own breed data."]},
+		menu = {{text=L["None"], value="None", tooltipTitle=L["None"], tooltipBody=L["No breed information will be shown if this is selected. RematchRedux does not maintain its own breed data."]},
 				{text=L["Battle Pet Breed ID"], value="BattlePetBreedID", hidden=function() return not C_AddOns.IsAddOnLoaded("BattlePetBreedID") end},
 				{text=L["PetTracker"], value="PetTracker", hidden=function() return not C_AddOns.IsAddOnLoaded("PetTracker") end}}
 	},
@@ -221,7 +221,7 @@ rematch.optionsList = {
 
 	-- Notes Options
 	{type="header", group=17, text=L["Notes Options"]},
-	{type="check", group=17, text=L["Keep Notes On Screen"], var="KeepNotesOnScreen", tooltip=L["Don't hide notes when changing tabs or closing Rematch."]},
+	{type="check", group=17, text=L["Keep Notes On Screen"], var="KeepNotesOnScreen", tooltip=L["Don't hide notes when changing tabs or closing RematchRedux."]},
 	{type="check", group=17, text=L["Even When Escape Pressed"], var="NotesNoEsc", dependency="KeepNotesOnScreen", tooltip=L["Also don't hide notes when ESCape key is pressed."]},
 	{type="check", group=17, text=L["Show Notes When Teams Load"], var="ShowNotesOnLoad", tooltip=L["When a team with notes is loaded, display the notes for the team."]},
 	{type="check", group=17, text=L["Show Notes In Battle"], var="ShowNotesInBattle", tooltip=L["If the loaded team has notes, display and lock the notes when you enter a pet battle."]},
@@ -303,10 +303,10 @@ rematch.optionsList = {
 
 	-- Miscellaneous Options
 	{type="header", group=6, text=L["Miscellaneous Options"]},
-	{type="check", group=6, text=L["Use Default Journal"], var="UseDefaultJournal", func="UseDefaultJournal", tooltip=L["Turn off Rematch integration with the default pet journal.\n\nYou can still use Rematch in its standalone window, accessed via key binding, /rematch command or from the Minimap button if enabled in options."]},
+	{type="check", group=6, text=L["Use Default Journal"], var="UseDefaultJournal", func="UseDefaultJournal", tooltip=L["Turn off RematchRedux integration with the default pet journal.\n\nYou can still use RematchRedux in its standalone window, accessed via key binding, /rematch command or from the Minimap button if enabled in options."]},
 	{type="check", group=6, text=L["Keep Companion"], var="KeepCompanion", tooltip=L["After a team is loaded, summon back the companion that was at your side before the load; or dismiss the pet if you had none summoned."]},
-	{type="check", group=6, text=L["Use Minimap Button"], var="UseMinimapButton", func="UseMinimapButton", tooltip=L["Place a button on the minimap to toggle Rematch and load favorite teams."]},
-	{type="check", group=6, text=L["No Summon On Double Click"], var="NoSummonOnDblClick", tooltip=L["Do nothing when pets within Rematch are double-clicked. The normal behavior of double click throughout Rematch is to summon or dismiss the pet."]},
+	{type="check", group=6, text=L["Use Minimap Button"], var="UseMinimapButton", func="UseMinimapButton", tooltip=L["Place a button on the minimap to toggle RematchRedux and load favorite teams."]},
+	{type="check", group=6, text=L["No Summon On Double Click"], var="NoSummonOnDblClick", tooltip=L["Do nothing when pets within RematchRedux are double-clicked. The normal behavior of double click throughout RematchRedux is to summon or dismiss the pet."]},
 	{type="check", group=6, text=L["Disable Sharing"], var="DisableShare", tooltip=L["Disable the Send button and also block any incoming pets sent by others. Import and Export still work."]},
 
 	-- Help Options
@@ -321,11 +321,11 @@ rematch.optionsList = {
 	{type="header", group=20, text=L["About RematchRedux"]},
 	{type="widget", group=20, text=L["All Options Troubleshoot Export Reset"], parentKey="OptionsManagementWidget"},
 	{type="text", group=20, text=L["Version "]..(C_AddOns.GetAddOnMetadata("RematchRedux","Version") or "")},
-	{type="text", group=20, isHelp=true, text=rematch.utils:GetBadgeAsText(12,16,true).."\124cffb0b0b0 "..L["Target or pet is in a team"]},
-	{type="text", group=20, isHelp=true, text=rematch.utils:GetBadgeAsText(11,16,true).."\124cffb0b0b0 "..L["Pet is in the leveling queue"]},
-	{type="text", group=20, isHelp=true, text=rematch.utils:GetBadgeAsText(27,16,true).."\124cffb0b0b0 "..L["Team has at least one target"]},
-	{type="text", group=20, isHelp=true, text=rematch.utils:GetBadgeAsText(14,16,true).."\124cffb0b0b0 "..L["Team or group has preferences"]},
-	{type="text", group=20, isHelp=true, text=rematch.utils:GetBadgeAsText(13,16,true).."\124cffb0b0b0 "..L["Team or pet has notes"]},
+	{type="text", group=20, isHelp=true, text=rematchRedux.utils:GetBadgeAsText(12,16,true).."\124cffb0b0b0 "..L["Target or pet is in a team"]},
+	{type="text", group=20, isHelp=true, text=rematchRedux.utils:GetBadgeAsText(11,16,true).."\124cffb0b0b0 "..L["Pet is in the leveling queue"]},
+	{type="text", group=20, isHelp=true, text=rematchRedux.utils:GetBadgeAsText(27,16,true).."\124cffb0b0b0 "..L["Team has at least one target"]},
+	{type="text", group=20, isHelp=true, text=rematchRedux.utils:GetBadgeAsText(14,16,true).."\124cffb0b0b0 "..L["Team or group has preferences"]},
+	{type="text", group=20, isHelp=true, text=rematchRedux.utils:GetBadgeAsText(13,16,true).."\124cffb0b0b0 "..L["Team or pet has notes"]},
 
 }
 

@@ -1,7 +1,7 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
 --[[
 
@@ -23,18 +23,18 @@ SlashCmdList["REMATCH"] = function(msg)
 
     -- "/rematch" with no other command will toggle the rematch window
     if msg=="" then
-        rematch.frame:Toggle()
+        rematchRedux.frame:Toggle()
         return
     end
 
     -- "/rematch <team name>" will attempt to load a team (if <team name> found)
-    if rematch.loadTeam:LoadTeamByName(msg) then
+    if rematchRedux.loadTeam:LoadTeamByName(msg) then
         return -- if LoadTeamByName found a teamID, then it's loading; leave
     end
 
     -- "/rematch reset all settings" will wipe and settings with a dialog prompt to confirm
     if msg=="reset everything" then
-        rematch.dialog:Register("ResetEverything",{
+        rematchRedux.dialog:Register("ResetEverything",{
             title = L["Reset Everything"],
             accept = YES,
             cancel = NO,
@@ -54,13 +54,13 @@ SlashCmdList["REMATCH"] = function(msg)
                 ReloadUI()
             end
         })
-        rematch.dialog:ShowDialog("ResetEverything")
+        rematchRedux.dialog:ShowDialog("ResetEverything")
         return
     end
 
     -- "/rematch delete all teams" will wipe all teams and groups with a dialog prompt to confirm
     if msg=="delete all teams" then
-        rematch.dialog:Register("DeleteAllTeams",{
+        rematchRedux.dialog:Register("DeleteAllTeams",{
             title = L["Delete All Teams"],
             accept = YES,
             cancel = NO,
@@ -73,11 +73,11 @@ SlashCmdList["REMATCH"] = function(msg)
                 self.Feedback:Set("warning",L["Warning: This cannot be undone!"])
             end,
             acceptFunc = function(self,info,subject)
-                rematch.savedTeams:Wipe()
-                rematch.savedGroups:Wipe()
+                rematchRedux.savedTeams:Wipe()
+                rematchRedux.savedGroups:Wipe()
             end,
         })
-        rematch.dialog:ShowDialog("DeleteAllTeams")
+        rematchRedux.dialog:ShowDialog("DeleteAllTeams")
         return
     end
 
@@ -85,12 +85,12 @@ SlashCmdList["REMATCH"] = function(msg)
     -- To use: Target the target and enter battle (it's ok if you lose target, just don't target
     -- anything else) and once you're in battle and see opponent pets, enter /rematch targetdata
     if msg=="targetdata" then
-        if not C_PetBattles.IsInBattle() or not rematch.targetInfo.recentTarget then
-            rematch.utils:Write(L["Usage: Target an npc to create data for, enter a pet battle, and once in battle with opponent pets displayed, enter:\n\124cffffffff/rematch targetdata"])
+        if not C_PetBattles.IsInBattle() or not rematchRedux.targetInfo.recentTarget then
+            rematchRedux.utils:Write(L["Usage: Target an npc to create data for, enter a pet battle, and once in battle with opponent pets displayed, enter:\n\124cffffffff/rematch targetdata"])
             return
         end
-        local npcID = rematch.targetInfo.recentTarget
-        local npcName = rematch.targetInfo:GetNpcName(npcID)
+        local npcID = rematchRedux.targetInfo.recentTarget
+        local npcName = rematchRedux.targetInfo:GetNpcName(npcID)
         local mapID = C_Map.GetBestMapForUnit("player")
         local mapName = C_Map.GetMapInfo(mapID).name
         -- start with map and npcID; 0 is expansion that needs filled in manually, nill is questID
@@ -99,7 +99,7 @@ SlashCmdList["REMATCH"] = function(msg)
         -- add pets with their stats
         local numPets = C_PetBattles.GetNumPets(Enum.BattlePetOwner.Enemy)
         for i=1,numPets do
-            local petInfo = rematch.petInfo:Fetch("battle:2:"..i)
+            local petInfo = rematchRedux.petInfo:Fetch("battle:2:"..i)
             local speed = petInfo.speed
             if speed and petInfo.petType==3 then -- for flying opponents remember to get stats before it loses racial
                 speed = speed/1.5
@@ -114,7 +114,7 @@ SlashCmdList["REMATCH"] = function(msg)
         if TinyPad then
             TinyPad.Insert(result)
         else -- otherwise print to chat
-            rematch.utils:Write(result)
+            rematchRedux.utils:Write(result)
             -- ChatEdit_ActivateChat(DEFAULT_CHAT_FRAME.editBox)
             -- DEFAULT_CHAT_FRAME.editBox:Insert(result)
         end
@@ -123,11 +123,11 @@ SlashCmdList["REMATCH"] = function(msg)
 
     -- "/rematch import options" will show a dialog to reset options and update to the ones provided
     if msg=="import options" then
-        rematch.dialog:ShowDialog("ImportOptions")
+        rematchRedux.dialog:ShowDialog("ImportOptions")
         return
     end
 
     -- if reached here, the msg didn't resolve to a team or anything meaningful
-    rematch.utils:Write(format(L["The team named \"%s\" can't be found."],msg))
+    rematchRedux.utils:Write(format(L["The team named \"%s\" can't be found."],msg))
 
 end

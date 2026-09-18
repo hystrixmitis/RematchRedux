@@ -1,19 +1,19 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.bottombar = rematch.frame.BottomBar
-rematch.frame:Register("bottombar")
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.bottombar = rematchRedux.frame.BottomBar
+rematchRedux.frame:Register("bottombar")
 
-rematch.events:Register(rematch.bottombar,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.bottombar,"PLAYER_LOGIN",function(self)
     self.SummonButton:SetText(SUMMON)
     self.FindBattleButton:SetText(FIND_BATTLE)
     self.SaveAsButton:SetText(L["Save As"])
     self.SaveButton:SetText(SAVE)
 
-    self.UseRematchCheckButton:SetText(L["RematchRedux"])
-    self.UseRematchCheckButton.tooltipTitle = L["Remove RematchRedux From Journal"]
-    self.UseRematchCheckButton.tooltipBody = L["Uncheck this to restore the default pet journal.\n\nYou can still use RematchRedux in its standlone window, accessed via key binding, /rematch command or from the Minimap button if enabled in options."]
+    self.UseRematchReduxCheckButton:SetText(L["RematchRedux"])
+    self.UseRematchReduxCheckButton.tooltipTitle = L["Remove RematchRedux From Journal"]
+    self.UseRematchReduxCheckButton.tooltipBody = L["Uncheck this to restore the default pet journal.\n\nYou can still use RematchRedux in its standlone window, accessed via key bindings or the /rematchredux command or from the Minimap button if enabled in options."]
 
     self.SummonButton.tooltipTitle = SUMMON
     self.SummonButton.tooltipBody = format("%s\n\n%s",BATTLE_PETS_SUMMON_TOOLTIP,L["You can also double-click a pet to summon or dismiss it."])
@@ -25,8 +25,8 @@ rematch.events:Register(rematch.bottombar,"PLAYER_LOGIN",function(self)
     self.SaveButton.tooltipBody = L["Quickly save the currently loaded pets and abilities to the loaded team."]
 end)
 
-function rematch.bottombar:Configure()
-    local mode = rematch.layout:GetMode(C.CURRENT)
+function rematchRedux.bottombar:Configure()
+    local mode = rematchRedux.layout:GetMode(C.CURRENT)
     local barWidth = self:GetWidth()
     if mode==3 then -- 3-panel mode: summon and find battle buttons match journal
         self.SummonButton:SetWidth(160)
@@ -44,23 +44,23 @@ function rematch.bottombar:Configure()
     elseif mode==1 then -- 1-panel mode: hide summon button, fit remaining 3 to fit
         local width = barWidth/3
         self.SummonButton:Hide()
-        rematch.bottombar.SaveButton:SetWidth(width)
-        rematch.bottombar.SaveAsButton:SetWidth(width)
-        rematch.bottombar.FindBattleButton:SetWidth(width)
+        rematchRedux.bottombar.SaveButton:SetWidth(width)
+        rematchRedux.bottombar.SaveAsButton:SetWidth(width)
+        rematchRedux.bottombar.FindBattleButton:SetWidth(width)
     end
-    rematch.bottombar.UseRematchCheckButton:SetShown(mode==3 and rematch.journal:IsActive())
-    rematch.bottombar.UseRematchCheckButton:SetChecked(true) -- always checked if journal view of rematch is visible
+    rematchRedux.bottombar.UseRematchReduxCheckButton:SetShown(mode==3 and rematchRedux.journal:IsActive())
+    rematchRedux.bottombar.UseRematchReduxCheckButton:SetChecked(true) -- always checked if journal vieRematchReduxmatch is visible
 end
 
-function rematch.bottombar:Update()
+function rematchRedux.bottombar:Update()
     -- update summon/dismiss panel button
-    if rematch.petCard:IsVisible() and rematch.cardManager:IsCardLocked(rematch.petCard) then
+    if rematchRedux.petCard:IsVisible() and rematchRedux.cardManager:IsCardLocked(rematchRedux.petCard) then
         local petID = C_PetJournal.GetSummonedPetGUID()
         self.SummonButton:Enable()
-        if rematch.petCard.petID==petID then
+        if rematchRedux.petCard.petID==petID then
             self.SummonButton:SetText(PET_DISMISS)
             self.SummonButton.tooltipTitle = PET_DISMISS
-        elseif rematch.petInfo:Fetch(rematch.petCard.petID).isOwned then
+        elseif rematchRedux.petInfo:Fetch(rematchRedux.petCard.petID).isOwned then
             self.SummonButton:SetText(BATTLE_PET_SUMMON)
             self.SummonButton.tooltipTitle = BATTLE_PET_SUMMON
         else
@@ -78,69 +78,69 @@ function rematch.bottombar:Update()
         self.FindBattleButton:SetText(FIND_BATTLE)
     end
     -- update save button (only enabled if a user team loaded)
-    self.SaveButton:SetEnabled(rematch.savedTeams:IsUserTeam(settings.currentTeamID))
+    self.SaveButton:SetEnabled(rematchRedux.savedTeams:IsUserTeam(settings.currentTeamID))
 end
 
-function rematch.bottombar:OnShow()
-    rematch.events:Register(self,"PET_BATTLE_QUEUE_STATUS",self.PET_BATTLE_QUEUE_STATUS)
-    rematch.events:Register(self,"REMATCH_TEAM_LOADED",self.Update)
+function rematchRedux.bottombar:OnShow()
+    rematchRedux.events:Register(self,"PET_BATTLE_QUEUE_STATUS",self.PET_BATTLE_QUEUE_STATUS)
+    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",self.Update)
 end
 
-function rematch.bottombar:OnHide()
-    rematch.events:Unregister(self,"PET_BATTLE_QUEUE_STATUS")
-    rematch.events:Unregister(self,"REMATCH_TEAM_LOADED")
+function rematchRedux.bottombar:OnHide()
+    rematchRedux.events:Unregister(self,"PET_BATTLE_QUEUE_STATUS")
+    rematchRedux.events:Unregister(self,"REMATCHREDUX_TEAM_LOADED")
 end
 
-function rematch.bottombar:PET_BATTLE_QUEUE_STATUS()
-    rematch.frame:Update() -- need to update loadout slots as well as panel button
+function rematchRedux.bottombar:PET_BATTLE_QUEUE_STATUS()
+    rematchRedux.frame:Update() -- need to update loadout slots as well as panel button
 end
 
-function rematch.bottombar.SummonButton:OnClick()
+function rematchRedux.bottombar.SummonButton:OnClick()
     self:GetScript("OnLeave")(self) -- force the mouse to leave to unhighlight
-    if rematch.petCard.petID then
-        C_PetJournal.SummonPetByGUID(rematch.petCard.petID)
-        rematch.petCard:Hide()
+    if rematchRedux.petCard.petID then
+        C_PetJournal.SummonPetByGUID(rematchRedux.petCard.petID)
+        rematchRedux.petCard:Hide()
     end
 end
 
 -- the "Save As" button summons a save dialog to potentially create a new team (if team renamed) or update some aspect of current
-function rematch.bottombar.SaveAsButton:OnClick()
-    rematch.saveDialog:SidelineLoadouts()
+function rematchRedux.bottombar.SaveAsButton:OnClick()
+    rematchRedux.saveDialog:SidelineLoadouts()
     -- if sidelining a loaded user team, add its teamID to subject
-    if rematch.savedTeams:IsUserTeam(settings.currentTeamID) then
-        rematch.dialog:ShowDialog("SaveTeam",{saveMode=C.SAVE_MODE_SAVEAS, teamID=settings.currentTeamID})
+    if rematchRedux.savedTeams:IsUserTeam(settings.currentTeamID) then
+        rematchRedux.dialog:ShowDialog("SaveTeam",{saveMode=C.SAVE_MODE_SAVEAS, teamID=settings.currentTeamID})
     else
-        rematch.dialog:ShowDialog("SaveTeam",{saveMode=C.SAVE_MODE_SAVEAS})
+        rematchRedux.dialog:ShowDialog("SaveTeam",{saveMode=C.SAVE_MODE_SAVEAS})
     end
 end
 
 -- the "Save" button resaves the loaded team, potentially from a change in pets or abilities
-function rematch.bottombar.SaveButton:OnClick()
-    if not rematch.savedTeams:IsUserTeam(settings.currentTeamID) then
+function rematchRedux.bottombar.SaveButton:OnClick()
+    if not rematchRedux.savedTeams:IsUserTeam(settings.currentTeamID) then
         return -- a user team is not loaded, do nothing
     end
-    rematch.saveDialog:SidelineLoadouts()
+    rematchRedux.saveDialog:SidelineLoadouts()
     -- if pets are the same, immediately save the updates to the current team
-    if rematch.utils:AreSame(rematch.savedTeams.sideline.pets,rematch.savedTeams[settings.currentTeamID].pets) then
-        rematch.savedTeams[settings.currentTeamID] = rematch.savedTeams.sideline
-        rematch.saveDialog:BlingLoadedTeam()
+    if rematchRedux.utils:AreSame(rematchRedux.savedTeams.sideline.pets,rematchRedux.savedTeams[settings.currentTeamID].pets) then
+        rematchRedux.savedTeams[settings.currentTeamID] = rematchRedux.savedTeams.sideline
+        rematchRedux.saveDialog:BlingLoadedTeam()
     else -- pets are different, confirm the save
-        rematch.dialog:ShowDialog("SaveOverwrite",settings.currentTeamID)
+        rematchRedux.dialog:ShowDialog("SaveOverwrite",settings.currentTeamID)
     end
 end
 
--- clicking the Rematch checkbutton on the bottombar means we're in journal mode; so always disabling.
--- there's another Rematch checkbutton on the PetJournal that does the opposite
-function rematch.bottombar.UseRematchCheckButton:OnClick()
+-- clicking the RematchRedux checkbutton on the bottombar means we're in journal mode; so always disabling.
+-- there's another RematchRedux checkbutton on the PetJournal that does the opposite
+function rematchRedux.bottombar.UseRematchReduxCheckButton:OnClick()
     self:SetChecked(true)
-    rematch.settings.UseDefaultJournal = true
-    rematch.frame:Hide()
-    rematch.frame:SetParent(UIParent)
+    rematchRedux.settings.UseDefaultJournal = true
+    rematchRedux.frame:Hide()
+    rematchRedux.frame:SetParent(UIParent)
     PetJournal:Show()
-    PetJournal_UpdatePetLoadOut() -- in case journal wasn't keeping up while rematch was doing stuff
+    PetJournal_UpdatePetLoadOut() -- in case journal wasn't keeping up while RematchRedux was doing stuff
 end
 
-function rematch.bottombar.FindBattleButton:OnClick()
+function rematchRedux.bottombar.FindBattleButton:OnClick()
     local queueState = C_PetBattles.GetPVPMatchmakingInfo()
     if queueState=="proposal" then
         C_PetBattles.DeclineQueuedPVPMatch()

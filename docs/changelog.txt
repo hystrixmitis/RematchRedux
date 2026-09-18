@@ -150,7 +150,7 @@ Notes:
 - Added Notes Option 'Hide Notes Button In Battle' to hide the new notes button in case other addons are using the same space of the battle UI
 - Potential fix for Safari Hat button not being usable because the toy was not cached
 - Fix for Delete/Undo/Save buttons not always dismissing when clicking Delete in the Notes window
-- Added REMATCH_NOTES_CHANGED event (with teamID or speciesID that had its notes changed)
+- Added REMATCHREDUX_NOTES_CHANGED event (with teamID or speciesID that had its notes changed)
 - Localization template updated
 
 12/17/2023 version 5.0.4

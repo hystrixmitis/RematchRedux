@@ -1,30 +1,30 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.battle = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.battle = {}
 
 -- this becoms the little notes button in the available spot of the battle UI's MicroButtonFrame
-rematch.battle.NotesButton = CreateFrame("Button","RematchNotesMicroButton")
+rematchRedux.battle.NotesButton = CreateFrame("Button","RematchReduxNotesMicroButton")
 
-rematch.events:Register(rematch.battle,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.battle,"PLAYER_LOGIN",function(self)
     if C_AddOns.IsAddOnLoaded("Blizzard_PetBattleUI") then -- if already loaded on login, run setup right away
         self:Setup()
     else -- otherwise register for battle ui to load before doing setup
-        rematch.events:Register(self,"ADDON_LOADED",self.ADDON_LOADED)
+        rematchRedux.events:Register(self,"ADDON_LOADED",self.ADDON_LOADED)
     end
 end)
 
 -- watches for battle ui being loaded and calls a setup if so
-function rematch.battle:ADDON_LOADED(addon)
+function rematchRedux.battle:ADDON_LOADED(addon)
     if addon=="Blizzard_PetBattleUI" then
         self:Setup()
-        rematch.events:Unregister(self,"ADDON_LOADED")
+        rematchRedux.events:Unregister(self,"ADDON_LOADED")
     end
 end
 
 -- one-time setup after battle ui is loaded
-function rematch.battle:Setup()
+function rematchRedux.battle:Setup()
 
     for _,parentKey in ipairs({"ActiveAlly","ActiveEnemy","Ally2","Ally3","Enemy2","Enemy3"}) do
         local frame = PetBattleFrame[parentKey]
@@ -34,13 +34,13 @@ function rematch.battle:Setup()
     end
 
     -- add anchor exceptions for pet card on ActiveAlly and ActiveEnemy
-    rematch.cardManager:AddAnchorException(rematch.petCard,PetBattleFrame.ActiveAlly,"TOP",PetBattleFrame.ActiveAlly,"BOTTOM",0,16)
-    rematch.cardManager:AddAnchorException(rematch.petCard,PetBattleFrame.ActiveEnemy,"TOP",PetBattleFrame.ActiveEnemy,"BOTTOM",0,16)
+    rematchRedux.cardManager:AddAnchorException(rematchRedux.petCard,PetBattleFrame.ActiveAlly,"TOP",PetBattleFrame.ActiveAlly,"BOTTOM",0,16)
+    rematchRedux.cardManager:AddAnchorException(rematchRedux.petCard,PetBattleFrame.ActiveEnemy,"TOP",PetBattleFrame.ActiveEnemy,"BOTTOM",0,16)
 
-    rematch.events:Register(self,"PET_BATTLE_FINAL_ROUND",self.PET_BATTLE_FINAL_ROUND)
-    rematch.events:Register(self,"PET_BATTLE_CLOSE",self.PET_BATTLE_CLOSE)
-    rematch.events:Register(self,"REMATCH_NOTES_CHANGED",self.REMATCH_NOTES_CHANGED)
-    rematch.events:Register(self,"REMATCH_TEAM_LOADED",self.REMATCH_NOTES_CHANGED) -- this shares same function as notes changing
+    rematchRedux.events:Register(self,"PET_BATTLE_FINAL_ROUND",self.PET_BATTLE_FINAL_ROUND)
+    rematchRedux.events:Register(self,"PET_BATTLE_CLOSE",self.PET_BATTLE_CLOSE)
+    rematchRedux.events:Register(self,"REMATCHREDUX_NOTES_CHANGED",self.REMATCHREDUX_NOTES_CHANGED)
+    rematchRedux.events:Register(self,"REMATCHREDUX_TEAM_LOADED",self.REMATCHREDUX_NOTES_CHANGED) -- this shares same function as notes changing
 
     -- set up notes micro button in battle UI to summon team notes
     local notesButton = self.NotesButton
@@ -70,17 +70,17 @@ function rematch.battle:Setup()
     notesButton:SetShown(not settings.HideNotesButtonInBattle)
 end
 
-function rematch.battle.NotesButton:OnEnter()
+function rematchRedux.battle.NotesButton:OnEnter()
     self.Highlight:Show()
-    rematch.cardManager:OnEnter(rematch.notes,self,rematch.settings.currentTeamID)
+    rematchRedux.cardManager:OnEnter(rematchRedux.notes,self,rematchRedux.settings.currentTeamID)
 end
 
-function rematch.battle.NotesButton:OnLeave()
+function rematchRedux.battle.NotesButton:OnLeave()
     self.Highlight:Hide()
-    rematch.cardManager:OnLeave(rematch.notes,self,rematch.settings.currentTeamID)
+    rematchRedux.cardManager:OnLeave(rematchRedux.notes,self,rematchRedux.settings.currentTeamID)
 end
 
-function rematch.battle.NotesButton:OnMouseDown()
+function rematchRedux.battle.NotesButton:OnMouseDown()
     if self:IsEnabled() then
         self.Background:SetPoint("CENTER",1,-1)
         self.Icon:SetPoint("CENTER",1,-1)
@@ -88,7 +88,7 @@ function rematch.battle.NotesButton:OnMouseDown()
     end
 end
 
-function rematch.battle.NotesButton:OnMouseUp()
+function rematchRedux.battle.NotesButton:OnMouseUp()
     if self:IsEnabled() then
         self.Background:SetPoint("CENTER")
         self.Icon:SetPoint("CENTER")
@@ -96,22 +96,22 @@ function rematch.battle.NotesButton:OnMouseUp()
     end
 end
 
-function rematch.battle.NotesButton:OnShow()
+function rematchRedux.battle.NotesButton:OnShow()
     self:OnMouseUp()
     self:Update()
 end
 
-function rematch.battle.NotesButton:OnClick()
-    rematch.cardManager:OnClick(rematch.notes,self,rematch.settings.currentTeamID)
+function rematchRedux.battle.NotesButton:OnClick()
+    rematchRedux.cardManager:OnClick(rematchRedux.notes,self,rematchRedux.settings.currentTeamID)
 end
 
 -- needs to update when button shown, team unloaded, team saved, notes changed
-function rematch.battle.NotesButton:Update()
-    local teamID = rematch.settings.currentTeamID
-    if rematch.savedTeams:IsUserTeam(teamID) then
+function rematchRedux.battle.NotesButton:Update()
+    local teamID = rematchRedux.settings.currentTeamID
+    if rematchRedux.savedTeams:IsUserTeam(teamID) then
         self.Icon:SetDesaturated(false)
         self.Icon:SetVertexColor(0.9,0.9,0.9,1)
-        if rematch.savedTeams[teamID].notes then
+        if rematchRedux.savedTeams[teamID].notes then
             self.Icon:SetTexCoord(0,0.5,0,1)
             self.Highlight:SetTexCoord(0,0.5,0,1)
         else -- team is loaded but has no notes, use icon with green + on it
@@ -130,55 +130,55 @@ end
 
 
 -- from the given owner,index, return a petID, either the owned petID (if petOwner is ally), or "battle:2:index"
-function rematch.battle:GetUnitPetID(petOwner,petIndex)
+function rematchRedux.battle:GetUnitPetID(petOwner,petIndex)
     -- if all ally 3 ally pets loaded, then we can use loadouts to get actual petID
     -- (if a pet is dead, then index 2 pet could be loadout slot 3; so can't easily get petID)
     -- TODO: petInfo is going to loadouts anyway; this is a bug to fix for future (kinda messy)
     if petOwner==Enum.BattlePetOwner.Ally and petIndex and C_PetBattles.GetNumPets(Enum.BattlePetOwner.Ally)==3 then
-        return (rematch.loadouts:GetLoadoutInfo(petIndex))
+        return (rematchRedux.loadouts:GetLoadoutInfo(petIndex))
     elseif petIndex then
         return format("battle:%d:%d",petOwner,petIndex) -- this will return an enemy battle:owner:index link
     end
 end
 
-function rematch.battle:UnitOnEnter()
+function rematchRedux.battle:UnitOnEnter()
     if settings.PetCardInBattle then
         PetBattlePrimaryUnitTooltip:Hide()
-        rematch.cardManager:OnEnter(rematch.petCard,self,rematch.battle:GetUnitPetID(self.petOwner,self.petIndex))
+        rematchRedux.cardManager:OnEnter(rematchRedux.petCard,self,rematchRedux.battle:GetUnitPetID(self.petOwner,self.petIndex))
     end
 end
 
-function rematch.battle:UnitOnLeave()
+function rematchRedux.battle:UnitOnLeave()
     if settings.PetCardInBattle then
-        rematch.cardManager:OnLeave(rematch.petCard,self,rematch.battle:GetUnitPetID(self.petOwner,self.petIndex))
+        rematchRedux.cardManager:OnLeave(rematchRedux.petCard,self,rematchRedux.battle:GetUnitPetID(self.petOwner,self.petIndex))
     end
 end
 
-function rematch.battle:UnitOnClick(button)
+function rematchRedux.battle:UnitOnClick(button)
     if button~="RightButton" and settings.PetCardInBattle then
-        rematch.cardManager:OnClick(rematch.petCard,self,rematch.battle:GetUnitPetID(self.petOwner,self.petIndex))
+        rematchRedux.cardManager:OnClick(rematchRedux.petCard,self,rematchRedux.battle:GetUnitPetID(self.petOwner,self.petIndex))
     end
 end
 
 -- as battle is ending, record if it was a pvp battle
-function rematch.battle:PET_BATTLE_FINAL_ROUND(winner)
+function rematchRedux.battle:PET_BATTLE_FINAL_ROUND(winner)
     self.wasInPVP = not C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy)
 end
 
 -- this is called in pairs, so don't use toggle without checking if it's visible
-function rematch.battle:PET_BATTLE_CLOSE()
-    if settings.ShowAfterBattle and not (self.wasInPVP and settings.ShowAfterPVEOnly) and not rematch.frame:IsVisible() then
-        rematch.frame:Toggle(true)
+function rematchRedux.battle:PET_BATTLE_CLOSE()
+    if settings.ShowAfterBattle and not (self.wasInPVP and settings.ShowAfterPVEOnly) and not rematchRedux.frame:IsVisible() then
+        rematchRedux.frame:Toggle(true)
         -- pvp pets don't actually take damage, so update frame after leaving battle
-        rematch.timer:Start(C.QUEUE_PROCESS_WAIT,rematch.frame.Update)
+        rematchRedux.timer:Start(C.QUEUE_PROCESS_WAIT,rematchRedux.frame.Update)
     end
-    if rematch.notes:IsVisible() and not rematch.notes.Content.ScrollFrame.EditBox:HasFocus() and not settings.KeepNotesOnScreen then
-        rematch.cardManager:HideCard(rematch.notes)
+    if rematchRedux.notes:IsVisible() and not rematchRedux.notes.Content.ScrollFrame.EditBox:HasFocus() and not settings.KeepNotesOnScreen then
+        rematchRedux.cardManager:HideCard(rematchRedux.notes)
     end
 end
 
 -- if notes change while in battle UI, then the notes micro button will potentially change
-function rematch.battle:REMATCH_NOTES_CHANGED()
+function rematchRedux.battle:REMATCHREDUX_NOTES_CHANGED()
     if PetBattleFrame and PetBattleFrame.BottomFrame.MicroButtonFrame:IsVisible() then
         self.NotesButton:Update()
     end

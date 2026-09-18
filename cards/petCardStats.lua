@@ -1,7 +1,7 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
 --[[
     The following table is an ordered list of stats to display on the pet card: smallish buttons with an icon, text and tooltip, and possibly a function
@@ -29,7 +29,7 @@ local reusedStrongVsWeights = {} -- reusing tables to reduce garbage creation
 local reusedStrongVsOrder = {}
 
 
-rematch.petCardStats = {
+rematchRedux.petCardStats = {
     -- Revoked
     {
         icon = "Interface\\Buttons\\UI-GroupLoot-Pass-Down",
@@ -64,7 +64,7 @@ rematch.petCardStats = {
         tooltipBody = L["The World of Warcraft expansion this pet is from."],
         isWide = true,
         value = function(self,petInfo)
-            return rematch.utils:GetFormattedExpansionName(petInfo.expansionID)
+            return rematchRedux.utils:GetFormattedExpansionName(petInfo.expansionID)
         end,
         show = function(self,petInfo)
             return petInfo.expansionID and settings.PetCardShowExpansionStat
@@ -93,12 +93,12 @@ rematch.petCardStats = {
             end
         end,
         tooltipTitle = function(self,petInfo)
-            return rematch.utils:GetFormattedMarkerName(petInfo.marker)
+            return rematchRedux.utils:GetFormattedMarkerName(petInfo.marker)
         end,
         tooltipBody = L["This is the pet marker you've chosen for this pet. You can change the marker from the pet's right-click menu."],
         isWide = true,
         value = function(self,petInfo)
-            return rematch.utils:GetFormattedMarkerName(petInfo.marker)
+            return rematchRedux.utils:GetFormattedMarkerName(petInfo.marker)
         end,
         show = function(self,petInfo)
             return petInfo.marker and true
@@ -129,7 +129,7 @@ rematch.petCardStats = {
     {
         icon = "Interface\\AddOns\\RematchRedux\\textures\\levelingstat",
         tooltipTile = L["Leveling"],
-        tooltipBody = L["This pet is in Rematch's leveling queue."],
+        tooltipBody = L["This pet is in RematchRedux's leveling queue."],
         value = L["Leveling"],
         show = function(self,petInfo)
             return petInfo.isLeveling
@@ -194,18 +194,18 @@ rematch.petCardStats = {
         iconCoords = {0.09375,0.578125,0.140625,0.625},
         tooltipTitle = L["Breed"],
         tooltipBody = function(self,petInfo)
-            local breedSource,breedSourceName = rematch.breedInfo:GetBreedSource()
+            local breedSource,breedSourceName = rematchRedux.breedInfo:GetBreedSource()
             if breedSource then
                 return format(L["Determines how stats are distributed. All breed data is pulled from your installed %s%s\124r addon."],C.HEX_WHITE,breedSourceName)
             end
         end,
         value = function(self,petInfo)
-            if rematch.breedInfo:GetBreedSource() then
+            if rematchRedux.breedInfo:GetBreedSource() then
                 return petInfo.breedName or UNKNOWN
             end
         end,
         show = function(self,petInfo)
-            return rematch.breedInfo:GetBreedSource() and petInfo.canBattle and petInfo.breedID
+            return rematchRedux.breedInfo:GetBreedSource() and petInfo.canBattle and petInfo.breedID
         end
     },
     -- Teams
@@ -223,12 +223,12 @@ rematch.petCardStats = {
         click = function(self,petInfo)
             if petInfo.isOwned and petInfo.idType=="pet" then
                 local petID = petInfo.petID -- about to clobber this if moving to teams view
-                rematch.layout:SummonView("teams")
-                rematch.teamsPanel:SetSearch(petID)
+                rematchRedux.layout:SummonView("teams")
+                rematchRedux.teamsPanel:SetSearch(petID)
             elseif petInfo.idType=="species" then
                 local name = petInfo.speciesName
-                rematch.layout:SummonView("teams")
-                rematch.teamsPanel:SetSearch(name)
+                rematchRedux.layout:SummonView("teams")
+                rematchRedux.teamsPanel:SetSearch(name)
             end
         end,
     },
@@ -258,7 +258,7 @@ rematch.petCardStats = {
         iconCoords = {0.075,0.925,0.075,0.925},
         tooltipTitle = COLLECTED,
         tooltipBody = function(self,petInfo)
-            return rematch.petCard:GetCollectedList(petInfo)
+            return rematchRedux.petCard:GetCollectedList(petInfo)
         end,
         value = function(self,petInfo)
             return format("%s%d/%d",petInfo.countColor,petInfo.count or 0,petInfo.maxCount or 0)
@@ -286,7 +286,7 @@ rematch.petCardStats = {
             end)
             for i=1,3 do -- and add them to results to return
                 if reusedStrongVsOrder[i] then
-                    results = results..rematch.utils:PetTypeAsText(reusedStrongVsOrder[i],16,true)
+                    results = results..rematchRedux.utils:PetTypeAsText(reusedStrongVsOrder[i],16,true)
                 end
             end
             wipe(reusedStrongVsOrder) -- done with tables, can clean up
@@ -319,13 +319,13 @@ rematch.petCardStats = {
             return petInfo.hasNotes
         end,
         enter = function(self,petInfo)
-            rematch.cardManager:OnEnter(rematch.notes,self,petInfo.petID)
+            rematchRedux.cardManager:OnEnter(rematchRedux.notes,self,petInfo.petID)
         end,
         leave = function(self,petInfo)
-            rematch.cardManager:OnLeave(rematch.notes,self,petInfo.petID)
+            rematchRedux.cardManager:OnLeave(rematchRedux.notes,self,petInfo.petID)
         end,
         click = function(self,petInfo)
-            rematch.cardManager:OnClick(rematch.notes,self,petInfo.petID)
+            rematchRedux.cardManager:OnClick(rematchRedux.notes,self,petInfo.petID)
         end
     },
     -- Search
@@ -339,14 +339,14 @@ rematch.petCardStats = {
         end,
         click = function(self,petInfo) -- clicking the search stat will look for an "Exact Species Name" to find all copies of the pet
             local petID = petInfo.petID -- SummonView may potentially clobber the passed petInfo; hold onto the petID just in case
-            rematch.layout:SummonView("pets")
-            petInfo = rematch.petInfo:Fetch(petID)
-            rematch.filters:ClearAll()
+            rematchRedux.layout:SummonView("pets")
+            petInfo = rematchRedux.petInfo:Fetch(petID)
+            rematchRedux.filters:ClearAll()
             local exactSearch = "\""..petInfo.speciesName.."\""
-            rematch.filters:SetSearch(exactSearch)
-            rematch.petsPanel.Top.SearchBox:SetText(exactSearch)
-            rematch.petsPanel:Update()
-            rematch.petCard:Hide()
+            rematchRedux.filters:SetSearch(exactSearch)
+            rematchRedux.petsPanel.Top.SearchBox:SetText(exactSearch)
+            rematchRedux.petsPanel:Update()
+            rematchRedux.petCard:Hide()
         end
     },
 

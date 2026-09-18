@@ -1,7 +1,7 @@
 <Ui>
 
-    <!-- DropDown widgets all have a label to the left with a RematchDropDown taking up the remaining space -->
-    <Button name="RematchOptionsDropDownTemplate" inherits="RematchTooltipScripts" virtual="true" hidden="true">
+    <!-- DropDown widgets all have a label to the left with a RematchReduxDropDown taking up the remaining space -->
+    <Button name="RematchReduxOptionsDropDownTemplate" inherits="RematchReduxTooltipScripts" virtual="true" hidden="true">
         <Size x="0" y="26"/>
         <KeyValues>
             <KeyValue key="isOption" value="true" type="boolean"/>
@@ -16,7 +16,7 @@
             </Layer>
         </Layers>
         <Frames>
-            <Button parentKey="DropDown" inherits="RematchDropDownTemplate,RematchTooltipScripts">
+            <Button parentKey="DropDown" inherits="RematchReduxDropDownTemplate,RematchReduxTooltipScripts">
                 <KeyValues>
                     <KeyValue key="isOption" value="true" type="boolean"/>
                     <KeyValue key="tooltipAtParent" value="true" type="boolean"/>
@@ -31,7 +31,7 @@
 
 
     <!-- template for header list buttons -->
-    <Button name="RematchOptionsHeaderTemplate" mixin="RematchOptionsListButtonMixin" inherits="RematchHeaderListButtonTemplate" virtual="true">
+    <Button name="RematchReduxOptionsHeaderTemplate" mixin="RematchReduxOptionsListButtonMixin" inherits="RematchReduxHeaderListButtonTemplate" virtual="true">
         <KeyValues>
             <KeyValue key="isOption" value="true" type="boolean"/>
         </KeyValues>
@@ -45,7 +45,7 @@
     </Button>
 
     <!-- template for check/radio list buttons -->
-    <Button name="RematchOptionsNormalTemplate" mixin="RematchOptionsListButtonMixin" virtual="true">
+    <Button name="RematchReduxOptionsNormalTemplate" mixin="RematchReduxOptionsListButtonMixin" virtual="true">
         <Size x="0" y="26"/>
         <KeyValues>
             <KeyValue key="isOption" value="true" type="boolean"/>
@@ -79,22 +79,22 @@
         </Scripts>
     </Button>
 
-    <Frame parentKey="OptionsPanel" parent="RematchFrame">
+    <Frame parentKey="OptionsPanel" parent="RematchReduxFrame">
         <Frames>
             <!-- Top contains the options searchbar -->
-            <Frame parentKey="Top" inherits="RematchPanelInsetFrameTemplate">
+            <Frame parentKey="Top" inherits="RematchReduxPanelInsetFrameTemplate">
                 <Size x="0" y="29"/>
                 <Anchors>
                     <Anchor point="TOPLEFT"/>
                     <Anchor point="TOPRIGHT"/>
                 </Anchors>
                 <Frames>
-                    <Button parentKey="AllButton" inherits="RematchAllButtonTemplate">
+                    <Button parentKey="AllButton" inherits="RematchReduxAllButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" x="3" y="-3"/>
                         </Anchors>
                     </Button>
-                    <EditBox parentKey="SearchBox" inherits="RematchSearchBoxTemplate">
+                    <EditBox parentKey="SearchBox" inherits="RematchReduxSearchBoxTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeKey="$parent.AllButton" relativePoint="TOPRIGHT" x="-1" y="0"/>
                             <Anchor point="TOPRIGHT" x="-3" y="-3"/>
@@ -103,7 +103,7 @@
                 </Frames>
             </Frame>
             <!-- List -->
-            <Frame parentKey="List" inherits="RematchAutoScrollBoxTemplate">
+            <Frame parentKey="List" inherits="RematchReduxAutoScrollBoxTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.Top" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
                     <Anchor point="BOTTOMRIGHT"/>
@@ -113,7 +113,7 @@
             <!-- widgets are single controls that are placed within the list and should be a direct child of the OptionPanel frame -->
 
             <!-- Breed Options: Breed Format -->
-            <Button parentKey="BreedFormatWidget" inherits="RematchOptionsDropDownTemplate"/>
+            <Button parentKey="BreedFormatWidget" inherits="RematchReduxOptionsDropDownTemplate"/>
 
             <!-- Standalone Window Options: Use Custom Scale -->
             <Button parentKey="UseCustomScaleWidget">
@@ -121,7 +121,7 @@
                     <KeyValue key="isOption" value="true" type="boolean"/>
                 </KeyValues>
                 <Frames>
-                    <Button parentKey="ScaleButton" inherits="RematchGreyPanelButtonTemplate">
+                    <Button parentKey="ScaleButton" inherits="RematchReduxGreyPanelButtonTemplate">
                         <Anchors>
                             <Anchor point="RIGHT"/>
                         </Anchors>
@@ -185,7 +185,7 @@
                     </Layer>
                 </Layers>
                 <Frames>
-                    <Button parentKey="ResetButton" inherits="RematchGreyPanelButtonTemplate">
+                    <Button parentKey="ResetButton" inherits="RematchReduxGreyPanelButtonTemplate">
                         <Size x="68" y="24"/>
                         <KeyValues>
                             <KeyValue key="coord" value="68x24"/>
@@ -199,7 +199,7 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <Button parentKey="ExportButton" inherits="RematchGreyPanelButtonTemplate">
+                    <Button parentKey="ExportButton" inherits="RematchReduxGreyPanelButtonTemplate">
                         <Size x="68" y="24"/>
                         <KeyValues>
                             <KeyValue key="coord" value="68x24"/>

@@ -1,7 +1,7 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
 
 local updates = {} -- functions indexed by button name to update button's state/content
 local preClicks = {} -- functions indexed by button name to modify attributes/behavior before a click
@@ -9,8 +9,8 @@ local tooltips = {} -- functions indexed by button name to show a tooltip
 
 -- for heal and bandage buttons to determine if any pet needs healed
 local function isAnyPetInjured()
-    for petID in rematch.roster:AllOwnedPets() do
-        local petInfo = rematch.petInfo:Fetch(petID)
+    for petID in rematchRedux.roster:AllOwnedPets() do
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if petInfo.isDead or petInfo.isInjured then -- at least one pet is injured
             return true
         end
@@ -39,29 +39,29 @@ end
 
 -- stops any pending tooltip waiting to be shown
 local function stopTooltip()
-    rematch.timer:Stop(repeatTooltip)
+    rematchRedux.timer:Stop(repeatTooltip)
 end
 
 -- call before filling a toolbar tooltip, returns false if a tooltip shouldn't be shown
 local function preTooltip(self)
     stopTooltip()
     if settings.HideToolbarTooltips then
-        rematch.tooltip:Hide()
+        rematchRedux.tooltip:Hide()
         return false
     else
-        rematch.tooltip:SetOwner(self)
+        rematchRedux.tooltip:SetOwner(self)
         return true
     end
 end
 
 -- call after filling a toolbar tooltip to actually show and anchor the tooltip
 local function postTooltip(self,repeatDelay)
-    if rematch.tooltip:GetNumLines()>0 then
-        local corner,opposite = rematch.utils:GetCorner(rematch.frame,UIParent)
-        rematch.tooltip:SetPoint(corner,self,opposite)
-        rematch.tooltip:Show()
+    if rematchRedux.tooltip:GetNumLines()>0 then
+        local corner,opposite = rematchRedux.utils:GetCorner(rematchRedux.frame,UIParent)
+        rematchRedux.tooltip:SetPoint(corner,self,opposite)
+        rematchRedux.tooltip:Show()
         if repeatDelay then
-            rematch.timer:Start(repeatDelay,repeatTooltip,self)
+            rematchRedux.timer:Start(repeatDelay,repeatTooltip,self)
         end
     end
 end
@@ -69,7 +69,7 @@ end
 --[[ updates ]]
 
 function updates:SafariHatButton()
-    local buffName = rematch.utils:GetItemBuff(C.SAFARI_HAT_ITEM_ID)
+    local buffName = rematchRedux.utils:GetItemBuff(C.SAFARI_HAT_ITEM_ID)
     if buffName then
         self.Cancel:Show()
         self:SetAttribute("type","cancelaura")
@@ -88,7 +88,7 @@ function updates:SafariHatButton()
         self.Icon:SetVertexColor(1,1,1)
     end
     -- Safari Hat Reminder
-    if settings.SafariHatShine and hasHat and not buffName and rematch.loadouts:NotAllMaxLevel() then
+    if settings.SafariHatShine and hasHat and not buffName and rematchRedux.loadouts:NotAllMaxLevel() then
         self.Shine:Show()
     else
         self.Shine:Hide()
@@ -103,7 +103,7 @@ function updates:SummonPetButton()
     local petID = C_PetJournal.GetSummonedPetGUID()
     if self.petID~=petID then
         self.petID = petID
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if petInfo.isValid then -- a pet is summoned
             self.Icon:SetTexture(petInfo.icon)
             self.Cancel:Show()
@@ -124,14 +124,14 @@ function updates:FindBattleButton()
 end
 
 function updates:LevelingStoneButton()
-    local itemID = rematch.toolbar:PickBestStone(C.LEVELING_STONES,C.DEFAULT_LEVELING_STONE_ITEM_ID)
+    local itemID = rematchRedux.toolbar:PickBestStone(C.LEVELING_STONES,C.DEFAULT_LEVELING_STONE_ITEM_ID)
     self.Icon:SetTexture((select(5,C_Item.GetItemInfoInstant(itemID))))
     self:SetAttribute("item","item:"..itemID)
     itemUpdate(self)
 end
 
 function updates:RarityStoneButton()
-    local itemID = rematch.toolbar:PickBestStone(C.RARITY_STONES,C.DEFAULT_RARITY_STONE_ITEM_ID)
+    local itemID = rematchRedux.toolbar:PickBestStone(C.RARITY_STONES,C.DEFAULT_RARITY_STONE_ITEM_ID)
     self.Icon:SetTexture((select(5,C_Item.GetItemInfoInstant(itemID))))
     self:SetAttribute("item","item:"..itemID)
     itemUpdate(self)
@@ -140,9 +140,9 @@ end
 --[[ preClicks ]]
 
 function preClicks:PetSatchelButton(button)
-    settings.PetSatchelIndex = settings.PetSatchelIndex%#rematch.toolbar.petSatchelButtons + 1
-    rematch.toolbar:Configure()
-    rematch.toolbar:Update()
+    settings.PetSatchelIndex = settings.PetSatchelIndex%#rematchRedux.toolbar.petSatchelButtons + 1
+    rematchRedux.toolbar:Configure()
+    rematchRedux.toolbar:Update()
     PlaySound(C.SOUND_SATCHEL)
 end
 
@@ -187,24 +187,24 @@ function preClicks:FindBattleButton(button)
 end
 
 function preClicks:RandomTeamButton(button)
-    rematch.randomPets:BuildCounterTeam(rematch.targetInfo.recentTarget)
-    rematch.loadTeam:LoadTeamID("counter")
+    rematchRedux.randomPets:BuildCounterTeam(rematchRedux.targetInfo.recentTarget)
+    rematchRedux.loadTeam:LoadTeamID("counter")
     PlaySound(C.SOUND_TEAM_LOAD)
 end
 
 -- clicking the Save As toolbar button should behave identically to clicking the bottombar SaveAsButton
 function preClicks:SaveAsButton(button)
-    rematch.bottombar.SaveAsButton:OnClick()
+    rematchRedux.bottombar.SaveAsButton:OnClick()
 end
 
 -- export button for loaded teams will sideline the loaded pets with the current team if one loaded
 function preClicks:ExportTeamButton(button)
-    rematch.saveDialog:SidelineLoadouts(newTeam)
-    rematch.dialog:ShowDialog("ExportSingleTeam",{teamID="sideline"})
+    rematchRedux.saveDialog:SidelineLoadouts(newTeam)
+    rematchRedux.dialog:ShowDialog("ExportSingleTeam",{teamID="sideline"})
 end
 
 function preClicks:ImportTeamButton(button)
-    rematch.dialog:ShowDialog("ImportTeams")
+    rematchRedux.dialog:ShowDialog("ImportTeams")
 end
 
 --[[ tooltips ]]
@@ -212,20 +212,20 @@ end
 function tooltips:SummonPetButton()
     if preTooltip(self) then
         local tooltipTitle,tooltipBody
-        local petInfo = rematch.petInfo:Fetch(C_PetJournal.GetSummonedPetGUID())
+        local petInfo = rematchRedux.petInfo:Fetch(C_PetJournal.GetSummonedPetGUID())
         if petInfo.isValid then -- a pet is summoned
-            rematch.tooltip:AddLine(petInfo.name,petInfo.color.r,petInfo.color.g,petInfo.color.b)
+            rematchRedux.tooltip:AddLine(petInfo.name,petInfo.color.r,petInfo.color.g,petInfo.color.b)
             if petInfo.customName then
-                rematch.tooltip:AddLine(petInfo.speciesName,1,1,1)
+                rematchRedux.tooltip:AddLine(petInfo.speciesName,1,1,1)
             end
-            rematch.tooltip:AddLine(format(L["Pet Level %d %s"],petInfo.level,petInfo.petTypeName),1,1,1)
-            rematch.tooltip:AddLine(format(L["%s Dismiss Pet"],C.LMB_TEXT_ICON))
+            rematchRedux.tooltip:AddLine(format(L["Pet Level %d %s"],petInfo.level,petInfo.petTypeName),1,1,1)
+            rematchRedux.tooltip:AddLine(format(L["%s Dismiss Pet"],C.LMB_TEXT_ICON))
         else -- a pet isn't summoned
-            rematch.tooltip:AddLine(L["Summon Random Pet"])
+            rematchRedux.tooltip:AddLine(L["Summon Random Pet"])
             if settings.ToolbarDismiss then
-                rematch.tooltip:AddLine(format("%s %s",C.LMB_TEXT_ICON,L["Random favorite pet"]))
+                rematchRedux.tooltip:AddLine(format("%s %s",C.LMB_TEXT_ICON,L["Random favorite pet"]))
             else
-                rematch.tooltip:AddLine(format("%s %s\n%s %s",C.LMB_TEXT_ICON,L["Random favorite pet"],C.RMB_TEXT_ICON,L["Random from all pets"]))
+                rematchRedux.tooltip:AddLine(format("%s %s\n%s %s",C.LMB_TEXT_ICON,L["Random favorite pet"],C.RMB_TEXT_ICON,L["Random from all pets"]))
             end
         end
         postTooltip(self)
@@ -235,8 +235,8 @@ end
 -- for buttons with onlya tooltipTitle and tooltipBody
 function tooltips:SimpleTooltip()
     if preTooltip(self) then
-        rematch.tooltip:AddLine(_G[self.tooltipTitle] or L[self.tooltipTitle])
-        rematch.tooltip:AddLine(_G[self.tooltipBody] or L[self.tooltipBody])
+        rematchRedux.tooltip:AddLine(_G[self.tooltipTitle] or L[self.tooltipTitle])
+        rematchRedux.tooltip:AddLine(_G[self.tooltipBody] or L[self.tooltipBody])
         postTooltip(self)
     end
 end
@@ -250,9 +250,9 @@ tooltips.SaveAsButton = tooltips.SimpleTooltip
 function tooltips:HealButton()
     if preTooltip(self) then
         local spellID = self:GetAttribute("spell")
-        rematch.tooltip:SetSpellByID(spellID)
+        rematchRedux.tooltip:SetSpellByID(spellID)
         if self.tooltipNotice then
-            rematch.tooltip:AddLine(format(L["%s%s"],C.HEX_BLUE,self.tooltipNotice))
+            rematchRedux.tooltip:AddLine(format(L["%s%s"],C.HEX_BLUE,self.tooltipNotice))
         end
         local cooldown = C_Spell.GetSpellCooldown(C.REVIVE_SPELL_ID)
         local repeatDelay = (cooldown and cooldown.startTime and cooldown.startTime>0) and 1 or nil
@@ -262,11 +262,11 @@ end
 
 function tooltips:SafariHatButton()
     if preTooltip(self) then
-        local _,spellID = rematch.utils:GetItemBuff(C.SAFARI_HAT_ITEM_ID)
+        local _,spellID = rematchRedux.utils:GetItemBuff(C.SAFARI_HAT_ITEM_ID)
         if spellID then -- safari hat is active, set buff tooltip
-            rematch.tooltip:SetUnitBuff("player",rematch.utils:GetBuffIndex(spellID))
+            rematchRedux.tooltip:SetUnitBuff("player",rematchRedux.utils:GetBuffIndex(spellID))
         else -- safari hat is not active, set toy tooltip
-            rematch.tooltip:SetToyByItemID(C.SAFARI_HAT_ITEM_ID)
+            rematchRedux.tooltip:SetToyByItemID(C.SAFARI_HAT_ITEM_ID)
         end
         postTooltip(self)
     end
@@ -276,18 +276,18 @@ function tooltips:ItemTooltip()
     if preTooltip(self) then
         local repeatDelay
         local itemID = self:GetAttribute("item")
-        local _,spellID = rematch.utils:GetItemBuff(itemID)
+        local _,spellID = rematchRedux.utils:GetItemBuff(itemID)
         if spellID then -- if the item grants a buff, display buff tooltip if it's up
-            rematch.tooltip:SetUnitBuff("player",rematch.utils:GetBuffIndex(spellID))
+            rematchRedux.tooltip:SetUnitBuff("player",rematchRedux.utils:GetBuffIndex(spellID))
             repeatDelay = 1 -- if tooltip for a buff, update it every second
         else -- display item tooltip otherwise
-            rematch.tooltip:SetItemByID(itemID)
-            if not C_Item.IsItemDataCachedByID(itemID) or rematch.tooltip:GetNumLines()<=2 then
+            rematchRedux.tooltip:SetItemByID(itemID)
+            if not C_Item.IsItemDataCachedByID(itemID) or rematchRedux.tooltip:GetNumLines()<=2 then
                 repeatDelay = 0.2 -- if tooltip for an item that's not cached or fully loaded, update again in 0.2 seconds
             end
         end
         if self.tooltipNotice then
-            rematch.tooltip:AddLine(format(L["%s%s"],C.HEX_BLUE,self.tooltipNotice))
+            rematchRedux.tooltip:AddLine(format(L["%s%s"],C.HEX_BLUE,self.tooltipNotice))
         end
         postTooltip(self,repeatDelay)
     end
@@ -300,54 +300,54 @@ tooltips.RarityStoneButton = tooltips.ItemTooltip
 
 --[[ button mixin ]]
 
-RematchToolbarButtonMixin = {}
+RematchReduxToolbarButtonMixin = {}
 
-function RematchToolbarButtonMixin:OnLoad()
+function RematchReduxToolbarButtonMixin:OnLoad()
     if self.icon then
         self.Icon:SetTexture(self.icon)
     end
     self.Cooldown:SetHideCountdownNumbers(true)
 end
 
-function RematchToolbarButtonMixin:OnEnter()
-    rematch.textureHighlight:Show(self.Icon)
+function RematchReduxToolbarButtonMixin:OnEnter()
+    rematchRedux.textureHighlight:Show(self.Icon)
     local button = self.button
-    if button and rematch.toolbar[button] and tooltips[button] then
-        tooltips[button](rematch.toolbar[button])
+    if button and rematchRedux.toolbar[button] and tooltips[button] then
+        tooltips[button](rematchRedux.toolbar[button])
     end
 end
 
-function RematchToolbarButtonMixin:OnLeave()
+function RematchReduxToolbarButtonMixin:OnLeave()
     stopTooltip()
-    rematch.textureHighlight:Hide()
-    rematch.tooltip:Hide()
+    rematchRedux.textureHighlight:Hide()
+    rematchRedux.tooltip:Hide()
     self.tooltipNotice = nil -- remove any notice added to tooltip
 end
 
-function RematchToolbarButtonMixin:OnMouseDown()
-    rematch.textureHighlight:Hide()
+function RematchReduxToolbarButtonMixin:OnMouseDown()
+    rematchRedux.textureHighlight:Hide()
 end
 
-function RematchToolbarButtonMixin:OnMouseUp()
+function RematchReduxToolbarButtonMixin:OnMouseUp()
     if self:IsMouseMotionFocus() then
-        rematch.textureHighlight:Show(self.Icon)
+        rematchRedux.textureHighlight:Show(self.Icon)
     end
 end
 
-function RematchToolbarButtonMixin:PreClick(mouseButton,down)
+function RematchReduxToolbarButtonMixin:PreClick(mouseButton,down)
     local button = self.button
-    if button and rematch.toolbar[button] and preClicks[button] and GetCVarBool("ActionButtonUseKeyDown")==down then
-        preClicks[button](rematch.toolbar[button],mouseButton,down)
+    if button and rematchRedux.toolbar[button] and preClicks[button] and GetCVarBool("ActionButtonUseKeyDown")==down then
+        preClicks[button](rematchRedux.toolbar[button],mouseButton,down)
     end
 end
 
-function RematchToolbarButtonMixin:PostClick(mouseButton,down)
-    if mouseButton=="RightButton" and settings.ToolbarDismiss and rematch.frame:IsVisible() then
-        rematch.frame:Toggle()
+function RematchReduxToolbarButtonMixin:PostClick(mouseButton,down)
+    if mouseButton=="RightButton" and settings.ToolbarDismiss and rematchRedux.frame:IsVisible() then
+        rematchRedux.frame:Toggle()
     end
 end
 
-function RematchToolbarButtonMixin:OnDragStart()
+function RematchReduxToolbarButtonMixin:OnDragStart()
     if self:GetAttribute("item") then
         C_Item.PickupItem(self:GetAttribute("item"))
     elseif self:GetAttribute("spell") then
@@ -356,10 +356,10 @@ function RematchToolbarButtonMixin:OnDragStart()
 end
 
 -- all buttons share this Update which calls the updates[] function indexed by button parentKey (self.button)
-function RematchToolbarButtonMixin:Update(fromEvent)
+function RematchReduxToolbarButtonMixin:Update(fromEvent)
     local button = self.button
-    if (not fromEvent or self.needsUpdate or self.alwaysUpdate) and button and rematch.toolbar[button] and updates[button] then
-        updates[button](rematch.toolbar[button])
+    if (not fromEvent or self.needsUpdate or self.alwaysUpdate) and button and rematchRedux.toolbar[button] and updates[button] then
+        updates[button](rematchRedux.toolbar[button])
         self.needsUpdate = nil
     end
 end

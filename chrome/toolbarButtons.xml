@@ -1,7 +1,7 @@
 <Ui>
     <Script file="toolbarButtons.lua"/>
 
-    <Button name="RematchToolbarButtonTemplate" mixin="RematchToolbarButtonMixin" registerForClicks="AnyUp,AnyDown" registerForDrag="LeftButton" inherits="SecureActionButtonTemplate" virtual="true" hidden="true">
+    <Button name="RematchReduxToolbarButtonTemplate" mixin="RematchReduxToolbarButtonMixin" registerForClicks="AnyUp,AnyDown" registerForDrag="LeftButton" inherits="SecureActionButtonTemplate" virtual="true" hidden="true">
         <Size x="32" y="32"/>
         <Layers>
             <!-- Icon is in background layer so the border overlaps it-->

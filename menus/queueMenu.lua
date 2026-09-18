@@ -1,12 +1,12 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.queueMenu = {}
-local qm = rematch.queueMenu
-local pm = rematch.petMenu
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.queueMenu = {}
+local qm = rematchRedux.queueMenu
+local pm = rematchRedux.petMenu
 
-rematch.events:Register(rematch.queueMenu,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.queueMenu,"PLAYER_LOGIN",function(self)
 
     -- menu for the queue button at top of queue panel
     local menu = {
@@ -26,13 +26,13 @@ rematch.events:Register(rematch.queueMenu,"PLAYER_LOGIN",function(self)
         {text=L["Fill Queue More"], hidden=qm.NotShowFillQueueMore, fillMore=true, func=qm.FillQueue, tooltipBody=L["Fill the leveling queue with one of each version of a pet that can level from the filtered pet list, regardless whether you have any at level 25 or one in the queue already."]},
         {text=L["Empty Queue"], isDisabled=qm.IsQueueEmpty, func=qm.EmptyQueue, tooltipBody=L["Remove all pets from the leveling queue."]},
         {spacer=true},
-        {text=L["Export Queue"], isDisabled=qm.IsQueueEmpty, func=qm.ExportQueue, tooltipBody=format(L["Export all pets in the leveling queue for later importing.\n\n%sNote\124r: Rematch will make a best guess what to import, but there's no guarantee the exact same pets will import, especially after they've leveled. This works best without many duplicates."],C.HEX_WHITE)},
-        {text=L["Import Queue"], func=qm.ImportQueue, tooltipBody=format(L["Import pets to the queue that have been previously exported.\n\n%sNote\124r: Rematch will make a best guess what to import, but there's no guarantee the exact same pets will import, especially after they've leveled. This works best without many duplicates."],C.HEX_WHITE)},
+        {text=L["Export Queue"], isDisabled=qm.IsQueueEmpty, func=qm.ExportQueue, tooltipBody=format(L["Export all pets in the leveling queue for later importing.\n\n%sNote\124r: RematchRedux will make a best guess what to import, but there's no guarantee the exact same pets will import, especially after they've leveled. This works best without many duplicates."],C.HEX_WHITE)},
+        {text=L["Import Queue"], func=qm.ImportQueue, tooltipBody=format(L["Import pets to the queue that have been previously exported.\n\n%sNote\124r: RematchRedux will make a best guess what to import, but there's no guarantee the exact same pets will import, especially after they've leveled. This works best without many duplicates."],C.HEX_WHITE)},
         {spacer=true},
         {text=L["Help"], icon="Interface\\Common\\help-i", isHelp=true, hidden=function() return settings.HideMenuHelp end, iconCoords={0.15,0.85,0.15,0.85}, tooltipBody=L["This is the leveling queue. Drag pets you want to level here.\n\nRight click any of the three battle pet slots and choose 'Put Leveling Pet Here' to mark it as a leveling slot you want controlled by the queue.\n\nWhile a leveling slot is active, the queue will fill the slot with the top-most pet in the queue. When this pet reaches level 25 (gratz!) it will leave the queue and the next pet in the queue will take its place.\n\nTeams saved with a leveling slot will reserve that slot for future leveling pets."]},
         {text=OKAY}
     }
-    rematch.menus:Register("QueueMenu",menu)
+    rematchRedux.menus:Register("QueueMenu",menu)
 
     -- menu when you right-click a pet in the queue (some options/funcs copied from petMenus)
     local menu = {
@@ -53,9 +53,9 @@ rematch.events:Register(rematch.queueMenu,"PLAYER_LOGIN",function(self)
         {spacer=true},
         {text=CANCEL},
     }
-    rematch.menus:Register("QueueListMenu",menu)
+    rematchRedux.menus:Register("QueueListMenu",menu)
 
-    rematch.dialog:Register("EmptyQueue",{
+    rematchRedux.dialog:Register("EmptyQueue",{
         title = L["Empty Queue"],
         prompt = L["Empty queue?"],
         accept = YES,
@@ -66,11 +66,11 @@ rematch.events:Register(rematch.queueMenu,"PLAYER_LOGIN",function(self)
         end,
         acceptFunc = function(self,info,subject)
             wipe(settings.LevelingQueue)
-            rematch.queue:Process()
+            rematchRedux.queue:Process()
         end,
     })
 
-    rematch.dialog:Register("FillQueue",{
+    rematchRedux.dialog:Register("FillQueue",{
         title = L["Fill Queue"],
         prompt = L["Add these pets to the queue?"],
         accept = YES,
@@ -81,36 +81,36 @@ rematch.events:Register(rematch.queueMenu,"PLAYER_LOGIN",function(self)
             Many = {"Spacer","Text","Spacer2","Feedback","Spacer3","CheckButton"},
         },
         refreshFunc = function(self,info,subject,firstRun)
-            local count = rematch.queue:FillQueue(subject.fillMore,true)
+            local count = rematchRedux.queue:FillQueue(subject.fillMore,true)
             self.Text:SetText(format(L["This will add %s%s\124r pets to the leveling queue."],C.HEX_WHITE,count))
             self.CheckButton:SetText(L["Don't Ask When Filling Queue"])
             self.Feedback:Set("warning",L["This is a lot of pets. You can be more selective by filtering pets."])
-            rematch.dialog:ChangeLayout(count>50 and "Many" or "Default")
-            rematch.dialog.OtherButton:SetEnabled(not subject.fillMore)
+            rematchRedux.dialog:ChangeLayout(count>50 and "Many" or "Default")
+            rematchRedux.dialog.OtherButton:SetEnabled(not subject.fillMore)
         end,
         acceptFunc = function(self,info,subject)
             if self.CheckButton:GetChecked() then
                 settings.DontConfirmFillQueue = true
             end
-            rematch.queue:FillQueue(subject.fillMore)
+            rematchRedux.queue:FillQueue(subject.fillMore)
         end,
         otherFunc = function(self,info,subject)
             -- a dialog close happens after this otherFunc, so come back in a frame with a new dialog
-            rematch.timer:Start(0,function()
-                rematch.dialog:ShowDialog("FillQueue",{fillMore=true})
+            rematchRedux.timer:Start(0,function()
+                rematchRedux.dialog:ShowDialog("FillQueue",{fillMore=true})
             end)
         end,
     })
 
-    rematch.dialog:Register("StopActiveSort",{
+    rematchRedux.dialog:Register("StopActiveSort",{
         title = L["Active Sort Enabled"],
         prompt =L["Turn off Active Sort and move pet?"],
         accept = YES,
         cancel = NO,
         layout = {"Feedback","Text","CheckButton"},
         refreshFunc = function(self,info,subject,firstRun)
-            self.Feedback:Set("warning",format(L["%s is already in the queue and Active Sort is enabled."],rematch.petInfo:Fetch(subject.petID).formattedName))
-            self.Text:SetText(format(L["The queue controls the order of pets while it's actively sorted.\n\nTo move this pet within the queue, Active Sort needs to be turned off."],rematch.petInfo:Fetch(subject.petID).formattedName))
+            self.Feedback:Set("warning",format(L["%s is already in the queue and Active Sort is enabled."],rematchRedux.petInfo:Fetch(subject.petID).formattedName))
+            self.Text:SetText(format(L["The queue controls the order of pets while it's actively sorted.\n\nTo move this pet within the queue, Active Sort needs to be turned off."],rematchRedux.petInfo:Fetch(subject.petID).formattedName))
             self.CheckButton:SetText(L["Don't Ask To Stop Active Sort"])
         end,
         acceptFunc = function(self,info,subject)
@@ -118,49 +118,49 @@ rematch.events:Register(rematch.queueMenu,"PLAYER_LOGIN",function(self)
                 settings.DontConfirmActiveSort = true
             end
             settings.QueueActiveSort = false -- if active sort and in the queue, turn off active sort and move to new position
-            rematch.queue:MoveIndex(rematch.queue:GetPetIndex(subject.petID),subject.newIndex)
-            rematch.queue:BlingPetID(subject.petID)
+            rematchRedux.queue:MoveIndex(rematchRedux.queue:GetPetIndex(subject.petID),subject.newIndex)
+            rematchRedux.queue:BlingPetID(subject.petID)
             ClearCursor()
         end
     })
 
     -- dialog from right click menu Remove From Leveling Queue; petsPanel doesn't have one since the pet list doesn't shift around
     -- and it's easy to re-add if they don't want
-    rematch.dialog:Register("RemoveFromQueue",{
+    rematchRedux.dialog:Register("RemoveFromQueue",{
         title = L["Remove From Queue"],
         accept = YES,
         cancel = NO,
         layout = {"Text","CheckButton"},
         refreshFunc = function(self,info,subject,firstRun)
-            self.Text:SetText(format(L["Remove %s from the leveling queue?"],rematch.petInfo:Fetch(subject).formattedName))
+            self.Text:SetText(format(L["Remove %s from the leveling queue?"],rematchRedux.petInfo:Fetch(subject).formattedName))
             self.CheckButton:SetText(L["Don't Ask For Queue Removal"])
         end,
         acceptFunc = function(self,info,subject)
             if self.CheckButton:GetChecked() then
                 settings.DontConfirmRemoveQueue = true
             end
-            rematch.queue:RemovePetID(subject)
+            rematchRedux.queue:RemovePetID(subject)
         end
     })
 
-    rematch.dialog:Register("ExportQueue",{
+    rematchRedux.dialog:Register("ExportQueue",{
         title = L["Export Queue"],
         accept = OKAY,
         layout = {"Text","MultiLineEditBox"},
         refreshFunc = function(self,info,subject,firstRun)
             if firstRun then
                 self.Text:SetText(L["Press Ctrl+C to copy to clipboard"])
-                self.MultiLineEditBox:SetText(rematch.queue:ExportQueue(),true)
+                self.MultiLineEditBox:SetText(rematchRedux.queue:ExportQueue(),true)
                 self.MultiLineEditBox:ScrollToTop()
             end
         end,
         changeFunc = function(self,info,subject)
-            self.MultiLineEditBox:SetText(rematch.queue:ExportQueue(),true)
+            self.MultiLineEditBox:SetText(rematchRedux.queue:ExportQueue(),true)
             self.MultiLineEditBox:ScrollToTop()
         end
     })
 
-    rematch.dialog:Register("ImportQueue",{
+    rematchRedux.dialog:Register("ImportQueue",{
         title = L["Import Queue"],
         accept = L["Import"],
         cancel = CANCEL,
@@ -174,17 +174,17 @@ rematch.events:Register(rematch.queueMenu,"PLAYER_LOGIN",function(self)
                 self.Text:SetText(L["Press Ctrl+V to paste from clipboard"])
                 self.Feedback:Set("warning",L["This is not a valid queue import"])
                 self.MultiLineEditBox:SetText("")
-                rematch.dialog.AcceptButton:Disable()
+                rematchRedux.dialog.AcceptButton:Disable()
             end
         end,
         changeFunc = function(self,info,subject)
-            local numNew,numOld,numCant,numBad = rematch.queue:AnalyzeImport(self.MultiLineEditBox:GetText():trim())
+            local numNew,numOld,numCant,numBad = rematchRedux.queue:AnalyzeImport(self.MultiLineEditBox:GetText():trim())
             if not numNew then
-                rematch.dialog:ChangeLayout("Default")
-                rematch.dialog.AcceptButton:Disable()
+                rematchRedux.dialog:ChangeLayout("Default")
+                rematchRedux.dialog.AcceptButton:Disable()
             elseif (numNew+numOld+numCant)==0 then
-                rematch.dialog:ChangeLayout("Invalid")
-                rematch.dialog.AcceptButton:Disable()
+                rematchRedux.dialog:ChangeLayout("Invalid")
+                rematchRedux.dialog.AcceptButton:Disable()
             else
                 local data = {}
                 if numNew and numNew>0 then tinsert(data,{L["Pets to add to queue"],numNew}) end
@@ -192,13 +192,13 @@ rematch.events:Register(rematch.queueMenu,"PLAYER_LOGIN",function(self)
                 if numCant and numCant>0 then tinsert(data,{L["Pets that can't level"],numCant}) end
                 if numBad and numBad>0 then tinsert(data,{L["Invalid pets"],numBad}) end
                 self.ListData:Set(data)
-                rematch.dialog:ChangeLayout("Valid")
-                rematch.dialog.AcceptButton:Enable()
-                rematch.dialog:Resize() -- resize height (fixedWidth 0 prevents dialog from messing with width)
+                rematchRedux.dialog:ChangeLayout("Valid")
+                rematchRedux.dialog.AcceptButton:Enable()
+                rematchRedux.dialog:Resize() -- resize height (fixedWidth 0 prevents dialog from messing with width)
             end
         end,
         acceptFunc = function(self,info,subject)
-            rematch.queue:ImportQueue(self.MultiLineEditBox:GetText():trim())
+            rematchRedux.queue:ImportQueue(self.MultiLineEditBox:GetText():trim())
         end,
     })
 
@@ -210,9 +210,9 @@ end
 
 function qm:ToggleActiveSort(arg1,arg2,arg3)
     settings.QueueActiveSort = not settings.QueueActiveSort
-    rematch.queue:SortQueue(C.QUEUE_SORT_ALL)
-    rematch.queue:Process()
-    rematch.menus:Show("QueueMenu",rematch.queuePanel.Top.QueueButton) -- redo queue menu since radios/checks toggling (a refresh isn't enough)
+    rematchRedux.queue:SortQueue(C.QUEUE_SORT_ALL)
+    rematchRedux.queue:Process()
+    rematchRedux.menus:Show("QueueMenu",rematchRedux.queuePanel.Top.QueueButton) -- redo queue menu since radios/checks toggling (a refresh isn't enough)
 end
 
 function qm:IsCurrentSort()
@@ -222,11 +222,11 @@ end
 function qm:SetCurrentSort()
     settings.QueueSortOrder = self.sort
     if not settings.QueueActiveSort then
-        rematch.queue:SortQueue(self.sort)
+        rematchRedux.queue:SortQueue(self.sort)
     else
-        rematch.queue:SortQueue(C.QUEUE_SORT_ALL)
+        rematchRedux.queue:SortQueue(C.QUEUE_SORT_ALL)
     end
-    rematch.queue:Process()
+    rematchRedux.queue:Process()
 end
 
 function qm:IsFirstChecked()
@@ -236,12 +236,12 @@ end
 function qm:SetFirstSort()
     if settings.QueueActiveSort then
         settings[self.var] = not settings[self.var]
-        rematch.queue:SortQueue(C.QUEUE_SORT_ALL)
+        rematchRedux.queue:SortQueue(C.QUEUE_SORT_ALL)
     else -- not actively sorting, do a one-time sort
-        rematch.queue:SortQueue(self.sort)
+        rematchRedux.queue:SortQueue(self.sort)
     end
-    rematch.queuePanel.List:Update()
-    rematch.queue:Process()
+    rematchRedux.queuePanel.List:Update()
+    rematchRedux.queue:Process()
 end
 
 function qm:IsPreferencesPaused()
@@ -249,11 +249,11 @@ function qm:IsPreferencesPaused()
 end
 
 function qm:TogglePreferencesPaused()
-    rematch.preferences:TogglePause()
+    rematchRedux.preferences:TogglePause()
 end
 
 function qm:EmptyQueue()
-    rematch.dialog:ShowDialog("EmptyQueue")
+    rematchRedux.dialog:ShowDialog("EmptyQueue")
 end
 
 function qm:IsQueueEmpty()
@@ -262,9 +262,9 @@ end
 
 function qm:FillQueue()
     if not settings.DontConfirmFillQueue then
-        rematch.dialog:ShowDialog("FillQueue",{fillMore=self.fillMore})
+        rematchRedux.dialog:ShowDialog("FillQueue",{fillMore=self.fillMore})
     else
-        rematch.queue:FillQueue(self.fillMore)
+        rematchRedux.queue:FillQueue(self.fillMore)
     end
 end
 
@@ -273,7 +273,7 @@ function qm:NotShowFillQueueMore()
 end
 
 function qm:GetPetName(petID)
-    return rematch.petInfo:Fetch(petID).formattedName
+    return rematchRedux.petInfo:Fetch(petID).formattedName
 end
 
 function qm:MovePetInQueue(petID)
@@ -289,59 +289,59 @@ function qm:SummonOrDismissFunc(petID)
 end
 
 function qm:ShowNotes(petID)
-    rematch.cardManager:HideCard(rematch.notes)
-    rematch.cardManager:ShowCard(rematch.notes,petID)
-    rematch.notes:SetFocus()
+    rematchRedux.cardManager:HideCard(rematchRedux.notes)
+    rematchRedux.cardManager:ShowCard(rematchRedux.notes,petID)
+    rematchRedux.notes:SetFocus()
 end
 
 function qm:RenamePetFunc(petID)
-    rematch.dialog:ShowDialog("RenameDialog",petID)
+    rematchRedux.dialog:ShowDialog("RenameDialog",petID)
 end
 
 function qm:SetOrRemoveFavoriteText(petID)
-    return rematch.petInfo:Fetch(petID).isFavorite and BATTLE_PET_UNFAVORITE or BATTLE_PET_FAVORITE
+    return rematchRedux.petInfo:Fetch(petID).isFavorite and BATTLE_PET_UNFAVORITE or BATTLE_PET_FAVORITE
 end
 
 function qm:SetOrRemoveFavoriteFunc(petID)
-    C_PetJournal.SetFavorite(petID,rematch.petInfo:Fetch(petID).isFavorite and 0 or 1)
-    rematch.filters:ForceUpdate()
-    rematch.frame:Update()
+    C_PetJournal.SetFavorite(petID,rematchRedux.petInfo:Fetch(petID).isFavorite and 0 or 1)
+    rematchRedux.filters:ForceUpdate()
+    rematchRedux.frame:Update()
 end
 
 function qm:RemoveFromQueue(petID)
     if settings.DontConfirmRemoveQueue then
-        rematch.queue:RemovePetID(petID)
+        rematchRedux.queue:RemovePetID(petID)
     else
-        rematch.dialog:ShowDialog("RemoveFromQueue",petID)
+        rematchRedux.dialog:ShowDialog("RemoveFromQueue",petID)
     end
 end
 
 function qm:MoveToTopOfQueue(petID)
-    rematch.queue:MoveIndex(rematch.queue:GetPetIndex(petID),1)
-    rematch.queue:BlingPetID(petID)
+    rematchRedux.queue:MoveIndex(rematchRedux.queue:GetPetIndex(petID),1)
+    rematchRedux.queue:BlingPetID(petID)
 end
 
 function qm:MoveToEndOfQueue(petID)
-    rematch.queue:MoveIndex(rematch.queue:GetPetIndex(petID),#settings.LevelingQueue+1)
-    rematch.queue:BlingPetID(petID)
+    rematchRedux.queue:MoveIndex(rematchRedux.queue:GetPetIndex(petID),#settings.LevelingQueue+1)
+    rematchRedux.queue:BlingPetID(petID)
 end
 
 function qm:ExportQueue()
-    rematch.dialog:ShowDialog("ExportQueue")
+    rematchRedux.dialog:ShowDialog("ExportQueue")
 end
 
 function qm:ImportQueue()
-    rematch.dialog:ShowDialog("ImportQueue")
+    rematchRedux.dialog:ShowDialog("ImportQueue")
 end
 
 function qm:NotInTeam(petID)
-    local numTeams = rematch.petInfo:Fetch(petID).numTeams
+    local numTeams = rematchRedux.petInfo:Fetch(petID).numTeams
     return not numTeams or numTeams==0
 end
 
 function qm:ListTeams(petID)
     if petID and petID:match(C.PET_ID_PATTERN) then
-        rematch.layout:SummonView("teams")
-        rematch.teamsPanel:SetSearch(petID)
+        rematchRedux.layout:SummonView("teams")
+        rematchRedux.teamsPanel:SetSearch(petID)
     end
 end

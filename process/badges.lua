@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.badges = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.badges = {}
 
 --[[
     Badges are small non-interactive icons placed to the right of list buttons to show if
@@ -17,9 +17,9 @@ rematch.badges = {}
 
     To register a badge (within this addon and outside it), use:
     
-    Rematch.badges:RegisterBadge(list,name,icon,coords,callback)
+    rematchRedux.badges:RegisterBadge(list,name,icon,coords,callback)
 
-        list (string) is one of the above four lists (can be anything but Rematch only adds badges for these)
+        list (string) is one of the above four lists (can be anything but RematchRedux only adds badges for these)
         name (string) is a unique-per-list identifier for the badge
         icon (string,number,function) is the icon of the badge; if a function it should return a string/number icon
         coords (table,function) is the texcoords of the badge; if a function it should return texcoords
@@ -29,48 +29,48 @@ rematch.badges = {}
 -- indexed by list ("pets", "teams", "targets"), an ordered list of badge info for the list
 local badges = {}
 
-rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.badges,"PLAYER_LOGIN",function(self)
 
     --[[ pets: badges for pet lists (queue too) ]]
 
     -- leveling: whether pet is leveling
     self:RegisterBadge("pets","leveling","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.375,0.5,0.125,0.25},
         function(self,petID) -- callback
-            return not self.forQueue and (not settings.HideLevelingBadges or rematch.petHerder:GetActionID()=="leveling") and rematch.petInfo:Fetch(petID).isLeveling
+            return not self.forQueue and (not settings.HideLevelingBadges or rematchRedux.petHerder:GetActionID()=="leveling") and rematchRedux.petInfo:Fetch(petID).isLeveling
         end
     )
     -- team: whether pet is in a team
     self:RegisterBadge("pets","team","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.5,0.625,0.125,0.25},
         function(self,petID) -- callback
-            return not settings.HideTeamBadges and rematch.petInfo.inTeams
+            return not settings.HideTeamBadges and rematchRedux.petInfo.inTeams
         end
     )
     -- marker: pet tag for the pet
     self:RegisterBadge("pets","marker","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",
         function(self,petID) -- coords
-            local marker = rematch.petInfo:Fetch(petID).marker
+            local marker = rematchRedux.petInfo:Fetch(petID).marker
             if marker and marker>=1 and marker<=8 then
                 return (marker-1)*0.125,marker*0.125,0.25,0.375
             end
         end,
         function(self,petID) -- callback
-            local actionID = rematch.petHerder:GetActionID()
-            return (not settings.HideMarkerBadges or (actionID and actionID:match("marker"))) and rematch.petInfo:Fetch(petID).marker
+            local actionID = rematchRedux.petHerder:GetActionID()
+            return (not settings.HideMarkerBadges or (actionID and actionID:match("marker"))) and rematchRedux.petInfo:Fetch(petID).marker
         end
     )
     -- new: whether pet is new/wrapped (sorted to top of list)
     self:RegisterBadge("pets","new","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.625,0.75,0.75,0.875},
         function(self,petID) -- callback
-            return rematch.petInfo:Fetch(petID).isStickied
+            return rematchRedux.petInfo:Fetch(petID).isStickied
         end
     )
 
     -- cage: whether pet can be caged (only shown while pet harder up with "cage" actionID)
     self:RegisterBadge("pets","cage","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.875,1,0.75,0.875},
         function(self,petID) -- callback
-            if rematch.petHerder:GetActionID()=="cage" then
-                local petInfo = rematch.petInfo:Fetch(petID)
-                return petInfo.isTradable and not petInfo.isInjured and not petInfo.isSlotted and (not petInfo.inTeams or rematch.dialog.Canvas.CheckButton:GetChecked())
+            if rematchRedux.petHerder:GetActionID()=="cage" then
+                local petInfo = rematchRedux.petInfo:Fetch(petID)
+                return petInfo.isTradable and not petInfo.isInjured and not petInfo.isSlotted and (not petInfo.inTeams or rematchRedux.dialog.Canvas.CheckButton:GetChecked())
             end
         end
     )
@@ -81,7 +81,7 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
     self:RegisterBadge("groups","preferences","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.75,0.875,0.125,0.25},
         function(self,groupID)
             if not settings.HidePreferenceBadges then
-                local group = groupID and rematch.savedGroups[groupID]
+                local group = groupID and rematchRedux.savedGroups[groupID]
                 return group and group.preferences
             end
         end
@@ -93,7 +93,7 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
     self:RegisterBadge("teams","targets","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.375,0.5,0.375,0.5},
         function(self,teamID)
             if not settings.HideTargetBadges then
-                local team = teamID and rematch.savedTeams[teamID]
+                local team = teamID and rematchRedux.savedTeams[teamID]
                 return team and team.targets
             end
         end
@@ -103,7 +103,7 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
     self:RegisterBadge("teams","preferences","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.75,0.875,0.125,0.25},
         function(self,teamID)
             if not settings.HidePreferenceBadges then
-                local team = teamID and rematch.savedTeams[teamID]
+                local team = teamID and rematchRedux.savedTeams[teamID]
                 return team and team.preferences
             end
         end
@@ -114,7 +114,7 @@ rematch.events:Register(rematch.badges,"PLAYER_LOGIN",function(self)
     -- teams: whether target has any teams
     self:RegisterBadge("targets","teams","Interface\\AddOns\\RematchRedux\\textures\\badges-borderless",{0.5,0.625,0.125,0.25},
         function(self,npcID)
-            return not settings.HideTeamBadges and rematch.savedTargets[npcID]
+            return not settings.HideTeamBadges and rematchRedux.savedTargets[npcID]
         end
     )
 
@@ -122,7 +122,7 @@ end)
 
 -- list: generally "pets", "teams" or "targets", used by AddBadges to determine badge set (required)
 -- name,icon,coords,callback get added to badges in the order they're registered
-function rematch.badges:RegisterBadge(list,name,icon,coords,callback)
+function rematchRedux.badges:RegisterBadge(list,name,icon,coords,callback)
     assert(type(list)=="string" and list:len()>0,"Invalid list name: "..(list or "nil"))
     assert(type(name)=="string" and name:len()>0,"Invalid badge name: "..(name or "nil"))
     assert(type(callback)=="function","Invalid callback function for "..name.." badge")
@@ -133,7 +133,7 @@ function rematch.badges:RegisterBadge(list,name,icon,coords,callback)
     end
 
     -- if badge already exists, remove it
-    rematch.badges:UnregisterBadge(list,name,true)
+    rematchRedux.badges:UnregisterBadge(list,name,true)
 
     -- add badge to registered badges
     tinsert(badges[list],{
@@ -145,14 +145,14 @@ function rematch.badges:RegisterBadge(list,name,icon,coords,callback)
 end
 
 -- removes a registered badge (noUpdate=true to not update the UI)
-function rematch.badges:UnregisterBadge(list,name,noUpdate)
+function rematchRedux.badges:UnregisterBadge(list,name,noUpdate)
     for i=#badges[list],1,-1 do
         if badges[list][i].name==name then
             tremove(badges[list],i)
         end
     end
-    if not noUpdate and rematch.frame:IsVisible() then
-        rematch.frame:Update()
+    if not noUpdate and rematchRedux.frame:IsVisible() then
+        rematchRedux.frame:Update()
     end
 end
 
@@ -168,9 +168,9 @@ end
 -- yoff: y offset for first badge
 -- xdir: -1 to place badges right to left; 1 to place badges left to right
 -- returns: width of the badges
-function rematch.badges:AddBadges(array,list,id,anchorPoint,relativeTo,relativePoint,xoff,yoff,xdir)
+function rematchRedux.badges:AddBadges(array,list,id,anchorPoint,relativeTo,relativePoint,xoff,yoff,xdir)
     -- first clear all badges
-    rematch.badges:ClearBadges(array)
+    rematchRedux.badges:ClearBadges(array)
     -- go through each registered badge for the list and show it
     local arrayIndex = 1
     local parent = array[1]:GetParent()
@@ -208,7 +208,7 @@ function rematch.badges:AddBadges(array,list,id,anchorPoint,relativeTo,relativeP
 end
 
 -- clears badges in the given parentArray
-function rematch.badges:ClearBadges(array)
+function rematchRedux.badges:ClearBadges(array)
     for _,badge in ipairs(array) do
         badge:Hide()
     end

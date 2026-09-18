@@ -2,7 +2,7 @@
     <Script file="tooltip.lua"/>
 
     <!-- standard tooltip for simple text -->
-    <Frame name="RematchTooltip" frameStrata="TOOLTIP" parent="UIParent" clampedToScreen="true" inherits="RematchShadowBackdropTemplate" hidden="true">
+    <Frame name="RematchReduxTooltip" frameStrata="TOOLTIP" parent="UIParent" clampedToScreen="true" inherits="RematchReduxShadowBackdropTemplate" hidden="true">
         <Layers>
 			<Layer level="ARTWORK">
 				<FontString parentArray="Lines" inherits="GameTooltipHeaderText" justifyH="LEFT">
@@ -14,7 +14,7 @@
         </Layers>
         <Frames>
             <!-- red tooltip border for flashing a warning tooltips -->
-            <Frame parentKey="RedBorder" setAllPoints="true" hidden="true" inherits="RematchBorderRedBackdropTemplate"/>
+            <Frame parentKey="RedBorder" setAllPoints="true" hidden="true" inherits="RematchReduxBorderRedBackdropTemplate"/>
         </Frames>
         <Scripts>
             <OnHide>
@@ -23,7 +23,7 @@
         </Scripts>
     </Frame>
 
-    <!-- a version of GameTooltip for item, spell and toy tooltips with the same backdrop as rematch's standard tooltip above -->
-    <GameTooltip name="RematchGameTooltip" frameStrata="TOOLTIP" parent="UIParent" inherits="GameTooltipTemplate,RematchShadowBackdropTemplate"/>
+    <!-- a version of GameTooltip for item, spell and toy tooltips with the same backdrop as RematchRedux's standard tooltip above -->
+    <GameTooltip name="RematchReduxGameTooltip" frameStrata="TOOLTIP" parent="UIParent" inherits="GameTooltipTemplate,RematchReduxShadowBackdropTemplate"/>
 
 </Ui>

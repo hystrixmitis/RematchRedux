@@ -3,13 +3,13 @@
     <Script file="petsPanelMixins.lua"/>
 
     <!-- template for the square overlays over the 10 pet type "buttons" -->
-    <Texture name="RematchTypeBarOverlayTemplate" desaturated="true" file="Interface\Buttons\CheckButtonHilight" alphaMode="ADD" alpha="0.75" hidden="true" virtual="true">
+    <Texture name="RematchReduxTypeBarOverlayTemplate" desaturated="true" file="Interface\Buttons\CheckButtonHilight" alphaMode="ADD" alpha="0.75" hidden="true" virtual="true">
         <Size x="25" y="25"/>
         <Color r="1.0" g="1.0" b="0.82"/>
     </Texture>
 
     <!-- template for the 3 typebar tabs (Pet Type, Strong Vs, Tough Vs). the bordering tab texture is a part of TypeBar.TabbedBorder -->
-    <Button name="RematchTypeBarTabTemplate" mixin="RematchTypeBarTabMixin" virtual="true">
+    <Button name="RematchReduxTypeBarTabTemplate" mixin="RematchReduxTypeBarTabMixin" virtual="true">
         <Size x="70" y="24"/>
         <Layers>
             <Layer level="BORDER">
@@ -57,18 +57,18 @@
     </Button>
 
 
-    <Frame parentKey="PetsPanel" parent="RematchFrame">
+    <Frame parentKey="PetsPanel" parent="RematchReduxFrame">
         <Frames>
 
             <!-- Top contains the searchbar, typebar and filter button -->
-            <Frame parentKey="Top" inherits="RematchPanelInsetFrameTemplate">
+            <Frame parentKey="Top" inherits="RematchReduxPanelInsetFrameTemplate">
                 <Size x="0" y="29"/>
                 <Anchors>
                     <Anchor point="TOPLEFT"/>
                     <Anchor point="TOPRIGHT"/>
                 </Anchors>
                 <Frames>
-                    <Button parentKey="ToggleButton" inherits="RematchSmallGreyButtonTemplate">
+                    <Button parentKey="ToggleButton" inherits="RematchReduxSmallGreyButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" x="3" y="-3"/>
                         </Anchors>
@@ -78,7 +78,7 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <Button parentKey="FilterButton" inherits="RematchFilterButtonTemplate">
+                    <Button parentKey="FilterButton" inherits="RematchReduxFilterButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPRIGHT" x="-3" y="-3"/>
                         </Anchors>
@@ -88,7 +88,7 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <EditBox parentKey="SearchBox" inherits="RematchSearchBoxTemplate">
+                    <EditBox parentKey="SearchBox" inherits="RematchReduxSearchBoxTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeKey="$parent.ToggleButton" relativePoint="TOPRIGHT" x="-1" y="0"/>
                             <Anchor point="TOPRIGHT" relativeKey="$parent.FilterButton" relativePoint="TOPLEFT" x="1" y="0"/>
@@ -119,7 +119,7 @@
                             </Layer>
                             <Layer level="ARTWORK">
                                 <!-- the 10 type "buttons" unfortunately textures can't inherit script handlers yet so they need to be declared on each -->
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Humanoid" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Humanoid" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="5" y="-26"/>
@@ -131,7 +131,7 @@
                                         <OnMouseUp method="OnMouseUp"/>
                                     </Scripts>
                                 </Texture>
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Dragon" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Dragon" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="31" y="-26"/>
@@ -143,7 +143,7 @@
                                         <OnMouseUp method="OnMouseUp"/>
                                     </Scripts>
                                 </Texture>
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Flying" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Flying" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="57" y="-26"/>
@@ -155,7 +155,7 @@
                                         <OnMouseUp method="OnMouseUp"/>
                                     </Scripts>
                                 </Texture>
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Undead" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Undead" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="83" y="-26"/>
@@ -167,7 +167,7 @@
                                         <OnMouseUp method="OnMouseUp"/>
                                     </Scripts>
                                 </Texture>
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Critter" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Critter" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="109" y="-26"/>
@@ -179,7 +179,7 @@
                                         <OnMouseUp method="OnMouseUp"/>
                                     </Scripts>
                                 </Texture>
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Magical" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Magical" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="135" y="-26"/>
@@ -191,7 +191,7 @@
                                         <OnMouseUp method="OnMouseUp"/>
                                     </Scripts>
                                 </Texture>
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Elemental" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Elemental" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="161" y="-26"/>
@@ -203,7 +203,7 @@
                                         <OnMouseUp method="OnMouseUp"/>
                                     </Scripts>
                                 </Texture>
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Beast" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Beast" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="187" y="-26"/>
@@ -215,7 +215,7 @@
                                         <OnMouseUp method="OnMouseUp"/>
                                     </Scripts>
                                 </Texture>
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Water" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Water" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="213" y="-26"/>
@@ -227,7 +227,7 @@
                                         <OnMouseUp method="OnMouseUp"/>
                                     </Scripts>
                                 </Texture>
-                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Mechanical" mixin="RematchTextureMouseMixin">
+                                <Texture parentArray="Buttons" file="Interface\Icons\Pet_Type_Mechanical" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="23" y="23"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="239" y="-26"/>
@@ -240,7 +240,7 @@
                                     </Scripts>
                                 </Texture>
                                 <!-- level 25 button is for quickly filtering level 25 rares -->
-                                <Texture parentKey="Level25Button" file="Interface\AddOns\RematchRedux\textures\levels" mixin="RematchTextureMouseMixin">
+                                <Texture parentKey="Level25Button" file="Interface\AddOns\RematchRedux\textures\levels" mixin="RematchReduxTextureMouseMixin">
                                     <Size x="19" y="19"/>
                                     <Anchors>
                                         <Anchor point="TOPLEFT" x="4" y="-1"/>
@@ -256,34 +256,34 @@
                             </Layer>
                             <!-- the 10 yellow/green/red borders around a pet type button to show it's selected -->
                             <Layer level="OVERLAY">
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="4" y="-25"/></Anchors>
                                 </Texture>
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="30" y="-25"/></Anchors>
                                 </Texture>
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="56" y="-25"/></Anchors>
                                 </Texture>
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="82" y="-25"/></Anchors>
                                 </Texture>
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="108" y="-25"/></Anchors>
                                 </Texture>
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="134" y="-25"/></Anchors>
                                 </Texture>
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="160" y="-25"/></Anchors>
                                 </Texture>
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="186" y="-25"/></Anchors>
                                 </Texture>
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="212" y="-25"/></Anchors>
                                 </Texture>
-                                <Texture parentArray="Selecteds" inherits="RematchTypeBarOverlayTemplate">
+                                <Texture parentArray="Selecteds" inherits="RematchReduxTypeBarOverlayTemplate">
                                     <Anchors><Anchor point="TOPLEFT" x="238" y="-25"/></Anchors>
                                 </Texture>
                                 <!-- highlight of the level 25 button -->
@@ -297,23 +297,23 @@
                             </Layer>
                         </Layers>
                         <Frames>
-                            <Button parentArray="Tabs" inherits="RematchTypeBarTabTemplate" id="1">
+                            <Button parentArray="Tabs" inherits="RematchReduxTypeBarTabTemplate" id="1">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" x="26" y="0"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Tabs" inherits="RematchTypeBarTabTemplate" id="2">
+                            <Button parentArray="Tabs" inherits="RematchReduxTypeBarTabTemplate" id="2">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" x="99" y="0"/>
                                 </Anchors>
                             </Button>
-                            <Button parentArray="Tabs" inherits="RematchTypeBarTabTemplate" id="3">
+                            <Button parentArray="Tabs" inherits="RematchReduxTypeBarTabTemplate" id="3">
                                 <Anchors>
                                     <Anchor point="TOPLEFT" x="172" y="0"/>
                                 </Anchors>
                             </Button>
                             <!-- clear button to right of tabs -->
-                            <Button parentKey="Clear" inherits="RematchClearButtonTemplate">
+                            <Button parentKey="Clear" inherits="RematchReduxClearButtonTemplate">
                                 <Anchors>
                                     <Anchor point="TOPRIGHT" x="-4" y="-2"/>
                                 </Anchors>
@@ -328,7 +328,7 @@
                 </Frames>
             </Frame>
             <!-- ResultsBar only shows when the list is filtered, to show how many pets listed -->
-            <Frame parentKey="ResultsBar" inherits="RematchPanelInsetFrameTemplate" hidden="true">
+            <Frame parentKey="ResultsBar" inherits="RematchReduxPanelInsetFrameTemplate" hidden="true">
                 <Size x="0" y="26"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.Top" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
@@ -350,7 +350,7 @@
 					</Layer>
 				</Layers>
 				<Frames>
-					<Button parentKey="Clear" inherits="RematchClearButtonTemplate">
+					<Button parentKey="Clear" inherits="RematchReduxClearButtonTemplate">
 						<Anchors>
 							<Anchor point="RIGHT" x="-5" y="0"/>
 						</Anchors>
@@ -363,7 +363,7 @@
 				</Frames>
             </Frame>
             <!-- List is the main list of pets -->
-            <Frame parentKey="List" inherits="RematchAutoScrollBoxTemplate">
+            <Frame parentKey="List" inherits="RematchReduxAutoScrollBoxTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.Top" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
                     <Anchor point="BOTTOMRIGHT"/>

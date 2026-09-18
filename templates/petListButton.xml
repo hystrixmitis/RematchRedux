@@ -1,7 +1,7 @@
 <Ui>
     <Script file="petListButton.lua"/>
 
-    <Button name="RematchNormalPetListButtonTemplate" mixin="RematchCommonPetListButtonMixin,RematchNormalPetListButtonMixin,RematchFillPetMixin" registerForDrag="LeftButton" registerForClicks="AnyUp" virtual="true">
+    <Button name="RematchReduxNormalPetListButtonTemplate" mixin="RematchReduxCommonPetListButtonMixin,RematchReduxNormalPetListButtonMixin,RematchReduxFillPetMixin" registerForDrag="LeftButton" registerForClicks="AnyUp" virtual="true">
         <Size x="200" y="44"/>
         <Layers>
             <!-- lowest layer contains the background texture over most of the button (aside from pet icon) -->
@@ -15,7 +15,7 @@
             </Layer>
             <Layer level="BACKGROUND">
                 <!-- main icon of the pet -->
-                <Texture parentKey="Icon" mixin="RematchPetPickupIconMixin">
+                <Texture parentKey="Icon" mixin="RematchReduxPetPickupIconMixin">
                     <Size x="40" y="40"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="2" y="-2"/>
@@ -101,7 +101,7 @@
                     </Anchors>
                 </FontString>
                 <!-- notes button acts as a real button -->
-                <Texture parentKey="NotesButton" inherits="RematchNotesButtonTemplate" hidden="true">
+                <Texture parentKey="NotesButton" inherits="RematchReduxNotesButtonTemplate" hidden="true">
                     <Anchors>
                         <Anchor point="TOPRIGHT" x="-3" y="-5"/>
                     </Anchors>
@@ -132,7 +132,7 @@
         </Scripts>
     </Button>
 
-    <Button name="RematchCompactPetListButtonTemplate" mixin="RematchCommonPetListButtonMixin,RematchCompactPetListButtonMixin,RematchFillPetMixin" registerForDrag="LeftButton" registerForClicks="AnyUp" virtual="true">
+    <Button name="RematchReduxCompactPetListButtonTemplate" mixin="RematchReduxCommonPetListButtonMixin,RematchReduxCompactPetListButtonMixin,RematchReduxFillPetMixin" registerForDrag="LeftButton" registerForClicks="AnyUp" virtual="true">
         <Size x="200" y="26"/>
         <Layers>
             <Layer level="BACKGROUND" textureSubLevel="-1">
@@ -145,7 +145,7 @@
             </Layer>
             <Layer level="BACKGROUND">
                 <!-- main icon of the pet -->
-                <Texture parentKey="Icon" mixin="RematchPetPickupIconMixin">
+                <Texture parentKey="Icon" mixin="RematchReduxPetPickupIconMixin">
                     <Size x="22" y="22"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" x="2" y="-2"/>
@@ -232,7 +232,7 @@
                     </Anchors>
                 </Texture> -->
                 <!-- notes button acts as a real button -->
-                <Texture parentKey="NotesButton" inherits="RematchNotesButtonTemplate" hidden="true">
+                <Texture parentKey="NotesButton" inherits="RematchReduxNotesButtonTemplate" hidden="true">
                     <Anchors>
                         <Anchor point="RIGHT" x="-37" y="0"/>
                     </Anchors>

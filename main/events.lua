@@ -1,12 +1,12 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-rematch.events = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+rematchRedux.events = {}
 
 local events = CreateFrame("Frame")
 
--- indexed by event name, ordered list of {module,callback} where module can be a "name" and rematch.name
--- is used as 'self' (or the given value if rematch[name] doesn't exist)
+-- indexed by event name, ordered list of {module,callback} where module can be a "name" and rematchRedux.name
+-- is used as 'self' (or the given value if rematchRedux[name] doesn't exist)
 local register = {}
 
 -- calls any registered callbacks in the order they were registered for the given event
@@ -14,15 +14,15 @@ local function runCallbacks(self,event,...)
     if register[event] then
         for _,info in ipairs(register[event]) do
             if type(info[2])=="function" then
-                info[2](rematch[info[1]] or info[1],...)
+                info[2](rematchRedux[info[1]] or info[1],...)
             end
         end
     end
 end
 events:SetScript("OnEvent",runCallbacks)
 
--- raises an abitrary event for other parts of the addon to handle, such as REMATCH_PET_PICKED_UP
-function rematch.events:Fire(event,...)
+-- raises an abitrary event for other parts of the addon to handle, such as REMATCHREDUX_PET_PICKED_UP
+function rematchRedux.events:Fire(event,...)
     runCallbacks(self,event,...)
 end
 
@@ -46,7 +46,7 @@ local function cleanup()
             end
         end
         if #info==0 then
-            if not event:match("^REMATCH_") then
+            if not event:match("^REMATCHREDUX_") then
                 events:UnregisterEvent(event)
             end
             register[event] = nil
@@ -55,14 +55,14 @@ local function cleanup()
 end
 
 -- registers an event for a module with a callback
-function rematch.events:Register(module,event,callback)
+function rematchRedux.events:Register(module,event,callback)
     if not register[event] then
         register[event] = {}
     end
     local index = getModuleIndex(module,event)
     if not index then -- newly registered
         tinsert(register[event],{module,callback})
-        if not event:match("^REMATCH_") then
+        if not event:match("^REMATCHREDUX_") then
             events:RegisterEvent(event)
         end
     elseif callback then -- already registered (or was flagged for remove), changing/restoring callback function
@@ -71,17 +71,17 @@ function rematch.events:Register(module,event,callback)
 end
 
 -- unregisters an event for a module
-function rematch.events:Unregister(module,event)
+function rematchRedux.events:Unregister(module,event)
     if register[event] then
         local index = getModuleIndex(module,event)
         if index then
             register[event][index][2] = "remove"
-            rematch.timer:Start(0,cleanup)
+            rematchRedux.timer:Start(0,cleanup)
         end
     end
 end
 
 -- for debugging
-function rematch.events:GetRegister()
+function rematchRedux.events:GetRegister()
     return register
 end

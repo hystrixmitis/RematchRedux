@@ -1,7 +1,7 @@
 <Ui>
 
     <!-- this is used not only for the three abilities in each loadout slot but for the flyout's two ability buttons -->
-    <Button name="RematchLoadoutAbilityBarButtonTemplate" mixin="RematchAbilityBarButtonMixin" registerForClicks="AnyUp" useParentLevel="true" virtual="true">
+    <Button name="RematchReduxLoadoutAbilityBarButtonTemplate" mixin="RematchReduxAbilityBarButtonMixin" registerForClicks="AnyUp" useParentLevel="true" virtual="true">
         <Size x="32" y="32"/>
         <HitRectInsets left="-3" right="-3" top="-3" bottom="-3"/>
         <Layers>
@@ -36,11 +36,11 @@
         </Scripts>
     </Button>
 
-    <Button name="RematchLoadoutTemplate" registerForDrag="LeftButton" registerForClicks="AnyUp" inherits="RematchInsetFrameTemplate" virtual="true">
+    <Button name="RematchReduxLoadoutTemplate" registerForDrag="LeftButton" registerForClicks="AnyUp" inherits="RematchReduxInsetFrameTemplate" virtual="true">
         <Size x="280" y="137"/>
         <Frames>
-            <!-- based on RematchPetButtonTemplate but not inheriting it (separate parent for highlight purposes, different size, etc.)-->
-            <Button parentKey="Pet" mixin="RematchFillPetMixin" registerForDrag="LeftButton" registerForClicks="AnyUp">
+            <!-- based on   PetButtonTemplate but not inheriting it (separate parent for highlight purposes, different size, etc.)-->
+            <Button parentKey="Pet" mixin="RematchReduxFillPetMixin" registerForDrag="LeftButton" registerForClicks="AnyUp">
                 <Size x="46" y="46"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" x="15" y="-18"/>
@@ -124,7 +124,7 @@
                     </OnReceiveDrag>
                 </Scripts>
             </Button>
-            <Frame parentKey="AbilityBar" mixin="RematchFillAbilityBarMixin">
+            <Frame parentKey="AbilityBar" mixin="RematchReduxFillAbilityBarMixin">
                 <Size x="112" y="36"/>
                 <Anchors>
                     <Anchor point="BOTTOM" x="0" y="24"/>
@@ -139,17 +139,17 @@
                     </Layer>
                 </Layers>
                 <Frames>
-                    <Button parentArray="Abilities" inherits="RematchLoadoutAbilityBarButtonTemplate" id="1">
+                    <Button parentArray="Abilities" inherits="RematchReduxLoadoutAbilityBarButtonTemplate" id="1">
                         <Anchors>
                             <Anchor point="LEFT" x="2" y="0"/>
                         </Anchors>
                     </Button>
-                    <Button parentArray="Abilities" inherits="RematchLoadoutAbilityBarButtonTemplate" id="2">
+                    <Button parentArray="Abilities" inherits="RematchReduxLoadoutAbilityBarButtonTemplate" id="2">
                         <Anchors>
                             <Anchor point="CENTER"/>
                         </Anchors>
                     </Button>
-                    <Button parentArray="Abilities" inherits="RematchLoadoutAbilityBarButtonTemplate" id="3">
+                    <Button parentArray="Abilities" inherits="RematchReduxLoadoutAbilityBarButtonTemplate" id="3">
                         <Anchors>
                             <Anchor point="RIGHT" x="-2" y="0"/>
                         </Anchors>
@@ -175,7 +175,7 @@
                 </Layers>
             </ModelScene>
             <!-- flash for when team loads -->
-            <Frame parentKey="Bling" inherits="RematchBlingAreaTemplate">
+            <Frame parentKey="Bling" inherits="RematchReduxBlingAreaTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="2" y="-2"/>
                     <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
@@ -317,7 +317,7 @@
             </Layer>
             <Layer level="OVERLAY">
                 <!-- notes button acts as a real button -->
-                <Texture parentKey="NotesButton" inherits="RematchNotesButtonTemplate" hidden="true">
+                <Texture parentKey="NotesButton" inherits="RematchReduxNotesButtonTemplate" hidden="true">
                     <Anchors>
                         <Anchor point="TOPRIGHT" x="-12" y="-21"/>
                     </Anchors>
@@ -443,19 +443,19 @@
         </Scripts>
     </Button>
 
-    <Frame parentKey="LoadoutPanel" parent="RematchFrame">
+    <Frame parentKey="LoadoutPanel" parent="RematchReduxFrame">
         <Frames>
-            <Button parentArray="Loadouts" inherits="RematchLoadoutTemplate" id="1">
+            <Button parentArray="Loadouts" inherits="RematchReduxLoadoutTemplate" id="1">
                 <Anchors>
                     <Anchor point="TOPLEFT"/>
                 </Anchors>
             </Button>
-            <Button parentArray="Loadouts" inherits="RematchLoadoutTemplate" id="2">
+            <Button parentArray="Loadouts" inherits="RematchReduxLoadoutTemplate" id="2">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="0" y="-139"/>
                 </Anchors>
             </Button>
-            <Button parentArray="Loadouts" inherits="RematchLoadoutTemplate" id="3">
+            <Button parentArray="Loadouts" inherits="RematchReduxLoadoutTemplate" id="3">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="0" y="-278"/>
                 </Anchors>
@@ -475,13 +475,13 @@
                 </Layers>
             </Frame>
             <!-- the flyout that appears when an ability is clicked, with the two ability options for the given ability slot -->
-            <Frame parentKey="AbilityFlyout" mixin="RematchFillAbilityFlyoutMixin" hidden="true">
+            <Frame parentKey="AbilityFlyout" mixin="RematchReduxFillAbilityFlyoutMixin" hidden="true">
                 <Size x="44" y="81"/>
                 <KeyValues>
                     <KeyValue key="horizontal" value="true" type="boolean"/>
                 </KeyValues>
                 <Frames>
-                    <Button parentArray="Abilities" inherits="RematchLoadoutAbilityBarButtonTemplate">
+                    <Button parentArray="Abilities" inherits="RematchReduxLoadoutAbilityBarButtonTemplate">
                         <Anchors>
                             <Anchor point="TOP" x="0" y="-6"/>
                         </Anchors>
@@ -489,7 +489,7 @@
                             <KeyValue key="isFlyoutAbility" value="true" type="boolean"/>
                         </KeyValues>
                     </Button>
-                    <Button parentArray="Abilities" inherits="RematchLoadoutAbilityBarButtonTemplate">
+                    <Button parentArray="Abilities" inherits="RematchReduxLoadoutAbilityBarButtonTemplate">
                         <Anchors>
                             <Anchor point="BOTTOM" x="0" y="6"/>
                         </Anchors>

@@ -25931,19 +25931,19 @@ function rematchReduxTable.allIcons:GetIcons(search)
 end
 
 -- iterator function to return the fileID of all icons that meet the search text if one given; or all icons if no search text given
-function rematch.allIcons:SearchIcons(search)
+function rematchReduxTable.allIcons:SearchIcons(search)
 	local i=0
     local mask
     if search and type(search)=="string" then
         search = search:trim()
         if search~="" then
-            mask = rematch.utils:DesensitizeText(search)
+            mask = rematchReduxTable.utils:DesensitizeText(search)
         end
     end
 	return function()
         while i<#allIcons do
 		    i=i+1
-            if not mask or rematch.utils:match(mask,allIcons[i]) then
+            if not mask or rematchReduxTable.utils:match(mask,allIcons[i]) then
                 local fileID = allIcons[i]:match("(%d+);.+")
                 fileID = tonumber(fileID)
                 return fileID

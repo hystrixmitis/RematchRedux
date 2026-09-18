@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.summaryDialog = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.summaryDialog = {}
 
 -- barchart tables that contain data for either types or sources
 -- filled in each: maxValue = max bar value; value = number between 0 and maxValue; total = used in calculations
@@ -48,9 +48,9 @@ local categories = {
     { name=L["Pets In Teams"], category=C.BARCHART_IN_TEAMS },
 }
 
-rematch.events:Register(rematch.summaryDialog,"PLAYER_LOGIN",function(self)
+rematchRedux.events:Register(rematchRedux.summaryDialog,"PLAYER_LOGIN",function(self)
 
-    rematch.dialog:Register("PetSummaryMinimized",{
+    rematchRedux.dialog:Register("PetSummaryMinimized",{
         title = L["Pet Collection"],
         accept = OKAY,
         minHeight = 275,
@@ -63,21 +63,21 @@ rematch.events:Register(rematch.summaryDialog,"PLAYER_LOGIN",function(self)
         },
         refreshFunc = function(self,info,subject,firstRun)
             if firstRun then
-                rematch.summaryDialog:FirstUseSetup()
+                rematchRedux.summaryDialog:FirstUseSetup()
                 settings.MinimizePetSummary = true -- hitting minimize button will set this
                 self.LayoutTabs:SetTabs({{"Summary","Default"},{"Pet Types","Types"},{"Sources","Sources"},{"Battles","Battles"}})
                 self.CheckButton:SetText(L["Rank teams by percentage won"])
                 self.CheckButton:SetChecked(settings.RankWinsByPercent)
             end
-            local layout = rematch.dialog:GetOpenLayout()
+            local layout = rematchRedux.dialog:GetOpenLayout()
             if layout=="Default" then
-                rematch.summaryDialog:FillSummary()
+                rematchRedux.summaryDialog:FillSummary()
             elseif layout=="Types" then
-                self.BarChart:Set(rematch.summaryDialog:GetChartData(C.BARCHART_TYPES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
+                self.BarChart:Set(rematchRedux.summaryDialog:GetChartData(C.BARCHART_TYPES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
             elseif layout=="Sources" then
-                self.BarChart:Set(rematch.summaryDialog:GetChartData(C.BARCHART_SOURCES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
+                self.BarChart:Set(rematchRedux.summaryDialog:GetChartData(C.BARCHART_SOURCES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
             elseif layout=="Battles" then
-                local stats = rematch.collectionInfo:GetWinStats(3)
+                local stats = rematchRedux.collectionInfo:GetWinStats(3)
                 self.BattleSummary:Fill(stats)
                 self.TopTeams:Fill(stats.topTeams)
                 self.TopTeams:SetShown(stats.teams and stats.teams>0) -- only show top teams if there are teams to show
@@ -85,11 +85,11 @@ rematch.events:Register(rematch.summaryDialog,"PLAYER_LOGIN",function(self)
         end,
         changeFunc = function(self,info,subject)
             settings.RankWinsByPercent = self.CheckButton:GetChecked()
-            rematch.dialog:Refresh()
+            rematchRedux.dialog:Refresh()
         end
     })
 
-    rematch.dialog:Register("PetSummary",{
+    rematchRedux.dialog:Register("PetSummary",{
         title = L["Pet Collection"],
         accept = OKAY,
         minHeight = 476, -- was 264 with summary on its own tab
@@ -101,21 +101,21 @@ rematch.events:Register(rematch.summaryDialog,"PLAYER_LOGIN",function(self)
         },
         refreshFunc = function(self,info,subject,firstRun)
             if firstRun then
-                rematch.summaryDialog:FirstUseSetup()
+                rematchRedux.summaryDialog:FirstUseSetup()
                 settings.MinimizePetSummary = false -- hitting minimize button will set this
                 self.LayoutTabs:SetTabs({{L["Pet Types"],"Default"},{L["Sources"],"Sources"},{L["Battles"],"Battles"}})
                 self.CheckButton:SetText(L["Rank teams by percentage won"])
                 self.CheckButton:SetChecked(settings.RankWinsByPercent)
             end
-            local layout = rematch.dialog:GetOpenLayout()
+            local layout = rematchRedux.dialog:GetOpenLayout()
             if layout=="Default" then
-                rematch.summaryDialog:FillSummary()
-                self.BarChart:Set(rematch.summaryDialog:GetChartData(C.BARCHART_TYPES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
+                rematchRedux.summaryDialog:FillSummary()
+                self.BarChart:Set(rematchRedux.summaryDialog:GetChartData(C.BARCHART_TYPES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
             elseif layout=="Sources" then
-                rematch.summaryDialog:FillSummary()
-                self.BarChart:Set(rematch.summaryDialog:GetChartData(C.BARCHART_SOURCES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
+                rematchRedux.summaryDialog:FillSummary()
+                self.BarChart:Set(rematchRedux.summaryDialog:GetChartData(C.BARCHART_SOURCES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
             elseif layout=="Battles" then
-                local stats = rematch.collectionInfo:GetWinStats(10)
+                local stats = rematchRedux.collectionInfo:GetWinStats(10)
                 self.BattleSummary:Fill(stats)
                 self.TopTeams:Fill(stats.topTeams)
                 self.TopTeams:SetShown(stats.teams and stats.teams>0) -- only show top teams if there are teams to show
@@ -123,7 +123,7 @@ rematch.events:Register(rematch.summaryDialog,"PLAYER_LOGIN",function(self)
         end,
         changeFunc = function(self,info,subject)
             settings.RankWinsByPercent = self.CheckButton:GetChecked()
-            rematch.dialog:Refresh()
+            rematchRedux.dialog:Refresh()
         end
     })
 
@@ -136,42 +136,42 @@ rematch.events:Register(rematch.summaryDialog,"PLAYER_LOGIN",function(self)
                       DuplicatePetsLabel = L["Duplicate Collected Pets"],
                       AverageLevelLabel = L["Average Battle Pet Level"],
                       UncollectedLabel = L["Pets Not Collected"]}) do
-        rematch.dialog.Canvas.PetSummary[k]:SetText(v)
+        rematchRedux.dialog.Canvas.PetSummary[k]:SetText(v)
     end
 
 end)
 
 -- since many sessions may not use this dialog at all, any setup stuff for dialog controls is done here on first use
-function rematch.summaryDialog:FirstUseSetup()
+function rematchRedux.summaryDialog:FirstUseSetup()
     if not self.isSetup then
         self.isSetup = true
         local menu = {}
         for i,info in ipairs(categories) do
             tinsert(menu,{text=info.name, value=i})
         end
-        rematch.dialog.Canvas.BarChartDropDown.DropDown:BasicSetup(menu,
+        rematchRedux.dialog.Canvas.BarChartDropDown.DropDown:BasicSetup(menu,
             function(value)
                 settings.BarChartCategory = value
-                rematch.dialog.Canvas.BarChart:Set(rematch.summaryDialog:GetChartData(rematch.dialog:GetOpenLayout()=="Types" and C.BARCHART_TYPES or C.BARCHART_SOURCES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
+                rematchRedux.dialog.Canvas.BarChart:Set(rematchRedux.summaryDialog:GetChartData(rematchRedux.dialog:GetOpenLayout()=="Types" and C.BARCHART_TYPES or C.BARCHART_SOURCES,settings.BarChartCategory or C.BARCHART_IN_JOURNAL))
             end
         )
-        rematch.dialog.Canvas.BarChartDropDown.DropDown:SetSelection(settings.BarChartCategory)
+        rematchRedux.dialog.Canvas.BarChartDropDown.DropDown:SetSelection(settings.BarChartCategory)
 
-        rematch.dialog.Canvas.TopTeams.WinsLabel:SetText(L["Wins"])
+        rematchRedux.dialog.Canvas.TopTeams.WinsLabel:SetText(L["Wins"])
 
 
-        rematch.dialog.Canvas.BattleSummary.WinLabel:SetText(L["Won"])
-        rematch.dialog.Canvas.BattleSummary.LossLabel:SetText(L["Lost"])
-        rematch.dialog.Canvas.BattleSummary.DrawLabel:SetText(L["Draw"])
+        rematchRedux.dialog.Canvas.BattleSummary.WinLabel:SetText(L["Won"])
+        rematchRedux.dialog.Canvas.BattleSummary.LossLabel:SetText(L["Lost"])
+        rematchRedux.dialog.Canvas.BattleSummary.DrawLabel:SetText(L["Draw"])
     end
 end
 
 -- main tab of dialog, summary statistics of collection
-function rematch.summaryDialog:FillSummary()
+function rematchRedux.summaryDialog:FillSummary()
     -- collection[speciesID] = {petType,source,numPets,numAt25,totalLevels,numPoor,numCommon,numUncommon,numRare}
-    local stats = rematch.collectionInfo:GetCollectionStats()
+    local stats = rematchRedux.collectionInfo:GetCollectionStats()
 
-    local summary = rematch.dialog.Canvas.PetSummary
+    local summary = rematchRedux.dialog.Canvas.PetSummary
 
     summary.TotalInJournal:SetText(format(L["There are %s%d\124r unique pets in the journal"],C.HEX_WHITE,stats.numInJournal))
     summary.TotalCollected:SetText(format(L["You've collected %s%.1f%%\124r of them"],C.HEX_WHITE,stats.numCollectedUnique*100/max(1,stats.numInJournal)))
@@ -203,7 +203,7 @@ end
 -- returns a chartData subtable filled in for the given category
 -- chart is either C.BARCHART_TYPES or C.BARCHART_SOURCES to choose which bar chart to get data for
 -- category is one of C.BARCHART_IN_JOURNAL, C.BARCHART_TOTAL_COLLECTED, etc of which category of data for the chart
-function rematch.summaryDialog:GetChartData(chart,category)
+function rematchRedux.summaryDialog:GetChartData(chart,category)
     local data = chartData[chart]
     assert(type(data)=="table" and #data>0,"Invalid chart data set: "..(chart or "nil"))
     assert(type(category)=="number","Invalid chart category: "..(category or "nil"))
@@ -213,7 +213,7 @@ function rematch.summaryDialog:GetChartData(chart,category)
     end
     -- total values for each bar
     -- collection[speciesID] = {petType,source,numPets,numAt25,totalLevels,numInTeams,numPoor,numCommon,numUncommon,numRare}
-    for _,info in pairs(rematch.collectionInfo:GetSpeciesStats()) do
+    for _,info in pairs(rematchRedux.collectionInfo:GetSpeciesStats()) do
         local addValue = 0
         local column = info[chart] -- either C.BARCHART_TYPES (1) or C.BARCHART_SOURCES (2) -- first two info indexes
         if column and data[column] then

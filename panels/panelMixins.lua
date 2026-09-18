@@ -1,4 +1,4 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
 

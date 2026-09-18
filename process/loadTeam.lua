@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.loadTeam = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.loadTeam = {}
 
 
 local loadPlan = {} -- ordered list of loadouts to change: {slot,petID,ability1,ability2,ability3}
@@ -17,48 +17,48 @@ local getExcludePetIDs
 local unplanned = {}
 
 -- call to load a teamID
-function rematch.loadTeam:LoadTeamID(teamID)
-    if rematch.loadouts:CantSwapPets() then
+function rematchRedux.loadTeam:LoadTeamID(teamID)
+    if rematchRedux.loadouts:CantSwapPets() then
         return -- can't swap pets, leave
     end
-    if teamID and rematch.savedTeams[teamID] then
-        rematch.rebuild:ValidateTeamID(teamID,true)
+    if teamID and rematchRedux.savedTeams[teamID] then
+        rematchRedux.rebuild:ValidateTeamID(teamID,true)
         loadingTeamID = teamID
         startLoad(teamID)
     end
 end
 
 -- loads a team by its case-insensitive name and returns the teamID being loaded if one is going to load
-function rematch.loadTeam:LoadTeamByName(teamName)
-    local teamID = rematch.savedTeams:GetTeamIDByName(teamName:trim())
+function rematchRedux.loadTeam:LoadTeamByName(teamName)
+    local teamID = rematchRedux.savedTeams:GetTeamIDByName(teamName:trim())
     if teamID then
-        rematch.loadTeam:LoadTeamID(teamID)
+        rematchRedux.loadTeam:LoadTeamID(teamID)
         return teamID
     end
 end
 
-function rematch.loadTeam:UnloadTeam()
+function rematchRedux.loadTeam:UnloadTeam()
     settings.currentTeamID = nil
-    rematch.queue:Process()
-    rematch.events:Fire("REMATCH_TEAM_LOADED")
+    rematchRedux.queue:Process()
+    rematchRedux.events:Fire("REMATCHREDUX_TEAM_LOADED")
 end
 
 -- returns true if a team is currently loading
-function rematch.loadTeam:IsTeamLoading()
+function rematchRedux.loadTeam:IsTeamLoading()
     return loadingTeamID and true or false
 end
 
 -- returns the healthiest version of the petID (possibly same petID if LoadHealthiest not enabled)
-function rematch.loadTeam:FindHealthiestPetID(petID,excludePetIDs,allowPetID)
+function rematchRedux.loadTeam:FindHealthiestPetID(petID,excludePetIDs,allowPetID)
     local bestPetID = petID
-    local petInfo = rematch.altInfo:Fetch(petID)
+    local petInfo = rematchRedux.altInfo:Fetch(petID)
     -- only looking for a healthier pet if setting enabled, player owns more than 1 of the species and petID injured
     if settings.LoadHealthiest and petInfo.count>1 then
         local bestHealth = petInfo.health
         local speciesID = petInfo.speciesID
         local maxHealth, power, speed = petInfo.maxHealth, petInfo.power, petInfo.speed
-        for ownedPetID in rematch.roster:AllSpeciesPetIDs(speciesID) do
-            petInfo = rematch.altInfo:Fetch(ownedPetID)
+        for ownedPetID in rematchRedux.roster:AllSpeciesPetIDs(speciesID) do
+            petInfo = rematchRedux.altInfo:Fetch(ownedPetID)
             if petInfo.speciesID==speciesID and petInfo.isOwned and petInfo.health>bestHealth then
                 -- if LoadHealthiestAny is true, then don't need to match other stats
                 if (settings.LoadHealthiestAny or (petInfo.maxHealth==maxHealth and petInfo.power==power and petInfo.speed==speed)) and (ownedPetID==petID or not (excludePetIDs and excludePetIDs[ownedPetID]) or ownedPetID==allowPetID) then
@@ -75,12 +75,12 @@ function rematch.loadTeam:FindHealthiestPetID(petID,excludePetIDs,allowPetID)
 end
 
 -- to be called when we want to make sure the already-loaded team has the healthiest pet (leaving battle, revive/bandages)
--- note to self: if this ever does anything on a delay, make sure to update rematch.main's delayedPetBattleClose too
--- (there's already some potential delay/queue processing for rematch.loadouts:SlotPet(), this is ok)
-function rematch.loadTeam:AssertHealthiestPet()
+-- note to self: if this ever does anything on a delay, make sure to update rematchRedux.main's delayedPetBattleClose too
+-- (there's already some potential delay/queue processing for rematchRedux.loadouts:SlotPet(), this is ok)
+function rematchRedux.loadTeam:AssertHealthiestPet()
     if settings.LoadHealthiest then
         local teamID = settings.currentTeamID
-        local team = teamID and rematch.savedTeams[teamID]
+        local team = teamID and rematchRedux.savedTeams[teamID]
         if team then
             -- for asserting healthiest pets, just exclude loaded petIDs (team's pets may want back in and shouldn't be excluded)
             local excludePetIDs = {}
@@ -91,12 +91,12 @@ function rematch.loadTeam:AssertHealthiestPet()
                 end
             end
             for i=1,3 do
-                local loadedPetID,ability1,ability2,ability3 = rematch.loadouts:GetLoadoutInfo(i)
-                local petInfo = rematch.petInfo:Fetch(loadedPetID)
+                local loadedPetID,ability1,ability2,ability3 = rematchRedux.loadouts:GetLoadoutInfo(i)
+                local petInfo = rematchRedux.petInfo:Fetch(loadedPetID)
                 if petInfo.idType=="pet" and petInfo.isOwned and not petInfo.isLeveling then
-                    local newPetID = rematch.loadTeam:FindHealthiestPetID(loadedPetID,excludePetIDs)
+                    local newPetID = rematchRedux.loadTeam:FindHealthiestPetID(loadedPetID,excludePetIDs)
                     if newPetID and loadedPetID~=newPetID then
-                        rematch.loadouts:SlotPet(i,newPetID)
+                        rematchRedux.loadouts:SlotPet(i,newPetID)
                         C_PetJournal.SetAbility(i,1,ability1)
                         C_PetJournal.SetAbility(i,2,ability2)
                         C_PetJournal.SetAbility(i,3,ability3)
@@ -112,12 +112,12 @@ end
 -- sets up the load plan and kicks off loading
 function startLoad(teamID)
     wipe(loadPlan)
-    local team = teamID and rematch.savedTeams[teamID]
+    local team = teamID and rematchRedux.savedTeams[teamID]
     if team then
         -- if all pets in a team are random, then use lenient rule
         local randomRules = C.RANDOM_RULES_LENIENT
         for i=1,3 do
-            if rematch.loadouts:GetSpecialPetIDType(team.pets[slot])~="random" then
+            if rematchRedux.loadouts:GetSpecialPetIDType(team.pets[slot])~="random" then
                 randomRules = settings.RandomPetRules -- a non-random pet in team, used saved random rules
             end
         end
@@ -129,13 +129,13 @@ function startLoad(teamID)
             if petID then
                 excludePetIDs[petID] = true
             end
-            local petInfo = rematch.petInfo:Fetch(team.pets[i])
+            local petInfo = rematchRedux.petInfo:Fetch(team.pets[i])
             if petInfo.idType=="pet" then
                 excludePetIDs[team.pets[i]] = true
             end
         end
 
-        rematch.queue:Update(teamID) -- update queue to the incoming team's preferences
+        rematchRedux.queue:Update(teamID) -- update queue to the incoming team's preferences
         local pickIndex = 1 -- 1-3 for leveling pet to load from queue
 
         wipe(unplanned)
@@ -143,17 +143,17 @@ function startLoad(teamID)
         -- add each pet to the load plan for the team
         for slot=1,3 do
             local petID = team.pets[slot]
-            rematch.loadouts:SetSlotPetID(slot,petID) -- set slot's petID regardless if it loads for special slots
+            rematchRedux.loadouts:SetSlotPetID(slot,petID) -- set slot's petID regardless if it loads for special slots
             if petID then
-                local petInfo = rematch.petInfo:Fetch(petID)
+                local petInfo = rematchRedux.petInfo:Fetch(petID)
                 -- every pet being slotted must be a valid owned pet BattlePet-0-etc
                 if petID==0 then -- leveling pet
-                    local levelingPetID = rematch.queue:GetTopPick(pickIndex)
+                    local levelingPetID = rematchRedux.queue:GetTopPick(pickIndex)
                     if levelingPetID then
                         tinsert(loadPlan,{slot,levelingPetID}) -- add leveling pet to load plan
                         excludePetIDs[levelingPetID] = true -- exclude leveling pet from potential randoms
                     elseif settings.QueueRandomWhenEmpty then -- if a leveling pet wasn't found and Random Pet When Queue Empty enabled, pick a random pet
-                        local levelingPetID = rematch.randomPets:PickRandomPetID({excludePetIDs=excludePetIDs,levelable=(not settings.QueueRandomMaxLevel)})
+                        local levelingPetID = rematchRedux.randomPets:PickRandomPetID({excludePetIDs=excludePetIDs,levelable=(not settings.QueueRandomMaxLevel)})
                         if levelingPetID then
                             tinsert(loadPlan,{slot,levelingPetID})
                             excludePetIDs[levelingPetID] = true
@@ -161,22 +161,22 @@ function startLoad(teamID)
                     end
                     pickIndex = pickIndex + 1
                 elseif petInfo.idType=="pet" and petInfo.isValid and petInfo.isOwned and petInfo.isSummonable then
-                    local ability1,ability2,ability3 = rematch.petTags:GetAbilities(team.tags[slot])
-                    local allowPetID = rematch.loadouts:GetLoadoutInfo(slot) -- if pet is replacing one already in the slot, allow keeping this one
-                    local healthiestPetID = rematch.loadTeam:FindHealthiestPetID(petID,excludePetIDs,allowPetID) -- returns same petID if option disabled
+                    local ability1,ability2,ability3 = rematchRedux.petTags:GetAbilities(team.tags[slot])
+                    local allowPetID = rematchRedux.loadouts:GetLoadoutInfo(slot) -- if pet is replacing one already in the slot, allow keeping this one
+                    local healthiestPetID = rematchRedux.loadTeam:FindHealthiestPetID(petID,excludePetIDs,allowPetID) -- returns same petID if option disabled
                     tinsert(loadPlan,{slot,healthiestPetID,ability1,ability2,ability3})
                     excludePetIDs[healthiestPetID] = true
                 elseif petInfo.idType=="pet" and not petInfo.isValid then
-                    local newPetID = rematch.petTags:FindPetID(team.tags[slot],excludePetIDs)
+                    local newPetID = rematchRedux.petTags:FindPetID(team.tags[slot],excludePetIDs)
                     if newPetID then
                         tinsert(loadPlan,{slot,newPetID,ability1,ability2,ability3})
                         excludePetIDs[newPetID] = true
                     end
                 elseif petInfo.idType=="random" then
                     local petType = tonumber(petID:match("^random:(%d+)"))
-                    local randomPetID = rematch.randomPets:PickRandomPetID({petType=petType,rules=randomRules,excludePetIDs=excludePetIDs})
+                    local randomPetID = rematchRedux.randomPets:PickRandomPetID({petType=petType,rules=randomRules,excludePetIDs=excludePetIDs})
                     if randomPetID then
-                        local petInfo = rematch.petInfo:Fetch(randomPetID)
+                        local petInfo = rematchRedux.petInfo:Fetch(randomPetID)
                         if settings.RandomAbilitiesToo then -- if Random Abilities Too enabled, load random abilities too
                             tinsert(loadPlan,{slot,randomPetID,petInfo.abilityList[1+(random(100)>50 and 3 or 0)],petInfo.abilityList[2+(random(100)>50 and 3 or 0)],petInfo.abilityList[3+(random(100)>50 and 3 or 0)]})
                         else -- otherwise let game choose abilities and only slot petID
@@ -247,7 +247,7 @@ function runLoad()
         timeout = timeout + 1
         for _,plan in ipairs(loadPlan) do
             if plan[2] then -- petID needs loaded into this slot
-                rematch.loadouts:SlotPet(plan[1],plan[2])
+                rematchRedux.loadouts:SlotPet(plan[1],plan[2])
             end
             if plan[3] then
                 C_PetJournal.SetAbility(plan[1],1,plan[3]) -- ability1
@@ -261,7 +261,7 @@ function runLoad()
         end
         -- update plan now that stuff loaded; if something remains to be loaded, come back in a bit to continue loading
         if updatePlan() then
-            rematch.timer:Start(C.TEAM_LOAD_WAIT,runLoad)
+            rematchRedux.timer:Start(C.TEAM_LOAD_WAIT,runLoad)
             return
         end
     end
@@ -269,32 +269,32 @@ function runLoad()
     finishLoad()
 end
 
--- finishes loading and alerts if any pets missing/replaced and fires REMATCH_TEAM_LOADED
+-- finishes loading and alerts if any pets missing/replaced and fires REMATCHREDUX_TEAM_LOADED
 function finishLoad()
     settings.currentTeamID = loadingTeamID
     -- SetSlotPetID to set special slots after team loads
-    local team = rematch.savedTeams[loadingTeamID]
+    local team = rematchRedux.savedTeams[loadingTeamID]
     if not team then
         return
     end
     for slot=1,3 do
         local petID = team.pets[slot]
-        rematch.loadouts:SetSlotPetID(slot,petID) -- this sets special slots
+        rematchRedux.loadouts:SetSlotPetID(slot,petID) -- this sets special slots
     end
     -- if we just loaded a team and we have a mini target panel up but panel should not stay up, dismiss it
-    if rematch.layout:GetSubview()=="target" and not rematch.loadedTargetPanel:ShouldShowTarget() then
-        rematch.frame:Configure()
+    if rematchRedux.layout:GetSubview()=="target" and not rematchRedux.loadedTargetPanel:ShouldShowTarget() then
+        rematchRedux.frame:Configure()
     end
     if team.notes and settings.ShowNotesOnLoad then
-        rematch.cardManager:ShowCard(rematch.notes,loadingTeamID)
+        rematchRedux.cardManager:ShowCard(rematchRedux.notes,loadingTeamID)
     end
     -- if any pets missing or unable to be loaded, show a warning
-    rematch.loadTeam:WarnProblemLoads()
+    rematchRedux.loadTeam:WarnProblemLoads()
     loadingTeamID = nil
-    rematch.events:Fire("REMATCH_TEAM_LOADED",settings.currentTeamID)
+    rematchRedux.events:Fire("REMATCHREDUX_TEAM_LOADED",settings.currentTeamID)
 end
 
-function rematch.loadTeam:WarnProblemLoads()
+function rematchRedux.loadTeam:WarnProblemLoads()
     local problem
     for slot=1,3 do
         if unplanned[slot] and unplanned[slot].problem==C.UNPLANNED_PET_MISSING then
@@ -306,7 +306,7 @@ function rematch.loadTeam:WarnProblemLoads()
     if not problem then
         return
     end
-    rematch.dialog:Register("ProblemLoad",{
+    rematchRedux.dialog:Register("ProblemLoad",{
         title = problem==C.UNPLANNED_PET_MISSING and L["Pets are missing"] or L["Low level random pet"],
         accept = OKAY,
         layout = {"Text","TeamWarning","CheckButton"},
@@ -321,7 +321,7 @@ function rematch.loadTeam:WarnProblemLoads()
                     petID = unplanned[i].petID
                 else
                     self.TeamWarning.Warnings[i]:Hide()
-                    petID = rematch.loadouts:GetLoadoutInfo(i)
+                    petID = rematchRedux.loadouts:GetLoadoutInfo(i)
                 end
                 self.TeamWarning.Pets[i].petID = petID
                 self.TeamWarning.Pets[i]:FillPet(petID)
@@ -330,12 +330,12 @@ function rematch.loadTeam:WarnProblemLoads()
         acceptFunc = function(self,info,subject)
             if problem==C.UNPLANNED_LOW_LEVEL and not self.CheckButton:GetChecked() then
                 settings.WarnWhenRandomNot25 = false
-                rematch.frame:Update()
+                rematchRedux.frame:Update()
             elseif problem==C.UNPLANNED_PET_MISSING and self.CheckButton:GetChecked() then
                 settings.DontWarnMissing = true
-                rematch.frame:Update()
+                rematchRedux.frame:Update()
             end
         end
     })
-    rematch.dialog:ShowDialog("ProblemLoad")
+    rematchRedux.dialog:ShowDialog("ProblemLoad")
 end

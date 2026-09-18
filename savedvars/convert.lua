@@ -1,8 +1,8 @@
-local _,rematch = ...
-local L = rematch.localization
-local C = rematch.constants
-local settings = rematch.settings
-rematch.convert = {}
+local _, rematchRedux = ...
+local L = rematchRedux.localization
+local C = rematchRedux.constants
+local settings = rematchRedux.settings
+rematchRedux.convert = {}
 
 --[[
     For converting Rematch 4.x data to Rematch 5.x
@@ -12,10 +12,10 @@ rematch.convert = {}
 
     Note for other addons that need to know about the conversion:
 
-    The Rematch event REMATCH_TEAMS_CONVERTED will fire when this conversion happens (and have
+    The Rematch event REMATCHREDUX_TEAMS_CONVERTED will fire when this conversion happens (and have
     a table of converted key/teamID values in its payload):
 
-        Rematch.events:Register(yourframe,"REMATCH_TEAMS_CONVERTED",function(self,convertedTeams)
+        Rematch.events:Register(yourframe,"REMATCHREDUX_TEAMS_CONVERTED",function(self,convertedTeams)
             for key,teamID in pairs(convertedTeams) do
                 print(key,"is now",teamID)
             end
@@ -44,7 +44,7 @@ rematch.convert = {}
 
 local conversionHappened -- true if an import/conversion of Rematch 4 to 5 teams happened this session
 
-function rematch.convert:ConversionCheck()
+function rematchRedux.convert:ConversionCheck()
     -- if there are Rematch4 savedvars then copy them to Rematch4Saved/Settings and nil old versions
     if RematchSaved and RematchSettings then
         Rematch4Saved = CopyTable(RematchSaved)
@@ -54,12 +54,12 @@ function rematch.convert:ConversionCheck()
     end
     -- if new settings are empty and there are Rematch4Settings, then import stuff after pets loaded
     -- (settings.WasShownOnLogout will have a value on a reload, so checking if 1 or less settings exists)
-    if rematch.utils:GetSize(Rematch5Settings)<=1 and Rematch4Settings then
-        rematch.convert:ImportSettings() -- import settings without waiting for pets to load (some modules need it on login)
+    if rematchRedux.utils:GetSize(Rematch5Settings)<=1 and Rematch4Settings then
+        rematchRedux.convert:ImportSettings() -- import settings without waiting for pets to load (some modules need it on login)
         -- and after pets load, import teams and queue
-        rematch.events:Register(self,"REMATCH_PETS_LOADED",function()
-            rematch.convert:ImportTeams()
-            rematch.convert:ImportQueue()
+        rematchRedux.events:Register(self,"REMATCHREDUX_PETS_LOADED",function()
+            rematchRedux.convert:ImportTeams()
+            rematchRedux.convert:ImportQueue()
         end)
     end
 
@@ -91,7 +91,7 @@ end
 
 -- copies various settings from Rematch 4.x
 -- note: THIS SHOULD BE IMPORTED FIRST (LevelingQueue and GroupOrder (among other things) are in settings)
-function rematch.convert:ImportSettings()
+function rematchRedux.convert:ImportSettings()
     if not Rematch4Settings then
         return
     end
@@ -156,23 +156,23 @@ end
 -- converts a single Rematch4.x team to Rematch 5.x
 local teamUpgradeMap = {} -- unordered table of [oldkey] = teamID only populated for upgraded teams
 local function upgradeTeam(key,team)
-    local sideline = rematch.savedTeams.sideline
-    rematch.savedTeams:Reset("sideline")
+    local sideline = rematchRedux.savedTeams.sideline
+    rematchRedux.savedTeams:Reset("sideline")
     if type(key)=="number" then -- team with target
         sideline.targets = {key}
-        sideline.name = rematch.savedTeams:GetUniqueName(team.teamName)
+        sideline.name = rematchRedux.savedTeams:GetUniqueName(team.teamName)
     else
-        sideline.name = rematch.savedTeams:GetUniqueName(key)
+        sideline.name = rematchRedux.savedTeams:GetUniqueName(key)
     end
     -- copy pets and create tags
     for i=1,3 do
         local petID,ability1,ability2,ability3 = unpack(team[i])
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if not petInfo.isValid then
             petID = team[i][5] -- if petID isn't valid, use its speciesID instead
         end
         sideline.pets[i] = petID
-        local tag = rematch.petTags:Create(petID,ability1,ability2,ability3)
+        local tag = rematchRedux.petTags:Create(petID,ability1,ability2,ability3)
         sideline.tags[i] = tag
     end
     -- if team has preferences, create a table for them
@@ -204,7 +204,7 @@ local function upgradeTeam(key,team)
         sideline.groupID = "group:favorites"
     end
     sideline.notes = team.notes
-    local newTeam = rematch.savedTeams:Create(sideline)  -- create the team
+    local newTeam = rematchRedux.savedTeams:Create(sideline)  -- create the team
     teamUpgradeMap[key] = newTeam.teamID
     -- save key->teamID mapping and fire event that an old team was converted to a new one
     settings.ConvertedTeams[key] = newTeam.teamID
@@ -213,7 +213,7 @@ end
 -- imports teams (and groups) from Rematch4Saved
 -- note: this should only run on login; teamIDsByName needs to be empty (if this is needed after
 -- login then expose teamIDsByName from savedTeams and wipe it here)
-function rematch.convert:ImportTeams()
+function rematchRedux.convert:ImportTeams()
     if not Rematch4Saved then
         return
     end
@@ -223,7 +223,7 @@ function rematch.convert:ImportTeams()
     wipe(Rematch5SavedTargets)
     wipe(settings.GroupOrder)
     wipe(settings.ExpandedGroups)
-    rematch.savedGroups:Validate() -- rebuild group structure
+    rematchRedux.savedGroups:Validate() -- rebuild group structure
 
     settings.ConvertedTeams = {} -- lookup table, indexed by Rematch 4 key of the Rematch 5 teamID
 
@@ -241,13 +241,13 @@ function rematch.convert:ImportTeams()
         end
     end
 
-    rematch.savedGroups["group:favorites"].showTab = true
+    rematchRedux.savedGroups["group:favorites"].showTab = true
 
     -- next upgrade tabs to groups
     for index,oldGroup in ipairs(Rematch4Settings.TeamGroups) do
-        local group = rematch.savedGroups["group:none"]
+        local group = rematchRedux.savedGroups["group:none"]
         if index>1 then -- team tab 1 is now "group:none"
-            group = rematch.savedGroups:Create(oldGroup[1]) -- create a new group with the old group name
+            group = rematchRedux.savedGroups:Create(oldGroup[1]) -- create a new group with the old group name
         end
         group.icon = oldGroup[2]
         group.sortMode = oldGroup[5] and C.GROUP_SORT_WINS or oldGroup[3] and C.GROUP_SORT_CUSTOM or C.GROUP_SORT_ALPHA
@@ -264,38 +264,38 @@ function rematch.convert:ImportTeams()
             group.preferences = CopyTable(oldGroup[4])
         end
         -- if room for a tab, make one
-        if rematch.savedGroups:GetNumTeamTabs() < C.MAX_TEAM_TABS then
+        if rematchRedux.savedGroups:GetNumTeamTabs() < C.MAX_TEAM_TABS then
             group.showTab = true
         end
     end
 
     wipe(teamUpgradeMap) -- no longer need this but keep table in case it needs re-run
-    rematch.savedTeams:TeamsChanged(true)
+    rematchRedux.savedTeams:TeamsChanged(true)
 
     -- fire an event that teams were converted, with a copy of the old key->new teamID mapping
-    rematch.events:Fire("REMATCH_TEAMS_CONVERTED",CopyTable(settings.ConvertedTeams))
+    rematchRedux.events:Fire("REMATCHREDUX_TEAMS_CONVERTED",CopyTable(settings.ConvertedTeams))
     conversionHappened = true
 
-    settings.BackupCount = rematch.utils:GetSize(Rematch5SavedTeams) -- not using rematch.savedTeams:GetNumTeams() since afterTeamsChanged hasn't run yet
+    settings.BackupCount = rematchRedux.utils:GetSize(Rematch5SavedTeams) -- not using rematch.savedTeams:GetNumTeams() since afterTeamsChanged hasn't run yet
 
 end
 
 -- copies queue from Rematch 4.x
-function rematch.convert:ImportQueue()
+function rematchRedux.convert:ImportQueue()
     if not Rematch4Settings then
         return
     end
     wipe(settings.LevelingQueue)
     for i,petID in ipairs(Rematch4Settings.LevelingQueue) do
-        local petInfo = rematch.petInfo:Fetch(petID)
+        local petInfo = rematchRedux.petInfo:Fetch(petID)
         if petInfo.isValid then
-            tinsert(settings.LevelingQueue,{petID=petID,petTag=rematch.petTags:Create(petID,"Q"),added=rematch.utils:GetDateTime()})
+            tinsert(settings.LevelingQueue,{petID=petID,petTag=rematchRedux.petTags:Create(petID,"Q"),added=rematchRedux.utils:GetDateTime()})
         end
     end
-    rematch.queue:Process()
+    rematchRedux.queue:Process()
 end
 
 -- returns a lookup table of Rematch4 keys to Rematch5 teamIDs, and whether conversion happened this session
-function rematch.convert:GetConvertedTeams()
+function rematchRedux.convert:GetConvertedTeams()
     return CopyTable(settings.ConvertedTeams),conversionHappened or false
 end

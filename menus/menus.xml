@@ -3,9 +3,9 @@
     <Script file="menus.lua"/>
 
     <!-- this is a parent frame template for each menu level -->
-    <Frame name="RematchMenuFrameTemplate" mixin="RematchMenuFrameMixin" clampedToScreen="true" inherits="RematchShadowBackdropTemplate" enableMouse="true" hidden="true" virtual="true">
+    <Frame name="RematchReduxMenuFrameTemplate" mixin="RematchReduxMenuFrameMixin" clampedToScreen="true" inherits="RematchReduxShadowBackdropTemplate" enableMouse="true" hidden="true" virtual="true">
 		<KeyValues>
-			<KeyValue key="isRematchMenu" value="true" type="boolean"/>
+			<KeyValue key="isRematchReduxMenu" value="true" type="boolean"/>
 			<KeyValue key="timer" value="0" type="number"/>
 		</KeyValues>
 		<Frames>
@@ -51,7 +51,7 @@
     </Frame>
 
 	<!-- the menu item buttons that display all text/options (aside from title which is a part of the parent frame) -->
-	<Button name="RematchMenuButtonTemplate" mixin="RematchMenuButtonMixin" virtual="true">
+	<Button name="RematchReduxMenuButtonTemplate" mixin="RematchReduxMenuButtonMixin" virtual="true">
 		<Size x="0" y="20"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -65,7 +65,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="ARTWORK">
-				<Texture parentKey="Check" file="Interface\Addons\Rematch\Textures\checkbuttons" hidden="true">
+				<Texture parentKey="Check" file="Interface\Addons\RematchRedux\Textures\checkbuttons" hidden="true">
 					<Size x="22" y="22"/>
 					<Anchors>
 						<Anchor point="LEFT" x="-2" y="0"/>
@@ -103,10 +103,10 @@
 	</Button>
 
 	<!-- single frame contains the delete and edit buttons for menus with deleteButton or editButton -->
-	<Frame name="RematchMenuSideButtons">
+	<Frame name="RematchReduxMenuSideButtons">
 		<Size x="32" y="16"/>
 		<Frames>
-			<Button parentKey="DeleteButton" mixin="RematchMenuSideButtonMixin" inherits="RematchTooltipScripts">
+			<Button parentKey="DeleteButton" mixin="RematchReduxMenuSideButtonMixin" inherits="RematchReduxTooltipScripts">
 				<Size x="16" y="16"/>
 				<Anchors>
 					<Anchor point="RIGHT"/>
@@ -125,7 +125,7 @@
 					<OnClick method="OnClick"/>
 				</Scripts>
 			</Button>
-			<Button parentKey="EditButton" mixin="RematchMenuSideButtonMixin" inherits="RematchTooltipScripts">
+			<Button parentKey="EditButton" mixin="RematchReduxMenuSideButtonMixin" inherits="RematchReduxTooltipScripts">
 				<Size x="16" y="16"/>
 				<Anchors>
 					<Anchor point="LEFT"/>

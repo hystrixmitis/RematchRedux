@@ -2,7 +2,7 @@
     <Script file="teamListButton.lua"/>
 
     <!-- group/header template -->
-    <Button name="RematchHeaderTeamListButtonTemplate" registerForDrag="LeftButton" registerForClicks="AnyUp" mixin="RematchHeaderTeamListButtonMixin" inherits="RematchHeaderListButtonTemplate" virtual="true">
+    <Button name="RematchReduxHeaderTeamListButtonTemplate" registerForDrag="LeftButton" registerForClicks="AnyUp" mixin="RematchReduxHeaderTeamListButtonMixin" inherits="RematchReduxHeaderListButtonTemplate" virtual="true">
         <Layers>
             <Layer level="BORDER">
                 <Texture parentKey="Icon" hidden="true">
@@ -50,7 +50,7 @@
     </Button>
 
     <!-- normal list button template -->
-    <Button name="RematchNormalTeamListButtonTemplate" registerForDrag="LeftButton" registerForClicks="AnyUp" mixin="RematchCommonTeamListButtonMixin,RematchNormalTeamListButtonMixin" virtual="true">
+    <Button name="RematchReduxNormalTeamListButtonTemplate" registerForDrag="LeftButton" registerForClicks="AnyUp" mixin="RematchReduxCommonTeamListButtonMixin,RematchReduxNormalTeamListButtonMixin" virtual="true">
         <Size x="0" y="44"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -85,7 +85,7 @@
             </Layer>
 			<Layer level="ARTWORK">
                 <!-- pets for the team or target -->
-				<Texture parentArray="Pets" mixin="RematchTeamListPetButtonMixin">
+				<Texture parentArray="Pets" mixin="RematchReduxTeamListPetButtonMixin">
 					<Size x="28" y="40"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" x="2" y="-2"/>
@@ -101,7 +101,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
 				</Texture>
-				<Texture parentArray="Pets" mixin="RematchTeamListPetButtonMixin">
+				<Texture parentArray="Pets" mixin="RematchReduxTeamListPetButtonMixin">
 					<Size x="28" y="40"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" x="31" y="-2"/>
@@ -117,7 +117,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
 				</Texture>
-				<Texture parentArray="Pets" mixin="RematchTeamListPetButtonMixin">
+				<Texture parentArray="Pets" mixin="RematchReduxTeamListPetButtonMixin">
 					<Size x="28" y="40"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" x="60" y="-2"/>
@@ -144,7 +144,7 @@
                     <TexCoords left="0" right="0.3515625" top="0" bottom="0.171875"/>
                 </Texture>
                 <!-- notes button in topright acts as a real button -->
-                <Texture parentKey="NotesButton" inherits="RematchNotesButtonTemplate" hidden="true">
+                <Texture parentKey="NotesButton" inherits="RematchReduxNotesButtonTemplate" hidden="true">
                     <Anchors>
                         <Anchor point="TOPRIGHT" x="-3" y="-5"/>
                     </Anchors>
@@ -184,7 +184,7 @@
     </Button>
 
     <!-- compact list button template -->
-    <Button name="RematchCompactTeamListButtonTemplate" registerForDrag="LeftButton" registerForClicks="AnyUp" mixin="RematchCommonTeamListButtonMixin,RematchCompactTeamListButtonMixin" virtual="true">
+    <Button name="RematchReduxCompactTeamListButtonTemplate" registerForDrag="LeftButton" registerForClicks="AnyUp" mixin="RematchReduxCommonTeamListButtonMixin,RematchReduxCompactTeamListButtonMixin" virtual="true">
         <Size x="0" y="26"/>
         <Layers>
             <Layer level="BACKGROUND">
@@ -212,7 +212,7 @@
             </Layer>
 			<Layer level="ARTWORK">
                 <!-- pets for the team or target -->
-				<Texture parentArray="Pets" mixin="RematchTeamListPetButtonMixin">
+				<Texture parentArray="Pets" mixin="RematchReduxTeamListPetButtonMixin">
 					<Size x="22" y="22"/>
 					<Anchors>
 						<Anchor point="LEFT" x="2" y="0"/>
@@ -228,7 +228,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
 				</Texture>
-				<Texture parentArray="Pets" mixin="RematchTeamListPetButtonMixin">
+				<Texture parentArray="Pets" mixin="RematchReduxTeamListPetButtonMixin">
 					<Size x="22" y="22"/>
 					<Anchors>
 						<Anchor point="LEFT" x="25" y="0"/>
@@ -244,7 +244,7 @@
                         <OnMouseUp method="OnMouseUp"/>
                     </Scripts>
 				</Texture>
-				<Texture parentArray="Pets" mixin="RematchTeamListPetButtonMixin">
+				<Texture parentArray="Pets" mixin="RematchReduxTeamListPetButtonMixin">
 					<Size x="22" y="22"/>
 					<Anchors>
 						<Anchor point="LEFT" x="48" y="0"/>
@@ -271,7 +271,7 @@
                     <TexCoords left="0" right="0.28125" top="0.1875" bottom="0.2890625"/>
                 </Texture>
                 <!-- notes button in topright acts as a real button -->
-                <Texture parentKey="NotesButton" inherits="RematchNotesButtonTemplate" hidden="true">
+                <Texture parentKey="NotesButton" inherits="RematchReduxNotesButtonTemplate" hidden="true">
                     <Size x="18" y="18"/>
                     <Anchors>
                         <Anchor point="RIGHT" x="-30" y="0"/>
