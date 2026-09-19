@@ -2,7 +2,7 @@
 ## Title: RematchRedux
 ## Notes: A pet journal alternative for managing pets and teams
 ## Author: HystrixMitis (originally by Gello)
-## Version: 12.1.0
+## Version: 6.0.0
 ## SavedVariables: RematchReduxSettings, RematchReduxSavedTeams, RematchReduxSavedGroups, RematchReduxSavedTargets
 ## IconTexture: Interface\AddOns\RematchRedux\textures\icon
 ## AddonCompartmentFunc: RematchReduxToggleWindow

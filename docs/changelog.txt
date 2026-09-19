@@ -1,3 +1,11 @@
+09/18/2026 version 6.0.0-alpha.1
+- First pass at getting all of the Rematch naming over to RematchRedux to avoid collisions and allow the two addons to exist
+  peacefully side-by-side
+- Does not support import of Rematch SavedVariables just yet. Coming before official release.
+- Report any issues you find with the addon running with Rematch both enabled and disabled.
+- Log issues at: https://github.com/hystrixmitis/RematchRedux/issues
+- Contact me via CurseForge directly: https://www.curseforge.com/members/hystrixmitis/projects
+
 01/24/2026 version 5.3.1
 - Targeting hostiles that would trigger a Midnight-specific "secret value" lua error are silently ignored and will not add to target history
 
