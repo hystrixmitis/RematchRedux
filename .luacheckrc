@@ -20,5 +20,5 @@ read_globals = {
     "C_Spell",
     "C_TaskQuest",
     "C_Timer",
-    "C_UnitAuras"s
+    "C_UnitAuras"
 }

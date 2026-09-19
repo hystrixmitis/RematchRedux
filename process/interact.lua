@@ -95,6 +95,8 @@ function rematchRedux.interact:ShouldInteract(npcID)
             return true -- if Interact Always enabled and a different team would load, interact
         end
     end
+    
+    ---@diagnostic disable-next-line: type-mismatch
     if currentTeamID and tContains(teams,currentTeamID) then
         return false -- a team for this target is already loaded, don't interact
     end

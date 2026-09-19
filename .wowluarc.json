@@ -1,0 +1,6 @@
+{
+  "flavors": ["retail"],
+  "diagnostics": {
+    "disable": ["need-check-nil"]
+  }
+}

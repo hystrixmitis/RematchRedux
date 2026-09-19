@@ -2,7 +2,7 @@
 
 ## *Functionality can and will change going forward! For now, the base is starting from the last Rematch update (5.3.1) with small fixes to import your old teams, notes, and targets.*
 
-Rematch is a pet journal alternative for managing pets and teams.
+RematchRedux is a pet journal alternative for managing pets and teams.
 
 Features
 
@@ -13,37 +13,37 @@ Features
 - Find counters with extended pet filters such as Strong Vs and Tough Vs
 - Search for abilities and text within abilities
 - Add notes to teams or pets as reminders or to find later with search
-- Share teams with other Rematch users with export/import or directly sending to an online player
+- Share teams with other RematchRedux users with export/import or directly sending to an online player
 - Use integrated with the pet journal or in a minimizable standalone window
 - And much, much more!
 
 How to use
 
-Rematch initially replaces your regular pet journal. You can switch back to the regular journal anytime by unchecking the Rematch checkbox at the bottom of the journal.
+RematchRedux initially replaces your regular pet journal. You can switch back to the regular journal anytime by unchecking the RematchRedux checkbox at the bottom of the journal.
 
 Alternately, a movable and minimizable standalone window can be summoned a few ways:
 - From a key you define in the game's key binding interface
-- /rematch macro command
+- /rematchredux (or /redux if you're into the whole brevity thing) macro command
 - "Use Minimap Button" in options to create a minimap button
 - From its LDB button if you have a Broker infobar addon
 
-Aside from the familiar list of pets and your loaded pets, Rematch adds another panel that switches between these tabs:
+Aside from the familiar list of pets and your loaded pets, RematchRedux adds another panel that switches between these tabs:
 - Teams: Your saved teams and the groups they're stored in
 - Targets: Notable targets with known pets grouped by their expansion and zone
 - Queue: The leveling queue of all pets you want to level
-- Options: Settings to change many aspects of Rematch
+- Options: Settings to change many aspects of RematchRedux
 
 Tooltips explain many parts of the addon. Poke around and experiment! Check out the many options. There are several views and a lot of features to the addon you can discover over time.
 
 Standalone Window
 
-From the start, Rematch was built to work independently in its own window detached from the journal. As a standalone window, Rematch has several benefits:
+From the start, RematchRedux was built to work independently in its own window detached from the journal. As a standalone window, RematchRedux has several benefits:
 - It won't cover or disrupt other addons that modify the journal.
 - It can display information more compactly in single or double panels in addition to the three-panel view like the journal. Click the left and right buttons in topleft beside the lock button to change views.
 - It can be minimized so you can view and interact with loaded pets without covering a large part of the screen. Click the minimize button in the topright of the window beside the close button.
 - When interacting with targets, the more compact views don't obscure the view of your targets or surroundings.
 - You can keep it on screen while doing a round of battle pets or during a battle; then dismiss it when done.
-- Many options in Rematch are designed to summon the standalone window, some automatically (Safari Hat Reminder, Interact Options), some manually (Minimap Button)
+- Many options in RematchRedux are designed to summon the standalone window, some automatically (Safari Hat Reminder, Interact Options), some manually (Minimap Button)
 
 Loaded Team
 
@@ -54,16 +54,16 @@ Above the loaded pets is a button with a gold background that will display the n
 Teams
 
 You can save an unlimited number of teams in an unlimited number of groups.
-- When saving a team, if you choose any targets in the Targets tab, Rematch will know what team to load when you interact with those targets later
+- When saving a team, if you choose any targets in the Targets tab, RematchRedux will know what team to load when you interact with those targets later
 - Teams that contain targets have a red target icon to the right of their name
-- In the Options tab you can go to Interact Options to choose what you'd like Rematch to do when you interact with targets that have a saved team
-- You can show up to 15 tabs as "bookmarks" to team groups that will display on the side of the Rematch window
+- In the Options tab you can go to Interact Options to choose what you'd like RematchRedux to do when you interact with targets that have a saved team
+- You can show up to 15 tabs as "bookmarks" to team groups that will display on the side of the RematchRedux window
 - You can add notes to teams either from its right-click menu or by clicking the notes button to the right of the loaded team button (described below)
-- If you'd like Rematch to build a team for your current target, click the little blue dice icon and a random team will be loaded. If the pets for the opponent's team are known, it will build a counter team that's strong vs and tough vs the opponent's pets. If you like the team don't forget to save it!
+- If you'd like RematchRedux to build a team for your current target, click the little blue dice icon and a random team will be loaded. If the pets for the opponent's team are known, it will build a counter team that's strong vs and tough vs the opponent's pets. If you like the team don't forget to save it!
 
 Pets
 
-To help make these teams, Rematch has expanded filter options, a Type Bar (opened by clicking the arrow next to the search box) for easily finding counters, and enhanced search ability.
+To help make these teams, RematchRedux has expanded filter options, a Type Bar (opened by clicking the arrow next to the search box) for easily finding counters, and enhanced search ability.
 
 If you open the Type Bar there are three tabs: Types, Strong Vs and Tough Vs:
 - Types allows you to quickly filter to a specific type or group of types.
@@ -88,7 +88,7 @@ Also:
 
 Queue
 
-Rematch has a robust system for leveling pets with the leveling queue. The queue is a place to put all the pets you want to level.
+RematchRedux has a robust system for leveling pets with the leveling queue. The queue is a place to put all the pets you want to level.
 
 - You can order the queue however you like, or let the addon sort the queue for you.
 - To mark a slot for leveling pets, right-click one of the three loaded slots and choose "Put Leveling Pet Here".
@@ -102,7 +102,7 @@ Sharing Teams
 
 Teams can be shared with friends directly in-game or through an export/import feature.
 
-To share a team in-game with another Rematch user, right-click a team and choose Share->Send Team. A dialog will ask for a name, which can be either an online character or a battle.net friend. If it reports the team was succesfully sent, the recipient now has a popup with your team they can save.
+To share a team in-game with another RematchRedux user, right-click a team and choose Share->Send Team. A dialog will ask for a name, which can be either an online character or a battle.net friend. If it reports the team was succesfully sent, the recipient now has a popup with your team they can save.
 
 You can also share teams by exporting them from the same Share menu. If you paste this exported text or string elsewhere, someone else can import your team by copy and pasting it into the Import Teams dialog.
 
@@ -110,6 +110,6 @@ You can share with yourself too! If you don't regularly backup your SavedVariabl
 
 In Conclusion
 
-There's a great deal more to Rematch. Play around with it and experiment. See if you can create new team combos that have never been tried before. Thanks for using it!
+There's a great deal more to RematchRedux. Play around with it and experiment. See if you can create new team combos that have never been tried before. Thanks for using it!
 
 If you have any suggestions, feedback, bugs to report or anything else you'd like to share, feel free to leave a comment here.
