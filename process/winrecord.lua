@@ -36,7 +36,9 @@ function rematchRedux.winrecord:PET_BATTLE_OPENING_START()
 end
 
 function rematchRedux.winrecord:PET_BATTLE_FINAL_ROUND(winner)
-    self.wasInPVP = not C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy)
+    -- IsPlayerNPC takes 1 parameter but the wowlua-ls linter doesn't have this cataloged for some reason. Can remove 
+    -- the @diagnostic disable-line: redundant-parameter comment if the linter is updated to recognize this function signature.
+    self.wasInPVP = not C_PetBattles.IsPlayerNPC(Enum.BattlePetOwner.Enemy) ---@diagnostic disable-line: redundant-parameter
 
     if settings.AutoWinRecord and (not settings.AutoWinRecordPVPOnly or self.wasInPVP) and rematchRedux.savedTeams:IsUserTeam(settings.currentTeamID) then
         local team = rematchRedux.savedTeams[rematchRedux.settings.currentTeamID]

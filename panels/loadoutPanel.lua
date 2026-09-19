@@ -199,7 +199,7 @@ function rematchRedux.loadoutPanel:FillModelScene(loadout,petID)
         if displayID ~= loadout.displayID then
             loadout.displayID = displayID
             local _,loadoutModelSceneID = C_PetJournal.GetPetModelSceneInfoBySpeciesID(petInfo.speciesID)
-            loadout.ModelScene:TransitionToModelSceneID(loadoutModelSceneID, CAMERA_TRANSITION_TYPE_IMMEDIATE, CAMERA_MODIFICATION_TYPE_DISCARD, forceSceneChange)
+            loadout.ModelScene:TransitionToModelSceneID( loadoutModelSceneID, CAMERA_TRANSITION_TYPE_IMMEDIATE, CAMERA_MODIFICATION_TYPE_DISCARD, false )
             local battlePetActor = loadout.ModelScene:GetActorByTag("pet")
             if battlePetActor then
                 battlePetActor:SetModelByCreatureDisplayID(displayID)

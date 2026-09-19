@@ -243,7 +243,9 @@ function rematchRedux.dragFrame.GlowFrame:OnUpdate(elapsed)
     end
 
     local cursorX,cursorY = GetCursorPosition()
-    local scale = focus:GetEffectiveScale()
+
+    -- GetEffectiveScale() is 100% a function on ScrollFrame, but the wowlua-ls linter doesn't have this cataloged for some reason.
+    local scale = focus:GetEffectiveScale() ---@diagnostic disable-line: undefined-field
     local centerX,centerY = focus:GetCenter()
 
     local showGlowLine = false

@@ -130,6 +130,7 @@ function rematchRedux.petTags:FindPetID(tag,excludePetIDs)
       if not speciesID then
          return
       end
+
       -- first see if there's either 0 or 1 copy of this speciesID
       local petInfo = rematchRedux.petInfo:Fetch(speciesID)
       if not petInfo.isValid then
@@ -140,26 +141,33 @@ function rematchRedux.petTags:FindPetID(tag,excludePetIDs)
          local speciesPetIDs = rematchRedux.roster:GetSpeciesPetIDs(speciesID)
          local petID = speciesPetIDs and speciesPetIDs[1]
          --local _,petID = C_PetJournal.FindPetIDByName(petInfo.speciesName)
-         if petID and (petID~=noPetID1 and petID~=noPetID1 and petID~=noPetID1) then
+
+         -- TODO: I'm not sure why noPetID1 is referenced here. It's a global that's never set, so it
+         -- defaults to nil. If someone reports issues with this, we might need to change up the logic.
+         if petID and (petID ~= noPetID1 and petID ~= noPetID1 and petID ~= noPetID1) then ---@diagnostic disable-line: undefined-global
             return petID -- pet found
          else
             return speciesID -- pet not found; should never get to this if count==1
          end
       end
+
       -- if we reached here, there's more than one pet of that speciesID owned; set up criteria for a search
       local minLevel = 0
       local minRarity = 0
       local maxLevel = 25
       local forQueue = false
+
       if tag:sub(1,1)=="Q" then -- if this is for the leveling queue, adjust level and rarity criteria
          minLevel = tonumber(tag:sub(2,2),32) or 0
          minRarity = tonumber(tag:sub(3,3),32) or 0
          maxLevel = 24
          forQueue = true
       end
+
       local breedID = tonumber(tag:sub(4,4),32) or 0
       local bestPetID
       local bestWeight = 0
+
       -- now look for a pet that's at least minLevel and minRarity and at most maxLevel
       for _,petID in ipairs(rematchRedux.roster:GetSpeciesPetIDs(speciesID)) do
          if not excludePetIDs or not excludePetIDs[petID] then

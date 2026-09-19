@@ -386,6 +386,8 @@ end
 function rematchRedux.frame:RestorePosition()
     if settings.XPos and settings.YPos then
         self:ClearAllPoints()
+        
+        ---@diagnostic disable-next-line: type-mismatch
         self:SetPoint(settings.Anchor,UIParent,"BOTTOMLEFT",settings.XPos,settings.YPos)
     else
         self:SavePosition()

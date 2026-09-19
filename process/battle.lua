@@ -162,7 +162,9 @@ end
 
 -- as battle is ending, record if it was a pvp battle
 function rematchRedux.battle:PET_BATTLE_FINAL_ROUND(winner)
-    self.wasInPVP = not C_PetBattles.IsPlayerNPC( Enum.BattlePetOwner.Enemy )
+    -- IsPlayerNPC takes 1 parameter but the wowlua-ls linter doesn't have this cataloged for some reason. Can remove 
+    -- the @diagnostic disable-line: redundant-parameter comment if the linter is updated to recognize this function signature.
+    self.wasInPVP = not C_PetBattles.IsPlayerNPC( Enum.BattlePetOwner.Enemy ) ---@diagnostic disable-line: redundant-parameter
 end
 
 -- this is called in pairs, so don't use toggle without checking if it's visible

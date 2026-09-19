@@ -365,11 +365,11 @@ function RematchReduxAutoScrollBoxMixin:ToggleAllHeaders()
     end
 end
 
--- collapses all  headers
-function RematchReduxAutoScrollBoxMixin:CollapseAllHeaders(noUpdate)
+-- collapses all headers
+function RematchReduxAutoScrollBoxMixin:CollapseAllHeaders( noUpdate )
     if self.expandedHeaders and next(self.expandedHeaders) then
         wipe(self.expandedHeaders)
-        if not noRefresh then
+        if not noUpdate then
             self:Update()
         end
     end
@@ -426,7 +426,7 @@ end
 
 -- puts the named select onto the button that contains data, if any (or clears if none or it's not in view)
 -- when the list is going to be updated by the calling function already, noRefresh = true to skip the refresh
-function RematchReduxAutoScrollBoxMixin:Select(name,data,noRefresh)
+function RematchReduxAutoScrollBoxMixin:Select( name, data, noRefresh )
     local selectFrame = selectFrames[self] and selectFrames[self][name]
     if selectFrame and selectFrame.data~=data then
         selectFrame.data = data

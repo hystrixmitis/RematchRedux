@@ -103,6 +103,7 @@ function rematchRedux.savedTargets:Set(targetID,newTeams)
     end
     -- next add targetID to any teams in newTeams that are not in oldTeams
     for _,teamID in ipairs(newTeams) do
+        ---@diagnostic disable-next-line: type-mismatch
         if not tContains(oldTeams,targetID) then
             local team = rematchRedux.savedTeams[teamID]
             if team then
