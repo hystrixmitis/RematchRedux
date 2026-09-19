@@ -1,3 +1,17 @@
+09/18/2026 version 6.0.0-alpha.1
+- BACK UP YOUR SAVEDVARIABLES FROM REMATCH BEFORE RUNNING THIS JUST TO BE SAFE
+- Bringing over the original 5.3.1 Rematch code and renaming everything over to the "RematchRedux" pattern.
+- Fixed numerous Lua warnings from wowlua-ls
+- The addon does not yet import from Rematch for ANY of the SavedVariables. Coming before release will be import
+  of settings, teams/groups, targets, and queues. If you want to manually import these and are comfortable with editing
+  the files, you may do so, but you will need to replace the old Rematch5* names with the RematchRedux* names for the Lua
+  tables.
+- Caveat for this ALPHA release: Rematch and RematchRedux should be able to co-exist, but I can't guarantee that
+  issues won't crop up. For now, go through GitHub or log an issue there if you see one. The goal is to quickly get the import
+  coded, which will require both to run side-by-side for the import process, and then Rematch can be successfully disabled or
+  removed going forward. Don't do that just yet, though!
+
+
 01/24/2026 version 5.3.1
 - Targeting hostiles that would trigger a Midnight-specific "secret value" lua error are silently ignored and will not add to target history
 
